@@ -1,0 +1,3688 @@
+#
+# Kristian Jagd <Kristianjagd@gmail.com>, 2011.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: X-Moto\n"
+"Report-Msgid-Bugs-To: xmoto@tuxfamily.org\n"
+"POT-Creation-Date: 2012-05-04 19:14+0200\n"
+"PO-Revision-Date: 2011-01-18 22:22+0100\n"
+"Last-Translator: Kristian Jagd <Kristianjagd@gmail.com>\n"
+"Language-Team: Dansk <LL@li.org>\n"
+"Language: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=n != 1;\n"
+
+#: src/GameText.h:33
+msgid "en_EN"
+msgstr "da_DK"
+
+#: src/GameText.h:35
+msgid "11 kHz"
+msgstr "11 kHz"
+
+#: src/GameText.h:36
+msgid "16-bit"
+msgstr "16-bit"
+
+#: src/GameText.h:37
+msgid "16 bits per pixel"
+msgstr "16 bits per pixel"
+
+#: src/GameText.h:38
+msgid "22 kHz"
+msgstr "22 kHz"
+
+#: src/GameText.h:39
+msgid "32 bits per pixel"
+msgstr "32 bits per pixel"
+
+#: src/GameText.h:40
+msgid "44 kHz"
+msgstr "44 kHz"
+
+#: src/GameText.h:41
+msgid "8-bit"
+msgstr "8-bit"
+
+#: src/GameText.h:42
+msgid "Quit level"
+msgstr "Afslut bane"
+
+#: src/GameText.h:43
+#, c-format
+msgid "Web account password for profile '%s':"
+msgstr "Kodeord for profilen '%s':"
+
+#: src/GameText.h:44
+msgid "Add to favorite"
+msgstr "Tilføj til favoritter"
+
+#: src/GameText.h:45
+msgid "Add to blacklist"
+msgstr "Tilføj til dårlige baner"
+
+#: src/GameText.h:46
+msgid "Action"
+msgstr "Handling"
+
+#: src/GameText.h:47 src/GameText.h:52
+msgid "All (on this computer)"
+msgstr "Alle (på denne computer)"
+
+#: src/GameText.h:48 src/GameText.h:827
+msgid "All levels"
+msgstr "Alle baner"
+
+#: src/GameText.h:49
+msgid ""
+"Do you want to allow X-Moto connecting\n"
+"to the Internet to look for more levels\n"
+"and best times of other players?"
+msgstr ""
+"Vil du give X-Moto lov til at gå på internettet\n"
+"og kigge efter flere baner og rekorder?"
+
+#: src/GameText.h:53
+msgid "Audio"
+msgstr "Lyd"
+
+#: src/GameText.h:54
+msgid "Author"
+msgstr "Skaber"
+
+#: src/GameText.h:55
+msgid "Automatic"
+msgstr "Automatisk"
+
+#: src/GameText.h:56
+msgid "Automatic saving of replays"
+msgstr "Gem replays automatisk"
+
+#: src/GameText.h:57
+msgid "Disable Animations"
+msgstr "Slå animationer fra"
+
+#: src/GameText.h:58
+msgid "Show game information in the console"
+msgstr "Vis infomationer om spillet in konsollen"
+
+#: src/GameText.h:59
+msgid "Auto zoom"
+msgstr "Auto zoom"
+
+#: src/GameText.h:60
+msgid "Database"
+msgstr "Database"
+
+#: src/GameText.h:61
+msgid "Camera Active Zoom"
+msgstr "Aktivt kamera zoom"
+
+#: src/GameText.h:62
+msgid "Use Trail Cam"
+msgstr "Brug trail cam"
+
+#: src/GameText.h:63
+msgid "Beating mode"
+msgstr "Rekord tilstand"
+
+#: src/GameText.h:64
+msgid "Best Times"
+msgstr "Bedste Tider"
+
+#: src/GameText.h:65
+msgid "Best player"
+msgstr "Bedste kører"
+
+#: src/GameText.h:66
+msgid "Brake"
+msgstr "Bremse"
+
+#: src/GameText.h:67
+#, c-format
+msgid "(by %s)"
+msgstr "(ved %s)"
+
+#: src/GameText.h:68
+msgid "Move Camera to left"
+msgstr "Bevæg kamera til venstre"
+
+#: src/GameText.h:69
+msgid "Move Camera to right"
+msgstr "Bevæg kamera til højre"
+
+#: src/GameText.h:70
+msgid "Move Camera down"
+msgstr "Bevæg kamera ned"
+
+#: src/GameText.h:71
+msgid "Move Camera up"
+msgstr "Bevæg kamera op"
+
+#: src/GameText.h:72
+msgid "Cancel"
+msgstr "Fortryd"
+
+#: src/GameText.h:73
+msgid "Change..."
+msgstr "Skift..."
+
+#: src/GameText.h:74
+msgid "Change direction"
+msgstr "Skift retning"
+
+#: src/GameText.h:75
+msgid "Change Key..."
+msgstr "Skift styring..."
+
+#: src/GameText.h:76
+msgid ""
+"Use the tabulation key to complete player names. Use the * to send private "
+"messages."
+msgstr ""
+"Tryk tab for automatisk at afsluttet spillerens navn. Brug * til at sende "
+"private beskeder."
+
+#: src/GameText.h:77
+msgid "Open chat dialog box"
+msgstr "Åben chat"
+
+#: src/GameText.h:78
+msgid "Open private chat dialog box"
+msgstr ""
+
+#: src/GameText.h:79
+msgid "Checking for new or updated levels..."
+msgstr "Checker for nye eller opdaterede baner "
+
+#: src/GameText.h:80
+msgid "I'm a child"
+msgstr "Jeg er et barn"
+
+#: src/GameText.h:81
+msgid "Choose Level"
+msgstr "Vælg bane"
+
+#: src/GameText.h:82
+msgid "Clean"
+msgstr "Ryd op"
+
+#: src/GameText.h:83
+#, c-format
+msgid "Are you sure you want to delete %i replay"
+msgid_plural "Are you sure you want to delete %i replay"
+msgstr[0] "Vil du virkelig slette %i replay?"
+msgstr[1] "Vil du virkelig slette %i replays?"
+
+#: src/GameText.h:84
+msgid "There is no replay to clean"
+msgstr "Der er ingen replays at rydde op i"
+
+#: src/GameText.h:85
+msgid "Close"
+msgstr "Luk"
+
+#: src/GameText.h:86
+msgid "Configure Joystick..."
+msgstr "Konfigurer Joystick"
+
+#: src/GameText.h:87
+msgid "Decrease console history size"
+msgstr "Formindsk konsol historik størrelsen"
+
+#: src/GameText.h:88
+msgid "Increase console history size"
+msgstr "Forøg konsol historik størrelsen"
+
+#: src/GameText.h:89
+msgid "Controls"
+msgstr "Styring"
+
+#: src/GameText.h:90 src/GameText.h:270
+msgid "General"
+msgstr "Generelt"
+
+#: src/GameText.h:92
+msgid "left control"
+msgstr "ventre ctrl"
+
+#: src/GameText.h:93
+msgid "right control"
+msgstr "højre ctrl"
+
+#: src/GameText.h:94
+msgid "left shift"
+msgstr "ventre shift"
+
+#: src/GameText.h:95
+msgid "right shift"
+msgstr "højre shift"
+
+#: src/GameText.h:96
+msgid "left alt"
+msgstr "ventre alt"
+
+#: src/GameText.h:97
+msgid "right alt"
+msgstr "højre alt"
+
+#: src/GameText.h:98
+msgid "left meta"
+msgstr "venstre meta"
+
+#: src/GameText.h:99
+msgid "right meta"
+msgstr "højre meta"
+
+#: src/GameText.h:100
+msgid "Abort the process"
+msgstr "Afbryd"
+
+#: src/GameText.h:101 src/GameText.h:115
+#, c-format
+msgid "button %i"
+msgstr "knappen %i"
+
+#: src/GameText.h:102
+msgid "left button"
+msgstr "venstre knap"
+
+#: src/GameText.h:103
+msgid "middle button"
+msgstr "knappen i midten"
+
+#: src/GameText.h:104
+msgid "right button"
+msgstr "højre knap"
+
+#: src/GameText.h:105
+msgid "wheel up"
+msgstr "hjul op"
+
+#: src/GameText.h:106
+msgid "wheel down"
+msgstr "hjul ned"
+
+#: src/GameText.h:107
+msgid "No joystick found"
+msgstr "intet joystick fundet"
+
+#: src/GameText.h:108
+#, c-format
+msgid "%i joystick found"
+msgid_plural "%i joysticks found"
+msgstr[0] "%i joystick fundet"
+msgstr[1] "%i joysticks fundet"
+
+#: src/GameText.h:109
+#, c-format
+msgid "axis %i"
+msgstr "aksen %i"
+
+#: src/GameText.h:110
+msgid "left"
+msgstr "venstre"
+
+#: src/GameText.h:111
+msgid "right"
+msgstr "højre"
+
+#: src/GameText.h:112
+msgid "up"
+msgstr "op"
+
+#: src/GameText.h:113
+msgid "down"
+msgstr "ned"
+
+#: src/GameText.h:114
+msgid "none"
+msgstr "ingen"
+
+#: src/GameText.h:116
+msgid "You must restart so that this option takes effect"
+msgstr "Du skal genstarte før ændringen virker"
+
+#: src/GameText.h:117
+msgid "You must reconnect to the server so that this option takes effect"
+msgstr "Du skal oprette forbindelse til serveren igen før ændringen virker"
+
+#: src/GameText.h:118
+msgid "Script action"
+msgstr "Script handling"
+
+#: src/GameText.h:121
+msgid "Lead Programming"
+msgstr "hoved-udvikler"
+
+#: src/GameText.h:127
+msgid "Additional Programming"
+msgstr "co-udvikler"
+
+#: src/GameText.h:138
+msgid "Graphics"
+msgstr "Grafik"
+
+#: src/GameText.h:143
+msgid "Music"
+msgstr "Musik"
+
+#: src/GameText.h:148
+msgid "Sound Effects"
+msgstr "Lydeffekter"
+
+#: src/GameText.h:152
+msgid "MacOS X Support"
+msgstr "MacOS X support"
+
+#: src/GameText.h:156
+msgid "Localization"
+msgstr "Oversættelser"
+
+#: src/GameText.h:157
+msgid "Slovak"
+msgstr "slovakisk"
+
+#: src/GameText.h:158
+msgid "French"
+msgstr "fransk"
+
+#: src/GameText.h:159
+msgid "Norwegian"
+msgstr "norsk"
+
+#: src/GameText.h:159
+msgid "English"
+msgstr "Engelsk"
+
+#: src/GameText.h:160
+msgid "German"
+msgstr "tysk"
+
+#: src/GameText.h:161
+msgid "Finnish"
+msgstr "finsk"
+
+#: src/GameText.h:162
+msgid "Catalan"
+msgstr "Catalansk"
+
+#: src/GameText.h:162
+msgid "Spanish"
+msgstr "spansk"
+
+#: src/GameText.h:163
+msgid "Polish"
+msgstr "polsk"
+
+#: src/GameText.h:164
+msgid "Italian"
+msgstr "italiensk"
+
+#: src/GameText.h:165
+msgid "Swedish"
+msgstr "svensk"
+
+#: src/GameText.h:166
+msgid "Czech"
+msgstr "tjekkisk"
+
+#: src/GameText.h:167
+msgid "Mikhail Brinchuk"
+msgstr "Mikhail Brinchuk"
+
+#: src/GameText.h:167
+msgid "Russian"
+msgstr "russisk"
+
+#: src/GameText.h:168
+msgid "Brazilian Portuguese"
+msgstr "brasiliansk portugisisk"
+
+#: src/GameText.h:169
+msgid "Latvian"
+msgstr "lettisk"
+
+#: src/GameText.h:170
+msgid "Danish"
+msgstr "dansk"
+
+#: src/GameText.h:171
+msgid "Lithuanian"
+msgstr "Litauisk"
+
+#: src/GameText.h:172
+msgid "Turkish"
+msgstr "Tyrkisk"
+
+#: src/GameText.h:173
+msgid "Hungarian"
+msgstr "Ungansk"
+
+#: src/GameText.h:174
+msgid "Portugese"
+msgstr "Portugisisk"
+
+#: src/GameText.h:175
+msgid "Dutch"
+msgstr "Hollandsk"
+
+#: src/GameText.h:176
+msgid "Taiwanese"
+msgstr "Taiwanesisk"
+
+#: src/GameText.h:177
+msgid "Galician"
+msgstr "Galicisk"
+
+#: src/GameText.h:179
+msgid "Main testers"
+msgstr "Hoved-testere"
+
+#: src/GameText.h:184
+msgid "Thanks to"
+msgstr "Tak til"
+
+#: src/GameText.h:185
+msgid "for KDE/gnome integration"
+msgstr "for KDE/gnome integration"
+
+#: src/GameText.h:186
+msgid "for Debian packaging"
+msgstr "for Debian pakning"
+
+#: src/GameText.h:187
+msgid "for Gentoo packaging"
+msgstr "for Gentoo pakning"
+
+#: src/GameText.h:188
+msgid "for Mandriva packaging"
+msgstr "for Mandriva pakning"
+
+#: src/GameText.h:189
+msgid "for FreeBSD packaging"
+msgstr "for FreeBSD pakning"
+
+#: src/GameText.h:190
+msgid "for across/elma"
+msgstr "for across/elma"
+
+#: src/GameText.h:191
+msgid "for making tinyxml"
+msgstr "for at lave tinyxml"
+
+#: src/GameText.h:192
+msgid "for the MD5 code"
+msgstr "for MD5 koden"
+
+#: src/GameText.h:194
+msgid "Everyone who have made levels"
+msgstr "Alle som har lavet en bane"
+
+#: src/GameText.h:195
+msgid "People who have provided bug reports"
+msgstr "Folk som har indberettet fejlreporter"
+
+#: src/GameText.h:196
+msgid "Anyone who has helped in any way"
+msgstr "Alle som har hjulpet os på nogen måde"
+
+#: src/GameText.h:198
+msgid "Credits"
+msgstr "Medvirkende"
+
+#: src/GameText.h:199
+msgid "Player"
+msgstr "Spiller"
+
+#: src/GameText.h:200
+msgid "Play now !"
+msgstr "Spil nu!"
+
+#: src/GameText.h:201
+msgid "Play music on all levels"
+msgstr "Spil musik til alle baner"
+
+#: src/GameText.h:202
+msgid "Date"
+msgstr "Dato"
+
+#: src/GameText.h:203
+msgid "Difficulty"
+msgstr "Sværhedsgrad"
+
+#: src/GameText.h:204
+msgid ""
+"X-Moto uses a database on your computer to save all your scores and "
+"statistics. You can send these data using your web account on the X-Moto "
+"server. It is useful to save your data or if you play X-Moto from different "
+"places."
+msgstr ""
+"X-Moto bruger en database på din computer til at gemme dine rekorder og "
+"statistikker. Du kan sende disse data ved hjælp af din Web-konto på X-Moto "
+"serveren. Det er smart at gemme din data, især hvis du spiller X-Moto fra "
+"forskellige computere."
+
+#: src/GameText.h:205
+msgid ""
+"If you manually copied the X-Moto user files (.xmoto) on some other "
+"computers, you should not use this functionality otherwise your statistics "
+"will be duplicated/not synchronized. If you did that, you should remove the "
+"copies you did."
+msgstr ""
+"Hvis du manuelt har kopieret X-Moto database filerne (.xmoto) til en anden "
+"computer, skal du ikke bruge denne funktion, ellers vil dine statistikker "
+"blive dublikerede eller ikke synkroniseret. Hvis du har gjort det, skal du "
+"fjerne de kopier du har lavet."
+
+#: src/GameText.h:206
+msgid "Synchronise"
+msgstr "Synkroniser"
+
+#: src/GameText.h:207
+msgid "Synchronize when X-Moto ends"
+msgstr "Synkroniser når du lukker X-Moto"
+
+#: src/GameText.h:208
+msgid "Upgrading database"
+msgstr "Opgraderer database"
+
+#: src/GameText.h:209
+msgid "Upgrading database stats for the profile"
+msgstr "Opgraderer database tilstanden for profilen"
+
+#: src/GameText.h:210
+msgid "Upgrading database profile"
+msgstr "Opgraderer database profil"
+
+#: src/GameText.h:211
+msgid "Death Animation"
+msgstr "Død-animationen"
+
+#: src/GameText.h:212
+msgid "Defaults"
+msgstr "Standard"
+
+#: src/GameText.h:213
+msgid "Do you really want to delete player?"
+msgstr "Vil du virkelig slette denne spiller?"
+
+#: src/GameText.h:214
+msgid "Do you really want to delete replay?"
+msgstr "Vil du virkelig slette denne replay?"
+
+#: src/GameText.h:215 src/GameText.h:218
+msgid "Delete"
+msgstr "Slet"
+
+#: src/GameText.h:216
+msgid "Delete from favorite"
+msgstr "Fjern fra favoritter"
+
+#: src/GameText.h:217
+msgid "Delete from blacklist"
+msgstr "Fjern fra dårlige baner"
+
+#: src/GameText.h:219
+msgid "Description"
+msgstr "Beskrivelse"
+
+#: src/GameText.h:220
+msgid "Display Ghost time difference"
+msgstr "Vis spøgelses tids-forskelle"
+
+#: src/GameText.h:221
+msgid "Display Ghost Information"
+msgstr "Vis spøgelses information"
+
+#: src/GameText.h:222
+msgid "Display bike arrow indication"
+msgstr "Vis pil "
+
+#: src/GameText.h:223
+msgid "Direct Connection"
+msgstr "Direkte forbindelse"
+
+#: src/GameText.h:224
+msgid "Downloading the ghost..."
+msgstr "Henter spøgelset..."
+
+#: src/GameText.h:225
+msgid "Downloading ghosts..."
+msgstr "Henter spøgelset"
+
+#: src/GameText.h:226
+msgid "Downloading the highscore..."
+msgstr "Henter rekorden..."
+
+#: src/GameText.h:227
+msgid "Downloading high-scores..."
+msgstr "Henter rekorder..."
+
+#: src/GameText.h:228
+msgid ""
+"Downloading extra levels...\n"
+"Press ESC to abort."
+msgstr ""
+"Henter ekstra baner...\n"
+"Tryk ESC for at afbryde."
+
+#: src/GameText.h:229
+msgid "Downloading the level..."
+msgstr "Henter banen..."
+
+#: src/GameText.h:230
+msgid "Checking for new levels..."
+msgstr "Tjekker efter nye baner..."
+
+#: src/GameText.h:231
+msgid "Downloading the replay..."
+msgstr "Henter replay..."
+
+#: src/GameText.h:232
+msgid "Loading new and updated levels..."
+msgstr "Indlæser nye og opdaterede baner..."
+
+#: src/GameText.h:233
+msgid "Checking for existing rooms..."
+msgstr "Tjekker efter rum..."
+
+#: src/GameText.h:234
+msgid ""
+"Downloading theme data required by new levels...\n"
+"Press ESC to abort."
+msgstr ""
+"Henter tema data der behøves af de nye baner...\n"
+"Tryk ESC for at afbryde."
+
+#: src/GameText.h:235
+msgid "Checking for new themes..."
+msgstr "Tjekker efter nye temaer..."
+
+#: src/GameText.h:236
+msgid "Get More Levels!"
+msgstr "Få flere baner!"
+
+#: src/GameText.h:237
+msgid "Drive"
+msgstr "Kør"
+
+#: src/GameText.h:238
+msgid "Enable Audio"
+msgstr "Lyd"
+
+#: src/GameText.h:239
+msgid "Check new levels at startup"
+msgstr "Tjek for nye baner ved opstart"
+
+#: src/GameText.h:240
+msgid "Check new highscores at startup"
+msgstr "Tjek for nye rekorder ved opstart"
+
+#: src/GameText.h:241
+msgid "Enable Context Help"
+msgstr "Hjælpe tekster"
+
+#: src/GameText.h:242
+msgid "Enable Engine Sound"
+msgstr "Motorlyd"
+
+#: src/GameText.h:243
+msgid "Enable Ghost"
+msgstr "Spøgelse"
+
+#: src/GameText.h:244
+msgid "Show World Record in-game"
+msgstr "Vis verdensrekorden i spillet"
+
+#: src/GameText.h:245
+msgid "Show next medal in-game"
+msgstr "Vis næste pris inde i spillet"
+
+#: src/GameText.h:246
+msgid "Enable menu music"
+msgstr "Musik i menuen"
+
+#: src/GameText.h:247
+msgid "Enable game music"
+msgstr "Musik inde i spillet"
+
+#: src/GameText.h:248
+msgid "Enable WWW Access"
+msgstr "WWW adgang"
+
+#: src/GameText.h:249
+msgid "Enter player name"
+msgstr "Spiller navn"
+
+#: src/GameText.h:250
+msgid "Enter name of replay"
+msgstr "Navn på replay"
+
+#: src/GameText.h:251
+msgid "There are errors in the level, don't expect it to be playable!"
+msgstr "Der er fejl i banen; forvent ikke at den kan spilles"
+
+#: src/GameText.h:252
+msgid "Check your Internet connection !"
+msgstr "Tjek din internet forbindelse !"
+
+#: src/GameText.h:253
+msgid "Failed to check for levels."
+msgstr "Kunne ikke tjekke efter baner"
+
+#: src/GameText.h:254
+msgid "Failed to download high-scores."
+msgstr "Kunne ikke hente rekorder"
+
+#: src/GameText.h:255
+msgid "Failed to download levels."
+msgstr "Kunne ikke hente baner."
+
+#: src/GameText.h:256
+msgid "Failed to download the replay."
+msgstr "Kunne ikke hente replayen."
+
+#: src/GameText.h:257
+msgid "Failed to download the rooms list."
+msgstr "Kunne ikke hente rum-listen"
+
+#: src/GameText.h:258
+msgid "Failed to get the selected theme"
+msgstr "Kunne ikke hente det valgte tema"
+
+#: src/GameText.h:259
+msgid "Failed to initialize level!"
+msgstr "Kunne ikke starte banen!"
+
+#: src/GameText.h:260
+msgid "Failed to load replay!"
+msgstr "Kunne ikke loade replayen"
+
+#: src/GameText.h:261
+msgid ""
+"Failed to save replay!\n"
+"Maybe you should try with another name?"
+msgstr ""
+"Kunne ikke gemme replayen!\n"
+"Måske skulle du prøve med et andet navn?"
+
+#: src/GameText.h:262
+msgid "Failed to update the theme list"
+msgstr "Kunne ikke opdatere tema listen"
+
+#: src/GameText.h:263
+msgid "File"
+msgstr "Fil"
+
+#: src/GameText.h:264
+msgid "Filter"
+msgstr "Filter"
+
+#: src/GameText.h:265
+msgid "Finished!"
+msgstr "Færdig!"
+
+#: src/GameText.h:266
+msgid "Finish Time"
+msgstr "Tid"
+
+#: src/GameText.h:267
+msgid "Flip left"
+msgstr "Roter til venstre"
+
+#: src/GameText.h:268
+msgid "Flip right"
+msgstr "Roter til højre"
+
+#: src/GameText.h:269
+msgid "Game Graphics"
+msgstr "Spil grafik"
+
+#: src/GameText.h:271
+msgid "General Info"
+msgstr "General info"
+
+#: src/GameText.h:272
+msgid "Get this theme"
+msgstr "Hent dette tema"
+
+#: src/GameText.h:273
+msgid "Local best"
+msgstr "Den lokale bedste"
+
+#: src/GameText.h:274
+msgid "Your best"
+msgstr "Din bedste"
+
+#: src/GameText.h:275
+msgid "Type"
+msgstr "Type"
+
+#: src/GameText.h:276 src/GameText.h:758
+msgid "The highscore of the reference room"
+msgstr "Rekorden i reference rummet"
+
+#: src/GameText.h:277 src/GameText.h:759
+msgid "The highscore of the other rooms"
+msgstr "Rekorden i de andre rum"
+
+#: src/GameText.h:278 src/GameText.h:756
+msgid "The best of my replays (on this computer)"
+msgstr "Den bedste af mine replays (på denne computer)"
+
+#: src/GameText.h:279 src/GameText.h:757
+msgid "The best of the replays (on this computer)"
+msgstr "Den bedste af mine replays (på denne computer)"
+
+#: src/GameText.h:280
+#, c-format
+msgid "Ghost of %s"
+msgstr "Spøgelse af %s"
+
+#: src/GameText.h:281
+msgid ""
+"Please wait the next party\n"
+"Or press escape to disconnect"
+msgstr ""
+"Vent venligst til det næste hold\n"
+"Eller tryk ESC for at afbryde"
+
+#: src/GameText.h:282
+#, c-format
+msgid "Web ghost of %s"
+msgstr "Spøgelse af %s"
+
+#: src/GameText.h:283
+msgid "Ghost"
+msgstr "Spøgelse"
+
+#: src/GameText.h:284
+msgid "Help"
+msgstr "Hjælp"
+
+#: src/GameText.h:288
+msgid "You control your bike using the keyboard"
+msgstr "Du kontrollerer din cykel ved at bruge tasteturet"
+
+#: src/GameText.h:289 src/GameText.h:308
+msgid "Accelerates"
+msgstr "Accelererer"
+
+#: src/GameText.h:290 src/GameText.h:309
+msgid "Brakes"
+msgstr "Bremser"
+
+#: src/GameText.h:291 src/GameText.h:310
+msgid "Rotates it counter-clockwise"
+msgstr "Roterer den mod uret"
+
+#: src/GameText.h:292 src/GameText.h:311
+msgid "Rotates it clockwise"
+msgstr "Roterer den med uret"
+
+#: src/GameText.h:293 src/GameText.h:312
+msgid "Turns around and drives in the other direction"
+msgstr "Vender cyklen på stedet"
+
+#: src/GameText.h:294 src/GameText.h:314 src/GameText.h:443
+msgid "Pause"
+msgstr "Pause"
+
+#: src/GameText.h:295 src/GameText.h:315
+msgid "Restart the level"
+msgstr "Genstart banen"
+
+#: src/GameText.h:296 src/GameText.h:316
+msgid "Previous/Next level"
+msgstr "Forgående/Næste bane"
+
+#: src/GameText.h:298 src/GameText.h:329
+msgid "Enable/disable web"
+msgstr "Tillader/blokerer internet-adgang"
+
+#: src/GameText.h:299
+msgid "Reload levels, themes and replays from directories"
+msgstr "Genindlæser baner, temaer og replays"
+
+#: src/GameText.h:300 src/GameText.h:333
+msgid "Take a screenshot"
+msgstr "Tager et screenshot"
+
+#: src/GameText.h:302
+msgid ""
+"Use Quick Play button to immediately start a game with a random level,\n"
+"or use Levels button to select from level packs."
+msgstr ""
+"Brug Hurtig Start til at øjeblikkeligt start et spil i en tilfældig bane,\n"
+"eller brug Baner knappen til at vælge fra bane pakkerne."
+
+#: src/GameText.h:304
+msgid ""
+"Find all the strawberries and touch the flower to finish\n"
+"the level."
+msgstr ""
+"Find alle jordbærene og rør blomsten for at gennemføre\n"
+"banen"
+
+#: src/GameText.h:305
+msgid ""
+"Read the README file or check out the website at\n"
+"http://xmoto.tuxfamily.org\n"
+"for more information."
+msgstr ""
+"Læs README filen eller se hjemmesiden på\n"
+"http://xmoto.tuxfamily.org\n"
+"for mere information."
+
+#: src/GameText.h:317
+msgid "change mirror mode"
+msgstr "Skift spejling"
+
+#: src/GameText.h:318
+msgid "Toggle blacklist"
+msgstr "dårlige baner"
+
+#: src/GameText.h:319
+msgid "Enable/disable audio"
+msgstr "lyd"
+
+#: src/GameText.h:320
+msgid "Open options menu"
+msgstr "Vis indstillinger"
+
+#: src/GameText.h:321
+msgid "Toggle Ghost Trail Rendering"
+msgstr "Gengivelse af spøgelsets vej"
+
+#: src/GameText.h:322
+msgid "Toggle Trail Cam"
+msgstr "Trail kamera"
+
+#: src/GameText.h:323
+msgid "Toggle Display Medals,Display WR"
+msgstr "Skift mellem vis priser og vis WR"
+
+#: src/GameText.h:324
+msgid "Show this help"
+msgstr "Vis denne hjælp"
+
+#: src/GameText.h:325
+msgid "Switch biker"
+msgstr "Skift kører"
+
+#: src/GameText.h:326
+msgid "Toggle favorite"
+msgstr "Favorit"
+
+#: src/GameText.h:327
+msgid "Toggle Ghost Trail Tracking Shot"
+msgstr "Vis spøgelsets vej"
+
+#: src/GameText.h:328
+msgid "Enable/disable FPS display"
+msgstr "FPS visning"
+
+#: src/GameText.h:330 src/GameText.h:509
+msgid "Enable/disable ugly mode"
+msgstr "Ugly mode til/fra"
+
+#: src/GameText.h:331
+msgid "Toggle Contrast, Light and Full Graphics"
+msgstr "Skift mellem kontrast, let og fuld grafik"
+
+#: src/GameText.h:332
+msgid "Toggle theme and ugly over mode"
+msgstr "Skift mellem tema og ugly over mode"
+
+#: src/GameText.h:335
+msgid "Hide ghosts"
+msgstr "Skjul spøgelse"
+
+#: src/GameText.h:336
+msgid "High"
+msgstr "Høj"
+
+#: src/GameText.h:337
+msgid "Highscore of the room"
+msgstr "Rekorden i rummet"
+
+#: src/GameText.h:338
+#, c-format
+msgid "%s: %s beat your highscore for level '%s'"
+msgstr "%s: %s slog din rekord i banen '%s'"
+
+#: src/GameText.h:339
+msgid "Levels are being added into the database. Please wait."
+msgstr "Baner bliver ført ind i databasen. Vent venligst."
+
+#: src/GameText.h:340
+msgid "Internet Configuration"
+msgstr "Internet konfiguration"
+
+#: src/GameText.h:341
+msgid "Infos"
+msgstr "Infos"
+
+#: src/GameText.h:342
+msgid "View Level Initially"
+msgstr "Vis banen først"
+
+#: src/GameText.h:343
+msgid "Joystick"
+msgstr "Joystick"
+
+#: src/GameText.h:344
+msgid "Enable joysticks"
+msgstr "Brug joysticks"
+
+#: src/GameText.h:345
+msgid "Oops!"
+msgstr "Oops!"
+
+#: src/GameText.h:346
+msgid "Press ENTER to try again"
+msgstr "Tryk ENTER for at prøve igen"
+
+#: src/GameText.h:347
+msgid "Press BACKSPACE to return to Checkpoint"
+msgstr "Tryk BACKSPACE for and vende tilbage til checkpoint"
+
+#: src/GameText.h:348
+msgid "Press ESC to display the menu"
+msgstr "Tryk ESC for at vise menuen"
+
+#: src/GameText.h:349
+msgid "Key"
+msgstr "Styring"
+
+#: src/GameText.h:350
+msgid "Keyboard"
+msgstr "Tastetur"
+
+#: src/GameText.h:351
+msgid "Language"
+msgstr "Sprog"
+
+#: src/GameText.h:352
+msgid "Language name"
+msgstr "Sprogets navn"
+
+#: src/GameText.h:353
+msgid "Language code"
+msgstr "Sprogkode"
+
+#: src/GameText.h:354
+msgid "Level"
+msgstr "Bane"
+
+#: src/GameText.h:355
+msgid "Added to favorites"
+msgstr "Tilføjet til favoritter"
+
+#: src/GameText.h:356
+msgid "Deleted from favorites"
+msgstr "Fjernet fra favoritter"
+
+#: src/GameText.h:357
+msgid "Added to blacklist"
+msgstr "Tilføjet til dårlige baner"
+
+#: src/GameText.h:358
+msgid "Deleted from blacklist"
+msgstr "Fjernet fra dårlige baner"
+
+#: src/GameText.h:359
+msgid "Level Info..."
+msgstr "Om banen..."
+
+#: src/GameText.h:360
+msgid "Level Name"
+msgstr "Bane navn"
+
+#: src/GameText.h:361
+#, c-format
+msgid "Level '%s' cannot be loaded"
+msgstr "Banen '%s' kunne ikke loades"
+
+#: src/GameText.h:362
+msgid "The level failed while loading with the following error :"
+msgstr ""
+
+#: src/GameText.h:363
+msgid "Do you want to send a report to website administrators ?"
+msgstr ""
+
+#: src/GameText.h:364
+msgid "Sending the report..."
+msgstr ""
+
+#: src/GameText.h:365
+msgid "Sending the vote..."
+msgstr ""
+
+#: src/GameText.h:366
+msgid "Level Pack"
+msgstr "Bane pakke"
+
+#: src/GameText.h:367
+msgid "Level Packs"
+msgstr "Bane pakker"
+
+#: src/GameText.h:368
+#, c-format
+msgid "Level '%s' required by replay!"
+msgstr "Banen '%s' påkrævet af replay! "
+
+#: src/GameText.h:369
+msgid "Levels"
+msgstr "Baner"
+
+#: src/GameText.h:370
+msgid "List All"
+msgstr "Vis alle"
+
+#: src/GameText.h:371
+msgid "Loading..."
+msgstr "Indlæser..."
+
+#: src/GameText.h:372
+msgid "Loading levels..."
+msgstr "Loader baner..."
+
+#: src/GameText.h:373
+msgid "Loading menu graphics..."
+msgstr "Loader menu-grafikken..."
+
+#: src/GameText.h:374
+msgid "Loading replays..."
+msgstr "Loader replays..."
+
+#: src/GameText.h:375
+msgid "Loading sounds..."
+msgstr "Loader lyde..."
+
+#: src/GameText.h:376
+msgid "Loading textures..."
+msgstr "Loader textures..."
+
+#: src/GameText.h:377
+msgid "Login"
+msgstr "Log ind"
+
+#: src/GameText.h:378
+msgid "Low"
+msgstr "Lav"
+
+#: src/GameText.h:379
+msgid "Main"
+msgstr "Hoved"
+
+#: src/GameText.h:380
+msgid "Mouse"
+msgstr "Mus"
+
+#: src/GameText.h:381 src/GameText.h:518
+msgid "Theme"
+msgstr "Tema"
+
+#: src/GameText.h:383 src/GameText.h:848
+msgid "Bronze"
+msgstr "Bronze"
+
+#: src/GameText.h:384 src/GameText.h:846
+msgid "Gold"
+msgstr "Guld"
+
+#: src/GameText.h:385 src/GameText.h:847
+msgid "Silver"
+msgstr "Sølv"
+
+#: src/GameText.h:386 src/GameText.h:845
+msgid "Platinum"
+msgstr "Platin"
+
+#: src/GameText.h:387
+msgid "Medium"
+msgstr "Medium"
+
+#: src/GameText.h:388
+msgid "Menu Graphics"
+msgstr "Menu Grafik"
+
+#: src/GameText.h:389
+msgid "Message not sent, unknown players :"
+msgstr "Besked ikke afsendt, ukendte spillere :"
+
+#: src/GameText.h:390
+#, c-format
+msgid "You got a %s medal"
+msgstr "Du fik en %s pris"
+
+#: src/GameText.h:391
+msgid "Contrast"
+msgstr "Kontrast"
+
+#: src/GameText.h:392
+msgid "Light"
+msgstr "Let"
+
+#: src/GameText.h:393
+msgid "Full"
+msgstr "Fuld"
+
+#: src/GameText.h:394
+msgid "Total time you scored / total highscore time for levels you finished"
+msgstr "Din totale tid / Den totale rekord-tid i de baner du har gennemført"
+
+#: src/GameText.h:395
+msgid "Level references unknown textures, it could be unplayable!"
+msgstr "Banen har et ikke-kendt texture, måske kan den ikke spilles!"
+
+#: src/GameText.h:396
+msgid "Mono"
+msgstr "Mono"
+
+#: src/GameText.h:397
+msgid "Following are your most played levels"
+msgstr "Følgene baner har du spillet mest"
+
+#: src/GameText.h:398
+msgid "Motion blur ghost"
+msgstr "Bevægelses-sløret spøgelse"
+
+#: src/GameText.h:399
+msgid "Multi"
+msgstr "Multi"
+
+#: src/GameText.h:400
+msgid "Semi-cooperative mode"
+msgstr "halv-samarbejde mode"
+
+#: src/GameText.h:401
+msgid "Stop the game once a player ends the level"
+msgstr "Stop spillet når en spiller gennemfører banen"
+
+#: src/GameText.h:402
+msgid "Number of players"
+msgstr "Antal at spillere"
+
+#: src/GameText.h:403
+msgid "New"
+msgstr "Ny"
+
+#: src/GameText.h:404
+#, c-format
+msgid "X-Moto %s or newer required to load level"
+msgstr "X-Moto %s eller nyrer behøves for at banen kan spilles"
+
+#: src/GameText.h:405
+msgid "New highscore!"
+msgstr "Ny rekord!"
+
+#: src/GameText.h:406
+msgid "New personal highscore!"
+msgstr "Ny personlig rekord!"
+
+#: src/GameText.h:407
+#, c-format
+msgid "%i new or updated level available. Download now ?"
+msgid_plural "%i new or updated levels available. Download now ?"
+msgstr[0] "%i ny eller opdateret bane er tilgængelig. Hent den nu ? "
+msgstr[1] "%i nye eller opdaterede baner er tilgængelige. Hent dem nu ?"
+
+#: src/GameText.h:410
+msgid "New Levels"
+msgstr "Nye baner"
+
+#: src/GameText.h:411
+msgid "New levels available!"
+msgstr "Nye baner er tilgængelige!"
+
+#: src/GameText.h:412
+msgid "New Profile..."
+msgstr "Ny spiller..."
+
+#: src/GameText.h:413
+msgid "No"
+msgstr "Nej"
+
+#: src/GameText.h:414
+msgid ""
+"No new or updated levels available.\n"
+"\n"
+"Try again another time."
+msgstr ""
+"Ingen nye eller opdaterede baner er tilgængelige\n"
+"\n"
+"Prøv igen senere"
+
+#: src/GameText.h:415
+msgid "No level following this one, sorry."
+msgstr "Der er ingen baner efter denne her..."
+
+#: src/GameText.h:416
+msgid "No statistics for this profile."
+msgstr "Ingen statistikker for denne spiller"
+
+#: src/GameText.h:417
+msgid "Not finished"
+msgstr "Ikke gennemført"
+
+#: src/GameText.h:418
+msgid ""
+"Important note!\n"
+"\n"
+"This is an in development version of X-Moto!\n"
+"All kinds of feedback are highly appreciated, so the game\n"
+"can get better.\n"
+"Mail bugs, ideas, comments, feature requests, hatemail, etc\n"
+"to xmoto@tuxfamily.org\n"
+"\n"
+"Also visit http://xmoto.tuxfamily.org to make sure you've\n"
+"got the latest version."
+msgstr ""
+"Vigtig note!\n"
+"\n"
+"Dette er en udviklingsversion af X-Moto!\n"
+"Al slags tilbagemelding er højt værdsat så spillet kan blive bedre. E-mail\n"
+"fejl, ideer, kommentarer, ønsker, hademails osv.\n"
+"til xmoto@tuxfamily.org\n"
+"besøg også http://xmoto.tuxfamily.org"
+
+#: src/GameText.h:428
+msgid "# Levels"
+msgstr "# Baner"
+
+#: src/GameText.h:429
+msgid "OK"
+msgstr "OK"
+
+#: src/GameText.h:430
+msgid "Open"
+msgstr "Åben"
+
+#: src/GameText.h:431
+msgid "Operation completed"
+msgstr "Færdig!"
+
+#: src/GameText.h:432
+msgid "Options"
+msgstr "Indstillinger"
+
+#: src/GameText.h:433
+msgid "Some options will not take effect before next restart!"
+msgstr ""
+"Nogle indstillinger vil ikke tage nogen effekt før næste genstart!Nogle af "
+"indstillingerne vil første virke efter næste genstart af X-Moto!"
+
+#: src/GameText.h:434
+msgid "By author"
+msgstr "Efter skaber"
+
+#: src/GameText.h:435
+msgid "Medals"
+msgstr "Priser"
+
+#: src/GameText.h:436 src/GameText.h:488
+msgid "Room"
+msgstr "Rum"
+
+#: src/GameText.h:437
+msgid "Special"
+msgstr "Speciel"
+
+#: src/GameText.h:438
+msgid "Standard"
+msgstr "Standard"
+
+#: src/GameText.h:439
+msgid "Web votes"
+msgstr "Web stemmer"
+
+#: src/GameText.h:440 src/GameText.h:501
+msgid "Statistics"
+msgstr "Statistikker"
+
+#: src/GameText.h:441 src/GameText.h:837
+msgid "By best driver"
+msgstr "Efter bedste kører"
+
+#: src/GameText.h:442
+msgid "By length"
+msgstr "Efter længde"
+
+#: src/GameText.h:444
+msgid "Password"
+msgstr "Kodeord"
+
+#: src/GameText.h:445 src/GameText.h:446
+msgid "Personal"
+msgstr "Personlig"
+
+#: src/GameText.h:447
+#, c-format
+msgid "%i player"
+msgid_plural "%i players"
+msgstr[0] "%i spiller"
+msgstr[1] "%i spillere"
+
+#: src/GameText.h:448
+msgid "Player Profile"
+msgstr "Spiller profil"
+
+#: src/GameText.h:449
+msgid "Player Profiles"
+msgstr "Spiller profiler"
+
+#: src/GameText.h:450
+msgid "Pause when playing X-Moto"
+msgstr "Pause når der spilles X-Moto"
+
+#: src/GameText.h:451
+msgid "Play Next Level"
+msgstr "Næste bane"
+
+#: src/GameText.h:452 src/GameText.h:583
+msgid "Port"
+msgstr "Port"
+
+#: src/GameText.h:453
+#, c-format
+msgid "Press key you want to '%s' or ESC to cancel..."
+msgstr "Pres den tast du vil have som  '%s'  eller ESC for at anullere"
+
+#: src/GameText.h:454
+#, c-format
+msgid "Press %s to chat"
+msgstr "Tryk %s for at chatte"
+
+#: src/GameText.h:455
+msgid "Proxy Server"
+msgstr "Proxy Server"
+
+#: src/GameText.h:456
+msgid "Configure Proxy..."
+msgstr "Konfigurer Proxy..."
+
+#: src/GameText.h:457
+msgid "Quality"
+msgstr "kvalitet"
+
+#: src/GameText.h:458
+msgid ""
+"Sorry, but there aren't enough levels matching your choice.\n"
+"Choosing random levels instead"
+msgstr ""
+"Beklager, men der er ikke nok baner der matcher dit valg. Vælger tilfældige "
+"baner i stedet for."
+
+#: src/GameText.h:459
+msgid "Quick start"
+msgstr "Hurtig start"
+
+#: src/GameText.h:460
+msgid "Quit Game"
+msgstr "Afslut spillet"
+
+#: src/GameText.h:461
+msgid "Do you really want to quit?"
+msgstr "Ønsker du virkelig at afslutte?"
+
+#: src/GameText.h:462
+msgid "Randomize"
+msgstr "Bland"
+
+#: src/GameText.h:463
+msgid "Reload files to the database"
+msgstr "Genindlæs filer til databasen"
+
+#: src/GameText.h:464
+msgid "Reloading levels..."
+msgstr "Genindlæser baner"
+
+#: src/GameText.h:465
+msgid "Reloading replays..."
+msgstr "Genindlæser replays"
+
+#: src/GameText.h:466
+msgid "Reloading themes..."
+msgstr "Genindlæser temaer..."
+
+#: src/GameText.h:467
+msgid "Replay"
+msgstr "Replay"
+
+#: src/GameText.h:468
+msgid ""
+"  Stop:\n"
+"    >>\n"
+"   < >\n"
+" Speed:"
+msgstr ""
+"Stop:\n"
+" >>\n"
+" <>\n"
+" Speed:"
+
+#: src/GameText.h:469
+msgid ""
+"[esc] , [space]\n"
+"[right key]\n"
+"[up/down keys]\n"
+msgstr ""
+"[esc] , [space]\n"
+"[højre pil]\n"
+"[op/ned pile]\n"
+
+#: src/GameText.h:470
+msgid ""
+"  Stop:\n"
+"<< >>\n"
+"   < >\n"
+" Speed:"
+msgstr ""
+"  Stop:\n"
+"<< >>\n"
+"   < >\n"
+" Speed:"
+
+#: src/GameText.h:471
+msgid ""
+"[esc] , [space]\n"
+"[left/right keys]\n"
+"[up/down keys]\n"
+msgstr ""
+"[esc] , [space]\n"
+"[venstre/højre pile]\n"
+"[op/ned pile]\n"
+
+#: src/GameText.h:472
+msgid "The replay can't be played!"
+msgstr "Replayen kan ikke afspilles!"
+
+#: src/GameText.h:473
+#, c-format
+msgid "Replay of %s"
+msgstr "Replay af %s"
+
+#: src/GameText.h:474
+msgid "Replays"
+msgstr "Replays"
+
+#: src/GameText.h:475
+msgid "Rewind while replaying"
+msgstr "Spol tilbage under replay"
+
+#: src/GameText.h:476
+msgid "Forward while replaying"
+msgstr "Forward under replay"
+
+#: src/GameText.h:477
+msgid "Pause while replaying"
+msgstr "Pause under replay"
+
+#: src/GameText.h:478
+msgid "Stop while replaying"
+msgstr "Stop ved replay"
+
+#: src/GameText.h:479
+msgid "Play faster while replaying"
+msgstr "Kør hurtigere under replay"
+
+#: src/GameText.h:480
+msgid "Play a bit faster while replaying"
+msgstr "Afspil en smule hurtigere under replay"
+
+#: src/GameText.h:481
+msgid "Play slower while replaying"
+msgstr "Afspil langsommere under replay"
+
+#: src/GameText.h:482
+msgid "Play a bit slower while replaying"
+msgstr "Afspil en smule langsommere under replay"
+
+#: src/GameText.h:483
+msgid "Are you sure you want to reset config to defaults ?"
+msgstr "Er du sikker på at du vil sætte indstillingerne til standard ?"
+
+#: src/GameText.h:484
+msgid "Restart This Level"
+msgstr "Genstart denne bane"
+
+#: src/GameText.h:485
+msgid "Restart to the last checkpoint"
+msgstr "Genstart ved seneste checkpoint"
+
+#: src/GameText.h:486
+msgid "Restart level"
+msgstr "Genstart bane"
+
+#: src/GameText.h:487
+msgid "Resume Playing"
+msgstr "Fortsæt..."
+
+#: src/GameText.h:489
+msgid "Run Windowed"
+msgstr "Kør i vindue"
+
+#: src/GameText.h:490
+msgid "Save"
+msgstr "Gem"
+
+#: src/GameText.h:491
+#, c-format
+msgid "Saved as %s"
+msgstr "Gemt som %s"
+
+#: src/GameText.h:492
+msgid "Save Replay"
+msgstr "Gem Replay"
+
+#: src/GameText.h:493
+msgid "Screen Resolution"
+msgstr "Skærmopløsning"
+
+#: src/GameText.h:494
+msgid "Screenshot"
+msgstr "Skærmdump"
+
+#: src/GameText.h:495
+msgid "Show"
+msgstr "Vis"
+
+#: src/GameText.h:496
+msgid "Show console"
+msgstr "Vis konsol"
+
+#: src/GameText.h:497
+msgid "Speedometer"
+msgstr "Speedometer"
+
+#: src/GameText.h:498
+msgid "Info..."
+msgstr "Info..."
+
+#: src/GameText.h:499
+msgid "Show Mini Map"
+msgstr "Vis minimap"
+
+#: src/GameText.h:500
+msgid "Play!"
+msgstr "Spil!"
+
+#: src/GameText.h:502
+msgid "STATS"
+msgstr "STATS"
+
+#: src/GameText.h:503
+msgid "You are currently disconnected"
+msgstr "Du er ikke tilsluttet"
+
+#: src/GameText.h:504
+msgid "Stereo"
+msgstr "Stereo"
+
+#: src/GameText.h:505
+msgid "Synchronisation down"
+msgstr "Synkronisation nede"
+
+#: src/GameText.h:506
+msgid "Synchronisation up"
+msgstr "Synkronisation oppe"
+
+#: src/GameText.h:507
+msgid "Synchronisation done successfully"
+msgstr "synkronisation udført"
+
+#: src/GameText.h:508
+#, c-format
+msgid "Key '%s' of Player '%i' has been switched to '%s'"
+msgstr "Spilleren '%s's tast '%i' er skiftet til '%s' "
+
+#: src/GameText.h:510
+msgid "Add/remove to favorite levels"
+msgstr "Tilføj/fjern til favoritter"
+
+#: src/GameText.h:511
+msgid "Switch FPS"
+msgstr "Skift FPS"
+
+#: src/GameText.h:512
+msgid "Add/remove to blacklisted levels"
+msgstr "Tilføj/fjern til dårlige baner"
+
+#: src/GameText.h:513
+msgid "Switch net game mode"
+msgstr ""
+
+#: src/GameText.h:514
+msgid "Switch highscore information"
+msgstr ""
+
+#: src/GameText.h:515
+msgid "Switch WWW access"
+msgstr "Skift WWW adgang"
+
+#: src/GameText.h:516
+msgid "Switch graphics quality mode"
+msgstr "Skift den grafiske kvalitet"
+
+#: src/GameText.h:517
+msgid "Switch graphics mode"
+msgstr "Skift grafik mode"
+
+#: src/GameText.h:519
+msgid "Available"
+msgstr "Tilgængelig"
+
+#: src/GameText.h:520
+msgid "To download"
+msgstr "At hente"
+
+#: src/GameText.h:521
+msgid "To be updated"
+msgstr "At blive opdateret"
+
+#: src/GameText.h:522
+msgid "The theme is now up to date"
+msgstr "Temaet er nu opdateret"
+
+#: src/GameText.h:523
+msgid "Time"
+msgstr "Tid"
+
+#: src/GameText.h:524
+msgid "Try This Level Again"
+msgstr "Prøv igen"
+
+#: src/GameText.h:525
+msgid "Tutorial"
+msgstr "Tutorial"
+
+#: src/GameText.h:526
+msgid "Undefined"
+msgstr "Udefineret"
+
+#: src/GameText.h:527
+msgid "Unknown"
+msgstr "Ukendt"
+
+#: src/GameText.h:528
+msgid "Unknown players :"
+msgstr "Ukendte spillere :"
+
+#: src/GameText.h:529
+msgid "Unpacked levels"
+msgstr "Upakkede baner"
+
+#: src/GameText.h:530
+msgid ""
+"Can't update this theme !\n"
+"The theme is not available on the web\n"
+"or your theme list is not up to date"
+msgstr ""
+"Kunne ikke opdatere temaet !\n"
+"Temaet er ikke tilgængeligt på nettet\n"
+"eller din tema-liste er ikke opdateret"
+
+#: src/GameText.h:531
+msgid "Update"
+msgstr "Opdater"
+
+#: src/GameText.h:532
+msgid "Updated"
+msgstr "Opdateret"
+
+#: src/GameText.h:533
+msgid "Check WWW"
+msgstr "Tjek WWW"
+
+#: src/GameText.h:534
+msgid "Update the rooms list"
+msgstr "Opdater rum-listen"
+
+#: src/GameText.h:535
+msgid "Update the theme list"
+msgstr "Opdater tema-listen"
+
+#: src/GameText.h:536
+msgid "Updating level lists..."
+msgstr "Opdaterer bane-listen..."
+
+#: src/GameText.h:537
+msgid "Upload"
+msgstr "Upload"
+
+#: src/GameText.h:538
+msgid "Upload all highscores"
+msgstr "Upload alle rekorder"
+
+#: src/GameText.h:539
+msgid ""
+"An unexpected error has occurred. There may be some problems with the web "
+"site."
+msgstr "En uforventet fejl opstod. Måske er der problemer med websiden"
+
+#: src/GameText.h:540
+msgid "Oh no !"
+msgstr "Ã…h nej!"
+
+#: src/GameText.h:541
+msgid "Uploading the highscore..."
+msgstr "Uploader rekorden..."
+
+#: src/GameText.h:542
+msgid "Use crappy information"
+msgstr "Brug informationer om dårlige baner"
+
+#: src/GameText.h:543
+msgid "Use permanent console"
+msgstr "Anvend permanent konsol"
+
+#: src/GameText.h:544
+msgid "Use Environment Vars"
+msgstr "Brug omgivelses variabler"
+
+#: src/GameText.h:545
+msgid "Use Profile"
+msgstr "Brug profil"
+
+#: src/GameText.h:546
+msgid "Allow web forms"
+msgstr "Tillad internet stemmer"
+
+#: src/GameText.h:547
+msgid "Using HTTP Proxy"
+msgstr "Bruger http proxy"
+
+#: src/GameText.h:548
+msgid "Using SOCKS4 Proxy"
+msgstr "Bruger SOCKS4 Proxy"
+
+#: src/GameText.h:549
+msgid "Using SOCKS5 Proxy"
+msgstr "Bruger SOCKS5 Proxy"
+
+#: src/GameText.h:550
+msgid "Video"
+msgstr "Video"
+
+#: src/GameText.h:551
+msgid "View"
+msgstr "Se"
+
+#: src/GameText.h:552 src/GameText.h:640
+msgid "View the replay"
+msgstr "Afspil replay"
+
+#: src/GameText.h:553
+msgid "View the highscore"
+msgstr "Se rekorden"
+
+#: src/GameText.h:554
+#, c-format
+msgid "Do you want to update level \"%s\"?"
+msgstr "Vil du opdatere banen \"%s\"?"
+
+#: src/GameText.h:555
+msgid "Warning"
+msgstr "Advarsel"
+
+#: src/GameText.h:557
+msgid "WWW"
+msgstr "WWW"
+
+#: src/GameText.h:558
+msgid "Reference room"
+msgstr "Reference rum"
+
+#: src/GameText.h:559
+#, c-format
+msgid "Room %i"
+msgstr "Rum %i"
+
+#: src/GameText.h:561
+#, c-format
+msgid "%d hours"
+msgstr "%d timer"
+
+#: src/GameText.h:562
+#, c-format
+msgid "%d minutes"
+msgstr "%d minutter"
+
+#: src/GameText.h:563
+#, c-format
+msgid "only %i"
+msgid_plural "only %i"
+msgstr[0] "kun %i"
+msgstr[1] "kun %i"
+
+#: src/GameText.h:565
+#, c-format
+msgid "Stats since: %s"
+msgstr "Statistikker siden: %s"
+
+#: src/GameText.h:566
+#, c-format
+msgid "X-Moto started %d time"
+msgid_plural "X-Moto started %d times"
+msgstr[0] "X-Moto er opstartet %d gang"
+msgstr[1] "X-Moto er opstartet %d gange"
+
+#: src/GameText.h:567
+#, c-format
+msgid "%d different level"
+msgid_plural "%d different levels"
+msgstr[0] "%d forskellige baner"
+msgstr[1] "%d forskellige baner"
+
+#: src/GameText.h:568
+#, c-format
+msgid "Time played: %s"
+msgstr "Tid spillet: %s"
+
+#: src/GameText.h:569
+#, c-format
+msgid "%d play"
+msgid_plural "%d plays"
+msgstr[0] "%i spil"
+msgstr[1] "%i spil"
+
+#: src/GameText.h:570
+#, c-format
+msgid "%d death"
+msgid_plural "%d deaths"
+msgstr[0] "død %d gang"
+msgstr[1] "død %d gange"
+
+#: src/GameText.h:571
+#, c-format
+msgid "%d finished"
+msgid_plural "%d finished"
+msgstr[0] "%d gennemført"
+msgstr[1] "%d gennemførte"
+
+#: src/GameText.h:572
+#, c-format
+msgid "%d restart"
+msgid_plural "%d restarts"
+msgstr[0] "%d genstart"
+msgstr[1] "%d genstarter"
+
+#: src/GameText.h:574
+#, c-format
+msgid "%d seconds"
+msgstr "%d sekunder"
+
+#: src/GameText.h:575
+msgid "Yes"
+msgstr "Ja"
+
+#: src/GameText.h:576
+msgid "Yes to all"
+msgstr "Ja til alle"
+
+#: src/GameText.h:577
+msgid "Your best time"
+msgstr "Din bedste tid"
+
+#: src/GameText.h:578
+msgid "Zoom in"
+msgstr "Zoom ind"
+
+#: src/GameText.h:579
+msgid "Reinitialize zoom"
+msgstr "Genstart zoom"
+
+#: src/GameText.h:580
+msgid "Zoom out"
+msgstr "Zoom ud"
+
+#: src/GameText.h:582
+msgid "Server"
+msgstr "Server"
+
+#: src/GameText.h:584
+msgid "Launch at startup"
+msgstr "Sæt i gang ved opstart"
+
+#: src/GameText.h:585
+msgid "Start the server"
+msgstr "Start serveren"
+
+#: src/GameText.h:586
+msgid "Stop the server"
+msgstr "Stop serveren"
+
+#: src/GameText.h:587
+msgid "Server is currently started"
+msgstr "Serveren kører"
+
+#: src/GameText.h:588
+msgid "Server is currently stopped"
+msgstr "Serveren er stoppet"
+
+#: src/GameText.h:589
+msgid "Default port"
+msgstr "Standard port"
+
+#: src/GameText.h:590
+msgid "Custom port"
+msgstr "Anden port"
+
+#: src/GameText.h:591
+msgid "Network"
+msgstr "Netværk"
+
+#: src/GameText.h:592
+msgid "Network admin console"
+msgstr ""
+
+#: src/GameText.h:593
+msgid "Simple ghost mode"
+msgstr "Simple spøgelser"
+
+#: src/GameText.h:594
+msgid "You're currently connected"
+msgstr "Du er tilsluttet"
+
+#: src/GameText.h:595
+msgid "You're currently disconnected"
+msgstr "Du er ikke tilsluttet"
+
+#: src/GameText.h:596
+msgid "Connect"
+msgstr "Tilslut"
+
+#: src/GameText.h:597
+msgid "Disconnect"
+msgstr "Afbryd"
+
+#: src/GameText.h:598
+msgid "Unable to connect on the server"
+msgstr "Kunne ikke oprette forbindelse til serveren"
+
+#: src/GameText.h:599
+msgid "Network error: you're disconnected"
+msgstr "Netværksfejl: Forbindelse afbrydt"
+
+#: src/GameText.h:600
+msgid "Connected players:"
+msgstr "Forbundne spillere:"
+
+#: src/GameText.h:601
+msgid "Chat message"
+msgstr "Chat besked"
+
+#: src/GameText.h:602
+#, c-format
+msgid "%s joined the game"
+msgstr "%s trådte ind"
+
+#: src/GameText.h:603
+#, c-format
+msgid "%s left the game"
+msgstr "%s forlod spillet"
+
+#: src/GameText.h:604
+#, c-format
+msgid "%s is playing level %s"
+msgstr "%s spiller banen %s"
+
+#: src/GameText.h:605
+msgid "Connexion at startup"
+msgstr "Forbindelse ved opstart"
+
+#: src/GameText.h:614
+msgid "Download the latest X-Moto world records and check for new levels"
+msgstr "Hent de seneste X-Moto rekorder og tjek efter nye baner"
+
+#: src/GameText.h:615
+msgid "Configure how you are connected to the Internet"
+msgstr "Konfigurer hvordan du er forbundet til internettet"
+
+#: src/GameText.h:616
+msgid "Play this level again"
+msgstr "Prøv denne bane igen"
+
+#: src/GameText.h:617
+msgid "Save a replay for later viewing"
+msgstr "Gem en replay til senere"
+
+#: src/GameText.h:618
+msgid "Play next level"
+msgstr "Spil næste bane"
+
+#: src/GameText.h:619
+msgid "Back to the main menu"
+msgstr "Tilbage til hovedmenuen"
+
+#: src/GameText.h:620
+msgid "Quit the game"
+msgstr "Afslut spillet"
+
+#: src/GameText.h:621
+msgid "Back to the game"
+msgstr "Tilbage til spillet"
+
+#: src/GameText.h:622
+msgid "Try this level again from the beginning"
+msgstr "Prøv denne bane igen fra starten"
+
+#: src/GameText.h:623
+msgid "Play next level instead"
+msgstr "Spil næste bane i stedet"
+
+#: src/GameText.h:624
+msgid "Try this level again"
+msgstr "Prøv denne bane igen"
+
+#: src/GameText.h:625
+msgid "Built-in and stand-alone external levels"
+msgstr "Build-in og eksterne baner"
+
+#: src/GameText.h:626
+msgid "Levels grouped together in level packs"
+msgstr "Baner samlet sammen i pakker"
+
+#: src/GameText.h:627
+msgid "Browse levels available to you"
+msgstr "Kig baner tilgængelige igennem"
+
+#: src/GameText.h:628
+msgid "View list of recorded replays"
+msgstr "Vis liste over optagede replays"
+
+#: src/GameText.h:629
+msgid "Configure X-Moto preferences"
+msgstr "Konfigurer X-Moto indstillinger"
+
+#: src/GameText.h:630
+msgid "Instructions of how to play X-Moto"
+msgstr "Instruktioner om hvordan man spiller X-Moto"
+
+#: src/GameText.h:631
+msgid "Change player profile"
+msgstr "Skift spiller profil"
+
+#: src/GameText.h:632
+msgid "Play tutorial of how to play the game"
+msgstr "Spil tutorial og lær hvordan man spiller spillet"
+
+#: src/GameText.h:633
+msgid "Play the selected level"
+msgstr "Spil den valgte bane"
+
+#: src/GameText.h:634
+msgid "View general information about the level, best times, and replays"
+msgstr "Vis genreral info omkring banen, bedste tider og replays"
+
+#: src/GameText.h:635
+msgid "Run the selected replay"
+msgstr "Afspil den valgte replay"
+
+#: src/GameText.h:636
+msgid "Permanently delete the selected replay"
+msgstr "Slet den valgte replay permanent"
+
+#: src/GameText.h:637
+msgid "Show replays of all players in list"
+msgstr "Vis replays af alle kørere i listen "
+
+#: src/GameText.h:638
+msgid "General X-Moto preferences"
+msgstr "Generalle X-Moto indstillinger"
+
+#: src/GameText.h:639
+msgid "Configure graphical options"
+msgstr "Konfigurer grafiske indstillinger"
+
+#: src/GameText.h:641
+msgid "Configure audio options"
+msgstr "Konfigurer lyd indstillinger"
+
+#: src/GameText.h:642
+msgid "Configure control options"
+msgstr "Konfigurer kontrol indstillinger"
+
+#: src/GameText.h:643
+msgid "Configure controls of Player"
+msgstr "Indstil spillerens styring"
+
+#: src/GameText.h:644
+msgid "Configure general controls"
+msgstr "Indstil generel styring"
+
+#: src/GameText.h:645
+msgid "Save options"
+msgstr "Gem indstillinger"
+
+#: src/GameText.h:646
+msgid "Revert options to defaults"
+msgstr "Sæt indstillingerne til standart"
+
+#: src/GameText.h:647
+msgid "Show a map of your surroundings when playing"
+msgstr "Viser et kort med dine omgivelser når du spiller"
+
+#: src/GameText.h:648
+msgid "Automatically download best times off the net when the game starts"
+msgstr "Hent automatisk de bedste tider, når spillet startes"
+
+#: src/GameText.h:649
+msgid "Show the World Record for a given level when playing"
+msgstr "Vis verdensrekorden når du spiller"
+
+#: src/GameText.h:650
+msgid "Show the time you need before achieving the next medal"
+msgstr "Vis tiden du skal bruge for at få næste pris"
+
+#: src/GameText.h:651
+msgid "Use crappy information from the website to update the crappy pack"
+msgstr "Brug informationer fra websiden til at opdatere den dårlige pakke"
+
+#: src/GameText.h:652
+msgid "Make console messages not disappear"
+msgstr "Lad konsol beskeder blive stående"
+
+#: src/GameText.h:653
+msgid "Allow X-Moto to ask you your mind about levels"
+msgstr "Tillad X-Moto at spørge hvad du synes om banerne"
+
+#: src/GameText.h:654
+msgid "Enable high-color graphics"
+msgstr "High-color grafik til/fra"
+
+#: src/GameText.h:655
+msgid "Enable true-color graphics"
+msgstr "True-clor grafik til/fra"
+
+#: src/GameText.h:656
+msgid "Select graphics resolution"
+msgstr "Vælg grafik opløsning"
+
+#: src/GameText.h:657
+msgid "Run the game in a window"
+msgstr "Kør spillet i et vindue"
+
+#: src/GameText.h:658
+msgid "Not so fancy menu graphics"
+msgstr "Den værste menu grafik"
+
+#: src/GameText.h:659
+msgid "A bit more fancy menu graphics"
+msgstr "Den lidt bedre menu grafik"
+
+#: src/GameText.h:660
+msgid "Fanciest menu graphics"
+msgstr "Den bedste menu grafik"
+
+#: src/GameText.h:661
+msgid "Disable most graphics not important to the gameplay"
+msgstr "Fjerner det meste af den grafik der ikke er vigtig for gameplay"
+
+#: src/GameText.h:662
+msgid "Disable some of the most resource-intensive graphics, like particles"
+msgstr ""
+"Fjerne nogle af de mest ressourcekrævende grafiske elementer, som partikler"
+
+#: src/GameText.h:663
+msgid "Enable all graphical effects"
+msgstr "Alle grafiske effekter"
+
+#: src/GameText.h:664
+msgid "Turn on sound effects"
+msgstr "Sætter lyd på"
+
+#: src/GameText.h:665
+msgid "Poor sound quality"
+msgstr "Dårlig lyd-kvalitet"
+
+#: src/GameText.h:666
+msgid "Normal sound quality"
+msgstr "Normal lyd-kvalitet"
+
+#: src/GameText.h:667
+msgid "Best sound quality"
+msgstr "Bedste lyd-kvalitet"
+
+#: src/GameText.h:668
+msgid "8-bit sound samples, poor quality"
+msgstr "8-bit lyd-spor, dårlig kvalitet"
+
+#: src/GameText.h:669
+msgid "16-bit sound samples, good quality"
+msgstr "16-bit lyd-spor, god kvalitet"
+
+#: src/GameText.h:670
+msgid "Mono (single channel) audio"
+msgstr "Mono (en kanal) lyd"
+
+#: src/GameText.h:671
+msgid "Stereo (two channel) audio"
+msgstr "Stereo (to kanaler) lyd"
+
+#: src/GameText.h:672
+msgid "Turn on engine noise"
+msgstr "Sætter motor lyd på"
+
+#: src/GameText.h:673
+msgid "Select action to re-configure to another key"
+msgstr "Vælg en aktion for at konfigurere til en anden tast"
+
+#: src/GameText.h:674
+msgid "View contents of level pack"
+msgstr "Vis indholdet af pakken"
+
+#: src/GameText.h:675
+msgid "Select a player profile to use"
+msgstr "Vælg en spiller profil til brug"
+
+#: src/GameText.h:676
+msgid "Use the selected player profile"
+msgstr "Brug valgte spiller profil"
+
+#: src/GameText.h:677
+msgid "Create new player profile"
+msgstr "Lav en ny profil"
+
+#: src/GameText.h:678
+msgid "Permanently delete selected player profile, including best times"
+msgstr "Sletter permanent den valgte spiller profil, inklusiv de bedste tider"
+
+#: src/GameText.h:679
+msgid "Select a level in the level pack to play"
+msgstr "Vælg en bane i pakken"
+
+#: src/GameText.h:680
+msgid "Close level pack"
+msgstr "Vælg bane pakke"
+
+#: src/GameText.h:681
+msgid "General information about the level"
+msgstr "General info omkring banen"
+
+#: src/GameText.h:682
+msgid "View best times for the level"
+msgstr "Vis bedste tider for banen"
+
+#: src/GameText.h:683
+msgid "View locally stored replays of the level"
+msgstr "Vis lokale gemte replays af banen"
+
+#: src/GameText.h:684
+msgid "Only show personal best times for this level"
+msgstr "Vis kun personelige bedste tider for denne bane"
+
+#: src/GameText.h:685
+msgid "Show all best times for this level"
+msgstr "Vis alle bedste tider for denne bane"
+
+#: src/GameText.h:686
+msgid "Only show personal replays for this level"
+msgstr "Vis kun personelige replays for denne bane"
+
+#: src/GameText.h:687
+msgid "Show all replays for this level"
+msgstr "Vis alle replays for denne bane"
+
+#: src/GameText.h:688
+msgid "Show information about new players and played levels in the console"
+msgstr "Vis information om nye spillere og spillede baner i konsollen"
+
+#: src/GameText.h:689
+msgid "Run selected replay"
+msgstr "Vis valgte replay"
+
+#: src/GameText.h:690
+msgid "Show helpful help strings such as this one"
+msgstr "Vis hjælpe tekster som denne her"
+
+#: src/GameText.h:691
+msgid ""
+"Let X-Moto look for more levels on the net, and install them automatically"
+msgstr ""
+"Lad X-Moto kigge efter flere baner på nettet, og installere dem automatisk"
+
+#: src/GameText.h:692
+msgid "Select this if you got a direct connection to the Internet"
+msgstr "Vælg dette hvis du har en direkte forbindelse til internettet"
+
+#: src/GameText.h:693
+msgid "Select this if you connect to the Internet through an HTTP proxy"
+msgstr ""
+"Vælg dette hvis du har forbindelse til internettet gennem en HTTP proxy"
+
+#: src/GameText.h:694
+msgid "Select this if you connect to the Internet through a SOCKS4 proxy"
+msgstr ""
+"Vælg dette hvis du har forbindelse til internettet gennem en SOCKS4 proxy"
+
+#: src/GameText.h:695
+msgid "Select this if you connect to the Internet through a SOCKS5 proxy"
+msgstr ""
+"Vælg dette hvis du har forbindelse til internettet gennem en SOCKS5 proxy"
+
+#: src/GameText.h:696
+msgid "Use these settings"
+msgstr "Brug disse indstillinger"
+
+#: src/GameText.h:697
+msgid "Write the IP address or host name of proxy server to use"
+msgstr "Skriv IP addressen eller host navnet på proxy serveren"
+
+#: src/GameText.h:698
+msgid "Write the port number used by the proxy server"
+msgstr "Skriv port nummeret som proxy serveren bruger"
+
+#: src/GameText.h:699
+msgid "New levels and levels updated from the Internet"
+msgstr "Nye baner og opdaterede baner fra internettet"
+
+#: src/GameText.h:701
+msgid "Show the ghost if possible in the game"
+msgstr "Vis spøgelset inde i spillet hvis muligt"
+
+#: src/GameText.h:702
+msgid "Choose which ghost to display"
+msgstr "Vælg hvilket spøgelse der skal vises"
+
+#: src/GameText.h:703
+msgid ""
+"Make motion blur effect for the ghost (if supported by your graphics card)"
+msgstr ""
+"Lav bevægelses-slør efter spøgelset (kun hvis det er understøttet af dit "
+"grafik kort)"
+
+#: src/GameText.h:704
+msgid "When starting a level with a ghost, display who the ghost is of"
+msgstr "Når en bane startes med et spøgelse, vis hvem spøgelset er"
+
+#: src/GameText.h:705
+msgid "Display an arrow to display where are located the bikes on the map"
+msgstr "Viser en pil der viser hvor de andre kører er i banen"
+
+#: src/GameText.h:706
+msgid "Display the time difference between the ghost and you"
+msgstr "Vis tids-forskellen mellem spøgelset og dig"
+
+#: src/GameText.h:707
+msgid "If you make a highscore it will automatically be saved as a replay"
+msgstr "Hvis du laver en rekord bliver den automatisk gemt som en replay"
+
+#: src/GameText.h:708
+msgid "Disable block animations (if X-Moto runs slowly)"
+msgstr "Slå blok animationer fra (hvis X-Moto kører langsomt)"
+
+#: src/GameText.h:709
+msgid "View the replay of the room's highscore"
+msgstr "Vis replayen af rummets rekord"
+
+#: src/GameText.h:711
+msgid "Check for new levels at startup"
+msgstr "Tjek for nye baner ved opstart"
+
+#: src/GameText.h:712
+msgid "Check for new highscores at startup"
+msgstr "Tjek for nye rekorder ved opstart"
+
+#: src/GameText.h:714
+msgid "Show various statistics about X-Moto"
+msgstr "Vis forskellige statistikker om X-Moto"
+
+#: src/GameText.h:715
+msgid "Update statistics (also happens each time X-Moto is started)"
+msgstr "Opdaterer statistikker (Det sker også når X-Moto startes)"
+
+#: src/GameText.h:716
+msgid "Enables background music in the main menu"
+msgstr "Baggrunds musik i menuen til/fra"
+
+#: src/GameText.h:717
+msgid "Enables background music while playing"
+msgstr "Tillader baggrundsmusik når du spiller"
+
+#: src/GameText.h:719
+msgid "Choose the X-Moto graphics theme"
+msgstr "Vælg X-Moto grafiske tema"
+
+#: src/GameText.h:720
+msgid "Check for new themes on the web"
+msgstr "Tjek efter nye temaer på nettet"
+
+#: src/GameText.h:721
+msgid "Download or update the selected theme"
+msgstr "Hent eller opdater det valgte tema"
+
+#: src/GameText.h:722
+msgid "Upload the replay on the website of highscores"
+msgstr "Uploader replayen på rekord-siden"
+
+#: src/GameText.h:723
+msgid "Upload your best replays to your room (useful when it is just created)"
+msgstr "Uploader dine bedste replays til rummet (nyttigt når rummet er nyt)"
+
+#: src/GameText.h:724
+msgid "Configure the main www options"
+msgstr "Konfigurerer de grundlæggende www indstillinger"
+
+#: src/GameText.h:725
+msgid "Configure the www options"
+msgstr "Konfigurer www indstillingerne"
+
+#: src/GameText.h:726
+msgid ""
+"Choose where to upload/download replays, highscore lists (for more "
+"information, check the website)"
+msgstr "Vælg hvor upload og hentning sker til og fra"
+
+#: src/GameText.h:727
+msgid "Choose your room"
+msgstr "Vælg dit rum"
+
+#: src/GameText.h:728
+msgid "Get the rooms list from the web"
+msgstr "Få rum-listen fra nettet"
+
+#: src/GameText.h:729
+msgid "Upload of highscore requires to log in (Except for WR)"
+msgstr ""
+"Upload af rekorder kræver at man logger ind (undtagen for verdensrekorder)"
+
+#: src/GameText.h:730
+msgid "Upload of highscore requires a password (Except for WR)"
+msgstr "Upload af rekorder kræver kodeord (undtagen for verdensrekorder)"
+
+#: src/GameText.h:731
+msgid "Show the speedometer when playing"
+msgstr "Vis speedometer når der spilles"
+
+#: src/GameText.h:732
+msgid "Enable animation of bike falling apart when dead"
+msgstr "Animation af cyklen der falder fra hinanden når man dør til/fra"
+
+#: src/GameText.h:733
+msgid "Automatically scroll over the level before starting playing it"
+msgstr "Automatisk scroll over banen før at den spilles"
+
+#: src/GameText.h:734
+msgid "Run a dynamic zoom while playing"
+msgstr "Brug dynamisk zoom når du spiller"
+
+#: src/GameText.h:735
+msgid "Use a camera that directs to the shortest path through the level"
+msgstr "Brug et camera der viser dig den korteste rute igennem banen."
+
+#: src/GameText.h:736
+msgid "View the X-Moto credits"
+msgstr "Vis X-Moto credits"
+
+#: src/GameText.h:737
+msgid "Name of replay"
+msgstr "Navn på replay"
+
+#: src/GameText.h:738
+msgid "Level played in replay"
+msgstr "Bane spillet i replayen"
+
+#: src/GameText.h:739
+msgid "Player who recorded the replay"
+msgstr "Spiller som optog replayen"
+
+#: src/GameText.h:740
+msgid "Click to select screen resolution"
+msgstr "Klik for at vælge skærmopløsning"
+
+#: src/GameText.h:741
+msgid "Completed levels / total number of levels in pack"
+msgstr "Gennemførte baner / totalt antal af baner i pakken"
+
+#: src/GameText.h:742
+msgid "Name of level pack"
+msgstr "Navn på pakken"
+
+#: src/GameText.h:743
+msgid "Add the level to the favorite levels list"
+msgstr "Tilføj banen til favorit-listen"
+
+#: src/GameText.h:744
+msgid "Delete the level from the favorite levels list"
+msgstr "Slet banen fra favorit-listen"
+
+#: src/GameText.h:745
+msgid "Puzzle the levels pack list"
+msgstr "Blander banerne i pakken"
+
+#: src/GameText.h:746
+msgid "Enter text to filter the level list"
+msgstr "Skriv for at sortere i bane-listen"
+
+#: src/GameText.h:747
+msgid "Choose the number of players"
+msgstr "Vælg antal af spillere"
+
+#: src/GameText.h:748
+msgid "Your proxy login"
+msgstr "Dit proxy login"
+
+#: src/GameText.h:749
+msgid "Your password associated with your login"
+msgstr "Dit kodeord forbundet med dit login"
+
+#: src/GameText.h:750
+msgid "Enter text to filter the replay list"
+msgstr "Skriv for at søge i replay-listen"
+
+#: src/GameText.h:751
+msgid "Enter text to filter the rooms list"
+msgstr "Skriv for at søge i listen"
+
+#: src/GameText.h:752
+msgid "Press to play X-Moto immediately"
+msgstr "Tryk for at spille X-Moto med det samme"
+
+#: src/GameText.h:753
+msgid "Increase or decrease the quality of the levels selected"
+msgstr "forøger eller formindsker kvaliteten af banerne"
+
+#: src/GameText.h:754
+msgid "Increase or decrease the difficulty of the levels selected"
+msgstr "forøger eller formindsker sværhedsgraden af banerne"
+
+#: src/GameText.h:755
+msgid ""
+"Stop the game once a player ends the level or continue while a player is "
+"running"
+msgstr ""
+"Stopper spillet når en spiller gennemfører banen, eller fortsætter når en "
+"spiller kører"
+
+#: src/GameText.h:760
+msgid "Don't show the ghosts while playing"
+msgstr "Vis ikke spøgelset når man spiller"
+
+#: src/GameText.h:761
+msgid "The scene is shared by all the players"
+msgstr "Denne scene er delt med alle spillerne"
+
+#: src/GameText.h:762
+msgid "Change the X-Moto language"
+msgstr "Skift sproget i X-Moto"
+
+#: src/GameText.h:763
+msgid "Name of the language"
+msgstr "Navn på sproget"
+
+#: src/GameText.h:764
+msgid "Code of the language"
+msgstr "Sprog kode"
+
+#: src/GameText.h:765
+msgid "Delete replays that X-Moto estimates to be not interesting to keep"
+msgstr "Fjern replays som X-Moto afgøre ikke er interessante at beholde"
+
+#: src/GameText.h:766
+msgid "Remove levels not suitable for children"
+msgstr "Fjern baner børn ikke bør spille"
+
+#: src/GameText.h:767
+msgid "Enable this room"
+msgstr "Brug dette rum"
+
+#: src/GameText.h:768
+msgid "Password associated to your profile for web access"
+msgstr "Kodeord forbundet til din profil for webadgang"
+
+#: src/GameText.h:769
+msgid "Main options"
+msgstr "Hoved indstillingerne"
+
+#: src/GameText.h:770
+msgid "Configure the X-Moto theme"
+msgstr "Konfigurér X-Moto temaet"
+
+#: src/GameText.h:771
+msgid "Configure ghosts displayed while playing the game"
+msgstr "Konfigurér spøgelset man kører imod"
+
+#: src/GameText.h:772
+msgid "Configure options linked to your X-Moto database"
+msgstr "Konfigurér indstillingerne om din Database"
+
+#: src/GameText.h:773
+msgid "Synchronise your database on the web"
+msgstr "Synkroniser din database på internettet"
+
+#: src/GameText.h:774
+msgid "Synchronise your database when your quit X-Moto"
+msgstr "Synkroniser din database når du afslutter X-Moto"
+
+#: src/GameText.h:775
+msgid "Enable joysticks events"
+msgstr "Tillad joysticks events"
+
+#: src/GameText.h:776
+msgid "Preselect the retry button when dying or finishing a level"
+msgstr ""
+"Vælger automatisk genstart kanppen når du dør eller gennemfører en bane"
+
+#: src/GameText.h:778
+msgid "Give your mind about this level"
+msgstr "Hvad synes du om denne bane?"
+
+#: src/GameText.h:779
+msgid "No idea"
+msgstr "Ingen anelse"
+
+#: src/GameText.h:780
+msgid "Beginner"
+msgstr "Begynder"
+
+#: src/GameText.h:781
+msgid "Expert"
+msgstr "Ekspert"
+
+#: src/GameText.h:782
+msgid "Master"
+msgstr "Mester"
+
+#: src/GameText.h:783
+msgid "God"
+msgstr "Gud"
+
+#: src/GameText.h:784
+msgid "Go !"
+msgstr "Kør !"
+
+#: src/GameText.h:785
+msgid "Not nice at all"
+msgstr "Slet ikke god"
+
+#: src/GameText.h:786
+msgid "Not nice"
+msgstr "Ikke god"
+
+#: src/GameText.h:787
+msgid "Nice"
+msgstr "God"
+
+#: src/GameText.h:788
+msgid "Really nice"
+msgstr "Rigtig god"
+
+#: src/GameText.h:789
+msgid "Send this report"
+msgstr "Send reporten"
+
+#: src/GameText.h:790
+msgid "Skip this report"
+msgstr "Ignorer report"
+
+#: src/GameText.h:792
+msgid "Pause to watch the level"
+msgstr "Pause for at se banen"
+
+#: src/GameText.h:793
+msgid "Next level"
+msgstr "Næste bane"
+
+#: src/GameText.h:794
+msgid "Previous level"
+msgstr "Forrige bane"
+
+#: src/GameText.h:795
+msgid "Switch player"
+msgstr "Skift spiller"
+
+#: src/GameText.h:796
+msgid "Switch trackingshot mode"
+msgstr "Skift tracking mode"
+
+#: src/GameText.h:797
+msgid "Switch ghosttrail rendering"
+msgstr "Skift spøgelsesspor rendering"
+
+#: src/GameText.h:799
+msgid "You don't want to vote"
+msgstr "Du vil ikke stemme"
+
+#: src/GameText.h:800
+msgid "Really easy"
+msgstr "Rigtig let"
+
+#: src/GameText.h:801
+msgid "No technical difficulty"
+msgstr "Ingen svære passager"
+
+#: src/GameText.h:802
+msgid "At least one difficulty"
+msgstr "Mindst en svær passage"
+
+#: src/GameText.h:803
+msgid "Several difficulties"
+msgstr "Mange svære steder"
+
+#: src/GameText.h:804
+msgid "Impossible"
+msgstr "Umulig"
+
+#: src/GameText.h:805
+msgid "Basic blocks, no decoration"
+msgstr "Normale kasser, ingen dekoration "
+
+#: src/GameText.h:806
+msgid "Basic decoration, not smooth blocks"
+msgstr "Simpel dekoration, ikke jævn vej"
+
+#: src/GameText.h:807
+msgid "Not original"
+msgstr "Ikke original"
+
+#: src/GameText.h:808
+msgid "Nice, could be better"
+msgstr "Flot, men kunne være bedre"
+
+#: src/GameText.h:809
+msgid "Several textures, sprites, ..."
+msgstr "Mange textures og elementer"
+
+#: src/GameText.h:810
+msgid "Send this report on the webserver"
+msgstr "Send denne report til serveren"
+
+#: src/GameText.h:811
+msgid "Don't send this report on the webserver"
+msgstr "Send ikke reporten til serveren"
+
+#: src/GameText.h:813
+msgid "Server configuration to play via the network"
+msgstr "Server opsætning til at spille over netværket"
+
+#: src/GameText.h:814
+msgid "Start the server at X-Moto startup"
+msgstr "Start severen når X-Moto starter"
+
+#: src/GameText.h:815
+msgid "Start/stop the server"
+msgstr "Start/stop serveren"
+
+#: src/GameText.h:816
+msgid "Port on which the server must listen to"
+msgstr "Porten serveren benytter"
+
+#: src/GameText.h:817
+msgid "Server on which you want to connect"
+msgstr "Server du vil oprette forbindelser til"
+
+#: src/GameText.h:818
+msgid "Connect/disconnect the client to the server"
+msgstr "Forbind/afbryd server forbindelsen"
+
+#: src/GameText.h:819
+msgid "Start to play with other connected players"
+msgstr "Spil med andre tilsluttede spillere"
+
+#: src/GameText.h:820
+msgid ""
+"Enables background music for levels that do not have their own music track"
+msgstr "Sætter baggrunds musik på i baner der ikke selv har deres egen musik"
+
+#: src/GameText.h:821
+msgid "Network playing mode : just see other players as ghosts"
+msgstr "Netværks mode: se de andre spillere som spøgelser"
+
+#: src/GameText.h:822
+msgid "Automatically connect to the server at startup"
+msgstr "Forbind automatisk til serveren ved opstart"
+
+#: src/GameText.h:824
+msgid "Levels with no highscore"
+msgstr "Baner med ingen rekord"
+
+#: src/GameText.h:825 src/GameText.h:860
+msgid "Levels you have not completed"
+msgstr "Baner du ikke har gennemført"
+
+#: src/GameText.h:826
+msgid "You're not the highscore holder"
+msgstr "Baner hvor du ikke har rekorden"
+
+#: src/GameText.h:828
+msgid "New and updated levels"
+msgstr "Nye og opdaterede baner"
+
+#: src/GameText.h:829
+msgid "Favorite levels"
+msgstr "Favorit baner"
+
+#: src/GameText.h:830
+msgid "Blacklisted levels"
+msgstr "Dårlige baner"
+
+#: src/GameText.h:831
+msgid "Nicest levels"
+msgstr "Bedste baner"
+
+#: src/GameText.h:832
+msgid "Hardest levels"
+msgstr "Sværeste baner"
+
+#: src/GameText.h:833
+msgid "Easiest levels"
+msgstr "Letteste baner"
+
+#: src/GameText.h:834
+msgid "Crappiest levels"
+msgstr "Dårligste baner"
+
+#: src/GameText.h:835
+msgid "Scripted levels"
+msgstr "Scriptede baner"
+
+#: src/GameText.h:836
+msgid "Physics levels"
+msgstr "Baner med fysik"
+
+#: src/GameText.h:838
+msgid "Last played levels"
+msgstr "Sidste spillede baner"
+
+#: src/GameText.h:839
+msgid "Never played levels"
+msgstr "Aldrig spillede baner"
+
+#: src/GameText.h:840
+msgid "Most played levels"
+msgstr "Mest spillede baner"
+
+#: src/GameText.h:841
+msgid "Less played levels (but played)"
+msgstr "Mindst spillede baner (dog spillet)"
+
+#: src/GameText.h:842
+msgid "Last highscores"
+msgstr "Seneste rekorder"
+
+#: src/GameText.h:843
+msgid "Last levels"
+msgstr "Seneste baner"
+
+#: src/GameText.h:844
+msgid "Oldest highscores"
+msgstr "Ældste rekorder"
+
+#: src/GameText.h:849
+msgid "No medal"
+msgstr "Ingen pris"
+
+#: src/GameText.h:850
+msgid "My levels"
+msgstr "Mine baner"
+
+#: src/GameText.h:851
+msgid "Crappy levels"
+msgstr "Dårlige baner"
+
+#: src/GameText.h:852
+msgid "Shortest levels"
+msgstr "Korteste baner"
+
+#: src/GameText.h:853
+msgid "Medium levels"
+msgstr "Mellem baner"
+
+#: src/GameText.h:854
+msgid "Long levels"
+msgstr "Lange baner"
+
+#: src/GameText.h:855
+msgid "Very long levels"
+msgstr "Meget lange baner"
+
+#: src/GameText.h:856
+msgid "Stolen highscores"
+msgstr "Stjålne rekorder"
+
+#: src/GameText.h:857
+msgid "Vote unlocked levels"
+msgstr "Stem ulåste levels"
+
+#: src/GameText.h:859
+msgid "Levels with no highscore in your room"
+msgstr "Baner med ingen rekord i dit rum"
+
+#: src/GameText.h:861
+msgid "Somebody in the room made a better highscore than yours"
+msgstr "Nogen i rummet har lavet en bedre rekord end dig"
+
+#: src/GameText.h:862
+msgid "All X-Moto levels"
+msgstr "Alle X-Moto baner"
+
+#: src/GameText.h:863
+msgid "New and updated levels since your last check"
+msgstr "Nye og opdaterede baner siden sidste tjek"
+
+#: src/GameText.h:864
+msgid "Your favorite levels"
+msgstr "Dine favorit baner"
+
+#: src/GameText.h:865
+msgid "Your blacklisted levels"
+msgstr "Dine dårlige baner"
+
+#: src/GameText.h:866
+msgid "Nicest X-Moto levels according to the web votes"
+msgstr "Bedste X-Moto baner ifølge stemmer på nettet"
+
+#: src/GameText.h:867
+msgid "Hardest X-Moto levels according to the web votes"
+msgstr "Sværeste X-Moto baner ifølge stemmer på nettet"
+
+#: src/GameText.h:868
+msgid "Easiest X-Moto levels according to the web votes"
+msgstr "Letteste X-Moto baner ifølge stemmer på nettet"
+
+#: src/GameText.h:869
+msgid "Crappiest X-Moto levels according to the web votes"
+msgstr "Dårligste X-Moto baner ifølge stemmer på nettet"
+
+#: src/GameText.h:870
+msgid "X-Moto levels which are dynamic"
+msgstr "X-Moto baner som er dynamiske"
+
+#: src/GameText.h:871
+msgid "X-Moto levels using strongly physics"
+msgstr "X-Moto baner der bruger blokke med fysik"
+
+#: src/GameText.h:872
+msgid "Last levels you have played"
+msgstr "De sidste baner du har spillet"
+
+#: src/GameText.h:873
+msgid "X-Moto levels you never played"
+msgstr "Baner du aldrig har spillet"
+
+#: src/GameText.h:874
+msgid "X-Moto levels you have played the most"
+msgstr "Baner du har spillet mest"
+
+#: src/GameText.h:875
+msgid "X-Moto levels you have played only a few times"
+msgstr "Baner du kun har spillet nogle få gange"
+
+#: src/GameText.h:876
+msgid "X-Moto levels having a recent highscore in your room"
+msgstr "Baner som har en ny rekord i dit rum"
+
+#: src/GameText.h:877
+msgid "Last created X-Moto levels"
+msgstr "Sidst lavede X-Moto baner"
+
+#: src/GameText.h:878
+msgid "X-Moto levels having an old highscore in your room"
+msgstr "X-Moto baner som har en gammel rekord i dit rum"
+
+#: src/GameText.h:879
+msgid "You have the room highscore"
+msgstr "Du har rekorden i dit rum"
+
+#: src/GameText.h:880
+msgid "Your personal highscore finish time is almost the room highscore (95%)"
+msgstr "Din pesonelige rekord er næsten rekord i rummet (inden for 95%)"
+
+#: src/GameText.h:881
+msgid ""
+"Your personal highscore finish time is almost the room highscore (90%-95%)"
+msgstr "Din pesonelige rekord er næsten rekord i rummet (inden for 90- 95%)"
+
+#: src/GameText.h:882
+msgid ""
+"Your personal highscore finish time is almost the room highscore (80%-90%)"
+msgstr "Din pesonelige rekord er næsten rekord i rummet (inden for 80%-90)"
+
+#: src/GameText.h:883
+msgid "The room highscore is really better than your own highscore"
+msgstr "Rekorden i rummet er meget bedre end din"
+
+#: src/GameText.h:884
+#, c-format
+msgid "Level pack \"%s\""
+msgstr "Bane pakke \"%s\"  "
+
+#: src/GameText.h:885
+#, c-format
+msgid "Highscores by %s"
+msgstr "Rekorder af  %s"
+
+#: src/GameText.h:886
+msgid "External levels (the one you put into the 'My levels' directory)"
+msgstr "Eksterne baner (dem du putter i 'my levels' mappen)"
+
+#: src/GameText.h:887
+msgid "Levels marked 'crappy' are hidden in all other packs"
+msgstr "Baner markeret som dårlige er skjult i alle andre pakker"
+
+#: src/GameText.h:888
+msgid "The shortest levels (less than 25 seconds)"
+msgstr "De korteste baner (mindre end 25 sekunder)"
+
+#: src/GameText.h:889
+msgid "The medium levels (25 seconds to 60)"
+msgstr "Mellem banerne (25 til 60 sekunder)"
+
+#: src/GameText.h:890
+msgid "The long levels (1 minute to 2 minutes)"
+msgstr "De lange baner ( 1 minut til 2 minutter)"
+
+#: src/GameText.h:891
+msgid "The longest levels (more than 2 minutes)"
+msgstr "De allerlængste baner (mere end 2 minutter)"
+
+#: src/GameText.h:892
+msgid "Levels for which you owned the highscore"
+msgstr "Baner hvor du tidligere havde rekorden i"
+
+#: src/GameText.h:893
+msgid "Levels having votes unlocked"
+msgstr "Baner der har stemmer oplåst"
+
+#: src/GameText.h:895
+msgid "Normal mode enabled"
+msgstr "Normal mode slået til"
+
+#: src/GameText.h:896
+msgid "Ugly mode enabled"
+msgstr "ugly mode slået til"
+
+#: src/GameText.h:897
+msgid "Ugly mode disabled"
+msgstr "ugly mode slået fra"
+
+#: src/GameText.h:898
+msgid "Theme mode enabled"
+msgstr "Tema mode slået til"
+
+#: src/GameText.h:899
+msgid "Theme mode disabled"
+msgstr "Tema mode slået fra"
+
+#: src/GameText.h:900
+msgid "UglyOver mode enabled"
+msgstr "UglyOver mode slået til"
+
+#: src/GameText.h:901
+msgid "UglyOver mode disabled"
+msgstr "UglyOver mode slået fra"
+
+#: src/GameText.h:902
+msgid "Contrast Graphics Mode enabled"
+msgstr "Kontrast grafik mode aktiveret"
+
+#: src/GameText.h:903
+msgid "Light Graphics Mode enabled"
+msgstr "Let grafik mode aktiveret"
+
+#: src/GameText.h:904
+msgid "Full Graphics Mode enabled"
+msgstr "Bedste grafik mode aktiveret"
+
+#: src/GameText.h:905
+msgid "Web connection enabled"
+msgstr "Internet forbindelse er sat til"
+
+#: src/GameText.h:906
+msgid "Web connection disabled"
+msgstr "Internet forbindelse er taget fra"
+
+#: src/GameText.h:907
+msgid "Replay interpolation enabled"
+msgstr "Replay \"Interpolation\" sat til"
+
+#: src/GameText.h:908
+msgid "Replay interpolation disabled"
+msgstr "Replay \"interpolation\" fra"
+
+#: src/GameText.h:909
+msgid "Fps enabled"
+msgstr "Visning af Fps sat til"
+
+#: src/GameText.h:910
+msgid "Fps disabled"
+msgstr "Visning af Fps taget fra"
+
+#: src/GameText.h:911
+msgid "Audio enabled"
+msgstr "Lyd slået til"
+
+#: src/GameText.h:912
+msgid "Audio disabled"
+msgstr "Lyd slået fra"
+
+#: src/GameText.h:913
+msgid "Trail Cam activated"
+msgstr "Trail kamera aktiveret"
+
+#: src/GameText.h:914
+msgid "Trail Cam deactivated"
+msgstr "Trail kamera deaktiveret"
+
+#: src/GameText.h:915
+msgid "Ghost Trail is not available"
+msgstr "Spøgelse gengivelse er ikke tilgængeligt"
+
+#: src/GameText.h:916
+msgid "Ghost Trail Rendering activated"
+msgstr "Spøgelse gengivelse aktiveret"
+
+#: src/GameText.h:917
+msgid "Ghost Trail Rendering deactivated"
+msgstr "Gengivelse af spøgelsets vej deaktiveret"
+
+#: src/GameText.h:919
+msgid "No training positions stored"
+msgstr "Ingen træningspositioner gemt"
+
+#: src/GameText.h:920
+#, c-format
+msgid "Training position %i/%i restored"
+msgstr "Træningsposition %i/%i genoprettet"
+
+#: src/GameText.h:921
+#, c-format
+msgid "Stored as training position %i"
+msgstr "Gemt som træningsposition %i"
+
+#: src/GameText.h:922
+msgid ""
+"This level is not recordable (feature still not implemented).\n"
+"Sorry."
+msgstr ""
+"Denne bane kan ikke optages (featuren er ikke lavet endnu).\n"
+"Beklager."
+
+#: src/GameText.h:923
+msgid "Restart Level to activate!"
+msgstr "Genstart banen for at aktivere"
+
+#: src/GameText.h:925
+#, c-format
+msgid "Can't find a highscore in the next %i level"
+msgid_plural "Can't find a highscore in the next %i levels"
+msgstr[0] "Kan ikke finde en rekord i den næste %i bane"
+msgstr[1] "Kan ikke finde en rekord i de næste %i baner"
+
+#: src/GameText.h:926
+msgid "Unable to build the report"
+msgstr ""
+
+#: src/GameText.h:929
+msgid "FontGroup:GENERAL"
+msgstr "FontGroup:GENERAL"
+
+#: src/LevelsText.h:21
+msgid "First let's take a look at the user interface..."
+msgstr ""
+"Lad os starte med at tage et kig på nogle af de mest elementære ting..."
+
+#: src/LevelsText.h:22
+msgid "In the upper left corner, you've got your timers"
+msgstr "I det øverste venstre hjørne, har du tidstagerne"
+
+#: src/LevelsText.h:23
+msgid "The big one is your current time"
+msgstr "Den store er din nuværende tid"
+
+#: src/LevelsText.h:24
+msgid ""
+"The small one to the right is your own best time\n"
+"for the current level..."
+msgstr "Den lille til højre, er din egen bedste tid for banen..."
+
+#: src/LevelsText.h:25
+msgid ""
+"... and the one to the left is the best of all\n"
+"on this computer."
+msgstr "...og den til venstre er den bedste på computeren"
+
+#: src/LevelsText.h:26
+msgid ""
+"Down here there's the minimap, which shows the level\n"
+"around you, so you know where you're heading."
+msgstr ""
+"Nede her er minimappet, som viser banen\n"
+"rundt om dig så du ved hvor du er"
+
+#: src/LevelsText.h:27
+msgid "Now let's look at your controls."
+msgstr "Lad os tage et kig på kontrollerne"
+
+#: src/LevelsText.h:28
+msgid "(You seem to be using a joystick, can't help with that :P)"
+msgstr ""
+"(Det ser ud som om at du bruger et joystick, kan ikke hjælpe med det :P"
+
+#: src/LevelsText.h:29
+msgid ": Drive forward"
+msgstr "Kør fremad"
+
+#: src/LevelsText.h:30
+msgid ": Brake"
+msgstr "Bremse"
+
+#: src/LevelsText.h:31
+msgid ": Change direction"
+msgstr "skift retning"
+
+#: src/LevelsText.h:32
+msgid ": Rotate anti-clockwise"
+msgstr "roter mod uret"
+
+#: src/LevelsText.h:33
+msgid ": Rotate clockwise"
+msgstr "roter med uret"
+
+#: src/LevelsText.h:34
+msgid "Okay. The red dot on your minimap is a strawberry."
+msgstr "Okay. Den røde prik på dit minimap er et jordbærd"
+
+#: src/LevelsText.h:35
+msgid ""
+"The primary objective of the game is for you\n"
+"to collect all of them, and then find the flower."
+msgstr ""
+"Hoved formålet med spillet er at samle dem\n"
+"og til sidst finde blomsten"
+
+#: src/LevelsText.h:36
+msgid ""
+"The icon to the right of your time,\n"
+"indicates how many strawberries still left."
+msgstr ""
+"Ikonet til højre af tiden\n"
+"viser hvor mange jordbær der er tilbage"
+
+#: src/LevelsText.h:37
+msgid "Drive in its direction..."
+msgstr "Kør i dens retning..."
+
+#: src/LevelsText.h:38
+msgid ""
+"When done, head for the flower.\n"
+"It's the purple dot on your minimap."
+msgstr ""
+"Når du er færdig, så kør efter blomsten.\n"
+"Det er den lilla plet på minimappet"
+
+#: src/LevelsText.h:39
+msgid "Welcome to X-Moto!"
+msgstr "Velkommen til X-Moto!"
+
+#: src/LevelsText.h:40
+msgid ""
+"This level is a short tutorial of\n"
+"how you play the game."
+msgstr ""
+"Denne bane er en kort gennemgang af\n"
+"hvordan du spiller spillet."
+
+#: src/LevelsText.h:41
+msgid "Please stay put and follow the instructions! :)"
+msgstr "Så forbliv rolig og følg instruktionerne! :) "
+
+#: src/LevelsText.h:42
+msgid "Pick up the strawberry by touching it"
+msgstr "Opsammel jordbærret ved at røre det"
+
+#: src/LevelsText.h:43
+msgid "Touch it to finish the level. Good luck with the rest :)"
+msgstr "Rør den for at gennemføre banen. Held og lykke med resten :)"
+
+#: src/LevelsText.h:44
+msgid "The first jump you're going to perform is very easy."
+msgstr "Det første hop du skal lave er meget let."
+
+#: src/LevelsText.h:45
+msgid ""
+"Drive to the left, accelerate, and when you are in\n"
+"the air, try to adjust your attitude with the left\n"
+"and right arrow keys, so you'll land on your wheels."
+msgstr ""
+"Kør til venstre, og når du er i luften\n"
+"så prøv at justere så du lander på hjulene."
+
+#: src/LevelsText.h:46
+msgid ""
+"The next jump is a bit trickier. You'll need all the\n"
+"speed you can get to reach the other side..."
+msgstr ""
+"Det næste hop er lidt sværere. Du skal bruge alt den fart\n"
+"du kan få, for at komme over på den anden side..."
+
+#: src/LevelsText.h:47
+msgid "Now for the most difficult jump in this tutorial!"
+msgstr "Nu til det aller sværeste hop!"
+
+#: src/LevelsText.h:48
+msgid "This time, speed alone won't do the job..."
+msgstr "Denne gang er fart ikke nok..."
+
+#: src/LevelsText.h:49
+msgid ""
+"Here's the plan:\n"
+"Again, you'll have to obtain maximum speed, but when\n"
+"you reach the edge of the jump, pull the bike's front\n"
+"wheel up."
+msgstr ""
+"Gør det samme som før, med den undtagelse at\n"
+"når du rammer kanten af afsættet med fuld fart, så skal\n"
+"du løfte forenden af cyklen alt det du kan!"
+
+#: src/LevelsText.h:50 src/LevelsText.h:63
+msgid ""
+"That will cause the rear suspension to increase the\n"
+"length of the jump.\n"
+"Try it..."
+msgstr ""
+"Det vil få cyklen til at flyve længere.\n"
+"Men pas på at du ikke falder bagover\n"
+"hvis du hiver for hårdt!"
+
+#: src/LevelsText.h:51
+msgid "This tutorial will teach you the basics of jumping."
+msgstr "Denne bane vil lære dig at hoppe"
+
+#: src/LevelsText.h:52
+msgid ""
+"Remember you can turn around your bike\n"
+"by pressing :"
+msgstr ""
+"Husk at du kan vende cyklen for at\n"
+"få bedre tilløb med:"
+
+#: src/LevelsText.h:53
+msgid "That was pretty easy, right?"
+msgstr "Det var rimeligt let, ikke?"
+
+#: src/LevelsText.h:54
+msgid ""
+"Accelerate NOW! Obtain maximum speed, and try to\n"
+"keep the front wheel at the ground..."
+msgstr ""
+"Accelerer NU! Få mest mulig fart på og prøv at holde\n"
+" forhjulet fri fra jorden..."
+
+#: src/LevelsText.h:55
+msgid "Nice jump there! :)"
+msgstr "Flot hop dér =)!"
+
+#: src/LevelsText.h:56
+msgid "Congrats, you're now a master jumper!"
+msgstr "Tillykke, du er nu en mester-hopper!"
+
+#: src/LevelsText.h:57
+msgid ""
+"The basic idea is that when driving on the rear wheel,\n"
+"your head is lowered quite a lot..."
+msgstr ""
+"Grundlæggende er ideen at når du kører på baghjulet\n"
+"så er dit hoved sænket en del..."
+
+#: src/LevelsText.h:58
+msgid ""
+"The difficult part is to keep the balance.\n"
+"When the distance you have to drive is quite short,\n"
+"you don't need to keep the balance."
+msgstr ""
+"Det svære bliver at holde balancen.\n"
+"Når distancen du skal køre er kort\n"
+"behøver du ikke at holde balancen"
+
+#: src/LevelsText.h:59
+msgid ""
+"Accelerate (slowly) to the right with the front wheel raising.\n"
+"Just before your head hit the block, make a quick left/right\n"
+"combination, and you should be on the other side.\n"
+"Try it..."
+msgstr ""
+"accelerer langsomt, med forhjulet løftet.\n"
+"Lige før hovedet rammer blokken, lav en hurtig\n"
+"højre/venstre manøvre, og så skulle du forhåbentlig\n"
+"komme helskindet ud på den anden side"
+
+#: src/LevelsText.h:60
+msgid ""
+"Now you'll try a bit more difficult one...\n"
+"This time keep your hands off the left and right arrow keys,\n"
+"they're not delicate enough to help you keep balance."
+msgstr ""
+"Nu er det tid til en lidt sværere en...\n"
+"Denne gang hold dine hænder fra højre/ventre...\n"
+"de er ikke kraftfulde nok til at holde balancen"
+
+#: src/LevelsText.h:61
+msgid ""
+"Instead regulate your angle by accelerating and braking.\n"
+"Try to drive a bit back and forth on your rear wheel,\n"
+"keeping the bike as steady as possible..."
+msgstr ""
+"I stedet for så reguler balancen ved at accelerere og bremse.\n"
+"Prøv at køre lidt frem og tilbage på baghjulet, imens\n"
+"du holder cyklen så lige som muligt..."
+
+#: src/LevelsText.h:62
+msgid "Try getting under the next obstacle when you feel you're ready."
+msgstr "Prøv at køre under den næste forhindring når du føler du er klar..."
+
+#: src/LevelsText.h:64
+msgid ""
+"This tutorial will teach you to rear-wheel through\n"
+"areas where the ceiling is low.\n"
+"Beware that this can be pretty difficult :)"
+msgstr ""
+"Denne bane vil lære dig at køre på baghjulet gennem\n"
+"områder hvor loftet er for lavt til hovedet.\n"
+"Vær opmærksom på at dette er meget svært :)"
+
+#: src/LevelsText.h:65
+msgid "Not that difficult, right?"
+msgstr "Det var ikke så svært, vel?"
+
+#: src/LevelsText.h:66
+msgid "Nice! Now try the next one, it's a bit more difficult..."
+msgstr "Flot! Prøv nu den næste... den er lidt sværere..."
+
+#: src/LevelsText.h:67
+msgid "Good job! The next one is even more difficult..."
+msgstr "Godt gået! Den næste er endnu sværere!..."
+
+#: src/LevelsText.h:68
+msgid ""
+"Now for the final one... It's not that long, but instead\n"
+"there's even less room for your precious head. Good luck! :)"
+msgstr ""
+"Nu til den sidste og sværeste... den er ikke særlig lang\n"
+"men til gengæld er det endnu mindre plads til dit dyrebare hoved! Held og "
+"lykke!"
+
+#~ msgid "Trail Cam not available"
+#~ msgstr "Trail kamera ikke tilgængeligt"
+
+#~ msgid "Key '%s' has been switched to '%s'"
+#~ msgstr "Tasten '%s' er blevet skiftet til '%s'"
+
+#~ msgid "Enable/disable theme mode"
+#~ msgstr "tema mode"
+
+#~ msgid "Enable/disable ugly over mode"
+#~ msgstr "ugly over mode"
+
+#~ msgid ""
+#~ "Physic levels recording is still not implemented.\n"
+#~ "Sorry."
+#~ msgstr ""
+#~ "Replays i fysik baner er endnu ikke implementeret.\n"
+#~ "Beklager."
+
+#~ msgid ""
+#~ "Stop[esc] ||[space]  << >>[left/right keys]  < >[up/down keys]   Speed:"
+#~ msgstr ""
+#~ "Stop[esc] ||[Mellemrumstasten] << >>[Højre/venstre taster]  < >[Up/ned "
+#~ "pilestaster] Fart:"
+
+#~ msgid "Stop[esc] ||[space] >>[right key] < >[up/down keys]   Speed:"
+#~ msgstr ""
+#~ "Stop[esc] ||[mellemrumtasten]  >>[højre tast]  < >[op/ned taster]   Fart:"
+
+#~ msgid ""
+#~ "Read the README file or check out the website at\n"
+#~ "http://xmoto.tuxfamily.org for more information."
+#~ msgstr ""
+#~ "Læs README filen eller tjek websiden på\n"
+#~ "http://xmoto.tuxfamily.org for mere infomation"
+
+#~ msgid "Musical levels"
+#~ msgstr "Musiske baner"
+
+#~ msgid "X-Moto levels with a background music"
+#~ msgstr "X-Moto baner med baggrundsmusik"
+
+#~ msgid "Initializing input system..."
+#~ msgstr "Opstarter input systemet..."
+
+#~ msgid "Initializing menus..."
+#~ msgstr "Opstarter menuer..."
+
+#~ msgid "Initializing renderer..."
+#~ msgstr "Opstarter rendering..."
+
+#~ msgid "Initializing text renderer..."
+#~ msgstr "Opstarter tekst-rendering..."
+
+#~ msgid "Enable Music"
+#~ msgstr "Musik"
+
+#~ msgid "Rooms"
+#~ msgstr "Rum"
+
+#~ msgid ""
+#~ "(Stats since: %s)\n"
+#~ "X-Moto started %d times; %d plays (%d different levels),\n"
+#~ "%d deaths, %d finishes, and %d restarts.\n"
+#~ "Time played: %s"
+#~ msgstr ""
+#~ "(Stats siden: %s)\n"
+#~ "X-Moto startet %d gange; %d forsøg (%d forskellige baner),\n"
+#~ "%d gange død, %d gange gennemført, og %d genstarts.\n"
+#~ "Tid spillet: %s"
+
+#~ msgid "%d plays, %d deaths, %d finishes, and %d restarts"
+#~ msgstr "%d forsøg, %d gange død, %d gange gennemført, og %d genstarts"
+
+#~ msgid "Upload highscore"
+#~ msgstr "Upload rekord"
