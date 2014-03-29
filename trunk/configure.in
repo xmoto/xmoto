@@ -154,6 +154,9 @@ then
 fi
 AM_CONDITIONAL([USE_SDLGFX], test "$USE_SDLGFX" = "1")
 
+# m
+AC_CHECK_LIB(m, floor, , AC_MSG_ERROR(No math library found))
+
 AC_SEARCH_LIBS(lua_pushboolean,lua lua5.1 lua50, [], [AC_MSG_ERROR(liblua5.1, liblua50, or liblua required)])
 AC_SEARCH_LIBS(luaopen_math,lualib lualib5.1 lualib50, [], [AC_MSG_ERROR(liblualib5.1, liblualib50, or liblualib required)])
 
