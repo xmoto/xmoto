@@ -1,0 +1,40 @@
+#!/bin/sh
+
+XMSERVER=localhost
+XMPORT=$(basename $0 | sed 's/^xmoto_connexions_//g')
+XMTIMEOUT=3
+
+# wait 3 seconds maximum
+plug_getNumberOfXMPlayers() {
+    (
+	cat <<EOF
+20
+-1
+0
+clientsNumberQ
+EOF
+	) |
+    nc -q "$XMTIMEOUT" "$XMSERVER" "$XMPORT" | sed -n "5,6p"
+}
+
+plug_config() {
+    cat <<EOF
+graph_category games
+graph_title X-Moto connexions (port ${XMPORT})
+graph_vlabel connexions
+graph_total total
+udp.label udp
+udp.draw AREASTACK
+tcp.label tcp
+tcp.draw AREASTACK
+EOF
+}
+
+if test "$1" = "config"
+then
+    plug_config
+    exit 0
+fi
+
+plug_getNumberOfXMPlayers | sed -e '1 s+^+tcp.value +' -e '2 s+^+udp.value +'
+exit 0
