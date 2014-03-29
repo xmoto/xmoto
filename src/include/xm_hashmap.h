@@ -14,7 +14,7 @@
 namespace HashNamespace=std;
 #endif
 struct hashcmp_str {
-  bool operator()(const char* s1, const char* s2) {
+  bool operator()(const char* s1, const char* s2) const {
     if(s1 == NULL || s2 == NULL) {
       return false;
     }
