@@ -31,9 +31,17 @@ lua_Number LuaLibBase::X_luaL_check_number(lua_State *L,int narg) {
 
 LuaLibBase::LuaLibBase(const std::string& i_libname, luaL_Reg i_reg[]) {
   m_pL = luaL_newstate();
+
+#if LUA_VERSION_NUM < 502
   luaopen_base(m_pL);
   luaopen_math(m_pL);
   luaopen_table(m_pL);
+#else
+  luaL_requiref(m_pL, "_G", luaopen_base, 1);
+  luaL_requiref(m_pL, LUA_MATHLIBNAME, luaopen_math, 1);
+  luaL_requiref(m_pL, LUA_TABLIBNAME,  luaopen_table, 1);
+#endif
+
   luaL_openlib(m_pL, i_libname.c_str(), i_reg, 0);
 }
 

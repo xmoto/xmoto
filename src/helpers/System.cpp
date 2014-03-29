@@ -25,6 +25,12 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "VExcept.h"
 #include <sstream>
 
+#if defined(WIN32) || defined(__APPLE__)
+#else
+#include <sys/types.h>
+#include <unistd.h>
+#endif
+
 std::vector<std::string>* System::getDisplayModes(int windowed) {
     std::vector<std::string>* modes = new std::vector<std::string>;
     SDL_Rect **sdl_modes;
