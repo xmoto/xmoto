@@ -50,6 +50,7 @@ function makeNSI {
   echo "        File jpeg62.dll"
   echo "	File libcurl-4.dll"
   echo "	File libpng12.dll"
+  echo "        File libxml2-2.dll"
   echo "	File lua5.1.dll"
   echo "	File mgwz.dll"
   echo "	File ogg.dll"
