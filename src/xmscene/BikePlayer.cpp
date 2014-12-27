@@ -120,11 +120,8 @@ void PlayerLocalBiker::updateToTime(int i_time, int i_timeStep,
   }
 
   /* controler */
-  bool bChangeDir = false;
   if(m_BikeC->ChangeDir()) {
     m_BikeC->setChangeDir(false);
-    bChangeDir = true;
-
     m_bikeState->Dir = m_bikeState->Dir==DD_LEFT?DD_RIGHT:DD_LEFT; /* switch */
     m_changeDirPer = 0.0;
   }

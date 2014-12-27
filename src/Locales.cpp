@@ -88,6 +88,11 @@ std::string Locales::init(std::string i_locale) {
 
   cs = bind_textdomain_codeset(PACKAGE_LANG, "UTF-8");
 
+  if(cs == NULL) {
+    /* outch not enough memory, no real thing to do */
+    return locale;
+  }
+
   return locale;
 
 #endif

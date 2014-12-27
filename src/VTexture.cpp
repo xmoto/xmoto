@@ -307,7 +307,7 @@ int TextureManager::getTextureSize(const std::string& p_fileName) {
     int* v_val;
 
     // cache
-    v_val = m_textureSizeCache[p_fileName.c_str()];
+    v_val = m_textureSizeCache[p_fileName];
     if(v_val != NULL) {
       return *v_val;
     }
@@ -331,7 +331,7 @@ int TextureManager::getTextureSize(const std::string& p_fileName) {
 #endif
 	m_textureSizeCacheKeys.push_back(p_fileName);
 	m_textureSizeCacheValues.push_back(v_val);
-	m_textureSizeCache[m_textureSizeCacheKeys[m_textureSizeCacheKeys.size()-1].c_str()] = v_val;
+	m_textureSizeCache[m_textureSizeCacheKeys[m_textureSizeCacheKeys.size()-1]] = v_val;
 
       }
 

@@ -65,7 +65,6 @@ void GhostTrail::initialize() {
     // now lets try real linear interpolation   
     Vector2f v_P_old = m_trailData[0], 
       v_P_new, 
-      v_vecCum = Vector2f(0,0),
       v_vecTmp;
     float v_time = TRAIL_INTERPOLATION_STEP;
     

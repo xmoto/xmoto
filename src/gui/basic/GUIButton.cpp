@@ -29,8 +29,6 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
   Painting
   ===========================================================================*/
   void UIButton::paint(void) {
-    int xm=0,ym=0;
-        
     bool bDisabled = isDisabled();
     bool bActive = isActive();
     
@@ -68,7 +66,6 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
               }
               break;
 	    }
-	    xm=2; ym=2;
 	  } else {
 	    switch(m_Type) {
 	    case UI_BUTTON_TYPE_LARGE:

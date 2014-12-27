@@ -135,7 +135,7 @@ private:
 
   void cleanUnregistredTextures();
 
-  HashNamespace::hash_map<const char*, int*, HashNamespace::hash<const char*>, hashcmp_str> m_textureSizeCache;
+  HashNamespace::unordered_map<std::string, int*> m_textureSizeCache;
   std::vector<std::string> m_textureSizeCacheKeys;
   std::vector<int*> m_textureSizeCacheValues;
 

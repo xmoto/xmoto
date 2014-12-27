@@ -30,10 +30,6 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include <stdio.h>
 #include <curl/curl.h>
 
-#if !defined(WIN32) && !defined(__APPLE__) && !defined(__MACH__)
-  //#define USE_HASH_MAP // removed because it seems to segfault i don't know why when i refresh levels using F5 and quit
-#endif
-
 #include "WWWAppInterface.h"
 #include "Theme.h"
 #include "XMSession.h"
@@ -61,27 +57,6 @@ class ThemeChoice;
 #define DEFAULT_WEBROOM_NAME              "WR"
 
 #define WWW_AGENT ("xmoto-" + XMBuild::getVersionString(true))
-
-#if defined(USE_HASH_MAP)
-  #ifdef __GNUC__
-  #if (__GNUC__ >= 3)
-  #include <ext/hash_map>
-  namespace HashNamespace=__gnu_cxx;
-  #else
-  #include <hash_map>
-  #define HashNamespace std
-  #endif
-  #else // #ifdef __GNUC__
-  #include <hash_map>
-  namespace HashNamespace=std;
-  #endif
-
-  struct highscore_str {
-    bool operator()(const char* s1, const char* s2) {
-      return strcmp(s1, s2) == 0;
-    }
-  };
-#endif
 
 struct f_curl_download_data {
   WWWAppInterface *v_WebApp;

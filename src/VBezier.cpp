@@ -97,14 +97,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
   ===========================================================================*/  
   void BezierShape::finishCreation() {
     /* Okay, create shape curves */
-    for(unsigned int i=0;i<m_nNumPoints;i++) {
-      /* Next point? */
-      int j;
-      if(i+1 == m_nNumPoints)
-	j=0;
-      else
-	j=i+1;
-    
+    for(unsigned int i=0;i<m_nNumPoints;i++) {    
       /* Do this curve */
       m_pCurves[i].setP(0,m_pPoints[i].Pos);
       m_pCurves[i].setP(1,m_pPoints[i].c2);

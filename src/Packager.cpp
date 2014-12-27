@@ -193,7 +193,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
     fclose(fp);
     
     /* Info */
-    printf("%d files scheduled for packaging!\n",FileList.size());
+    printf("%lu files scheduled for packaging!\n",FileList.size());
     printf("Creating package '%s'...\n", BinFile.c_str());
     
     /* Do it */
