@@ -1365,7 +1365,6 @@ void GameRenderer::_RenderGameStatus(Scene* i_scene) {
 
     int nStrawberriesLeft = i_scene->getLevelSrc()->countToTakeEntities();
     int nQuantity = 0;
-    Vector2i bottomLeft = i_scene->getCamera()->getDispBottomLeft();
     int height = i_scene->getCamera()->getDispHeight();
 
     if(XMSession::instance()->ugly() == false) {
@@ -2768,7 +2767,6 @@ void GameRenderer::renderTimePanel(Scene* i_scene) {
   DrawLib* pDrawlib = GameApp::instance()->getDrawLib();
 
   Biker* pBiker = i_scene->getCamera()->getPlayerToFollow();
-  Vector2i bottomLeft = i_scene->getCamera()->getDispBottomLeft();
 
   /* render game time */
   FontManager* v_fm = pDrawlib->getFontMedium();

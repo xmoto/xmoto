@@ -659,15 +659,13 @@ void LevelsManager::reloadExternalLevels(xmDatabase* i_db, bool i_loadMainLayerO
 
   i_db->levels_add_begin(true);
   for(unsigned int i=0; i<LvlFiles.size(); i++) {
-    bool bCached = false;
-
     /* add the level from the unloaded levels if possible to make it faster */
     if(i_db->levels_add_fast(LvlFiles[i], v_levelName, true) == false) {
       Level *v_level = new Level();
 
       try {
 	v_level->setFileName(LvlFiles[i]);
-	bCached = v_level->loadReducedFromFile(i_loadMainLayerOnly);
+        v_level->loadReducedFromFile(i_loadMainLayerOnly);
 	
 	v_levelName = v_level->Name();
 
@@ -702,10 +700,8 @@ void LevelsManager::reloadExternalLevels(xmDatabase* i_db, bool i_loadMainLayerO
 void LevelsManager::addExternalLevel(std::string i_levelFile, xmDatabase *i_db, bool i_loadMainLayerOnly) {
   Level *v_level = new Level();
   try {
-    bool bCached = false;
-
     v_level->setFileName(i_levelFile);
-    bCached = v_level->loadReducedFromFile(i_loadMainLayerOnly);
+    v_level->loadReducedFromFile(i_loadMainLayerOnly);
       
     // Check for ID conflict
     if(doesLevelExist(v_level->Id(), i_db)) {
@@ -741,7 +737,6 @@ void LevelsManager::reloadInternalLevels(xmDatabase* i_db, bool i_loadMainLayerO
   i_db->levels_add_begin(false);
 
   for(unsigned int i=0; i<LvlFiles.size(); i++) {
-    bool bCached = false;
     int v_isExternal;
 
     v_isExternal = LvlFiles[i].find("Levels/MyLevels/") != std::string::npos;
@@ -755,7 +750,7 @@ void LevelsManager::reloadInternalLevels(xmDatabase* i_db, bool i_loadMainLayerO
 
       try {
 	v_level->setFileName(LvlFiles[i]);
-	bCached = v_level->loadReducedFromFile(i_loadMainLayerOnly);
+	v_level->loadReducedFromFile(i_loadMainLayerOnly);
 	
 	// Check for ID conflict
 	if(doesLevelExist(v_level->Id(), i_db)) {
@@ -873,7 +868,6 @@ void LevelsManager::updateLevelsFromLvl(const std::vector<std::string> &NewLvl,
 
     /* new */
     for(unsigned int i=0; i<NewLvl.size(); i++) {
-      bool bCached = false;
       v_level = new Level();
       
       try {
@@ -881,7 +875,7 @@ void LevelsManager::updateLevelsFromLvl(const std::vector<std::string> &NewLvl,
 	current++;
 	
 	v_level->setFileName(NewLvl[i]);
-	bCached = v_level->loadReducedFromFile(i_loadMainLayerOnly);
+	v_level->loadReducedFromFile(i_loadMainLayerOnly);
 	
 	// Check for ID conflict
 	if(doesLevelExist(v_level->Id(), i_db)) {
@@ -907,12 +901,11 @@ void LevelsManager::updateLevelsFromLvl(const std::vector<std::string> &NewLvl,
     
     /* updated */
     for(unsigned int i=0; i<UpdatedLvl.size(); i++) {
-      bool bCached = false;
       v_level = new Level();
       
       try {
 	v_level->setFileName(UpdatedLvl[i]);
-	bCached = v_level->loadReducedFromFile(i_loadMainLayerOnly);
+	v_level->loadReducedFromFile(i_loadMainLayerOnly);
 	
 	pCaller->setTaskProgress(current * total);
 	pCaller->setBeingDownloadedInformation(v_level->Name());

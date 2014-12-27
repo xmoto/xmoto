@@ -39,7 +39,6 @@ void XMLDocument::clean() {
 }
 
 void XMLDocument::XMLDocumentErrorFunc(void* ctx, const char* msg, ...) {
-  XMLDocument* v_xml = (XMLDocument*) ctx;
   va_list List;
   char cBuf[2048];
 

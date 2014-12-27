@@ -24,7 +24,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 typedef unsigned int Color;
 
 #define MAKE_COLOR(red, green, blue, alpha) \
-	((Color)(alpha|(((Color)blue)<<8)|(((Color)green)<<16)|(((Color)red)<<24)))
+  ((Color)((alpha)|(((Color)blue)<<8)|(((Color)green)<<16)|(((Color)red)<<24)))
 
 #define GET_ALPHA(color) \
 	((Color)((color)&0xff))

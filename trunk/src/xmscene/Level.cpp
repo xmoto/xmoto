@@ -1221,8 +1221,6 @@ int Level::loadToPlay(ChipmunkWorld* i_chipmunkWorld, PhysicsSettings* i_physics
   /* Spawn initial entities */
   for(unsigned int i=0; i<m_entities.size(); i++) {
     m_entities[i]->loadToPlay(m_scriptSource);
-    Vector2f v = m_entities[i]->DynamicPosition();
-
     m_pCollisionSystem->addEntity(m_entities[i]);
 
     if(m_entities[i]->IsToTake()){

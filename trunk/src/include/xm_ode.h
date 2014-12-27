@@ -1,5 +1,5 @@
 #if defined(WIN32)
-  #include "ode/ode.h"
+  #include "ode_integrated/ode.h"
 #else
   #include <ode/ode.h>
 #endif

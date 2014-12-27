@@ -728,7 +728,7 @@ void StateOptions::createGUIIfNeeded(RenderSurface* i_screen) {
 		      i_screen->getDispWidth(),
 		      i_screen->getDispHeight());
 
-  UIWindow *v_window, *v_frame;
+  UIWindow *v_window;
   UIStatic*  v_someText;
   UITabView* v_tabview;
   UIButton*  v_button;
@@ -750,11 +750,11 @@ void StateOptions::createGUIIfNeeded(RenderSurface* i_screen) {
   v_tabview->setTabContextHelp(3, CONTEXTHELP_DB_OPTIONS);
   v_tabview->setTabContextHelp(4, CONTEXTHELP_LANGUAGE_OPTIONS);
 
-  v_frame = makeWindowOptions_general(v_tabview);
-  v_frame = makeWindowOptions_rooms(v_tabview);
-  v_frame = makeWindowOptions_ghosts(v_tabview);
-  v_frame = makeWindowOptions_db(v_tabview);
-  v_frame = makeWindowOptions_language(v_tabview);
+  makeWindowOptions_general(v_tabview);
+  makeWindowOptions_rooms(v_tabview);
+  makeWindowOptions_ghosts(v_tabview);
+  makeWindowOptions_db(v_tabview);
+  makeWindowOptions_language(v_tabview);
 
   v_button = new UIButton(v_window, 20, v_window->getPosition().nHeight-68, GAMETEXT_DEFAULTS, 115, 57);
   v_button->setID("DEFAULTS_BUTTON");
@@ -2136,7 +2136,6 @@ void StateOptions::updateRoomsList() {
 }
 
 void StateOptions::createRoomsList(UIList *pList) {
-  UIListEntry *pEntry;
   std::string v_selected_roomName = "";
   char **v_result;
   unsigned int nrow;
@@ -2159,7 +2158,7 @@ void StateOptions::createRoomsList(UIList *pList) {
   for(unsigned int i=0; i<nrow; i++) {
     v_roomId   = xmDatabase::instance("main")->getResult(v_result, 2, i, 0);
     v_roomName = xmDatabase::instance("main")->getResult(v_result, 2, i, 1);
-    pEntry = pList->addEntry(v_roomName, reinterpret_cast<void *>(new std::string(v_roomId)));    
+    pList->addEntry(v_roomName, reinterpret_cast<void *>(new std::string(v_roomId)));    
   }
   xmDatabase::instance("main")->read_DB_free(v_result);
 
@@ -2167,7 +2166,7 @@ void StateOptions::createRoomsList(UIList *pList) {
   for(unsigned int i=0; i<nrow; i++) {
     v_roomId   = xmDatabase::instance("main")->getResult(v_result, 2, i, 0);
     v_roomName = xmDatabase::instance("main")->getResult(v_result, 2, i, 1);
-    pEntry = pList->addEntry(v_roomName, reinterpret_cast<void *>(new std::string(v_roomId)));    
+    pList->addEntry(v_roomName, reinterpret_cast<void *>(new std::string(v_roomId)));    
   }
   xmDatabase::instance("main")->read_DB_free(v_result);
 

@@ -80,7 +80,7 @@ public:
   /* a glyph from other glyphs */
   /*kejo:why not just grrr create a copy contructor*/
   GLFontGlyph(const std::string& i_value,
-	      HashNamespace::hash_map<const char*, GLFontGlyphLetter*, HashNamespace::hash<const char*>, hashcmp_str>& i_glyphsLetters);
+	      HashNamespace::unordered_map<std::string, GLFontGlyphLetter*>& i_glyphsLetters);
   virtual ~GLFontGlyph();
 
   std::string Value() const;
@@ -132,11 +132,11 @@ public:
 private:
   std::vector<std::string> m_glyphsKeys;
   std::vector<GLFontGlyph*> m_glyphsValues;
-  HashNamespace::hash_map<const char*, GLFontGlyph*, HashNamespace::hash<const char*>, hashcmp_str> m_glyphs;
+  HashNamespace::unordered_map<std::string, GLFontGlyph*> m_glyphs;
 
   std::vector<std::string> m_glyphsLettersKeys;
   std::vector<GLFontGlyphLetter*> m_glyphsLettersValues;
-  HashNamespace::hash_map<const char*, GLFontGlyphLetter*, HashNamespace::hash<const char*>, hashcmp_str> m_glyphsLetters;
+  HashNamespace::unordered_map<std::string, GLFontGlyphLetter*> m_glyphsLetters;
 
   unsigned int getLonguestLineSize(const std::string& i_value, unsigned int i_start = 0, unsigned int i_nbLinesToRead = -1);
 };
@@ -825,7 +825,7 @@ GLFontGlyph::GLFontGlyph(const std::string& i_value) {
 }
 
 GLFontGlyph::GLFontGlyph(const std::string& i_value,
-			 HashNamespace::hash_map<const char*, GLFontGlyphLetter*, HashNamespace::hash<const char*>, hashcmp_str>& i_glyphsLetters) {
+			 HashNamespace::unordered_map<std::string, GLFontGlyphLetter*>& i_glyphsLetters) {
   GLFontGlyph* v_glyph;
   std::string  v_char;
 
@@ -850,7 +850,7 @@ GLFontGlyph::GLFontGlyph(const std::string& i_value,
       v_maxHeight = 0;
       v_curWidth  = 0;
     } else {
-      v_glyph = i_glyphsLetters[v_char.c_str()];
+      v_glyph = i_glyphsLetters[v_char];
       if(v_glyph != NULL) {
 	if(v_glyph->realHeight() > v_maxHeight)
 	  v_maxHeight = v_glyph->realHeight();
@@ -927,7 +927,7 @@ GLFontManager::~GLFontManager() {
   /* i added the m_glyphsList because the iterator on the hashmap
      often produces segfault on delete it->second */
   //printf("BEGIN ~GLFontManager()\n");
-  //HashNamespace::hash_map<const char*, GLFontGlyph*, HashNamespace::hash<const char*>, hashcmp_str, std::allocator<GLFontGlyph*> >::iterator it;
+  //HashNamespace::unordered_map<std::string, GLFontGlyph*>::iterator it;
   //for (it = m_glyphs.begin(); it != m_glyphs.end(); it++) {
   //  delete it->second;
   //}
@@ -967,7 +967,7 @@ FontGlyph* GLFontManager::getGlyph(const std::string& i_string) {
   GLFontGlyph *v_glyph;
   GLFontGlyphLetter *v_glyphLetter;
 
-  v_glyph = m_glyphs[i_string.c_str()];
+  v_glyph = m_glyphs[i_string];
   if(v_glyph != NULL) return v_glyph;
 
   /* make sure that chars exists into the hashmap before continuing */
@@ -976,11 +976,11 @@ FontGlyph* GLFontManager::getGlyph(const std::string& i_string) {
   while(n < i_string.size()) {
     v_char = utf8::getNextChar(i_string, n);
     if(v_char != "\n") {
-      if(m_glyphsLetters[v_char.c_str()] == NULL) {
+      if(m_glyphsLetters[v_char] == NULL) {
 	v_glyphLetter = new GLFontGlyphLetter(v_char, m_ttf, m_fixedFontSize);
 	m_glyphsLettersKeys.push_back(v_char);
 	m_glyphsLettersValues.push_back(v_glyphLetter);
-	m_glyphsLetters[m_glyphsLettersKeys[m_glyphsLettersKeys.size()-1].c_str()] = v_glyphLetter;
+	m_glyphsLetters[m_glyphsLettersKeys[m_glyphsLettersKeys.size()-1]] = v_glyphLetter;
       }
     }
   }
@@ -989,7 +989,7 @@ FontGlyph* GLFontManager::getGlyph(const std::string& i_string) {
   v_glyph = new GLFontGlyph(i_string, m_glyphsLetters);
   m_glyphsKeys.push_back(i_string);
   m_glyphsValues.push_back(v_glyph);  
-  m_glyphs[m_glyphsKeys[m_glyphsKeys.size()-1].c_str()] = v_glyph;
+  m_glyphs[m_glyphsKeys[m_glyphsKeys.size()-1]] = v_glyph;
 
   return v_glyph;
 }
@@ -1078,7 +1078,7 @@ void GLFontManager::printStringGradOne(DrawLib* pDrawLib, FontGlyph* i_glyph, in
 	v_y -= v_lineHeight + UTF8_INTERLINE_SPACE;
 	v_lineHeight = 0;
       } else {
-	v_glyphLetter = m_glyphsLetters[v_char.c_str()];
+	v_glyphLetter = m_glyphsLetters[v_char];
 	if(v_glyphLetter != NULL) {
 	  if(v_glyphLetter->realHeight() > v_lineHeight)
 	    v_lineHeight = v_glyphLetter->realHeight();
@@ -1145,7 +1145,7 @@ unsigned int GLFontManager::getLonguestLineSize(const std::string& i_value, unsi
 	return v_longuest_linesize;
       }
     } else {
-      v_glyphLetter = m_glyphsLetters[v_char.c_str()];
+      v_glyphLetter = m_glyphsLetters[v_char];
       if(v_glyphLetter != NULL) {
 	v_current_linesize += v_glyphLetter->realWidth() + UTF8_INTERCHAR_SPACE;
       }
