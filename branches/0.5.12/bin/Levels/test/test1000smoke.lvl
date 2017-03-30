@@ -1,0 +1,4975 @@
+<?xml version="1.0" encoding="utf-8"?>
+<level id="1000smoke" rversion="0.2.5">
+	<info>
+		<name>casdcscscsc</name>
+		<description></description>
+		<author></author>
+		<date>2008-05-28</date>
+		<sky>sky1</sky>
+		<border texture="autumn"/>
+	</info>
+	<limits left="-18.600750" right="18.600750" top="26.306775" bottom="-26.306775"/>
+	<entity id="path2401" typeid="PlayerStart">
+		<position y="17.138666" x="-17.65075"/>
+		<size r="0.4"/>
+	</entity>
+	<entity id="path2421" typeid="ParticleSource">
+		<position y="17.588666" x="-10.50075"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path2443" typeid="ParticleSource">
+		<position y="17.488666" x="-12.55075"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path2445" typeid="ParticleSource">
+		<position y="17.488666" x="-11.95075"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path2447" typeid="ParticleSource">
+		<position y="17.488666" x="-11.10075"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path2449" typeid="ParticleSource">
+		<position y="17.488666" x="-10.85075"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path2451" typeid="ParticleSource">
+		<position y="17.488666" x="-10.45075"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path2453" typeid="ParticleSource">
+		<position y="17.688666" x="-12.55075"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path2455" typeid="ParticleSource">
+		<position y="17.688666" x="-12.20075"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path2457" typeid="ParticleSource">
+		<position y="17.688666" x="-12.00075"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path2459" typeid="ParticleSource">
+		<position y="17.688666" x="-11.45075"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path2465" typeid="ParticleSource">
+		<position y="18.138666" x="-12.97575"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path2467" typeid="ParticleSource">
+		<position y="18.038666" x="-12.47575"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path2469" typeid="ParticleSource">
+		<position y="18.038666" x="-11.87575"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path2471" typeid="ParticleSource">
+		<position y="18.038666" x="-11.02575"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path2473" typeid="ParticleSource">
+		<position y="18.038666" x="-10.77575"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path2475" typeid="ParticleSource">
+		<position y="18.038666" x="-12.92575"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path2477" typeid="ParticleSource">
+		<position y="18.038666" x="-12.47575"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path2479" typeid="ParticleSource">
+		<position y="18.038666" x="-12.12575"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path2481" typeid="ParticleSource">
+		<position y="18.038666" x="-11.92575"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path2483" typeid="ParticleSource">
+		<position y="18.038666" x="-11.37575"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path2485" typeid="ParticleSource">
+		<position y="18.088666" x="-12.25075"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path2487" typeid="ParticleSource">
+		<position y="17.988666" x="-11.75075"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path2489" typeid="ParticleSource">
+		<position y="17.988666" x="-11.15075"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path2491" typeid="ParticleSource">
+		<position y="17.988666" x="-12.85075"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path2493" typeid="ParticleSource">
+		<position y="17.988666" x="-12.60075"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path2495" typeid="ParticleSource">
+		<position y="17.988666" x="-12.20075"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path2497" typeid="ParticleSource">
+		<position y="17.988666" x="-11.75075"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path2499" typeid="ParticleSource">
+		<position y="17.988666" x="-11.40075"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path2501" typeid="ParticleSource">
+		<position y="17.988666" x="-11.20075"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path2503" typeid="ParticleSource">
+		<position y="17.988666" x="-10.65075"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path2505" typeid="ParticleSource">
+		<position y="17.588666" x="-11.35075"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path2507" typeid="ParticleSource">
+		<position y="18.588666" x="-10.82575"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path2509" typeid="ParticleSource">
+		<position y="18.588666" x="-12.77575"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path2511" typeid="ParticleSource">
+		<position y="18.588666" x="-11.92575"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path2513" typeid="ParticleSource">
+		<position y="18.588666" x="-11.67575"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path2515" typeid="ParticleSource">
+		<position y="18.588666" x="-11.27575"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path2517" typeid="ParticleSource">
+		<position y="18.588666" x="-10.82575"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path2519" typeid="ParticleSource">
+		<position y="18.588666" x="-10.47575"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path2521" typeid="ParticleSource">
+		<position y="17.688666" x="-12.85075"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path2523" typeid="ParticleSource">
+		<position y="17.688666" x="-12.30075"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path2525" typeid="ParticleSource">
+		<position y="18.138666" x="-12.67575"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path2527" typeid="ParticleSource">
+		<position y="18.038666" x="-12.17575"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path2529" typeid="ParticleSource">
+		<position y="18.038666" x="-11.57575"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path2531" typeid="ParticleSource">
+		<position y="18.038666" x="-10.72575"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path2533" typeid="ParticleSource">
+		<position y="18.038666" x="-10.47575"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path2535" typeid="ParticleSource">
+		<position y="18.238666" x="-12.62575"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path2537" typeid="ParticleSource">
+		<position y="18.238666" x="-12.17575"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path2539" typeid="ParticleSource">
+		<position y="18.238666" x="-11.82575"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path2541" typeid="ParticleSource">
+		<position y="18.238666" x="-11.62575"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path2543" typeid="ParticleSource">
+		<position y="18.238666" x="-11.07575"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path2545" typeid="ParticleSource">
+		<position y="18.338666" x="-10.92575"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path2547" typeid="ParticleSource">
+		<position y="18.238666" x="-10.42575"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path2549" typeid="ParticleSource">
+		<position y="18.238666" x="-12.37575"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path2551" typeid="ParticleSource">
+		<position y="18.238666" x="-11.52575"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path2553" typeid="ParticleSource">
+		<position y="18.238666" x="-11.27575"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path2555" typeid="ParticleSource">
+		<position y="18.238666" x="-10.87575"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path2557" typeid="ParticleSource">
+		<position y="18.238666" x="-10.42575"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path2559" typeid="ParticleSource">
+		<position y="18.438666" x="-12.62575"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path2561" typeid="ParticleSource">
+		<position y="18.438666" x="-12.42575"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path2563" typeid="ParticleSource">
+		<position y="18.438666" x="-11.87575"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path2565" typeid="ParticleSource">
+		<position y="17.888666" x="-12.80075"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path2567" typeid="ParticleSource">
+		<position y="17.788666" x="-12.30075"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path2569" typeid="ParticleSource">
+		<position y="17.788666" x="-11.70075"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path2571" typeid="ParticleSource">
+		<position y="17.788666" x="-10.85075"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path2573" typeid="ParticleSource">
+		<position y="17.788666" x="-10.60075"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path2575" typeid="ParticleSource">
+		<position y="17.788666" x="-12.75075"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path2577" typeid="ParticleSource">
+		<position y="17.788666" x="-12.30075"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path2579" typeid="ParticleSource">
+		<position y="17.788666" x="-11.95075"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path2581" typeid="ParticleSource">
+		<position y="17.788666" x="-11.75075"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path2583" typeid="ParticleSource">
+		<position y="17.788666" x="-11.20075"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path2585" typeid="ParticleSource">
+		<position y="18.238666" x="-10.87575"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path2587" typeid="ParticleSource">
+		<position y="18.138666" x="-12.92575"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path2589" typeid="ParticleSource">
+		<position y="18.138666" x="-12.32575"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path2591" typeid="ParticleSource">
+		<position y="18.138666" x="-11.47575"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path2593" typeid="ParticleSource">
+		<position y="18.138666" x="-11.22575"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path2595" typeid="ParticleSource">
+		<position y="18.138666" x="-10.82575"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path2597" typeid="ParticleSource">
+		<position y="18.138666" x="-10.37575"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path2599" typeid="ParticleSource">
+		<position y="18.338666" x="-12.57575"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path2601" typeid="ParticleSource">
+		<position y="18.338666" x="-12.37575"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path2603" typeid="ParticleSource">
+		<position y="18.338666" x="-11.82575"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path2605" typeid="ParticleSource">
+		<position y="17.988666" x="-11.65075"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path2607" typeid="ParticleSource">
+		<position y="17.888666" x="-11.15075"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path2609" typeid="ParticleSource">
+		<position y="17.888666" x="-10.55075"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path2611" typeid="ParticleSource">
+		<position y="17.888666" x="-12.25075"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path2613" typeid="ParticleSource">
+		<position y="17.888666" x="-12.00075"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path2615" typeid="ParticleSource">
+		<position y="17.888666" x="-11.60075"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path2617" typeid="ParticleSource">
+		<position y="17.888666" x="-11.15075"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path2619" typeid="ParticleSource">
+		<position y="17.888666" x="-10.80075"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path2621" typeid="ParticleSource">
+		<position y="17.888666" x="-10.60075"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path2623" typeid="ParticleSource">
+		<position y="18.088666" x="-12.60075"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path2625" typeid="ParticleSource">
+		<position y="18.438666" x="-12.42575"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path2627" typeid="ParticleSource">
+		<position y="18.338666" x="-11.92575"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path2629" typeid="ParticleSource">
+		<position y="18.338666" x="-11.32575"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path2631" typeid="ParticleSource">
+		<position y="18.338666" x="-10.47575"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path2633" typeid="ParticleSource">
+		<position y="18.538666" x="-12.77575"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path2635" typeid="ParticleSource">
+		<position y="18.538666" x="-12.37575"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path2637" typeid="ParticleSource">
+		<position y="18.538666" x="-11.92575"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path2639" typeid="ParticleSource">
+		<position y="18.538666" x="-11.57575"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path2641" typeid="ParticleSource">
+		<position y="18.538666" x="-11.37575"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path2643" typeid="ParticleSource">
+		<position y="18.538666" x="-10.82575"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path2645" typeid="ParticleSource">
+		<position y="17.588666" x="-11.22575"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path2647" typeid="ParticleSource">
+		<position y="17.488666" x="-10.72575"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path2649" typeid="ParticleSource">
+		<position y="17.688666" x="-12.67575"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path2651" typeid="ParticleSource">
+		<position y="17.688666" x="-11.82575"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path2653" typeid="ParticleSource">
+		<position y="17.688666" x="-11.57575"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path2655" typeid="ParticleSource">
+		<position y="17.688666" x="-11.17575"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path2657" typeid="ParticleSource">
+		<position y="17.688666" x="-10.72575"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path2659" typeid="ParticleSource">
+		<position y="17.688666" x="-12.92575"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path2661" typeid="ParticleSource">
+		<position y="17.688666" x="-12.72575"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path2663" typeid="ParticleSource">
+		<position y="17.688666" x="-12.17575"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path2665" typeid="ParticleSource">
+		<position y="18.063666" x="-10.70075"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path2667" typeid="ParticleSource">
+		<position y="17.963666" x="-12.75075"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path2669" typeid="ParticleSource">
+		<position y="17.963666" x="-12.15075"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path2671" typeid="ParticleSource">
+		<position y="17.963666" x="-11.30075"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path2673" typeid="ParticleSource">
+		<position y="17.963666" x="-11.05075"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path2675" typeid="ParticleSource">
+		<position y="17.963666" x="-10.65075"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path2677" typeid="ParticleSource">
+		<position y="18.163666" x="-12.75075"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path2679" typeid="ParticleSource">
+		<position y="18.163666" x="-12.40075"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path2681" typeid="ParticleSource">
+		<position y="18.163666" x="-12.20075"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path2683" typeid="ParticleSource">
+		<position y="18.163666" x="-11.65075"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path2685" typeid="ParticleSource">
+		<position y="18.338666" x="-12.70075"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path2687" typeid="ParticleSource">
+		<position y="18.513666" x="-12.67575"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path2689" typeid="ParticleSource">
+		<position y="18.513666" x="-12.07575"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path2691" typeid="ParticleSource">
+		<position y="18.513666" x="-11.22575"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path2693" typeid="ParticleSource">
+		<position y="18.513666" x="-10.97575"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path2695" typeid="ParticleSource">
+		<position y="18.513666" x="-10.57575"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path2697" typeid="ParticleSource">
+		<position y="18.513666" x="-12.67575"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path2699" typeid="ParticleSource">
+		<position y="18.513666" x="-12.32575"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path2701" typeid="ParticleSource">
+		<position y="18.513666" x="-12.12575"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path2703" typeid="ParticleSource">
+		<position y="18.513666" x="-11.57575"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path2705" typeid="ParticleSource">
+		<position y="17.713666" x="-11.62575"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path2707" typeid="ParticleSource">
+		<position y="17.613666" x="-11.12575"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path2709" typeid="ParticleSource">
+		<position y="17.613666" x="-10.52575"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path2711" typeid="ParticleSource">
+		<position y="17.613666" x="-12.22575"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path2713" typeid="ParticleSource">
+		<position y="17.613666" x="-11.97575"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path2715" typeid="ParticleSource">
+		<position y="17.613666" x="-11.57575"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path2717" typeid="ParticleSource">
+		<position y="17.613666" x="-11.12575"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path2719" typeid="ParticleSource">
+		<position y="17.613666" x="-10.77575"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path2721" typeid="ParticleSource">
+		<position y="17.613666" x="-10.57575"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path2723" typeid="ParticleSource">
+		<position y="17.813666" x="-12.57575"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path2725" typeid="ParticleSource">
+		<position y="18.063666" x="-11.55075"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path2727" typeid="ParticleSource">
+		<position y="17.963666" x="-11.05075"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path2729" typeid="ParticleSource">
+		<position y="17.963666" x="-10.45075"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path2731" typeid="ParticleSource">
+		<position y="17.963666" x="-12.15075"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path2733" typeid="ParticleSource">
+		<position y="17.963666" x="-11.90075"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path2735" typeid="ParticleSource">
+		<position y="17.963666" x="-11.50075"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path2737" typeid="ParticleSource">
+		<position y="17.963666" x="-11.05075"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path2739" typeid="ParticleSource">
+		<position y="17.963666" x="-10.70075"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path2741" typeid="ParticleSource">
+		<position y="17.963666" x="-10.50075"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path2743" typeid="ParticleSource">
+		<position y="18.163666" x="-12.50075"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path2745" typeid="ParticleSource">
+		<position y="18.613666" x="-12.87575"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path2747" typeid="ParticleSource">
+		<position y="18.513666" x="-12.37575"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path2749" typeid="ParticleSource">
+		<position y="18.513666" x="-11.77575"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path2751" typeid="ParticleSource">
+		<position y="18.513666" x="-10.92575"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path2753" typeid="ParticleSource">
+		<position y="18.513666" x="-10.67575"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path2755" typeid="ParticleSource">
+		<position y="17.613666" x="-12.85075"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path2757" typeid="ParticleSource">
+		<position y="17.613666" x="-12.40075"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path2759" typeid="ParticleSource">
+		<position y="17.613666" x="-12.05075"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path2761" typeid="ParticleSource">
+		<position y="17.613666" x="-11.85075"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path2763" typeid="ParticleSource">
+		<position y="17.613666" x="-11.30075"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path2765" typeid="ParticleSource">
+		<position y="17.713666" x="-11.15075"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path2767" typeid="ParticleSource">
+		<position y="17.613666" x="-10.65075"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path2769" typeid="ParticleSource">
+		<position y="17.613666" x="-12.60075"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path2771" typeid="ParticleSource">
+		<position y="17.613666" x="-11.75075"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path2773" typeid="ParticleSource">
+		<position y="17.613666" x="-11.50075"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path2775" typeid="ParticleSource">
+		<position y="17.613666" x="-11.10075"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path2777" typeid="ParticleSource">
+		<position y="17.613666" x="-10.65075"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path2779" typeid="ParticleSource">
+		<position y="17.813666" x="-12.85075"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path2781" typeid="ParticleSource">
+		<position y="17.813666" x="-12.65075"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path2783" typeid="ParticleSource">
+		<position y="17.813666" x="-12.10075"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path2785" typeid="ParticleSource">
+		<position y="18.363666" x="-13.00075"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path2787" typeid="ParticleSource">
+		<position y="18.263666" x="-12.50075"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path2789" typeid="ParticleSource">
+		<position y="18.263666" x="-11.90075"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path2791" typeid="ParticleSource">
+		<position y="18.263666" x="-11.05075"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path2793" typeid="ParticleSource">
+		<position y="18.263666" x="-10.80075"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path2795" typeid="ParticleSource">
+		<position y="18.263666" x="-10.40075"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path2797" typeid="ParticleSource">
+		<position y="18.263666" x="-12.50075"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path2799" typeid="ParticleSource">
+		<position y="18.263666" x="-12.15075"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path2801" typeid="ParticleSource">
+		<position y="18.263666" x="-11.95075"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path2803" typeid="ParticleSource">
+		<position y="18.263666" x="-11.40075"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path2805" typeid="ParticleSource">
+		<position y="17.613666" x="-11.10075"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path2807" typeid="ParticleSource">
+		<position y="18.613666" x="-10.57575"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path2809" typeid="ParticleSource">
+		<position y="18.613666" x="-12.52575"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path2811" typeid="ParticleSource">
+		<position y="18.613666" x="-11.67575"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path2813" typeid="ParticleSource">
+		<position y="18.613666" x="-11.42575"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path2815" typeid="ParticleSource">
+		<position y="18.613666" x="-11.02575"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path2817" typeid="ParticleSource">
+		<position y="18.613666" x="-10.57575"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path2819" typeid="ParticleSource">
+		<position y="17.713666" x="-12.80075"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path2821" typeid="ParticleSource">
+		<position y="17.713666" x="-12.60075"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path2823" typeid="ParticleSource">
+		<position y="17.713666" x="-12.05075"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path2825" typeid="ParticleSource">
+		<position y="17.613666" x="-11.02575"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path2827" typeid="ParticleSource">
+		<position y="17.513666" x="-10.52575"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path2829" typeid="ParticleSource">
+		<position y="17.513666" x="-12.47575"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path2831" typeid="ParticleSource">
+		<position y="17.513666" x="-11.62575"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path2833" typeid="ParticleSource">
+		<position y="17.513666" x="-11.37575"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path2835" typeid="ParticleSource">
+		<position y="17.513666" x="-10.97575"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path2837" typeid="ParticleSource">
+		<position y="17.513666" x="-10.52575"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path2839" typeid="ParticleSource">
+		<position y="17.713666" x="-12.72575"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path2841" typeid="ParticleSource">
+		<position y="17.713666" x="-12.52575"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path2843" typeid="ParticleSource">
+		<position y="17.713666" x="-11.97575"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path2845" typeid="ParticleSource">
+		<position y="17.813666" x="-12.65075"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path2847" typeid="ParticleSource">
+		<position y="17.713666" x="-12.15075"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path2849" typeid="ParticleSource">
+		<position y="17.713666" x="-11.55075"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path2851" typeid="ParticleSource">
+		<position y="17.713666" x="-10.70075"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path2853" typeid="ParticleSource">
+		<position y="17.713666" x="-10.45075"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path2855" typeid="ParticleSource">
+		<position y="17.913666" x="-12.60075"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path2857" typeid="ParticleSource">
+		<position y="17.913666" x="-12.15075"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path2859" typeid="ParticleSource">
+		<position y="17.913666" x="-11.80075"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path2861" typeid="ParticleSource">
+		<position y="17.913666" x="-11.60075"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path2863" typeid="ParticleSource">
+		<position y="17.913666" x="-11.05075"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path2865" typeid="ParticleSource">
+		<position y="18.063666" x="-11.42575"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path2867" typeid="ParticleSource">
+		<position y="17.963666" x="-10.92575"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path2869" typeid="ParticleSource">
+		<position y="18.163666" x="-12.87575"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path2871" typeid="ParticleSource">
+		<position y="18.163666" x="-12.02575"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path2873" typeid="ParticleSource">
+		<position y="18.163666" x="-11.77575"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path2875" typeid="ParticleSource">
+		<position y="18.163666" x="-11.37575"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path2877" typeid="ParticleSource">
+		<position y="18.163666" x="-10.92575"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path2879" typeid="ParticleSource">
+		<position y="18.163666" x="-10.57575"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path2881" typeid="ParticleSource">
+		<position y="18.163666" x="-12.92575"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path2883" typeid="ParticleSource">
+		<position y="18.163666" x="-12.37575"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path2885" typeid="ParticleSource">
+		<position y="18.013666" x="-11.25075"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path2887" typeid="ParticleSource">
+		<position y="17.913666" x="-10.75075"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path2889" typeid="ParticleSource">
+		<position y="18.113666" x="-12.70075"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path2891" typeid="ParticleSource">
+		<position y="18.113666" x="-11.85075"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path2893" typeid="ParticleSource">
+		<position y="18.113666" x="-11.60075"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path2895" typeid="ParticleSource">
+		<position y="18.113666" x="-11.20075"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path2897" typeid="ParticleSource">
+		<position y="18.113666" x="-10.75075"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path2899" typeid="ParticleSource">
+		<position y="18.113666" x="-10.40075"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path2901" typeid="ParticleSource">
+		<position y="18.113666" x="-12.75075"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path2903" typeid="ParticleSource">
+		<position y="18.113666" x="-12.20075"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path2905" typeid="ParticleSource">
+		<position y="18.563666" x="-11.17575"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path2907" typeid="ParticleSource">
+		<position y="18.463666" x="-10.67575"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path2909" typeid="ParticleSource">
+		<position y="18.463666" x="-12.62575"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path2911" typeid="ParticleSource">
+		<position y="18.463666" x="-11.77575"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path2913" typeid="ParticleSource">
+		<position y="18.463666" x="-11.52575"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path2915" typeid="ParticleSource">
+		<position y="18.463666" x="-11.12575"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path2917" typeid="ParticleSource">
+		<position y="18.463666" x="-10.67575"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path2919" typeid="ParticleSource">
+		<position y="17.563666" x="-12.90075"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path2921" typeid="ParticleSource">
+		<position y="17.563666" x="-12.70075"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path2923" typeid="ParticleSource">
+		<position y="17.563666" x="-12.15075"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path2925" typeid="ParticleSource">
+		<position y="17.663666" x="-12.17575"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path2927" typeid="ParticleSource">
+		<position y="17.563666" x="-11.67575"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path2929" typeid="ParticleSource">
+		<position y="17.563666" x="-11.07575"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path2931" typeid="ParticleSource">
+		<position y="17.763666" x="-12.77575"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path2933" typeid="ParticleSource">
+		<position y="17.763666" x="-12.52575"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path2935" typeid="ParticleSource">
+		<position y="17.763666" x="-12.12575"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path2937" typeid="ParticleSource">
+		<position y="17.763666" x="-11.67575"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path2939" typeid="ParticleSource">
+		<position y="17.763666" x="-11.32575"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path2941" typeid="ParticleSource">
+		<position y="17.763666" x="-11.12575"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path2943" typeid="ParticleSource">
+		<position y="17.763666" x="-10.57575"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path2945" typeid="ParticleSource">
+		<position y="18.013666" x="-12.10075"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path2947" typeid="ParticleSource">
+		<position y="17.913666" x="-11.60075"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path2949" typeid="ParticleSource">
+		<position y="17.913666" x="-11.00075"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path2951" typeid="ParticleSource">
+		<position y="18.113666" x="-12.70075"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path2953" typeid="ParticleSource">
+		<position y="18.113666" x="-12.45075"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path2955" typeid="ParticleSource">
+		<position y="18.113666" x="-12.05075"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path2957" typeid="ParticleSource">
+		<position y="18.113666" x="-11.60075"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path2959" typeid="ParticleSource">
+		<position y="18.113666" x="-11.25075"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path2961" typeid="ParticleSource">
+		<position y="18.113666" x="-11.05075"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path2963" typeid="ParticleSource">
+		<position y="18.113666" x="-10.50075"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path2965" typeid="ParticleSource">
+		<position y="18.563666" x="-10.87575"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path2967" typeid="ParticleSource">
+		<position y="18.463666" x="-10.37575"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path2969" typeid="ParticleSource">
+		<position y="17.563666" x="-12.35075"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path2971" typeid="ParticleSource">
+		<position y="17.563666" x="-11.50075"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path2973" typeid="ParticleSource">
+		<position y="17.563666" x="-11.25075"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path2975" typeid="ParticleSource">
+		<position y="17.563666" x="-10.85075"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path2977" typeid="ParticleSource">
+		<position y="17.563666" x="-10.40075"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path2979" typeid="ParticleSource">
+		<position y="17.563666" x="-12.60075"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path2981" typeid="ParticleSource">
+		<position y="17.563666" x="-12.40075"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path2983" typeid="ParticleSource">
+		<position y="17.563666" x="-11.85075"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path2985" typeid="ParticleSource">
+		<position y="17.663666" x="-11.70075"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path2987" typeid="ParticleSource">
+		<position y="17.563666" x="-11.20075"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path2989" typeid="ParticleSource">
+		<position y="17.563666" x="-10.60075"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path2991" typeid="ParticleSource">
+		<position y="17.763666" x="-12.30075"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path2993" typeid="ParticleSource">
+		<position y="17.763666" x="-12.05075"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path2995" typeid="ParticleSource">
+		<position y="17.763666" x="-11.65075"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path2997" typeid="ParticleSource">
+		<position y="17.763666" x="-11.20075"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path2999" typeid="ParticleSource">
+		<position y="17.763666" x="-10.85075"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path3001" typeid="ParticleSource">
+		<position y="17.763666" x="-10.65075"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path3003" typeid="ParticleSource">
+		<position y="17.763666" x="-12.65075"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path3005" typeid="ParticleSource">
+		<position y="18.313666" x="-11.00075"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path3007" typeid="ParticleSource">
+		<position y="18.213666" x="-10.50075"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path3009" typeid="ParticleSource">
+		<position y="18.213666" x="-12.45075"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path3011" typeid="ParticleSource">
+		<position y="18.213666" x="-11.60075"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path3013" typeid="ParticleSource">
+		<position y="18.213666" x="-11.35075"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path3015" typeid="ParticleSource">
+		<position y="18.213666" x="-10.95075"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path3017" typeid="ParticleSource">
+		<position y="18.213666" x="-10.50075"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path3019" typeid="ParticleSource">
+		<position y="18.413666" x="-12.70075"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path3021" typeid="ParticleSource">
+		<position y="18.413666" x="-12.50075"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path3023" typeid="ParticleSource">
+		<position y="18.413666" x="-11.95075"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path3025" typeid="ParticleSource">
+		<position y="17.563666" x="-11.65075"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path3027" typeid="ParticleSource">
+		<position y="18.563666" x="-11.12575"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path3029" typeid="ParticleSource">
+		<position y="18.563666" x="-10.52575"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path3031" typeid="ParticleSource">
+		<position y="17.663666" x="-12.25075"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path3033" typeid="ParticleSource">
+		<position y="17.663666" x="-12.00075"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path3035" typeid="ParticleSource">
+		<position y="17.663666" x="-11.60075"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path3037" typeid="ParticleSource">
+		<position y="17.663666" x="-11.15075"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path3039" typeid="ParticleSource">
+		<position y="17.663666" x="-10.80075"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path3041" typeid="ParticleSource">
+		<position y="17.663666" x="-10.60075"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path3043" typeid="ParticleSource">
+		<position y="17.663666" x="-12.60075"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path3045" typeid="ParticleSource">
+		<position y="17.563666" x="-11.57575"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path3047" typeid="ParticleSource">
+		<position y="17.463666" x="-11.07575"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path3049" typeid="ParticleSource">
+		<position y="17.463666" x="-10.47575"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path3051" typeid="ParticleSource">
+		<position y="17.663666" x="-12.17575"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path3053" typeid="ParticleSource">
+		<position y="17.663666" x="-11.92575"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path3055" typeid="ParticleSource">
+		<position y="17.663666" x="-11.52575"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path3057" typeid="ParticleSource">
+		<position y="17.663666" x="-11.07575"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path3059" typeid="ParticleSource">
+		<position y="17.663666" x="-10.72575"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path3061" typeid="ParticleSource">
+		<position y="17.663666" x="-10.52575"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path3063" typeid="ParticleSource">
+		<position y="17.663666" x="-12.52575"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path3065" typeid="ParticleSource">
+		<position y="17.763666" x="-10.65075"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path3067" typeid="ParticleSource">
+		<position y="17.863666" x="-12.70075"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path3069" typeid="ParticleSource">
+		<position y="17.863666" x="-12.10075"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path3071" typeid="ParticleSource">
+		<position y="17.863666" x="-11.25075"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path3073" typeid="ParticleSource">
+		<position y="17.863666" x="-11.00075"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path3075" typeid="ParticleSource">
+		<position y="17.863666" x="-10.60075"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path3077" typeid="ParticleSource">
+		<position y="17.863666" x="-12.70075"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path3079" typeid="ParticleSource">
+		<position y="17.863666" x="-12.35075"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path3081" typeid="ParticleSource">
+		<position y="17.863666" x="-12.15075"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path3083" typeid="ParticleSource">
+		<position y="17.863666" x="-11.60075"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path3085" typeid="ParticleSource">
+		<position y="18.213666" x="-11.97575"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path3087" typeid="ParticleSource">
+		<position y="18.113666" x="-11.47575"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path3089" typeid="ParticleSource">
+		<position y="18.113666" x="-10.87575"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path3091" typeid="ParticleSource">
+		<position y="18.113666" x="-12.57575"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path3093" typeid="ParticleSource">
+		<position y="18.113666" x="-12.32575"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path3095" typeid="ParticleSource">
+		<position y="18.113666" x="-11.92575"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path3097" typeid="ParticleSource">
+		<position y="18.113666" x="-11.47575"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path3099" typeid="ParticleSource">
+		<position y="18.113666" x="-11.12575"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path3101" typeid="ParticleSource">
+		<position y="18.113666" x="-10.92575"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path3103" typeid="ParticleSource">
+		<position y="18.113666" x="-10.37575"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path3105" typeid="ParticleSource">
+		<position y="17.613666" x="-12.90075"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path3107" typeid="ParticleSource">
+		<position y="17.513666" x="-12.40075"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path3109" typeid="ParticleSource">
+		<position y="17.513666" x="-11.80075"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path3111" typeid="ParticleSource">
+		<position y="17.513666" x="-10.95075"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path3113" typeid="ParticleSource">
+		<position y="17.513666" x="-10.70075"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path3115" typeid="ParticleSource">
+		<position y="17.513666" x="-12.85075"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path3117" typeid="ParticleSource">
+		<position y="17.513666" x="-12.40075"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path3119" typeid="ParticleSource">
+		<position y="17.513666" x="-12.05075"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path3121" typeid="ParticleSource">
+		<position y="17.513666" x="-11.85075"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path3123" typeid="ParticleSource">
+		<position y="17.513666" x="-11.30075"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path3125" typeid="ParticleSource">
+		<position y="17.963666" x="-12.82575"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path3127" typeid="ParticleSource">
+		<position y="17.863666" x="-12.32575"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path3129" typeid="ParticleSource">
+		<position y="17.863666" x="-11.72575"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path3131" typeid="ParticleSource">
+		<position y="17.863666" x="-10.87575"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path3133" typeid="ParticleSource">
+		<position y="17.863666" x="-10.62575"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path3135" typeid="ParticleSource">
+		<position y="18.063666" x="-12.77575"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path3137" typeid="ParticleSource">
+		<position y="18.063666" x="-12.32575"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path3139" typeid="ParticleSource">
+		<position y="18.063666" x="-11.97575"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path3141" typeid="ParticleSource">
+		<position y="18.063666" x="-11.77575"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path3143" typeid="ParticleSource">
+		<position y="18.063666" x="-11.22575"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path3145" typeid="ParticleSource">
+		<position y="17.913666" x="-12.10075"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path3147" typeid="ParticleSource">
+		<position y="17.813666" x="-11.60075"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path3149" typeid="ParticleSource">
+		<position y="17.813666" x="-11.00075"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path3151" typeid="ParticleSource">
+		<position y="18.013666" x="-12.70075"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path3153" typeid="ParticleSource">
+		<position y="18.013666" x="-12.45075"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path3155" typeid="ParticleSource">
+		<position y="18.013666" x="-12.05075"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path3157" typeid="ParticleSource">
+		<position y="18.013666" x="-11.60075"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path3159" typeid="ParticleSource">
+		<position y="18.013666" x="-11.25075"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path3161" typeid="ParticleSource">
+		<position y="18.013666" x="-11.05075"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path3163" typeid="ParticleSource">
+		<position y="18.013666" x="-10.50075"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path3165" typeid="ParticleSource">
+		<position y="18.513666" x="-11.17575"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path3167" typeid="ParticleSource">
+		<position y="18.413666" x="-10.67575"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path3169" typeid="ParticleSource">
+		<position y="18.613666" x="-12.62575"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path3171" typeid="ParticleSource">
+		<position y="18.613666" x="-11.77575"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path3173" typeid="ParticleSource">
+		<position y="18.613666" x="-11.52575"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path3175" typeid="ParticleSource">
+		<position y="18.613666" x="-11.12575"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path3177" typeid="ParticleSource">
+		<position y="18.613666" x="-10.67575"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path3179" typeid="ParticleSource">
+		<position y="18.613666" x="-12.87575"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path3181" typeid="ParticleSource">
+		<position y="18.613666" x="-12.67575"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path3183" typeid="ParticleSource">
+		<position y="18.613666" x="-12.12575"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path3185" typeid="ParticleSource">
+		<position y="18.163666" x="-12.52575"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path3187" typeid="ParticleSource">
+		<position y="18.063666" x="-12.02575"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path3189" typeid="ParticleSource">
+		<position y="18.063666" x="-11.42575"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path3191" typeid="ParticleSource">
+		<position y="18.063666" x="-10.57575"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path3193" typeid="ParticleSource">
+		<position y="18.063666" x="-12.87575"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path3195" typeid="ParticleSource">
+		<position y="18.063666" x="-12.47575"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path3197" typeid="ParticleSource">
+		<position y="18.063666" x="-12.02575"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path3199" typeid="ParticleSource">
+		<position y="18.063666" x="-11.67575"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path3201" typeid="ParticleSource">
+		<position y="18.063666" x="-11.47575"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path3203" typeid="ParticleSource">
+		<position y="18.063666" x="-10.92575"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path3205" typeid="ParticleSource">
+		<position y="18.163666" x="-10.77575"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path3207" typeid="ParticleSource">
+		<position y="18.263666" x="-12.82575"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path3209" typeid="ParticleSource">
+		<position y="18.263666" x="-12.22575"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path3211" typeid="ParticleSource">
+		<position y="18.263666" x="-11.37575"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path3213" typeid="ParticleSource">
+		<position y="18.263666" x="-11.12575"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path3215" typeid="ParticleSource">
+		<position y="18.263666" x="-10.72575"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path3217" typeid="ParticleSource">
+		<position y="18.263666" x="-12.82575"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path3219" typeid="ParticleSource">
+		<position y="18.263666" x="-12.47575"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path3221" typeid="ParticleSource">
+		<position y="18.263666" x="-12.27575"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path3223" typeid="ParticleSource">
+		<position y="18.263666" x="-11.72575"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path3225" typeid="ParticleSource">
+		<position y="17.713666" x="-12.65075"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path3227" typeid="ParticleSource">
+		<position y="17.613666" x="-12.15075"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path3229" typeid="ParticleSource">
+		<position y="17.613666" x="-11.55075"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path3231" typeid="ParticleSource">
+		<position y="17.613666" x="-10.70075"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path3233" typeid="ParticleSource">
+		<position y="17.613666" x="-10.45075"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path3235" typeid="ParticleSource">
+		<position y="17.813666" x="-12.60075"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path3237" typeid="ParticleSource">
+		<position y="17.813666" x="-12.15075"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path3239" typeid="ParticleSource">
+		<position y="17.813666" x="-11.80075"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path3241" typeid="ParticleSource">
+		<position y="17.813666" x="-11.60075"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path3243" typeid="ParticleSource">
+		<position y="17.813666" x="-11.05075"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path3245" typeid="ParticleSource">
+		<position y="18.063666" x="-10.72575"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path3247" typeid="ParticleSource">
+		<position y="18.163666" x="-12.77575"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path3249" typeid="ParticleSource">
+		<position y="18.163666" x="-12.17575"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path3251" typeid="ParticleSource">
+		<position y="18.163666" x="-11.32575"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path3253" typeid="ParticleSource">
+		<position y="18.163666" x="-11.07575"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path3255" typeid="ParticleSource">
+		<position y="18.163666" x="-10.67575"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path3257" typeid="ParticleSource">
+		<position y="18.163666" x="-12.77575"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path3259" typeid="ParticleSource">
+		<position y="18.163666" x="-12.42575"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path3261" typeid="ParticleSource">
+		<position y="18.163666" x="-12.22575"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path3263" typeid="ParticleSource">
+		<position y="18.163666" x="-11.67575"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path3265" typeid="ParticleSource">
+		<position y="17.813666" x="-11.50075"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path3267" typeid="ParticleSource">
+		<position y="17.713666" x="-11.00075"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path3269" typeid="ParticleSource">
+		<position y="17.713666" x="-10.40075"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path3271" typeid="ParticleSource">
+		<position y="17.913666" x="-12.10075"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path3273" typeid="ParticleSource">
+		<position y="17.913666" x="-11.85075"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path3275" typeid="ParticleSource">
+		<position y="17.913666" x="-11.45075"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path3277" typeid="ParticleSource">
+		<position y="17.913666" x="-11.00075"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path3279" typeid="ParticleSource">
+		<position y="17.913666" x="-10.65075"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path3281" typeid="ParticleSource">
+		<position y="17.913666" x="-10.45075"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path3283" typeid="ParticleSource">
+		<position y="17.913666" x="-12.45075"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path3285" typeid="ParticleSource">
+		<position y="18.463666" x="-12.27575"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path3287" typeid="ParticleSource">
+		<position y="18.363666" x="-11.77575"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path3289" typeid="ParticleSource">
+		<position y="18.363666" x="-11.17575"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path3291" typeid="ParticleSource">
+		<position y="18.363666" x="-12.87575"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path3293" typeid="ParticleSource">
+		<position y="18.363666" x="-12.62575"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path3295" typeid="ParticleSource">
+		<position y="18.363666" x="-12.22575"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path3297" typeid="ParticleSource">
+		<position y="18.363666" x="-11.77575"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path3299" typeid="ParticleSource">
+		<position y="18.363666" x="-11.42575"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path3301" typeid="ParticleSource">
+		<position y="18.363666" x="-11.22575"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path3303" typeid="ParticleSource">
+		<position y="18.363666" x="-10.67575"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path3305" typeid="ParticleSource">
+		<position y="18.463666" x="-11.90075"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path3307" typeid="ParticleSource">
+		<position y="18.363666" x="-11.40075"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path3309" typeid="ParticleSource">
+		<position y="18.363666" x="-10.80075"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path3311" typeid="ParticleSource">
+		<position y="18.363666" x="-12.50075"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path3313" typeid="ParticleSource">
+		<position y="18.363666" x="-12.25075"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path3315" typeid="ParticleSource">
+		<position y="18.363666" x="-11.85075"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path3317" typeid="ParticleSource">
+		<position y="18.363666" x="-11.40075"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path3319" typeid="ParticleSource">
+		<position y="18.363666" x="-11.05075"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path3321" typeid="ParticleSource">
+		<position y="18.363666" x="-10.85075"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path3323" typeid="ParticleSource">
+		<position y="18.363666" x="-10.30075"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path3325" typeid="ParticleSource">
+		<position y="18.213666" x="-12.05075"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path3327" typeid="ParticleSource">
+		<position y="18.113666" x="-11.55075"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path3329" typeid="ParticleSource">
+		<position y="18.113666" x="-10.95075"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path3331" typeid="ParticleSource">
+		<position y="18.313666" x="-12.65075"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path3333" typeid="ParticleSource">
+		<position y="18.313666" x="-12.40075"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path3335" typeid="ParticleSource">
+		<position y="18.313666" x="-12.00075"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path3337" typeid="ParticleSource">
+		<position y="18.313666" x="-11.55075"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path3339" typeid="ParticleSource">
+		<position y="18.313666" x="-11.20075"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path3341" typeid="ParticleSource">
+		<position y="18.313666" x="-11.00075"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path3343" typeid="ParticleSource">
+		<position y="18.313666" x="-10.45075"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path3345" typeid="ParticleSource">
+		<position y="17.663666" x="-12.00075"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path3347" typeid="ParticleSource">
+		<position y="17.563666" x="-11.50075"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path3349" typeid="ParticleSource">
+		<position y="17.563666" x="-10.90075"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path3351" typeid="ParticleSource">
+		<position y="17.563666" x="-12.60075"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path3353" typeid="ParticleSource">
+		<position y="17.563666" x="-12.35075"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path3355" typeid="ParticleSource">
+		<position y="17.563666" x="-11.95075"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path3357" typeid="ParticleSource">
+		<position y="17.563666" x="-11.50075"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path3359" typeid="ParticleSource">
+		<position y="17.563666" x="-11.15075"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path3361" typeid="ParticleSource">
+		<position y="17.563666" x="-10.95075"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path3363" typeid="ParticleSource">
+		<position y="17.563666" x="-10.40075"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path3365" typeid="ParticleSource">
+		<position y="17.863666" x="-10.42575"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path3367" typeid="ParticleSource">
+		<position y="17.763666" x="-12.47575"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path3369" typeid="ParticleSource">
+		<position y="17.763666" x="-11.87575"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path3371" typeid="ParticleSource">
+		<position y="17.763666" x="-11.02575"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path3373" typeid="ParticleSource">
+		<position y="17.763666" x="-10.77575"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path3375" typeid="ParticleSource">
+		<position y="17.763666" x="-10.37575"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path3377" typeid="ParticleSource">
+		<position y="17.963666" x="-12.47575"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path3379" typeid="ParticleSource">
+		<position y="17.963666" x="-12.12575"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path3381" typeid="ParticleSource">
+		<position y="17.963666" x="-11.92575"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path3383" typeid="ParticleSource">
+		<position y="17.963666" x="-11.37575"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path3385" typeid="ParticleSource">
+		<position y="18.213666" x="-12.90075"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path3387" typeid="ParticleSource">
+		<position y="18.113666" x="-12.40075"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path3389" typeid="ParticleSource">
+		<position y="18.113666" x="-11.80075"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path3391" typeid="ParticleSource">
+		<position y="18.113666" x="-10.95075"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path3393" typeid="ParticleSource">
+		<position y="18.113666" x="-10.70075"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path3395" typeid="ParticleSource">
+		<position y="18.313666" x="-12.85075"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path3397" typeid="ParticleSource">
+		<position y="18.313666" x="-12.40075"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path3399" typeid="ParticleSource">
+		<position y="18.313666" x="-12.05075"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path3401" typeid="ParticleSource">
+		<position y="18.313666" x="-11.85075"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path3403" typeid="ParticleSource">
+		<position y="18.313666" x="-11.30075"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path3405" typeid="ParticleSource">
+		<position y="17.663666" x="-11.70075"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path3407" typeid="ParticleSource">
+		<position y="17.563666" x="-11.20075"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path3409" typeid="ParticleSource">
+		<position y="17.563666" x="-10.60075"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path3411" typeid="ParticleSource">
+		<position y="17.763666" x="-12.30075"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path3413" typeid="ParticleSource">
+		<position y="17.763666" x="-12.05075"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path3415" typeid="ParticleSource">
+		<position y="17.763666" x="-11.65075"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path3417" typeid="ParticleSource">
+		<position y="17.763666" x="-11.20075"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path3419" typeid="ParticleSource">
+		<position y="17.763666" x="-10.85075"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path3421" typeid="ParticleSource">
+		<position y="17.763666" x="-10.65075"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path3423" typeid="ParticleSource">
+		<position y="17.763666" x="-12.65075"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path3425" typeid="ParticleSource">
+		<position y="17.863666" x="-12.50075"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path3427" typeid="ParticleSource">
+		<position y="17.763666" x="-12.00075"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path3429" typeid="ParticleSource">
+		<position y="17.763666" x="-11.40075"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path3431" typeid="ParticleSource">
+		<position y="17.763666" x="-10.55075"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path3433" typeid="ParticleSource">
+		<position y="17.963666" x="-12.85075"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path3435" typeid="ParticleSource">
+		<position y="17.963666" x="-12.45075"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path3437" typeid="ParticleSource">
+		<position y="17.963666" x="-12.00075"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path3439" typeid="ParticleSource">
+		<position y="17.963666" x="-11.65075"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path3441" typeid="ParticleSource">
+		<position y="17.963666" x="-11.45075"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path3443" typeid="ParticleSource">
+		<position y="17.963666" x="-10.90075"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path3445" typeid="ParticleSource">
+		<position y="18.513666" x="-11.80075"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path3447" typeid="ParticleSource">
+		<position y="18.413666" x="-11.30075"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path3449" typeid="ParticleSource">
+		<position y="18.413666" x="-10.70075"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path3451" typeid="ParticleSource">
+		<position y="18.413666" x="-12.40075"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path3453" typeid="ParticleSource">
+		<position y="18.413666" x="-12.15075"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path3455" typeid="ParticleSource">
+		<position y="18.413666" x="-11.75075"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path3457" typeid="ParticleSource">
+		<position y="18.413666" x="-11.30075"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path3459" typeid="ParticleSource">
+		<position y="18.413666" x="-10.95075"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path3461" typeid="ParticleSource">
+		<position y="18.413666" x="-10.75075"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path3463" typeid="ParticleSource">
+		<position y="18.613666" x="-12.75075"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path3465" typeid="ParticleSource">
+		<position y="17.763666" x="-12.45075"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path3467" typeid="ParticleSource">
+		<position y="17.663666" x="-11.95075"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path3469" typeid="ParticleSource">
+		<position y="17.663666" x="-11.35075"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path3471" typeid="ParticleSource">
+		<position y="17.663666" x="-10.50075"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path3473" typeid="ParticleSource">
+		<position y="17.863666" x="-12.80075"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path3475" typeid="ParticleSource">
+		<position y="17.863666" x="-12.40075"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path3477" typeid="ParticleSource">
+		<position y="17.863666" x="-11.95075"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path3479" typeid="ParticleSource">
+		<position y="17.863666" x="-11.60075"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path3481" typeid="ParticleSource">
+		<position y="17.863666" x="-11.40075"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path3483" typeid="ParticleSource">
+		<position y="17.863666" x="-10.85075"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path3485" typeid="ParticleSource">
+		<position y="17.763666" x="-12.37575"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path3487" typeid="ParticleSource">
+		<position y="17.663666" x="-11.87575"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path3489" typeid="ParticleSource">
+		<position y="17.663666" x="-11.27575"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path3491" typeid="ParticleSource">
+		<position y="17.663666" x="-10.42575"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path3493" typeid="ParticleSource">
+		<position y="17.863666" x="-12.72575"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path3495" typeid="ParticleSource">
+		<position y="17.863666" x="-12.32575"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path3497" typeid="ParticleSource">
+		<position y="17.863666" x="-11.87575"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path3499" typeid="ParticleSource">
+		<position y="17.863666" x="-11.52575"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path3501" typeid="ParticleSource">
+		<position y="17.863666" x="-11.32575"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path3503" typeid="ParticleSource">
+		<position y="17.863666" x="-10.77575"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path3505" typeid="ParticleSource">
+		<position y="17.963666" x="-11.45075"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path3507" typeid="ParticleSource">
+		<position y="17.863666" x="-10.95075"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path3509" typeid="ParticleSource">
+		<position y="18.063666" x="-12.90075"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path3511" typeid="ParticleSource">
+		<position y="18.063666" x="-12.05075"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path3513" typeid="ParticleSource">
+		<position y="18.063666" x="-11.80075"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path3515" typeid="ParticleSource">
+		<position y="18.063666" x="-11.40075"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path3517" typeid="ParticleSource">
+		<position y="18.063666" x="-10.95075"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path3519" typeid="ParticleSource">
+		<position y="18.063666" x="-10.60075"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path3521" typeid="ParticleSource">
+		<position y="18.063666" x="-10.40075"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path3523" typeid="ParticleSource">
+		<position y="18.063666" x="-12.40075"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path3525" typeid="ParticleSource">
+		<position y="18.413666" x="-12.77575"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path3527" typeid="ParticleSource">
+		<position y="18.313666" x="-12.27575"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path3529" typeid="ParticleSource">
+		<position y="18.313666" x="-11.67575"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path3531" typeid="ParticleSource">
+		<position y="18.313666" x="-10.82575"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path3533" typeid="ParticleSource">
+		<position y="18.313666" x="-10.57575"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path3535" typeid="ParticleSource">
+		<position y="18.313666" x="-12.72575"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path3537" typeid="ParticleSource">
+		<position y="18.313666" x="-12.27575"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path3539" typeid="ParticleSource">
+		<position y="18.313666" x="-11.92575"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path3541" typeid="ParticleSource">
+		<position y="18.313666" x="-11.72575"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path3543" typeid="ParticleSource">
+		<position y="18.313666" x="-11.17575"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path3545" typeid="ParticleSource">
+		<position y="18.113666" x="-12.45075"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path3547" typeid="ParticleSource">
+		<position y="18.013666" x="-11.95075"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path3549" typeid="ParticleSource">
+		<position y="18.013666" x="-11.35075"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path3551" typeid="ParticleSource">
+		<position y="18.013666" x="-10.50075"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path3553" typeid="ParticleSource">
+		<position y="18.213666" x="-12.80075"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path3555" typeid="ParticleSource">
+		<position y="18.213666" x="-12.40075"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path3557" typeid="ParticleSource">
+		<position y="18.213666" x="-11.95075"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path3559" typeid="ParticleSource">
+		<position y="18.213666" x="-11.60075"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path3561" typeid="ParticleSource">
+		<position y="18.213666" x="-11.40075"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path3563" typeid="ParticleSource">
+		<position y="18.213666" x="-10.85075"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path3565" typeid="ParticleSource">
+		<position y="17.563666" x="-12.40075"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path3567" typeid="ParticleSource">
+		<position y="18.563666" x="-11.87575"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path3569" typeid="ParticleSource">
+		<position y="18.563666" x="-11.27575"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path3571" typeid="ParticleSource">
+		<position y="18.563666" x="-10.42575"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path3573" typeid="ParticleSource">
+		<position y="18.563666" x="-12.72575"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path3575" typeid="ParticleSource">
+		<position y="18.563666" x="-12.32575"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path3577" typeid="ParticleSource">
+		<position y="18.563666" x="-11.87575"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path3579" typeid="ParticleSource">
+		<position y="18.563666" x="-11.52575"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path3581" typeid="ParticleSource">
+		<position y="18.563666" x="-11.32575"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path3583" typeid="ParticleSource">
+		<position y="18.563666" x="-10.77575"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path3585" typeid="ParticleSource">
+		<position y="17.763666" x="-10.82575"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path3587" typeid="ParticleSource">
+		<position y="17.663666" x="-12.87575"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path3589" typeid="ParticleSource">
+		<position y="17.663666" x="-12.27575"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path3591" typeid="ParticleSource">
+		<position y="17.663666" x="-11.42575"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path3593" typeid="ParticleSource">
+		<position y="17.663666" x="-11.17575"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path3595" typeid="ParticleSource">
+		<position y="17.663666" x="-10.77575"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path3597" typeid="ParticleSource">
+		<position y="17.863666" x="-12.87575"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path3599" typeid="ParticleSource">
+		<position y="17.863666" x="-12.52575"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path3601" typeid="ParticleSource">
+		<position y="17.863666" x="-12.32575"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path3603" typeid="ParticleSource">
+		<position y="17.863666" x="-11.77575"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path3605" typeid="ParticleSource">
+		<position y="18.113666" x="-10.75075"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path3607" typeid="ParticleSource">
+		<position y="18.013666" x="-12.80075"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path3609" typeid="ParticleSource">
+		<position y="18.013666" x="-12.20075"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path3611" typeid="ParticleSource">
+		<position y="18.013666" x="-11.35075"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path3613" typeid="ParticleSource">
+		<position y="18.013666" x="-11.10075"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path3615" typeid="ParticleSource">
+		<position y="18.013666" x="-10.70075"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path3617" typeid="ParticleSource">
+		<position y="18.213666" x="-12.80075"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path3619" typeid="ParticleSource">
+		<position y="18.213666" x="-12.45075"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path3621" typeid="ParticleSource">
+		<position y="18.213666" x="-12.25075"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path3623" typeid="ParticleSource">
+		<position y="18.213666" x="-11.70075"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path3625" typeid="ParticleSource">
+		<position y="17.563666" x="-12.10075"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path3627" typeid="ParticleSource">
+		<position y="18.563666" x="-11.57575"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path3629" typeid="ParticleSource">
+		<position y="18.563666" x="-10.97575"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path3631" typeid="ParticleSource">
+		<position y="17.663666" x="-12.70075"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path3633" typeid="ParticleSource">
+		<position y="17.663666" x="-12.45075"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path3635" typeid="ParticleSource">
+		<position y="17.663666" x="-12.05075"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path3637" typeid="ParticleSource">
+		<position y="17.663666" x="-11.60075"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path3639" typeid="ParticleSource">
+		<position y="17.663666" x="-11.25075"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path3641" typeid="ParticleSource">
+		<position y="17.663666" x="-11.05075"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path3643" typeid="ParticleSource">
+		<position y="17.663666" x="-10.50075"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path3645" typeid="ParticleSource">
+		<position y="17.763666" x="-12.90075"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path3647" typeid="ParticleSource">
+		<position y="17.663666" x="-12.40075"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path3649" typeid="ParticleSource">
+		<position y="17.663666" x="-11.80075"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path3651" typeid="ParticleSource">
+		<position y="17.663666" x="-10.95075"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path3653" typeid="ParticleSource">
+		<position y="17.663666" x="-10.70075"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path3655" typeid="ParticleSource">
+		<position y="17.863666" x="-12.85075"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path3657" typeid="ParticleSource">
+		<position y="17.863666" x="-12.40075"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path3659" typeid="ParticleSource">
+		<position y="17.863666" x="-12.05075"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path3661" typeid="ParticleSource">
+		<position y="17.863666" x="-11.85075"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path3663" typeid="ParticleSource">
+		<position y="17.863666" x="-11.30075"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path3665" typeid="ParticleSource">
+		<position y="18.413666" x="-12.20075"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path3667" typeid="ParticleSource">
+		<position y="18.313666" x="-11.70075"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path3669" typeid="ParticleSource">
+		<position y="18.313666" x="-11.10075"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path3671" typeid="ParticleSource">
+		<position y="18.313666" x="-12.80075"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path3673" typeid="ParticleSource">
+		<position y="18.313666" x="-12.55075"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path3675" typeid="ParticleSource">
+		<position y="18.313666" x="-12.15075"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path3677" typeid="ParticleSource">
+		<position y="18.313666" x="-11.70075"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path3679" typeid="ParticleSource">
+		<position y="18.313666" x="-11.35075"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path3681" typeid="ParticleSource">
+		<position y="18.313666" x="-11.15075"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path3683" typeid="ParticleSource">
+		<position y="18.313666" x="-10.60075"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path3685" typeid="ParticleSource">
+		<position y="17.663666" x="-12.85075"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path3687" typeid="ParticleSource">
+		<position y="17.563666" x="-12.35075"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path3689" typeid="ParticleSource">
+		<position y="17.563666" x="-11.75075"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path3691" typeid="ParticleSource">
+		<position y="17.563666" x="-10.90075"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path3693" typeid="ParticleSource">
+		<position y="17.563666" x="-10.65075"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path3695" typeid="ParticleSource">
+		<position y="17.763666" x="-12.80075"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path3697" typeid="ParticleSource">
+		<position y="17.763666" x="-12.35075"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path3699" typeid="ParticleSource">
+		<position y="17.763666" x="-12.00075"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path3701" typeid="ParticleSource">
+		<position y="17.763666" x="-11.80075"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path3703" typeid="ParticleSource">
+		<position y="17.763666" x="-11.25075"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path3705" typeid="ParticleSource">
+		<position y="17.663666" x="-12.77575"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path3707" typeid="ParticleSource">
+		<position y="17.563666" x="-12.27575"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path3709" typeid="ParticleSource">
+		<position y="17.563666" x="-11.67575"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path3711" typeid="ParticleSource">
+		<position y="17.563666" x="-10.82575"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path3713" typeid="ParticleSource">
+		<position y="17.563666" x="-10.57575"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path3715" typeid="ParticleSource">
+		<position y="17.763666" x="-12.72575"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path3717" typeid="ParticleSource">
+		<position y="17.763666" x="-12.27575"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path3719" typeid="ParticleSource">
+		<position y="17.763666" x="-11.92575"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path3721" typeid="ParticleSource">
+		<position y="17.763666" x="-11.72575"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path3723" typeid="ParticleSource">
+		<position y="17.763666" x="-11.17575"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path3725" typeid="ParticleSource">
+		<position y="17.863666" x="-11.85075"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path3727" typeid="ParticleSource">
+		<position y="17.763666" x="-11.35075"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path3729" typeid="ParticleSource">
+		<position y="17.763666" x="-10.75075"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path3731" typeid="ParticleSource">
+		<position y="17.963666" x="-12.45075"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path3733" typeid="ParticleSource">
+		<position y="17.963666" x="-12.20075"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path3735" typeid="ParticleSource">
+		<position y="17.963666" x="-11.80075"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path3737" typeid="ParticleSource">
+		<position y="17.963666" x="-11.35075"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path3739" typeid="ParticleSource">
+		<position y="17.963666" x="-11.00075"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path3741" typeid="ParticleSource">
+		<position y="17.963666" x="-10.80075"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path3743" typeid="ParticleSource">
+		<position y="17.963666" x="-12.80075"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path3745" typeid="ParticleSource">
+		<position y="18.113666" x="-10.62575"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path3747" typeid="ParticleSource">
+		<position y="18.213666" x="-12.67575"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path3749" typeid="ParticleSource">
+		<position y="18.213666" x="-12.07575"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path3751" typeid="ParticleSource">
+		<position y="18.213666" x="-11.22575"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path3753" typeid="ParticleSource">
+		<position y="18.213666" x="-10.97575"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path3755" typeid="ParticleSource">
+		<position y="18.213666" x="-10.57575"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path3757" typeid="ParticleSource">
+		<position y="18.213666" x="-12.67575"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path3759" typeid="ParticleSource">
+		<position y="18.213666" x="-12.32575"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path3761" typeid="ParticleSource">
+		<position y="18.213666" x="-12.12575"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path3763" typeid="ParticleSource">
+		<position y="18.213666" x="-11.57575"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path3765" typeid="ParticleSource">
+		<position y="17.663666" x="-12.75075"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path3767" typeid="ParticleSource">
+		<position y="17.563666" x="-12.25075"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path3769" typeid="ParticleSource">
+		<position y="17.563666" x="-11.65075"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path3771" typeid="ParticleSource">
+		<position y="17.563666" x="-10.80075"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path3773" typeid="ParticleSource">
+		<position y="17.563666" x="-10.55075"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path3775" typeid="ParticleSource">
+		<position y="17.763666" x="-12.70075"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path3777" typeid="ParticleSource">
+		<position y="17.763666" x="-12.25075"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path3779" typeid="ParticleSource">
+		<position y="17.763666" x="-11.90075"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path3781" typeid="ParticleSource">
+		<position y="17.763666" x="-11.70075"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path3783" typeid="ParticleSource">
+		<position y="17.763666" x="-11.15075"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path3785" typeid="ParticleSource">
+		<position y="18.213666" x="-12.67575"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path3787" typeid="ParticleSource">
+		<position y="18.113666" x="-12.17575"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path3789" typeid="ParticleSource">
+		<position y="18.113666" x="-11.57575"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path3791" typeid="ParticleSource">
+		<position y="18.113666" x="-10.72575"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path3793" typeid="ParticleSource">
+		<position y="18.113666" x="-10.47575"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path3795" typeid="ParticleSource">
+		<position y="18.113666" x="-12.62575"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path3797" typeid="ParticleSource">
+		<position y="18.113666" x="-12.17575"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path3799" typeid="ParticleSource">
+		<position y="18.113666" x="-11.82575"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path3801" typeid="ParticleSource">
+		<position y="18.113666" x="-11.62575"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path3803" typeid="ParticleSource">
+		<position y="18.113666" x="-11.07575"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path3805" typeid="ParticleSource">
+		<position y="18.163666" x="-11.95075"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path3807" typeid="ParticleSource">
+		<position y="18.063666" x="-11.45075"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path3809" typeid="ParticleSource">
+		<position y="18.063666" x="-10.85075"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path3811" typeid="ParticleSource">
+		<position y="18.063666" x="-12.55075"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path3813" typeid="ParticleSource">
+		<position y="18.063666" x="-12.30075"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path3815" typeid="ParticleSource">
+		<position y="18.063666" x="-11.90075"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path3817" typeid="ParticleSource">
+		<position y="18.063666" x="-11.45075"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path3819" typeid="ParticleSource">
+		<position y="18.063666" x="-11.10075"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path3821" typeid="ParticleSource">
+		<position y="18.063666" x="-10.90075"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path3823" typeid="ParticleSource">
+		<position y="18.263666" x="-12.90075"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path3825" typeid="ParticleSource">
+		<position y="17.663666" x="-11.05075"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path3827" typeid="ParticleSource">
+		<position y="17.563666" x="-10.55075"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path3829" typeid="ParticleSource">
+		<position y="17.563666" x="-12.50075"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path3831" typeid="ParticleSource">
+		<position y="17.563666" x="-11.65075"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path3833" typeid="ParticleSource">
+		<position y="17.563666" x="-11.40075"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path3835" typeid="ParticleSource">
+		<position y="17.563666" x="-11.00075"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path3837" typeid="ParticleSource">
+		<position y="17.563666" x="-10.55075"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path3839" typeid="ParticleSource">
+		<position y="17.763666" x="-12.75075"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path3841" typeid="ParticleSource">
+		<position y="17.763666" x="-12.55075"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path3843" typeid="ParticleSource">
+		<position y="17.763666" x="-12.00075"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path3845" typeid="ParticleSource">
+		<position y="18.213666" x="-12.37575"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path3847" typeid="ParticleSource">
+		<position y="18.113666" x="-11.87575"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path3849" typeid="ParticleSource">
+		<position y="18.113666" x="-11.27575"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path3851" typeid="ParticleSource">
+		<position y="18.113666" x="-10.42575"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path3853" typeid="ParticleSource">
+		<position y="18.313666" x="-12.72575"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path3855" typeid="ParticleSource">
+		<position y="18.313666" x="-12.32575"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path3857" typeid="ParticleSource">
+		<position y="18.313666" x="-11.87575"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path3859" typeid="ParticleSource">
+		<position y="18.313666" x="-11.52575"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path3861" typeid="ParticleSource">
+		<position y="18.313666" x="-11.32575"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path3863" typeid="ParticleSource">
+		<position y="18.313666" x="-10.77575"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path3865" typeid="ParticleSource">
+		<position y="18.413666" x="-10.62575"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path3867" typeid="ParticleSource">
+		<position y="18.313666" x="-12.67575"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path3869" typeid="ParticleSource">
+		<position y="18.313666" x="-12.07575"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path3871" typeid="ParticleSource">
+		<position y="18.313666" x="-11.22575"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path3873" typeid="ParticleSource">
+		<position y="18.313666" x="-10.97575"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path3875" typeid="ParticleSource">
+		<position y="18.313666" x="-10.57575"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path3877" typeid="ParticleSource">
+		<position y="18.513666" x="-12.67575"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path3879" typeid="ParticleSource">
+		<position y="18.513666" x="-12.32575"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path3881" typeid="ParticleSource">
+		<position y="18.513666" x="-12.12575"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path3883" typeid="ParticleSource">
+		<position y="18.513666" x="-11.57575"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path3885" typeid="ParticleSource">
+		<position y="17.963666" x="-12.50075"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path3887" typeid="ParticleSource">
+		<position y="17.863666" x="-12.00075"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path3889" typeid="ParticleSource">
+		<position y="17.863666" x="-11.40075"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path3891" typeid="ParticleSource">
+		<position y="17.863666" x="-10.55075"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path3893" typeid="ParticleSource">
+		<position y="17.863666" x="-12.85075"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path3895" typeid="ParticleSource">
+		<position y="17.863666" x="-12.45075"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path3897" typeid="ParticleSource">
+		<position y="17.863666" x="-12.00075"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path3899" typeid="ParticleSource">
+		<position y="17.863666" x="-11.65075"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path3901" typeid="ParticleSource">
+		<position y="17.863666" x="-11.45075"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path3903" typeid="ParticleSource">
+		<position y="17.863666" x="-10.90075"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path3905" typeid="ParticleSource">
+		<position y="18.313666" x="-10.57575"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path3907" typeid="ParticleSource">
+		<position y="18.213666" x="-12.62575"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path3909" typeid="ParticleSource">
+		<position y="18.213666" x="-12.02575"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path3911" typeid="ParticleSource">
+		<position y="18.213666" x="-11.17575"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path3913" typeid="ParticleSource">
+		<position y="18.213666" x="-10.92575"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path3915" typeid="ParticleSource">
+		<position y="18.213666" x="-10.52575"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path3917" typeid="ParticleSource">
+		<position y="18.413666" x="-12.62575"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path3919" typeid="ParticleSource">
+		<position y="18.413666" x="-12.27575"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path3921" typeid="ParticleSource">
+		<position y="18.413666" x="-12.07575"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path3923" typeid="ParticleSource">
+		<position y="18.413666" x="-11.52575"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path3925" typeid="ParticleSource">
+		<position y="18.063666" x="-11.35075"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path3927" typeid="ParticleSource">
+		<position y="17.963666" x="-10.85075"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path3929" typeid="ParticleSource">
+		<position y="17.963666" x="-12.80075"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path3931" typeid="ParticleSource">
+		<position y="17.963666" x="-11.95075"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path3933" typeid="ParticleSource">
+		<position y="17.963666" x="-11.70075"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path3935" typeid="ParticleSource">
+		<position y="17.963666" x="-11.30075"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path3937" typeid="ParticleSource">
+		<position y="17.963666" x="-10.85075"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path3939" typeid="ParticleSource">
+		<position y="17.963666" x="-10.50075"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path3941" typeid="ParticleSource">
+		<position y="18.163666" x="-12.85075"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path3943" typeid="ParticleSource">
+		<position y="18.163666" x="-12.30075"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path3945" typeid="ParticleSource">
+		<position y="18.513666" x="-12.12575"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path3947" typeid="ParticleSource">
+		<position y="18.413666" x="-11.62575"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path3949" typeid="ParticleSource">
+		<position y="18.413666" x="-11.02575"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path3951" typeid="ParticleSource">
+		<position y="18.613666" x="-12.72575"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path3953" typeid="ParticleSource">
+		<position y="18.613666" x="-12.47575"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path3955" typeid="ParticleSource">
+		<position y="18.613666" x="-12.07575"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path3957" typeid="ParticleSource">
+		<position y="18.613666" x="-11.62575"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path3959" typeid="ParticleSource">
+		<position y="18.613666" x="-11.27575"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path3961" typeid="ParticleSource">
+		<position y="18.613666" x="-11.07575"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path3963" typeid="ParticleSource">
+		<position y="18.613666" x="-10.52575"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path3965" typeid="ParticleSource">
+		<position y="17.663666" x="-10.92575"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path3967" typeid="ParticleSource">
+		<position y="17.563666" x="-10.42575"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path3969" typeid="ParticleSource">
+		<position y="17.763666" x="-12.37575"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path3971" typeid="ParticleSource">
+		<position y="17.763666" x="-11.52575"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path3973" typeid="ParticleSource">
+		<position y="17.763666" x="-11.27575"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path3975" typeid="ParticleSource">
+		<position y="17.763666" x="-10.87575"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path3977" typeid="ParticleSource">
+		<position y="17.763666" x="-10.42575"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path3979" typeid="ParticleSource">
+		<position y="17.763666" x="-12.62575"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path3981" typeid="ParticleSource">
+		<position y="17.763666" x="-12.42575"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path3983" typeid="ParticleSource">
+		<position y="17.763666" x="-11.87575"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path3985" typeid="ParticleSource">
+		<position y="17.563666" x="-12.60075"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path3987" typeid="ParticleSource">
+		<position y="17.463666" x="-12.10075"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path3989" typeid="ParticleSource">
+		<position y="17.463666" x="-11.50075"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path3991" typeid="ParticleSource">
+		<position y="17.463666" x="-10.65075"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path3993" typeid="ParticleSource">
+		<position y="17.463666" x="-10.40075"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path3995" typeid="ParticleSource">
+		<position y="17.663666" x="-12.55075"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path3997" typeid="ParticleSource">
+		<position y="17.663666" x="-12.10075"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path3999" typeid="ParticleSource">
+		<position y="17.663666" x="-11.75075"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path4001" typeid="ParticleSource">
+		<position y="17.663666" x="-11.55075"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path4003" typeid="ParticleSource">
+		<position y="17.663666" x="-11.00075"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path4005" typeid="ParticleSource">
+		<position y="18.113666" x="-12.52575"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path4007" typeid="ParticleSource">
+		<position y="18.013666" x="-12.02575"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path4009" typeid="ParticleSource">
+		<position y="18.013666" x="-11.42575"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path4011" typeid="ParticleSource">
+		<position y="18.013666" x="-10.57575"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path4013" typeid="ParticleSource">
+		<position y="18.013666" x="-12.87575"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path4015" typeid="ParticleSource">
+		<position y="18.013666" x="-12.47575"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path4017" typeid="ParticleSource">
+		<position y="18.013666" x="-12.02575"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path4019" typeid="ParticleSource">
+		<position y="18.013666" x="-11.67575"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path4021" typeid="ParticleSource">
+		<position y="18.013666" x="-11.47575"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path4023" typeid="ParticleSource">
+		<position y="18.013666" x="-10.92575"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path4025" typeid="ParticleSource">
+		<position y="18.063666" x="-11.80075"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path4027" typeid="ParticleSource">
+		<position y="17.963666" x="-11.30075"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path4029" typeid="ParticleSource">
+		<position y="17.963666" x="-10.70075"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path4031" typeid="ParticleSource">
+		<position y="17.963666" x="-12.40075"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path4033" typeid="ParticleSource">
+		<position y="17.963666" x="-12.15075"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path4035" typeid="ParticleSource">
+		<position y="17.963666" x="-11.75075"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path4037" typeid="ParticleSource">
+		<position y="17.963666" x="-11.30075"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path4039" typeid="ParticleSource">
+		<position y="17.963666" x="-10.95075"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path4041" typeid="ParticleSource">
+		<position y="17.963666" x="-10.75075"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path4043" typeid="ParticleSource">
+		<position y="18.163666" x="-12.75075"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path4045" typeid="ParticleSource">
+		<position y="17.563666" x="-10.90075"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path4047" typeid="ParticleSource">
+		<position y="18.563666" x="-12.92575"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path4049" typeid="ParticleSource">
+		<position y="18.563666" x="-12.32575"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path4051" typeid="ParticleSource">
+		<position y="18.563666" x="-11.47575"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path4053" typeid="ParticleSource">
+		<position y="18.563666" x="-11.22575"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path4055" typeid="ParticleSource">
+		<position y="18.563666" x="-10.82575"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path4057" typeid="ParticleSource">
+		<position y="18.563666" x="-10.37575"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path4059" typeid="ParticleSource">
+		<position y="17.663666" x="-12.60075"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path4061" typeid="ParticleSource">
+		<position y="17.663666" x="-12.40075"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path4063" typeid="ParticleSource">
+		<position y="17.663666" x="-11.85075"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path4065" typeid="ParticleSource">
+		<position y="18.113666" x="-12.22575"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path4067" typeid="ParticleSource">
+		<position y="18.013666" x="-11.72575"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path4069" typeid="ParticleSource">
+		<position y="18.013666" x="-11.12575"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path4071" typeid="ParticleSource">
+		<position y="18.213666" x="-12.82575"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path4073" typeid="ParticleSource">
+		<position y="18.213666" x="-12.57575"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path4075" typeid="ParticleSource">
+		<position y="18.213666" x="-12.17575"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path4077" typeid="ParticleSource">
+		<position y="18.213666" x="-11.72575"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path4079" typeid="ParticleSource">
+		<position y="18.213666" x="-11.37575"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path4081" typeid="ParticleSource">
+		<position y="18.213666" x="-11.17575"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path4083" typeid="ParticleSource">
+		<position y="18.213666" x="-10.62575"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path4085" typeid="ParticleSource">
+		<position y="18.313666" x="-10.47575"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path4087" typeid="ParticleSource">
+		<position y="18.213666" x="-12.52575"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path4089" typeid="ParticleSource">
+		<position y="18.213666" x="-11.92575"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path4091" typeid="ParticleSource">
+		<position y="18.213666" x="-11.07575"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path4093" typeid="ParticleSource">
+		<position y="18.213666" x="-10.82575"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path4095" typeid="ParticleSource">
+		<position y="18.213666" x="-10.42575"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path4097" typeid="ParticleSource">
+		<position y="18.413666" x="-12.52575"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path4099" typeid="ParticleSource">
+		<position y="18.413666" x="-12.17575"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path4101" typeid="ParticleSource">
+		<position y="18.413666" x="-11.97575"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path4103" typeid="ParticleSource">
+		<position y="18.413666" x="-11.42575"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path4105" typeid="ParticleSource">
+		<position y="17.863666" x="-12.35075"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path4107" typeid="ParticleSource">
+		<position y="17.763666" x="-11.85075"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path4109" typeid="ParticleSource">
+		<position y="17.763666" x="-11.25075"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path4111" typeid="ParticleSource">
+		<position y="17.763666" x="-10.40075"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path4113" typeid="ParticleSource">
+		<position y="17.763666" x="-12.70075"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path4115" typeid="ParticleSource">
+		<position y="17.763666" x="-12.30075"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path4117" typeid="ParticleSource">
+		<position y="17.763666" x="-11.85075"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path4119" typeid="ParticleSource">
+		<position y="17.763666" x="-11.50075"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path4121" typeid="ParticleSource">
+		<position y="17.763666" x="-11.30075"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path4123" typeid="ParticleSource">
+		<position y="17.763666" x="-10.75075"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path4125" typeid="ParticleSource">
+		<position y="18.213666" x="-10.42575"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path4127" typeid="ParticleSource">
+		<position y="18.113666" x="-12.47575"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path4129" typeid="ParticleSource">
+		<position y="18.113666" x="-11.87575"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path4131" typeid="ParticleSource">
+		<position y="18.113666" x="-11.02575"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path4133" typeid="ParticleSource">
+		<position y="18.113666" x="-10.77575"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path4135" typeid="ParticleSource">
+		<position y="18.113666" x="-10.37575"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path4137" typeid="ParticleSource">
+		<position y="18.313666" x="-12.47575"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path4139" typeid="ParticleSource">
+		<position y="18.313666" x="-12.12575"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path4141" typeid="ParticleSource">
+		<position y="18.313666" x="-11.92575"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path4143" typeid="ParticleSource">
+		<position y="18.313666" x="-11.37575"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path4145" typeid="ParticleSource">
+		<position y="17.963666" x="-11.20075"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path4147" typeid="ParticleSource">
+		<position y="17.863666" x="-10.70075"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path4149" typeid="ParticleSource">
+		<position y="17.863666" x="-12.65075"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path4151" typeid="ParticleSource">
+		<position y="17.863666" x="-11.80075"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path4153" typeid="ParticleSource">
+		<position y="17.863666" x="-11.55075"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path4155" typeid="ParticleSource">
+		<position y="17.863666" x="-11.15075"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path4157" typeid="ParticleSource">
+		<position y="17.863666" x="-10.70075"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path4159" typeid="ParticleSource">
+		<position y="18.063666" x="-12.90075"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path4161" typeid="ParticleSource">
+		<position y="18.063666" x="-12.70075"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path4163" typeid="ParticleSource">
+		<position y="18.063666" x="-12.15075"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path4165" typeid="ParticleSource">
+		<position y="18.413666" x="-11.97575"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path4167" typeid="ParticleSource">
+		<position y="18.313666" x="-11.47575"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path4169" typeid="ParticleSource">
+		<position y="18.313666" x="-10.87575"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path4171" typeid="ParticleSource">
+		<position y="18.513666" x="-12.57575"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path4173" typeid="ParticleSource">
+		<position y="18.513666" x="-12.32575"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path4175" typeid="ParticleSource">
+		<position y="18.513666" x="-11.92575"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path4177" typeid="ParticleSource">
+		<position y="18.513666" x="-11.47575"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path4179" typeid="ParticleSource">
+		<position y="18.513666" x="-11.12575"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path4181" typeid="ParticleSource">
+		<position y="18.513666" x="-10.92575"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path4183" typeid="ParticleSource">
+		<position y="18.513666" x="-12.92575"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path4185" typeid="ParticleSource">
+		<position y="17.563666" x="-10.77575"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path4187" typeid="ParticleSource">
+		<position y="17.663666" x="-12.82575"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path4189" typeid="ParticleSource">
+		<position y="17.663666" x="-12.22575"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path4191" typeid="ParticleSource">
+		<position y="17.663666" x="-11.37575"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path4193" typeid="ParticleSource">
+		<position y="17.663666" x="-11.12575"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path4195" typeid="ParticleSource">
+		<position y="17.663666" x="-10.72575"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path4197" typeid="ParticleSource">
+		<position y="17.663666" x="-12.82575"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path4199" typeid="ParticleSource">
+		<position y="17.663666" x="-12.47575"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path4201" typeid="ParticleSource">
+		<position y="17.663666" x="-12.27575"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path4203" typeid="ParticleSource">
+		<position y="17.663666" x="-11.72575"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path4205" typeid="ParticleSource">
+		<position y="18.413666" x="-11.75075"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path4207" typeid="ParticleSource">
+		<position y="18.313666" x="-11.25075"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path4209" typeid="ParticleSource">
+		<position y="18.313666" x="-10.65075"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path4211" typeid="ParticleSource">
+		<position y="18.513666" x="-12.35075"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path4213" typeid="ParticleSource">
+		<position y="18.513666" x="-12.10075"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path4215" typeid="ParticleSource">
+		<position y="18.513666" x="-11.70075"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path4217" typeid="ParticleSource">
+		<position y="18.513666" x="-11.25075"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path4219" typeid="ParticleSource">
+		<position y="18.513666" x="-10.90075"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path4221" typeid="ParticleSource">
+		<position y="18.513666" x="-10.70075"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path4223" typeid="ParticleSource">
+		<position y="18.513666" x="-12.70075"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path4225" typeid="ParticleSource">
+		<position y="17.863666" x="-11.70075"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path4227" typeid="ParticleSource">
+		<position y="17.763666" x="-11.20075"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path4229" typeid="ParticleSource">
+		<position y="17.763666" x="-10.60075"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path4231" typeid="ParticleSource">
+		<position y="17.763666" x="-12.30075"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path4233" typeid="ParticleSource">
+		<position y="17.763666" x="-12.05075"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path4235" typeid="ParticleSource">
+		<position y="17.763666" x="-11.65075"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path4237" typeid="ParticleSource">
+		<position y="17.763666" x="-11.20075"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path4239" typeid="ParticleSource">
+		<position y="17.763666" x="-10.85075"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path4241" typeid="ParticleSource">
+		<position y="17.763666" x="-10.65075"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path4243" typeid="ParticleSource">
+		<position y="17.963666" x="-12.65075"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path4245" typeid="ParticleSource">
+		<position y="18.063666" x="-12.67575"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path4247" typeid="ParticleSource">
+		<position y="17.963666" x="-12.17575"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path4249" typeid="ParticleSource">
+		<position y="17.963666" x="-11.57575"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path4251" typeid="ParticleSource">
+		<position y="17.963666" x="-10.72575"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path4253" typeid="ParticleSource">
+		<position y="17.963666" x="-10.47575"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path4255" typeid="ParticleSource">
+		<position y="18.163666" x="-12.62575"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path4257" typeid="ParticleSource">
+		<position y="18.163666" x="-12.17575"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path4259" typeid="ParticleSource">
+		<position y="18.163666" x="-11.82575"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path4261" typeid="ParticleSource">
+		<position y="18.163666" x="-11.62575"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path4263" typeid="ParticleSource">
+		<position y="18.163666" x="-11.07575"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path4265" typeid="ParticleSource">
+		<position y="17.563666" x="-11.77575"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path4267" typeid="ParticleSource">
+		<position y="17.463666" x="-11.27575"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path4269" typeid="ParticleSource">
+		<position y="17.463666" x="-10.67575"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path4271" typeid="ParticleSource">
+		<position y="17.663666" x="-12.37575"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path4273" typeid="ParticleSource">
+		<position y="17.663666" x="-12.12575"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path4275" typeid="ParticleSource">
+		<position y="17.663666" x="-11.72575"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path4277" typeid="ParticleSource">
+		<position y="17.663666" x="-11.27575"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path4279" typeid="ParticleSource">
+		<position y="17.663666" x="-10.92575"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path4281" typeid="ParticleSource">
+		<position y="17.663666" x="-10.72575"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path4283" typeid="ParticleSource">
+		<position y="17.663666" x="-12.72575"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path4285" typeid="ParticleSource">
+		<position y="17.863666" x="-11.40075"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path4287" typeid="ParticleSource">
+		<position y="17.763666" x="-10.90075"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path4289" typeid="ParticleSource">
+		<position y="17.963666" x="-12.85075"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path4291" typeid="ParticleSource">
+		<position y="17.963666" x="-12.00075"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path4293" typeid="ParticleSource">
+		<position y="17.963666" x="-11.75075"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path4295" typeid="ParticleSource">
+		<position y="17.963666" x="-11.35075"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path4297" typeid="ParticleSource">
+		<position y="17.963666" x="-10.90075"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path4299" typeid="ParticleSource">
+		<position y="17.963666" x="-10.55075"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path4301" typeid="ParticleSource">
+		<position y="17.963666" x="-12.90075"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path4303" typeid="ParticleSource">
+		<position y="17.963666" x="-12.35075"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path4305" typeid="ParticleSource">
+		<position y="18.063666" x="-12.20075"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path4307" typeid="ParticleSource">
+		<position y="17.963666" x="-11.70075"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path4309" typeid="ParticleSource">
+		<position y="17.963666" x="-11.10075"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path4311" typeid="ParticleSource">
+		<position y="18.163666" x="-12.80075"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path4313" typeid="ParticleSource">
+		<position y="18.163666" x="-12.55075"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path4315" typeid="ParticleSource">
+		<position y="18.163666" x="-12.15075"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path4317" typeid="ParticleSource">
+		<position y="18.163666" x="-11.70075"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path4319" typeid="ParticleSource">
+		<position y="18.163666" x="-11.35075"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path4321" typeid="ParticleSource">
+		<position y="18.163666" x="-11.15075"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path4323" typeid="ParticleSource">
+		<position y="18.163666" x="-10.60075"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path4325" typeid="ParticleSource">
+		<position y="18.713666" x="-11.50075"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path4327" typeid="ParticleSource">
+		<position y="18.613666" x="-11.00075"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path4329" typeid="ParticleSource">
+		<position y="18.613666" x="-10.40075"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path4331" typeid="ParticleSource">
+		<position y="18.613666" x="-12.10075"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path4333" typeid="ParticleSource">
+		<position y="18.613666" x="-11.85075"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path4335" typeid="ParticleSource">
+		<position y="18.613666" x="-11.45075"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path4337" typeid="ParticleSource">
+		<position y="18.613666" x="-11.00075"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path4339" typeid="ParticleSource">
+		<position y="18.613666" x="-10.65075"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path4341" typeid="ParticleSource">
+		<position y="18.613666" x="-10.45075"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path4343" typeid="ParticleSource">
+		<position y="18.213666" x="-10.62575"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path4345" typeid="ParticleSource">
+		<position y="17.963666" x="-12.15075"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path4347" typeid="ParticleSource">
+		<position y="17.863666" x="-11.65075"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path4349" typeid="ParticleSource">
+		<position y="17.863666" x="-11.05075"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path4351" typeid="ParticleSource">
+		<position y="18.063666" x="-12.75075"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path4353" typeid="ParticleSource">
+		<position y="18.063666" x="-12.50075"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path4355" typeid="ParticleSource">
+		<position y="18.063666" x="-12.10075"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path4357" typeid="ParticleSource">
+		<position y="18.063666" x="-11.65075"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path4359" typeid="ParticleSource">
+		<position y="18.063666" x="-11.30075"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path4361" typeid="ParticleSource">
+		<position y="18.063666" x="-11.10075"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path4363" typeid="ParticleSource">
+		<position y="18.063666" x="-10.55075"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path4365" typeid="ParticleSource">
+		<position y="17.963666" x="-12.07575"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path4367" typeid="ParticleSource">
+		<position y="17.863666" x="-11.57575"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path4369" typeid="ParticleSource">
+		<position y="17.863666" x="-10.97575"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path4371" typeid="ParticleSource">
+		<position y="18.063666" x="-12.67575"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path4373" typeid="ParticleSource">
+		<position y="18.063666" x="-12.42575"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path4375" typeid="ParticleSource">
+		<position y="18.063666" x="-12.02575"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path4377" typeid="ParticleSource">
+		<position y="18.063666" x="-11.57575"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path4379" typeid="ParticleSource">
+		<position y="18.063666" x="-11.22575"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path4381" typeid="ParticleSource">
+		<position y="18.063666" x="-11.02575"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path4383" typeid="ParticleSource">
+		<position y="18.063666" x="-10.47575"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path4385" typeid="ParticleSource">
+		<position y="18.163666" x="-11.15075"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path4387" typeid="ParticleSource">
+		<position y="18.063666" x="-10.65075"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path4389" typeid="ParticleSource">
+		<position y="18.263666" x="-12.60075"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path4391" typeid="ParticleSource">
+		<position y="18.263666" x="-11.75075"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path4393" typeid="ParticleSource">
+		<position y="18.263666" x="-11.50075"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path4395" typeid="ParticleSource">
+		<position y="18.263666" x="-11.10075"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path4397" typeid="ParticleSource">
+		<position y="18.263666" x="-10.65075"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path4399" typeid="ParticleSource">
+		<position y="18.263666" x="-12.85075"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path4401" typeid="ParticleSource">
+		<position y="18.263666" x="-12.65075"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path4403" typeid="ParticleSource">
+		<position y="18.263666" x="-12.10075"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path4405" typeid="ParticleSource">
+		<position y="18.613666" x="-12.47575"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path4407" typeid="ParticleSource">
+		<position y="18.113666" x="-11.52575"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path4409" typeid="ParticleSource">
+		<position y="18.513666" x="-11.37575"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path4411" typeid="ParticleSource">
+		<position y="18.513666" x="-10.52575"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path4413" typeid="ParticleSource">
+		<position y="18.513666" x="-12.82575"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path4415" typeid="ParticleSource">
+		<position y="18.513666" x="-12.42575"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path4417" typeid="ParticleSource">
+		<position y="18.513666" x="-11.97575"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path4419" typeid="ParticleSource">
+		<position y="18.513666" x="-11.62575"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path4421" typeid="ParticleSource">
+		<position y="18.513666" x="-11.42575"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<entity id="path4423" typeid="ParticleSource">
+		<position y="18.513666" x="-10.87575"/>
+		<size r="0.4"/>
+		<param name="type" value="Smoke"/>
+	</entity>
+	<block id="rect2383">
+		<physics grip="20"/>
+		<position y="14.218109" x="18.900000"/>
+		<usetexture id="ArcticsRed2"/>
+		<vertex x="-38.000750" y="2.370557"/>
+		<vertex x="0.799250" y="2.370557"/>
+		<vertex x="0.799250" y="-6.629443"/>
+		<vertex x="-38.000750" y="-6.629443"/>
+	</block>
+</level>

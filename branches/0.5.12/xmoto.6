@@ -1,0 +1,307 @@
+.\"                                      Hey, EMACS: -*- nroff -*-
+.\" First parameter, NAME, should be all caps
+.\" Second parameter, SECTION, should be 1-8, maybe w/ subsection
+.\" other parameters are allowed: see man(7), man(1)
+.\" the date format is YYYY-MM-DD, see man 7 man-pages
+.TH XMOTO 6 2008-01-11
+.\" Please adjust this date whenever revising the manpage.
+.\"
+.\" Some roff macros, for reference:
+.\" .nh        disable hyphenation
+.\" .hy        enable hyphenation
+.\" .ad l      left justify
+.\" .ad b      justify to both left and right margins
+.\" .nf        disable filling
+.\" .fi        enable filling
+.\" .br        insert line break
+.\" .sp <n>    insert n+1 empty lines
+.\" for manpage-specific macros, see man(7)
+
+.SH NAME
+X-Moto \- 2D motocross platform game
+
+.SH SYNOPSIS
+.B xmoto
+[options] 
+.br
+.B xmoto
+[options] replay.rpl
+.br
+.B xmoto
+[options] level.lvl
+
+.SH DESCRIPTION
+.B X-Moto
+is a challenging 2D motocross platform game, where physics plays an important role in the gameplay. You need to control your bike to its limit, if you want to have a chance finishing the more difficult of the challenges.
+
+.SH GAMEPLAY
+A number of strawberries are typically spread around each level, which generally consists of a complicated landscape seen from the side - i.e. much like islands in the sky. You need to collect all those berries to finish the level - when you've got the last one, you need find the sunflower which will complete the level when you touch it. Variations to this basic gameplay may be found around some of the levels.
+
+Your motocross bike is likewise seen from the side, and you control its throttle, braking, and simple changes to the attitude by jerking the bike back and forth. Additionally you can change the direction of your driving, by rotating on the spot.
+
+You control your bike using the keyboard. The following keys are the default values, but may be changed from inside the game:
+.TP
+.B Up\ arrow
+Accelerate.
+.TP
+.B Down\ arrow
+Brake.
+.TP
+.B Left\ arrow
+Rotate counter-clockwise.
+.TP
+.B Right\ arrow
+Rotate clockwise.
+.TP
+.B Space
+Turn around and drive in the other direction.
+
+.PP
+Additionally, some other keys can be pressed while playing:
+.TP
+.B Escape
+Pause the game, and open the in-game menu.
+.TP
+.B TAB
+Autozoom animation. Zooms out so that you can see the whole level. 
+.TP
+.B F2 
+Switch the camera to the ghost, so you can follow it and see how the level can be mastered.
+.TP
+.B F3 
+Add the current level to favorites while playing. Press again to remove from favorites.
+.TP
+.B F5
+Restart the level while playing.  Rebuild the database if pressed while in the main menu.
+.TP
+.B F7 
+Show/hide frames-per-second counter.
+.TP
+.B F8 
+Activate/Deactivate Internet connection.
+.TP
+.B F9 
+Switch to the "Ugly mode". Saves a lot of CPU time and shows some secret passages. 
+.TP
+.B F10 
+Theme Mode. It can be used to test custom graphics. Also helps to avoid wreckers.
+.TP 
+.B F11 
+Line Mode. This mode is mostly for testing. Draws lines around blocks and shows zones.
+.TP 
+.B F12 
+Take a Screenshot. The file is saved into the xmoto directory.
+.TP
+.B Ctrl+i 
+Toggle replay interpolation. Makes replays look smoother when turned on.
+.TP
+.B Ctrl+m
+Toggle mirror mode. Wanna have twice as many levels?
+.TP
+.B Ctrl+b
+Blacklist/unblacklist a level while playing. 
+.TP
+.B Ctrl+s
+enable/disable sound.
+.TP
+.B Ctrl+o
+display the option window
+.TP
+.B PgUp 
+Jump to the previous level while playing.
+.TP
+.B PgDown 
+Jump to the next level while playing.
+.TP
+.B Alt+Enter
+Toggle fullscreen. Aslo changes your "run windowed/fullscreen" setting. 
+.\" FIXME:http://todo.xmoto.tuxfamily.org/index.php?do=details&task_id=250
+.\" find out what options have this behaviour
+.SH OPTIONS
+.B Most of these options also change your config settings, so be careful!
+.TP
+.B \-h, \-?, \-help, --help
+Show summary of options.
+.TP
+.B \-res, --resolution <widthxheight>
+Forces a specific display resolution.
+.TP
+.B \--bpp  <bits>
+Forces a specific number of bits per pixel.
+.TP
+.B \-fs, --fullscreen
+Forces the game to run in fullscreen mode.
+.TP
+.B \-win, --windowed
+Forces the game to run in windowed mode.
+.TP
+.B --nosound
+Turns off sound effects, even if they are enabled in the config.
+.TP
+.B \-r, --replay <replay>
+Play the replay and quit afterwards.
+.TP
+.B \-ri, --replayInfos <replay>
+Display information about the replay and quit.
+.TP
+.B \-v, --verbose
+Be verbose and output debug messages on the standard output.
+.TP
+.BI \-l, --level\  id
+Start playing the specified level right away. If
+.I id
+is a number the corresponding built-in level is selected, otherwise it should be the identifier of an external level (not the file name).
+.TP
+.B --levelFile <FILE>
+Start playing the given level right away.
+.TP
+.B \-d, --debug
+Enables debug mode.
+.TP
+.BI \-p, --profile\  name
+Use the player profile specified by
+.IR name .
+.TP
+.BI \--children
+Force children compliant mode. It removes levels not suitable for children.
+.TP
+.B --configpath path
+Use
+.IR path
+as the xmoto configuration path.
+.TP
+.B \-ll, --listlevels
+Output the list of available levels and quit.
+.TP
+.B \-lr, --listreplays
+Output the list of available replays and quit.
+.TP
+.B --fps
+Enables framerate display.
+.TP
+.B \-td, --timedemo
+Tries to render the game as fast as possible. No delaying, maximum framerate.
+.TP
+.B --benchmark
+Only meaningful when combined with --replay and --timedemo. Useful to determine graphics performance.
+.TP
+.B --nowww
+Do not  allow xmoto to connect to the web.
+.TP
+.B --testTheme
+Enables testThemeMode. This will display the collision forms over the sprites of the theme to check if the theme is nicely designed.
+.TP
+.B --drawlib drawlib
+Choose which rendering engine to use (default one is OPENGL if available). You do not need this unless you *really* know what you are doing.
+.TP
+.B --noexts
+Do not use any OpenGL extensions.
+.TP
+.B --novobs
+Don't use VOB OpenGL extension (GL_ARB_vertex_buffer_object).
+.TP
+.B --ugly
+Enables "the ugly" mode. This will increase the game's framerate significantly, but it will also make the graphics look very ugly - most things inside the game will be drawn with lines, the rider for instance being a simple stick figure. This option is very useful if your system doesn't have a proper OpenGL-capable video card (like for instance if you have a laptop with on-board video card). If you have the right amount of CPU power, it should even be possible to run X-Moto in OpenGL software emulation mode (MesaGL on linux, Windows' OpenGL fallback driver, etc).
+.TP
+.B --defaultTheme theme
+Set
+.IR theme
+as default theme for new profiles created. This is mostly useful for packagers wanting to set the theme of their distribution by default.
+.TP
+.B --noDBDirsCheck
+Don't check that system and user dirs changed at startup. It is mainly usefull if you use X-Moto on a USB key.
+.TP
+.B --server
+Run X-Moto as a server only (no gui).
+.TP
+.B --serverPort <port>
+Specify the server port (with --server only).
+.TP
+.B --serverAdminPassword <password>
+Specify a server admin password which is always valid (with --server only).
+.TP
+.B --connectAtStartup
+Connect the client to the server at startup.
+.TP
+.B --updateLevelsOnly
+Only update levels (no gui).
+.TP
+.B --noLog
+Disable logging into xmoto.log
+.TP
+.B --pack bin dir
+Build a
+.IR bin
+package from the directory
+.IR dir .
+.TP
+.B --unpack bin dir no_list
+Unpack the
+.IR bin
+package into the dir
+.IR dir .
+Add
+.IR no_list
+if you do not need a list of all extracted files.
+.TP
+.B --cleancache
+Deletes the content of the level cache.
+.\" .TP
+.\" .B --gdebug
+.\" dont mention options that are not in -h!!!
+.TP
+.B --cleanNoWWWLevels
+Check web levels list and remove levels which are not available on the web (removed files are put into ~/.xmoto/Trash/Levels)
+.TP
+.B --sqlTrace
+Enable sql trace mode.
+.TP
+.B      --videoRecording
+Enable video recording while plaing/replaying (should be used with --replay and --benchmark).
+.TP
+.B       --videoRecordingSizeDivision DIVISION
+Change video size (1=full, 2=50%, 4=25%).
+.TP
+.B      --videoRecordingFramerate FRAMERATE
+Change video framerate.
+.TP
+.B	--videoRecordingStartTime NBCENTSOFSECONDS
+Start recording video after NBCENTSOFSECONDS time elapsed.
+.TP
+.B	--videoRecordingEndTime NBCENTSOFSECONDS
+Stop recording video after NBCENTSOFSECONDS time elapsed.
+.TP
+.B	--hidePlayingInformation
+Don't show some information while playing/replaying ; usefull to make nicer video.
+
+.SH EXAMPLES
+.B view a replay in windowed mode:
+.br
+xmoto --windowed ~/.xmoto/Replays/replay.rpl
+.br
+.B disable sounds, Internet connection and play mylevel.lvl directly:
+.br
+xmoto --nosound --nowww mylevel.lvl
+
+.\".SH SEE ALSO
+.\" xmoto-edit is deprecated. Should I leave it here and write "deprecated, use inksmoto"?
+.\" or delete completely?
+.\" (01:08:08 PM) Jean-Marc: hum, remove it
+.\".BR xmoto\-edit (6).
+
+.\" Use of an  AUTHORS  section  is strongly discouraged(man 7 man-pages) 
+.SH AUTHORS
+.B xmoto
+was written by Rasmus Neckelmann <neckelmann@gmail.com>, Nicolas Adenis-Lamarre <nadenislamarre@free.fr> and Emmanuel Gorse <e.gorse@free.fr>.
+
+.SH REPORTING BUGS
+Please fill out bug reports on our website: <http://todo.xmoto.tuxfamily.org/>, or write to xmoto@tuxfamily.org.
+
+.\" .SH COPYRIGHT
+.\" Copyright © 2007 Rasmus Neckelmann, Nicolas Adenis-Lamarre, Emmanuel Gorse. 
+.\" This is free software. You may redistribute copies of it under the terms of the GNU  General Public  License <http://www.gnu.org/licenses/gpl.html>. There is NO WARRANTY, to the extent permitted by law.
+
+.PP
+This manual page was written by Samuel Mimram <smimram@debian.org>,
+for the Debian project. Updated by Amand 
+Tihon <amand.tihon@alrj.org> and AvovA. 

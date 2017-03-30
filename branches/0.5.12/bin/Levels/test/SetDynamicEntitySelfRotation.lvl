@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<level id="SetDynamicEntitySelfRotation">
+	<info>
+		<name>SetDynamicEntitySelfRotation</name>
+		<description></description>
+		<author></author>
+		<date></date>
+		<sky>sky1</sky>
+	</info>
+
+<script>
+function OnLoad()
+  Game.SetDynamicEntitySelfRotation("Strawberry0", 1000, 0, 0);
+  return true;
+end;
+</script>
+
+	<limits left="-40.000000" right="-10.000000" top="-1.875977" bottom="-23.218287"/>
+	<block id="Block0">
+		<position x="-38.500000" y="-16.000000" />
+		<usetexture id="default"/>
+		<vertex x="-1.500000" y="7.000000"/>
+		<vertex x="1.500000" y="7.000000"/>
+		<vertex x="1.500000" y="-7.000000"/>
+		<vertex x="-1.500000" y="-7.000000"/>
+	</block>
+
+<entity id="Strawberry0" typeid="Strawberry">
+<size r="0.4"/>
+<position x="-35" y="-9" angle="3.14159265359" />
+</entity>
+
+	<entity id="path11222" typeid="Sprite">
+		<size r="0.4"/>
+		<param name="z" value="-1"/>
+		<param name="name" value="palmgrass"/>
+		<position y="-9.2018881" x="-30.299284825" angle="0.0001"/>
+	</entity>
+
+	<entity id="MyPlayerStart0" typeid="PlayerStart">
+		<size r="0.400000"/>
+		<position x="-38.353115" y="-8.870203"/>
+	</entity>
+
+
+</level>

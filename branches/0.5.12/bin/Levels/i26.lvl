@@ -1,0 +1,283 @@
+<?xml version="1.0" encoding="utf-8"?>
+<level id="_iL26_" levelpack="Classical" levelpackNum="26">
+	<info>
+		<name>No Doubt</name>
+		<description></description>
+		<author>cow</author>
+		<date></date>
+		<sky>sky1</sky>
+	</info>
+	<limits left="-40.000000" right="40.000000" top="20.000000" bottom="-20.000000"/>
+	<block id="Block0">
+		<position x="-16.166664" y="-15.666667"/>
+		<usetexture id="default"/>
+		<vertex x="-18.833336" y="-4.333332"/>
+		<vertex x="-7.833336" y="-3.333334"/>
+		<vertex x="0.166664" y="-0.333334"/>
+		<vertex x="5.166664" y="7.666668"/>
+		<vertex x="11.166664" y="7.666668"/>
+		<vertex x="11.166664" y="-4.333332"/>
+	</block>
+	<block id="Block1">
+		<position x="5.375000" y="-15.125000"/>
+		<usetexture id="default"/>
+		<vertex x="-10.375000" y="7.125000"/>
+		<vertex x="-8.375000" y="5.125000"/>
+		<vertex x="-3.375000" y="0.125000"/>
+		<vertex x="1.625000" y="-1.875000"/>
+		<vertex x="7.625000" y="-1.875000"/>
+		<vertex x="11.625000" y="1.125000"/>
+		<vertex x="11.625000" y="-4.875000"/>
+		<vertex x="-10.375000" y="-4.875000"/>
+	</block>
+	<block id="Block2">
+		<position x="30.142857" y="-12.285714"/>
+		<usetexture id="default"/>
+		<vertex x="-8.142853" y="-0.714286"/>
+		<vertex x="-6.142854" y="1.285714"/>
+		<vertex x="-1.142853" y="2.285714"/>
+		<vertex x="3.857147" y="6.285714"/>
+		<vertex x="9.857147" y="6.285714"/>
+		<vertex x="9.857147" y="-7.714286"/>
+		<vertex x="-8.142853" y="-7.714286"/>
+	</block>
+	<block id="Block3">
+		<position x="37.400002" y="-5.200000"/>
+		<usetexture id="default"/>
+		<vertex x="-3.400045" y="-0.800004"/>
+		<vertex x="-1.400045" y="1.199997"/>
+		<vertex x="-0.400045" y="0.199996"/>
+		<vertex x="2.599955" y="0.199996"/>
+		<vertex x="2.599955" y="-0.800004"/>
+	</block>
+	<block id="Block4">
+		<position x="24.125000" y="-3.500000"/>
+		<usetexture id="default"/>
+		<vertex x="8.875000" y="0.500000"/>
+		<vertex x="4.875000" y="-1.500000"/>
+		<vertex x="3.875000" y="-1.500000"/>
+		<vertex x="-4.125000" y="0.500000"/>
+		<vertex x="-10.125000" y="1.500000"/>
+		<vertex x="-8.125000" y="1.500000"/>
+		<vertex x="-3.125000" y="0.500000"/>
+		<vertex x="4.875000" y="-0.500000"/>
+	</block>
+	<block id="Block5">
+		<position x="0.000000" y="-0.000000"/>
+		<usetexture id="default"/>
+		<vertex x="8.000000" y="-3.000000"/>
+		<vertex x="-1.000000" y="-4.000000"/>
+		<vertex x="-15.000000" y="-2.000000"/>
+		<vertex x="-13.000000" y="-2.000000"/>
+		<vertex x="-3.000000" y="-3.000000"/>
+		<vertex x="0.000000" y="-3.000000"/>
+	</block>
+	<block id="Block6">
+		<position x="-0.000000" y="0.000000"/>
+		<usetexture id="default"/>
+		<vertex x="-23.000000" y="-4.000000"/>
+		<vertex x="-21.000000" y="-5.000000"/>
+		<vertex x="-40.000000" y="-5.000000"/>
+		<vertex x="-40.000000" y="7.000000"/>
+		<vertex x="-37.000000" y="7.000000"/>
+		<vertex x="-31.000000" y="-2.000000"/>
+		<vertex x="-29.000000" y="-3.000000"/>
+	</block>
+	<block id="Block7">
+		<position x="0.000002" y="-0.000002"/>
+		<usetexture id="default"/>
+		<vertex x="-32.000000" y="6.000000"/>
+		<vertex x="-30.000000" y="5.000000"/>
+		<vertex x="-26.000000" y="7.000000"/>
+		<vertex x="-23.000000" y="5.000000"/>
+		<vertex x="-18.000000" y="9.000000"/>
+		<vertex x="-14.000002" y="5.000000"/>
+		<vertex x="-11.000002" y="7.000000"/>
+		<vertex x="-8.000002" y="5.000000"/>
+		<vertex x="-8.000002" y="4.000000"/>
+		<vertex x="-32.000000" y="5.000000"/>
+	</block>
+	<block id="Block8">
+		<position x="14.000000" y="7.625000"/>
+		<usetexture id="default"/>
+		<vertex x="-19.000000" y="-3.625000"/>
+		<vertex x="-11.000000" y="-3.625000"/>
+		<vertex x="-7.000000" y="-2.625000"/>
+		<vertex x="-3.000000" y="-0.625000"/>
+		<vertex x="-1.000000" y="2.375000"/>
+		<vertex x="0.000000" y="5.375000"/>
+		<vertex x="-1.000000" y="8.375000"/>
+		<vertex x="4.000000" y="8.375000"/>
+		<vertex x="3.000000" y="5.375000"/>
+		<vertex x="3.000000" y="2.375000"/>
+		<vertex x="4.000000" y="0.375000"/>
+		<vertex x="7.000000" y="-2.625000"/>
+		<vertex x="10.000000" y="-3.625000"/>
+		<vertex x="15.000000" y="-3.625000"/>
+		<vertex x="15.000000" y="-5.625000"/>
+		<vertex x="-19.000000" y="-5.625000"/>
+	</block>
+	<block id="Block9">
+		<position x="5.250000" y="12.000000"/>
+		<usetexture id="default"/>
+		<vertex x="5.750000" y="1.000000"/>
+		<vertex x="4.750000" y="0.000000"/>
+		<vertex x="-9.250000" y="-1.000000"/>
+		<vertex x="-9.250000" y="0.000000"/>
+	</block>
+	<block id="Block10">
+		<position x="0.000000" y="0.000000"/>
+		<usetexture id="default"/>
+		<vertex x="-12.000000" y="16.000000"/>
+		<vertex x="-9.000000" y="17.000000"/>
+		<vertex x="-7.000000" y="14.000000"/>
+		<vertex x="-5.000000" y="13.000000"/>
+		<vertex x="-4.000000" y="12.000000"/>
+		<vertex x="-4.000000" y="11.000000"/>
+		<vertex x="-15.000000" y="11.000000"/>
+		<vertex x="-15.000000" y="16.000000"/>
+	</block>
+	<block id="Block11">
+		<position x="0.250000" y="-0.250000"/>
+		<usetexture id="default"/>
+		<vertex x="-4.250000" y="16.250000"/>
+		<vertex x="12.750000" y="17.250000"/>
+		<vertex x="12.750000" y="16.250000"/>
+		<vertex x="-4.250000" y="15.250000"/>
+	</block>
+	<block id="Block12">
+		<position x="31.166666" y="14.500000"/>
+		<usetexture id="default"/>
+		<vertex x="-11.166655" y="-2.500000"/>
+		<vertex x="3.833345" y="-0.500000"/>
+		<vertex x="6.833345" y="1.500000"/>
+		<vertex x="7.833345" y="0.500000"/>
+		<vertex x="3.833345" y="-1.500000"/>
+		<vertex x="-11.166655" y="-3.500000"/>
+	</block>
+	<block id="Block13">
+		<position x="-38.071430" y="-9.285703"/>
+		<usetexture id="default"/>
+		<vertex x="1.071458" y="28.285702"/>
+		<vertex x="2.071457" y="28.285702"/>
+		<vertex x="2.071457" y="27.285706"/>
+		<vertex x="2.071457" y="26.285706"/>
+		<vertex x="1.071458" y="26.285706"/>
+		<vertex x="1.071458" y="27.285706"/>
+		<vertex x="0.071458" y="27.285706"/>
+		<vertex x="0.071458" y="24.285706"/>
+		<vertex x="1.071458" y="24.285706"/>
+		<vertex x="1.071458" y="25.285706"/>
+		<vertex x="2.071457" y="25.285706"/>
+		<vertex x="2.071457" y="22.285706"/>
+		<vertex x="-0.928542" y="22.285706"/>
+		<vertex x="-0.928542" y="28.285702"/>
+	</block>
+	<block id="Block14">
+		<position x="2.999990" y="26.799999"/>
+		<usetexture id="default"/>
+		<vertex x="-38.000000" y="-7.800001"/>
+		<vertex x="-35.000000" y="-7.800001"/>
+		<vertex x="-35.000000" y="-13.800001"/>
+		<vertex x="-38.000000" y="-13.800001"/>
+		<vertex x="-38.000000" y="-12.800001"/>
+		<vertex x="-36.000000" y="-12.800001"/>
+		<vertex x="-36.000000" y="-8.800001"/>
+		<vertex x="-37.000000" y="-8.800001"/>
+		<vertex x="-37.000000" y="-11.799999"/>
+		<vertex x="-38.000000" y="-11.799999"/>
+	</block>
+	<block id="Block15">
+		<position x="0.000007" y="28.764696"/>
+		<usetexture id="default"/>
+		<vertex x="-31.000000" y="-9.764696"/>
+		<vertex x="-30.000000" y="-9.764696"/>
+		<vertex x="-30.000000" y="-13.764694"/>
+		<vertex x="-30.000000" y="-14.764696"/>
+		<vertex x="-29.000000" y="-13.764694"/>
+		<vertex x="-28.000000" y="-14.764696"/>
+		<vertex x="-28.000000" y="-9.764696"/>
+		<vertex x="-27.000000" y="-9.764696"/>
+		<vertex x="-26.000000" y="-8.764694"/>
+		<vertex x="-26.000000" y="-9.764696"/>
+		<vertex x="-27.000000" y="-10.764696"/>
+		<vertex x="-27.000000" y="-15.764696"/>
+		<vertex x="-28.000000" y="-15.764696"/>
+		<vertex x="-29.000000" y="-14.764696"/>
+		<vertex x="-30.000000" y="-15.764696"/>
+		<vertex x="-31.000000" y="-15.764696"/>
+		<vertex x="-31.000000" y="-10.764696"/>
+	</block>
+	<entity id="MyPlayerStart0" typeid="PlayerStart">
+		<size r="0.400000"/>
+		<position x="-35.000000" y="-19.000000"/>
+	</entity>
+	<entity id="MyEndOfLevel0" typeid="EndOfLevel">
+		<size r="0.500000"/>
+		<position x="38.000000" y="19.000000"/>
+		<param name="style" value="default"/>
+	</entity>
+	<entity id="MyWrecker0" typeid="Wrecker">
+		<size r="0.400000"/>
+		<position x="18.000000" y="-1.000000"/>
+		<param name="style" value="default"/>
+	</entity>
+	<entity id="MyWrecker1" typeid="Wrecker">
+		<size r="0.400000"/>
+		<position x="18.000000" y="-16.000000"/>
+		<param name="style" value="default"/>
+	</entity>
+	<entity id="MyWrecker2" typeid="Wrecker">
+		<size r="0.400000"/>
+		<position x="19.000000" y="-16.000000"/>
+		<param name="style" value="default"/>
+	</entity>
+	<entity id="MyWrecker3" typeid="Wrecker">
+		<size r="0.400000"/>
+		<position x="20.000000" y="-16.000000"/>
+		<param name="style" value="default"/>
+	</entity>
+	<entity id="MyWrecker4" typeid="Wrecker">
+		<size r="0.400000"/>
+		<position x="21.000000" y="-16.000000"/>
+		<param name="style" value="default"/>
+	</entity>
+	<entity id="MyWrecker5" typeid="Wrecker">
+		<size r="0.400000"/>
+		<position x="8.000000" y="11.000000"/>
+		<param name="style" value="default"/>
+	</entity>
+	<entity id="MyStrawberry0" typeid="Strawberry">
+		<size r="0.500000"/>
+		<position x="18.000000" y="14.000000"/>
+	</entity>
+	<entity id="MyStrawberry1" typeid="Strawberry">
+		<size r="0.500000"/>
+		<position x="28.000000" y="5.000000"/>
+	</entity>
+	<entity id="MyStrawberry2" typeid="Strawberry">
+		<size r="0.500000"/>
+		<position x="3.000000" y="5.000000"/>
+	</entity>
+	<entity id="MyStrawberry3" typeid="Strawberry">
+		<size r="0.500000"/>
+		<position x="12.000000" y="14.000000"/>
+	</entity>
+	<entity id="MyStrawberry4" typeid="Strawberry">
+		<size r="0.500000"/>
+		<position x="-14.000000" y="17.000000"/>
+	</entity>
+	<entity id="MyStrawberry5" typeid="Strawberry">
+		<size r="0.500000"/>
+		<position x="-6.000000" y="-7.000000"/>
+	</entity>
+	<entity id="MyStrawberry6" typeid="Strawberry">
+		<size r="0.500000"/>
+		<position x="38.000000" y="-4.000000"/>
+	</entity>
+	<entity id="MyStrawberry7" typeid="Strawberry">
+		<size r="0.500000"/>
+		<position x="11.000000" y="-2.000000"/>
+	</entity>
+
+</level>
