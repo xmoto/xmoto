@@ -1,0 +1,266 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+<svg
+   xmlns:dc="http://purl.org/dc/elements/1.1/"
+   xmlns:cc="http://web.resource.org/cc/"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:xlink="http://www.w3.org/1999/xlink"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   width="500"
+   height="450"
+   id="svg2"
+   sodipodi:version="0.32"
+   inkscape:version="0.44"
+   sodipodi:docbase="/home/nicolas/progs/archives/xmoto_cvs/xmoto/doc"
+   sodipodi:docname="rider.svg"
+   version="1.0">
+  <defs
+     id="defs4">
+    <linearGradient
+       id="linearGradient2050">
+      <stop
+         style="stop-color:#f03;stop-opacity:1;"
+         offset="0"
+         id="stop2052" />
+      <stop
+         style="stop-color:#f03;stop-opacity:0;"
+         offset="1"
+         id="stop2054" />
+    </linearGradient>
+    <linearGradient
+       inkscape:collect="always"
+       xlink:href="#linearGradient2050"
+       id="linearGradient2048"
+       x1="23.571457"
+       y1="198.79077"
+       x2="25.371094"
+       y2="231.64792"
+       gradientUnits="userSpaceOnUse" />
+    <linearGradient
+       inkscape:collect="always"
+       xlink:href="#linearGradient2050"
+       id="linearGradient2062"
+       gradientUnits="userSpaceOnUse"
+       x1="23.571457"
+       y1="198.79077"
+       x2="25.371094"
+       y2="231.64792" />
+    <linearGradient
+       inkscape:collect="always"
+       xlink:href="#linearGradient2050"
+       id="linearGradient2064"
+       gradientUnits="userSpaceOnUse"
+       x1="23.571457"
+       y1="198.79077"
+       x2="25.371094"
+       y2="231.64792" />
+    <linearGradient
+       inkscape:collect="always"
+       xlink:href="#linearGradient2050"
+       id="linearGradient2066"
+       gradientUnits="userSpaceOnUse"
+       x1="23.571457"
+       y1="198.79077"
+       x2="25.371094"
+       y2="231.64792" />
+  </defs>
+  <sodipodi:namedview
+     id="base"
+     pagecolor="#ffffff"
+     bordercolor="#666666"
+     borderopacity="1.0"
+     inkscape:pageopacity="0.0"
+     inkscape:pageshadow="2"
+     inkscape:zoom="0.49497475"
+     inkscape:cx="830.86832"
+     inkscape:cy="367.50426"
+     inkscape:document-units="px"
+     inkscape:current-layer="layer1"
+     inkscape:window-width="1018"
+     inkscape:window-height="705"
+     inkscape:window-x="0"
+     inkscape:window-y="0"
+     width="500px"
+     height="450px" />
+  <metadata
+     id="metadata7">
+    <rdf:RDF>
+      <cc:Work
+         rdf:about="">
+        <dc:format>image/svg+xml</dc:format>
+        <dc:type
+           rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+      </cc:Work>
+    </rdf:RDF>
+  </metadata>
+  <g
+     inkscape:label="Calque 1"
+     inkscape:groupmode="layer"
+     id="layer1">
+    <path
+       style="fill:none;fill-opacity:0.75;fill-rule:evenodd;stroke:black;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+       d="M 158.59395,382.63104 L 226.27416,301.81884 L 156.57364,246.26045 L 152.53303,92.717265 L 206.07111,160.39749 L 285.87316,159.38733 L 283.85286,158.37718"
+       id="path1882" />
+    <flowRoot
+       xml:space="preserve"
+       id="flowRoot1902"
+       transform="translate(-58.76217,18.18275)"><flowRegion
+         id="flowRegion1904"><rect
+           id="rect1906"
+           width="117.1777"
+           height="27.274118"
+           x="181.82745"
+           y="60.392384" /></flowRegion><flowPara
+         id="flowPara1908">ShoulderP</flowPara></flowRoot>    <flowRoot
+       xml:space="preserve"
+       id="flowRoot1910"
+       transform="translate(-80.8122,1.010153)"><flowRegion
+         id="flowRegion1912"><rect
+           id="rect1914"
+           width="58.588848"
+           height="36.36549"
+           x="370.72598"
+           y="147.2655" /></flowRegion><flowPara
+         id="flowPara1916">HandP</flowPara></flowRoot>    <flowRoot
+       xml:space="preserve"
+       id="flowRoot1918"
+       transform="translate(-185.8681,2.020305)"><flowRegion
+         id="flowRegion1920"><rect
+           id="rect1922"
+           width="110.10663"
+           height="18.182745"
+           x="261.62952"
+           y="238.17923" /></flowRegion><flowPara
+         id="flowPara1924">LowerbodyP</flowPara><flowPara
+         id="flowPara1926" /></flowRoot>    <flowRoot
+       xml:space="preserve"
+       id="flowRoot1928"
+       transform="translate(-97.9848,1.010153)"><flowRegion
+         id="flowRegion1930"><rect
+           id="rect1932"
+           width="90.913727"
+           height="30.304577"
+           x="326.27927"
+           y="293.73761" /></flowRegion><flowPara
+         id="flowPara1934">KneeP</flowPara><flowPara
+         id="flowPara1936" /></flowRoot>    <flowRoot
+       xml:space="preserve"
+       id="flowRoot1938"
+       transform="translate(-50.50763,-3.030457)"><flowRegion
+         id="flowRegion1940"><rect
+           id="rect1942"
+           width="92.934036"
+           height="36.36549"
+           x="190.91884"
+           y="387.68179" /></flowRegion><flowPara
+         id="flowPara1944">FootP</flowPara></flowRoot>    <flowRoot
+       xml:space="preserve"
+       id="flowRoot1946"
+       transform="translate(-84.85281,-10.10153)"><flowRegion
+         id="flowRegion1948"><rect
+           id="rect1950"
+           width="94.954338"
+           height="24.243662"
+           x="267.69043"
+           y="172.51932" /></flowRegion><flowPara
+         id="flowPara1952">ElbowP</flowPara></flowRoot>    <flowRoot
+       xml:space="preserve"
+       id="flowRoot1978"
+       transform="translate(-141.8731,22.38796)"
+       style="fill:#f03"><flowRegion
+         id="flowRegion1980"><rect
+           id="rect1982"
+           width="183.57144"
+           height="17.857143"
+           x="281.42856"
+           y="376.64789"
+           style="fill:#f03" /></flowRegion><flowPara
+         id="flowPara1984">m_PlayerFootAnchorBodyID</flowPara></flowRoot>    <flowRoot
+       xml:space="preserve"
+       id="flowRoot1986"
+       transform="translate(-9.015989,-259.0406)"
+       style="fill:#f03"><flowRegion
+         id="flowRegion1988"><rect
+           id="rect1990"
+           width="193.57144"
+           height="25.714285"
+           x="298.57144"
+           y="420.21933"
+           style="fill:#f03" /></flowRegion><flowPara
+         id="flowPara1992">m_PlayerHandAnchorBodyID</flowPara></flowRoot>    <flowRoot
+       xml:space="preserve"
+       id="flowRoot1994"
+       transform="translate(106.6984,-115.4691)"
+       style="fill:#f03"><flowRegion
+         id="flowRegion1996"><rect
+           id="rect1998"
+           width="148.57143"
+           height="20.714285"
+           x="26.428572"
+           y="380.21933"
+           style="fill:#f03" /></flowRegion><flowPara
+         id="flowPara2000">m_PlayerULegBodyID</flowPara></flowRoot>    <flowRoot
+       xml:space="preserve"
+       id="flowRoot2002"
+       transform="translate(125.9841,5.95939)"
+       style="fill:#f03"><flowRegion
+         id="flowRegion2004"><rect
+           id="rect2006"
+           width="168.57143"
+           height="37.857143"
+           x="15.714286"
+           y="324.50504"
+           style="fill:#f03" /></flowRegion><flowPara
+         id="flowPara2008">m_PlayerLLegBodyID</flowPara></flowRoot>    <flowRoot
+       xml:space="preserve"
+       id="flowRoot2010"
+       transform="translate(171.6984,-163.3263)"
+       style="fill:#f03"><flowRegion
+         id="flowRegion2012"><rect
+           id="rect2014"
+           width="170"
+           height="41.42857"
+           x="6.4285712"
+           y="266.64789"
+           style="fill:#f03" /></flowRegion><flowPara
+         id="flowPara2016">m_PlayerUArmBodyID</flowPara></flowRoot>    <flowRoot
+       xml:space="preserve"
+       id="flowRoot2018"
+       transform="translate(204.5554,-61.18348)"
+       style="fill:url(#linearGradient2048);fill-opacity:1"><flowRegion
+         id="flowRegion2020"
+         style="fill:url(#linearGradient2062);fill-opacity:1"><rect
+           id="rect2022"
+           width="182.14285"
+           height="35.714287"
+           x="24.285715"
+           y="186.6479"
+           style="fill:url(#linearGradient2064);fill-opacity:1" /></flowRegion><flowPara
+         id="flowPara2024"
+         style="fill:url(#linearGradient2066);fill-opacity:1">m_PlayerLArmBodyID</flowPara></flowRoot>    <flowRoot
+       xml:space="preserve"
+       id="flowRoot2026"
+       transform="translate(18.12678,21.67367)"
+       style="fill:#f03"><flowRegion
+         id="flowRegion2028"><rect
+           id="rect2030"
+           width="172.14285"
+           height="19.285715"
+           x="18.571428"
+           y="153.07646"
+           style="fill:#f03" /></flowRegion><flowPara
+         id="flowPara2032">m_PlayerTorsoBodyID</flowPara></flowRoot>    <path
+       sodipodi:type="arc"
+       style="fill:none;stroke:black;stroke-opacity:1"
+       id="path2068"
+       sodipodi:cx="226.42857"
+       sodipodi:cy="79.147896"
+       sodipodi:rx="34.285713"
+       sodipodi:ry="33.214287"
+       d="M 260.71429 79.147896 A 34.285713 33.214287 0 1 1  192.14286,79.147896 A 34.285713 33.214287 0 1 1  260.71429 79.147896 z"
+       transform="translate(-74.73027,-20.46918)" />
+  </g>
+</svg>
