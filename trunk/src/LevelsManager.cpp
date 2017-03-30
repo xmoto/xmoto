@@ -1147,19 +1147,19 @@ void LevelsManager::writeDefaultPackages(const std::string& i_file) {
 
   writeDefaultPackagesSql(pfh, "QUERY_LVL_ALL",
 			  LevelsManager::queryLevelsAsVirtualPack(lprv_dontcare, // scripted
-								  lprv_dontcare, // physics
-								  lprv_dontcare, // crappy
-								  lprv_dontcare, // children compliant
-								  lprv_no,       // blacklisted
-								  lprv_dontcare, // to reload
-								  lprv_dontcare, // favorite
-								  lprv_dontcare, // unfinished
-								  lprv_dontcare, // new
-								  lprv_dontcare, // stolen
-								  lprv_dontcare, // highscore driver
-								  "",            // highscore driver name
-								  0,             // last levels
-								  0              // last highscores
+								  lprv_dontcare,     // physics
+								  lprv_dontcare,     // crappy
+								  lprv_deferoptions, // children compliant
+								  lprv_no,           // blacklisted
+								  lprv_dontcare,     // to reload
+								  lprv_dontcare,     // favorite
+								  lprv_dontcare,     // unfinished
+								  lprv_dontcare,     // new
+								  lprv_dontcare,     // stolen
+								  lprv_dontcare,     // highscore driver
+								  "",                // highscore driver name
+								  0,                 // last levels
+								  0                  // last highscores
 								  ));
 
   writeDefaultPackagesSql(pfh, "QUERY_LVL_MY",
@@ -1181,222 +1181,222 @@ void LevelsManager::writeDefaultPackages(const std::string& i_file) {
 
   writeDefaultPackagesSql(pfh, "QUERY_LVL_FAVORITES",
 			  LevelsManager::queryLevelsAsVirtualPack(lprv_dontcare, // scripted
-								  lprv_dontcare, // physics
-								  lprv_dontcare, // crappy
-								  lprv_dontcare, // children compliant
-								  lprv_no,       // blacklisted
-								  lprv_dontcare, // to reload
-								  lprv_yes,      // favorite
-								  lprv_dontcare, // unfinished
-								  lprv_dontcare, // new
-								  lprv_dontcare, // stolen
-								  lprv_dontcare, // highscore driver
-								  "",            // highscore driver name
-								  0,             // last levels
-								  0              // last highscores
+								  lprv_dontcare,     // physics
+								  lprv_dontcare,     // crappy
+								  lprv_deferoptions, // children compliant
+								  lprv_no,           // blacklisted
+								  lprv_dontcare,     // to reload
+								  lprv_yes,          // favorite
+								  lprv_dontcare,     // unfinished
+								  lprv_dontcare,     // new
+								  lprv_dontcare,     // stolen
+								  lprv_dontcare,     // highscore driver
+								  "",                // highscore driver name
+								  0,                 // last levels
+								  0                  // last highscores
 								  ));
   writeDefaultPackagesSql(pfh, "QUERY_LVL_BLACKLIST",
 			  LevelsManager::queryLevelsAsVirtualPack(lprv_dontcare, // scripted
-								  lprv_dontcare, // physics
-								  lprv_dontcare, // crappy
-								  lprv_dontcare, // children compliant
-								  lprv_yes,      // blacklisted
-								  lprv_dontcare, // to reload
-								  lprv_dontcare, // favorite
-								  lprv_dontcare, // unfinished
-								  lprv_dontcare, // new
-								  lprv_dontcare, // stolen
-								  lprv_dontcare, // highscore driver
-								  "",            // highscore driver name
-								  0,             // last levels
-								  0              // last highscores
+								  lprv_dontcare,     // physics
+								  lprv_deferoptions, // crappy
+								  lprv_deferoptions, // children compliant
+								  lprv_yes,          // blacklisted
+								  lprv_dontcare,     // to reload
+								  lprv_dontcare,     // favorite
+								  lprv_dontcare,     // unfinished
+								  lprv_dontcare,     // new
+								  lprv_dontcare,     // stolen
+								  lprv_dontcare,     // highscore driver
+								  "",                // highscore driver name
+								  0,                 // last levels
+								  0                  // last highscores
 								  ));
 
   writeDefaultPackagesSql(pfh, "QUERY_LVL_SCRIPTED",
 			  LevelsManager::queryLevelsAsVirtualPack(lprv_yes,      // scripted
-								  lprv_dontcare, // physics
-								  lprv_dontcare, // crappy
-								  lprv_dontcare, // children compliant
-								  lprv_no,       // blacklisted
-								  lprv_dontcare, // to reload
-								  lprv_dontcare, // favorite
-								  lprv_dontcare, // unfinished
-								  lprv_dontcare, // new
-								  lprv_dontcare, // stolen
-								  lprv_dontcare, // highscore driver
-								  "",            // highscore driver name
-								  0,             // last levels
-								  0              // last highscores
+								  lprv_dontcare,     // physics
+								  lprv_deferoptions, // crappy
+								  lprv_deferoptions, // children compliant
+								  lprv_no,           // blacklisted
+								  lprv_dontcare,     // to reload
+								  lprv_dontcare,     // favorite
+								  lprv_dontcare,     // unfinished
+								  lprv_dontcare,     // new
+								  lprv_dontcare,     // stolen
+								  lprv_dontcare,     // highscore driver
+								  "",                // highscore driver name
+								  0,                 // last levels
+								  0                  // last highscores
 								  ));
 
   writeDefaultPackagesSql(pfh, "QUERY_LVL_PHYSICS",
 			  LevelsManager::queryLevelsAsVirtualPack(lprv_dontcare, // scripted
-								  lprv_yes,      // physics
-								  lprv_dontcare, // crappy
-								  lprv_dontcare, // children compliant
-								  lprv_no,       // blacklisted
-								  lprv_dontcare, // to reload
-								  lprv_dontcare, // favorite
-								  lprv_dontcare, // unfinished
-								  lprv_dontcare, // new
-								  lprv_dontcare, // stolen
-								  lprv_dontcare, // highscore driver
-								  "",            // highscore driver name
-								  0,             // last levels
-								  0              // last highscores
+								  lprv_yes,          // physics
+								  lprv_deferoptions, // crappy
+								  lprv_deferoptions, // children compliant
+								  lprv_no,           // blacklisted
+								  lprv_dontcare,     // to reload
+								  lprv_dontcare,     // favorite
+								  lprv_dontcare,     // unfinished
+								  lprv_dontcare,     // new
+								  lprv_dontcare,     // stolen
+								  lprv_dontcare,     // highscore driver
+								  "",                // highscore driver name
+								  0,                 // last levels
+								  0                  // last highscores
 								  ));
 
   writeDefaultPackagesSql(pfh, "QUERY_LVL_INCOMPLETED",
 			  LevelsManager::queryLevelsAsVirtualPack(lprv_dontcare, // scripted
-								  lprv_dontcare, // physics
-								  lprv_dontcare, // crappy
-								  lprv_dontcare, // children compliant
-								  lprv_no,       // blacklisted
-								  lprv_dontcare, // to reload
-								  lprv_dontcare, // favorite
-								  lprv_no,       // finished
-								  lprv_dontcare, // new
-								  lprv_dontcare, // stolen
-								  lprv_dontcare, // highscore driver
-								  "",            // highscore driver name
-								  0,             // last levels
-								  0              // last highscores
+								  lprv_dontcare,     // physics
+								  lprv_deferoptions, // crappy
+								  lprv_deferoptions, // children compliant
+								  lprv_no,           // blacklisted
+								  lprv_dontcare,     // to reload
+								  lprv_dontcare,     // favorite
+								  lprv_no,           // finished
+								  lprv_dontcare,     // new
+								  lprv_dontcare,     // stolen
+								  lprv_dontcare,     // highscore driver
+								  "",                // highscore driver name
+								  0,                 // last levels
+								  0                  // last highscores
 								  ));
 
   writeDefaultPackagesSql(pfh, "QUERY_LVL_NEW",
 			  LevelsManager::queryLevelsAsVirtualPack(lprv_dontcare, // scripted
-								  lprv_dontcare, // physics
-								  lprv_dontcare, // crappy
-								  lprv_dontcare, // children compliant
-								  lprv_no,       // blacklisted
-								  lprv_dontcare, // to reload
-								  lprv_dontcare, // favorite
-								  lprv_dontcare, // finished
-								  lprv_yes,      // new
-								  lprv_dontcare, // stolen
-								  lprv_dontcare, // highscore driver
-								  "",            // highscore driver name
-								  0,             // last levels
-								  0              // last highscores
+								  lprv_dontcare,     // physics
+								  lprv_deferoptions, // crappy
+								  lprv_dontcare,     // children compliant
+								  lprv_no,           // blacklisted
+								  lprv_dontcare,     // to reload
+								  lprv_dontcare,     // favorite
+								  lprv_dontcare,     // finished
+								  lprv_yes,          // new
+								  lprv_dontcare,     // stolen
+								  lprv_dontcare,     // highscore driver
+								  "",                // highscore driver name
+								  0,                 // last levels
+								  0                  // last highscores
 								  ));
 
   writeDefaultPackagesSql(pfh, "QUERY_LVL_CRAPPY",
 			  LevelsManager::queryLevelsAsVirtualPack(lprv_dontcare, // scripted
-								  lprv_dontcare, // physics
-								  lprv_yes,      // crappy
-								  lprv_dontcare, // children compliant
-								  lprv_no,       // blacklisted
-								  lprv_dontcare, // to reload
-								  lprv_dontcare, // favorite
-								  lprv_dontcare, // finished
-								  lprv_dontcare, // new
-								  lprv_dontcare, // stolen
-								  lprv_dontcare, // highscore driver
-								  "",            // highscore driver name
-								  0,             // last levels
-								  0              // last highscores
+								  lprv_dontcare,     // physics
+								  lprv_yes,          // crappy
+								  lprv_deferoptions, // children compliant
+								  lprv_no,           // blacklisted
+								  lprv_dontcare,     // to reload
+								  lprv_dontcare,     // favorite
+								  lprv_dontcare,     // finished
+								  lprv_dontcare,     // new
+								  lprv_dontcare,     // stolen
+								  lprv_dontcare,     // highscore driver
+								  "",                // highscore driver name
+								  0,                 // last levels
+								  0                  // last highscores
 								  ));
 
   writeDefaultPackagesSql(pfh, "QUERY_LVL_LAST",
 			  LevelsManager::queryLevelsAsVirtualPack(lprv_dontcare, // scripted
-								  lprv_dontcare, // physics
-								  lprv_dontcare, // crappy
-								  lprv_dontcare, // children compliant
-								  lprv_no,       // blacklisted
-								  lprv_dontcare, // to reload
-								  lprv_dontcare, // favorite
-								  lprv_dontcare, // finished
-								  lprv_dontcare, // new
-								  lprv_dontcare, // stolen
-								  lprv_dontcare, // highscore driver
-								  "",            // highscore driver name
-								  100,           // last levels
-								  0              // last highscores
+								  lprv_dontcare,     // physics
+								  lprv_deferoptions, // crappy
+								  lprv_deferoptions, // children compliant
+								  lprv_no,           // blacklisted
+								  lprv_dontcare,     // to reload
+								  lprv_dontcare,     // favorite
+								  lprv_dontcare,     // finished
+								  lprv_dontcare,     // new
+								  lprv_dontcare,     // stolen
+								  lprv_dontcare,     // highscore driver
+								  "",                // highscore driver name
+								  100,               // last levels
+								  0                  // last highscores
 								  ));
 
   writeDefaultPackagesSql(pfh, "QUERY_LVL_STOLEN",
 			  LevelsManager::queryLevelsAsVirtualPack(lprv_dontcare, // scripted
-								  lprv_dontcare, // physics
-								  lprv_dontcare, // crappy
-								  lprv_dontcare, // children compliant
-								  lprv_no,       // blacklisted
-								  lprv_dontcare, // to reload
-								  lprv_dontcare, // favorite
-								  lprv_dontcare, // finished
-								  lprv_dontcare, // new
-								  lprv_yes,      // stolen
-								  lprv_dontcare, // highscore driver
-								  "",            // highscore driver name
-								  0,             // last levels
-								  0              // last highscores
+								  lprv_dontcare,     // physics
+								  lprv_deferoptions, // crappy
+								  lprv_deferoptions, // children compliant
+								  lprv_no,           // blacklisted
+								  lprv_dontcare,     // to reload
+								  lprv_dontcare,     // favorite
+								  lprv_dontcare,     // finished
+								  lprv_dontcare,     // new
+								  lprv_yes,          // stolen
+								  lprv_dontcare,     // highscore driver
+								  "",                // highscore driver name
+								  0,                 // last levels
+								  0                  // last highscores
 								  ));
 
   writeDefaultPackagesSql(pfh, "QUERY_LVL_NO_HIGHSCORE",
 			  LevelsManager::queryLevelsAsVirtualPack(lprv_dontcare, // scripted
-								  lprv_dontcare, // physics
-								  lprv_dontcare, // crappy
-								  lprv_dontcare, // children compliant
-								  lprv_no,       // blacklisted
-								  lprv_dontcare, // to reload
-								  lprv_dontcare, // favorite
-								  lprv_dontcare, // finished
-								  lprv_dontcare, // new
-								  lprv_dontcare, // stolen
-								  lprv_yes,      // highscore driver
-								  "",            // highscore driver name
-								  0,             // last levels
-								  0              // last highscores
+								  lprv_dontcare,     // physics
+								  lprv_deferoptions, // crappy
+								  lprv_deferoptions, // children compliant
+								  lprv_no,           // blacklisted
+								  lprv_dontcare,     // to reload
+								  lprv_dontcare,     // favorite
+								  lprv_dontcare,     // finished
+								  lprv_dontcare,     // new
+								  lprv_dontcare,     // stolen
+								  lprv_yes,          // highscore driver
+								  "",                // highscore driver name
+								  0,                 // last levels
+								  0                  // last highscores
 								  ));
 
   writeDefaultPackagesSql(pfh, "QUERY_LVL_NOT_THE_HIGHSCORE",
 			  LevelsManager::queryLevelsAsVirtualPack(lprv_dontcare, // scripted
-								  lprv_dontcare, // physics
-								  lprv_dontcare, // crappy
-								  lprv_dontcare, // children compliant
-								  lprv_no,       // blacklisted
-								  lprv_dontcare, // to reload
-								  lprv_dontcare, // favorite
-								  lprv_dontcare, // finished
-								  lprv_dontcare, // new
-								  lprv_dontcare, // stolen
-								  lprv_no,       // highscore driver
-								  "<SELF>",      // highscore driver name
-								  0,             // last levels
-								  0              // last highscores
+								  lprv_dontcare,     // physics
+								  lprv_deferoptions, // crappy
+								  lprv_deferoptions, // children compliant
+								  lprv_no,           // blacklisted
+								  lprv_dontcare,     // to reload
+								  lprv_dontcare,     // favorite
+								  lprv_dontcare,     // finished
+								  lprv_dontcare,     // new
+								  lprv_dontcare,     // stolen
+								  lprv_no,           // highscore driver
+								  "<SELF>",          // highscore driver name
+								  0,                 // last levels
+								  0                  // last highscores
 								  ));
 
   writeDefaultPackagesSql(pfh, "QUERY_LVL_LAST_HIGHSCORES",
 			  LevelsManager::queryLevelsAsVirtualPack(lprv_dontcare, // scripted
-								  lprv_dontcare, // physics
-								  lprv_dontcare, // crappy
-								  lprv_dontcare, // children compliant
-								  lprv_no,       // blacklisted
-								  lprv_dontcare, // to reload
-								  lprv_dontcare, // favorite
-								  lprv_dontcare, // finished
-								  lprv_dontcare, // new
-								  lprv_dontcare, // stolen
-								  lprv_dontcare, // highscore driver
-								  "",            // highscore driver name
-								  0,             // last levels
-								  100            // last highscores
+								  lprv_dontcare,     // physics
+								  lprv_deferoptions, // crappy
+								  lprv_deferoptions, // children compliant
+								  lprv_no,           // blacklisted
+								  lprv_dontcare,     // to reload
+								  lprv_dontcare,     // favorite
+								  lprv_dontcare,     // finished
+								  lprv_dontcare,     // new
+								  lprv_dontcare,     // stolen
+								  lprv_dontcare,     // highscore driver
+								  "",                // highscore driver name
+								  0,                 // last levels
+								  100                // last highscores
 								  ));
 
   writeDefaultPackagesSql(pfh, "QUERY_LVL_OLDEST_HIGHSCORES",
 			  LevelsManager::queryLevelsAsVirtualPack(lprv_dontcare, // scripted
-								  lprv_dontcare, // physics
-								  lprv_dontcare, // crappy
-								  lprv_dontcare, // children compliant
-								  lprv_no,       // blacklisted
-								  lprv_dontcare, // to reload
-								  lprv_dontcare, // favorite
-								  lprv_dontcare, // finished
-								  lprv_dontcare, // new
-								  lprv_dontcare, // stolen
-								  lprv_dontcare, // highscore driver
-								  "",            // highscore driver name
-								  0,             // last levels
-								  -100           // last highscores
+								  lprv_dontcare,     // physics
+								  lprv_deferoptions, // crappy
+								  lprv_deferoptions, // children compliant
+								  lprv_no,           // blacklisted
+								  lprv_dontcare,     // to reload
+								  lprv_dontcare,     // favorite
+								  lprv_dontcare,     // finished
+								  lprv_dontcare,     // new
+								  lprv_dontcare,     // stolen
+								  lprv_dontcare,     // highscore driver
+								  "",                // highscore driver name
+								  0,                 // last levels
+								  -100               // last highscores
 								  ));
 
   XMFS::closeFile(pfh);
@@ -1498,7 +1498,7 @@ std::string LevelsManager::queryLevelsAsVirtualPack(levelPropertyRequiredValue i
     }
   }
 
-  // finnished ?
+  // finished ?
   if(i_isFinished != lprv_dontcare) {
     if(i_isFinished == lprv_yes) {
       v_tables += " INNER JOIN stats_profiles_levels AS e ON (a.id_level = e.id_level AND e.id_profile=xm_profile())";
@@ -1557,13 +1557,15 @@ std::string LevelsManager::queryLevelsAsVirtualPack(levelPropertyRequiredValue i
       v_where += " WHERE (b.crappy IS NULL OR b.crappy=0)";
     }
     break;
-  case lprv_dontcare:
+  case lprv_deferoptions:
     // if you don't care, don't force then, use options
     if(v_mustBeInWebLevels) { // optim
       v_where += " WHERE xm_userCrappy(b.crappy)=0";
     } else {
-      v_where += " WHERE (b.crappy IS NULL OR xm_userCrappy(b.crappy)=0)";
+      v_where += " WHERE (b.crappy IS NULL OR b.crappy=0)";
     }
+  case lprv_dontcare:
+    // if you don't care, show levels with or without crappy marking
     break;
   }
 
@@ -1589,12 +1591,14 @@ std::string LevelsManager::queryLevelsAsVirtualPack(levelPropertyRequiredValue i
   case lprv_no:
     v_where += " AND b.children_compliant=0 AND xm_userChildrenCompliant(b.children_compliant)=1";
     break;
-  case lprv_dontcare:
+  case lprv_deferoptions:
     if(v_mustBeInWebLevels) { // optim
       v_where += " AND xm_userChildrenCompliant(b.children_compliant)=1";
     } else {
       v_where += " AND (b.children_compliant IS NULL OR xm_userChildrenCompliant(b.children_compliant)=1)";
     }
+    break;
+  case lprv_dontcare:
     break;
   }
 
