@@ -128,8 +128,8 @@ public:
 					    const std::string& i_profile, const std::string& i_id_room, xmDatabase *i_db);
   void reloadExternalLevels(xmDatabase* i_db, bool i_loadMainLayerOnly, XMotoLoadLevelsInterface *i_loadLevelsInterface = NULL);
 
-  // when requesting for level, or values must be yes, or no, or yes or no, so 3 cases
-  enum levelPropertyRequiredValue {lprv_yes, lprv_no, lprv_dontcare};
+  // when requesting for level, or values must be yes, or no, or yes or no, or deferring to user options, so 4 cases
+  enum levelPropertyRequiredValue {lprv_yes, lprv_no, lprv_deferoptions, lprv_dontcare};
 
   static void writeDefaultPackagesSql(FileHandle* pfh, const std::string& i_sqlName, const std::string& i_sql);
   static void writeDefaultPackages(const std::string& i_file);
