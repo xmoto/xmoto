@@ -25,6 +25,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "xmscene/Camera.h"
 #include "Replay.h"
 #include "Game.h"
+#include "states/GameState.h"
 #include "SysMessage.h"
 #include "helpers/Log.h"
 #include "db/xmDatabase.h"
@@ -45,7 +46,6 @@ void XMSceneHooks::OnTakeCheckpoint(unsigned int i_player) {
     /* Play yummy-yummy sound */
     try {
       Sound::playSampleByName(Theme::instance()->getSound(m_Scene->getLevelSrc()->SoundForCheckpoint())->FilePath());
-
     } catch(Exception &e) {
     }
 }
