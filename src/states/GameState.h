@@ -22,11 +22,11 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #define __GAMESTATE_H__
 
 #include "StateMessageBoxReceiver.h"
-#include "../XMKey.h"
+#include "xmoto/XMKey.h"
 #include <utility>
 #include <string>
 #include <queue>
-#include "../helpers/RenderSurface.h"
+#include "helpers/RenderSurface.h"
 
 class GameState : public StateMessageBoxReceiver{
 

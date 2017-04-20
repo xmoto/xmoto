@@ -19,12 +19,12 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 =============================================================================*/
 
 #include "UpgradeLevelsThread.h"
-#include "../Game.h"
-#include "../helpers/Log.h"
-#include "../GameText.h"
-#include "../states/StateManager.h"
-#include "../states/StateUpgradeLevels.h"
-#include "../helpers/CmdArgumentParser.h"
+#include "xmoto/Game.h"
+#include "helpers/Log.h"
+#include "xmoto/GameText.h"
+#include "states/StateManager.h"
+#include "states/StateUpgradeLevels.h"
+#include "helpers/CmdArgumentParser.h"
 
 UpgradeLevelsThread::UpgradeLevelsThread(const std::string& i_id_theme, bool i_loadMainLayerOnly, bool i_updateAutomaticallyLevels)
   : XMThread("ULT")

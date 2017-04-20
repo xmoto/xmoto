@@ -19,11 +19,11 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 =============================================================================*/
 
 #include "StateMultiUpdate.h"
-#include "../drawlib/DrawLib.h"
-#include "../helpers/Log.h"
-#include "../thread/XMThread.h"
+#include "drawlib/DrawLib.h"
+#include "helpers/Log.h"
+#include "thread/XMThread.h"
 #include "StateMessageBox.h"
-#include "../Game.h"
+#include "xmoto/Game.h"
 
 /* static members */
 UIRoot* StateMultiUpdate::m_sGUI = NULL;

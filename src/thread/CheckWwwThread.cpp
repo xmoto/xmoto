@@ -19,12 +19,12 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 =============================================================================*/
 
 #include "CheckWwwThread.h"
-#include "../GameText.h"
-#include "../Game.h"
-#include "../states/StateManager.h"
-#include "../helpers/Log.h"
-#include "../VFileIO.h"
-#include "../WWW.h"
+#include "xmoto/GameText.h"
+#include "xmoto/Game.h"
+#include "states/StateManager.h"
+#include "helpers/Log.h"
+#include "common/VFileIO.h"
+#include "common/WWW.h"
 
 #define DEFAULT_WEBHIGHSCORES_FILENAME "webhighscores.xml"
 

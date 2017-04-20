@@ -19,12 +19,12 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 =============================================================================*/
 
 #include "SendVoteThread.h"
-#include "../GameText.h"
-#include "../XMSession.h"
-#include "../WWW.h"
-#include "../helpers/Log.h"
-#include "../helpers/Random.h"
-#include "../db/xmDatabase.h"
+#include "xmoto/GameText.h"
+#include "common/XMSession.h"
+#include "common/WWW.h"
+#include "helpers/Log.h"
+#include "helpers/Random.h"
+#include "db/xmDatabase.h"
 
 #define VOTE_ASK_FREQUENCY 10 // /1000 = 1%
 #define PLAYED_ENOUGH_TIME 3000 // at least 30 seconds

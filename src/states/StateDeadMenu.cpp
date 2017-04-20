@@ -19,15 +19,15 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 =============================================================================*/
 
 #include "StateDeadMenu.h"
-#include "../Game.h"
-#include "../drawlib/DrawLib.h"
-#include "../GameText.h"
+#include "xmoto/Game.h"
+#include "drawlib/DrawLib.h"
+#include "xmoto/GameText.h"
 #include "StateMessageBox.h"
-#include "../Universe.h"
-#include "../Replay.h"
-#include "../helpers/Log.h"
-#include "../states/StateVote.h"
-#include "../thread/SendVoteThread.h"
+#include "xmoto/Universe.h"
+#include "xmoto/Replay.h"
+#include "helpers/Log.h"
+#include "states/StateVote.h"
+#include "thread/SendVoteThread.h"
 #include "StatePreplayingReplay.h"
 
 /* static members */

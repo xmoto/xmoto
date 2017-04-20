@@ -19,12 +19,12 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 =============================================================================*/
 
 #include "StateCreditsMode.h"
-#include "../Credits.h"
-#include "../xmscene/BikePlayer.h"
-#include "../GameText.h"
-#include "../Game.h"
-#include "../Universe.h"
-#include "../Renderer.h"
+#include "xmoto/Credits.h"
+#include "xmscene/BikePlayer.h"
+#include "xmoto/GameText.h"
+#include "xmoto/Game.h"
+#include "xmoto/Universe.h"
+#include "xmoto/Renderer.h"
 
 StateCreditsMode::StateCreditsMode(Universe* i_universe, GameRenderer* i_renderer, const std::string& i_replay, ReplayBiker* i_replayBiker):
 StateReplaying(i_universe, i_renderer, i_replay, i_replayBiker)

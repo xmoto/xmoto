@@ -19,7 +19,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 =============================================================================*/
 
 #include "BikeParameters.h"
-#include "../PhysSettings.h"
+#include "xmoto/PhysSettings.h"
 #include "PhysicsSettings.h"
 
 BikeParameters::BikeParameters(PhysicsSettings* i_physicsSettings) {

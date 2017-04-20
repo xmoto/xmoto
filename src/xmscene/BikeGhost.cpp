@@ -19,11 +19,11 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 =============================================================================*/
 
 #include "BikeGhost.h"
-#include "../Replay.h"
-#include "../GameText.h"
-#include "../helpers/Text.h"
-#include "../GameEvents.h"
-#include "../Theme.h"
+#include "xmoto/Replay.h"
+#include "xmoto/GameText.h"
+#include "helpers/Text.h"
+#include "xmoto/GameEvents.h"
+#include "common/Theme.h"
 #include "Level.h"
 
 #define INTERPOLATION_MAXIMUM_TIME  300

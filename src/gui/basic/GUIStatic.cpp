@@ -22,8 +22,8 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  *  GUI: Static text stuff
  */
 #include "GUI.h"
-#include "../../VXml.h"
-#include "../../Game.h"
+#include "common/VXml.h"
+#include "xmoto/Game.h"
 
   UIStatic::UIStatic(UIWindow *pParent,int x,int y,std::string Caption,int nWidth,int nHeight) {
         initW(pParent,x,y,Caption,nWidth,nHeight);

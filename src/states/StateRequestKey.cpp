@@ -20,9 +20,9 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
 #include "StateRequestKey.h"
 #include "StateManager.h"
-#include "../Game.h"
-#include "../drawlib/DrawLib.h"
-#include "../helpers/CmdArgumentParser.h"
+#include "xmoto/Game.h"
+#include "drawlib/DrawLib.h"
+#include "helpers/CmdArgumentParser.h"
 
 /* static members */
 UIRoot*  StateRequestKey::m_sGUI = NULL;

@@ -26,8 +26,8 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include <string>
 #include <vector>
 #include "BasicSceneStructs.h"
-#include "../helpers/VMath.h"
-#include "../VFileIO_types.h"
+#include "helpers/VMath.h"
+#include "common/VFileIO_types.h"
 
 class Block;
 class Entity;

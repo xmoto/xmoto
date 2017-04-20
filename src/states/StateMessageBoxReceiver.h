@@ -22,7 +22,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #define __STATEMESSAGEBOXRECEIVER_H__
 
 #include <string>
-#include "../gui/basic/GUI.h"
+#include "gui/basic/GUI.h"
 
 class StateMessageBoxReceiver {
   public:

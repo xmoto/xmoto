@@ -19,13 +19,13 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 =============================================================================*/
 
 #include "DownloadReplaysThread.h"
-#include "../db/xmDatabase.h"
-#include "../helpers/VExcept.h"
-#include "../states/StateManager.h"
-#include "../helpers/Log.h"
-#include "../XMSession.h"
-#include "../Game.h"
-#include "../VFileIO.h"
+#include "db/xmDatabase.h"
+#include "helpers/VExcept.h"
+#include "states/StateManager.h"
+#include "helpers/Log.h"
+#include "common/XMSession.h"
+#include "xmoto/Game.h"
+#include "common/VFileIO.h"
 
 DownloadReplaysThread::DownloadReplaysThread(StateManager* i_manager) : XMThread("DRT") {
     m_pWebRoom  = new WebRoom(NULL);

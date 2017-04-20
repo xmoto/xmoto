@@ -22,16 +22,16 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  *  In-game graphical user interface
  */
 #include "GUI.h"
-#include "../../VXml.h"
-#include "../../GameText.h"
-#include "../../drawlib/DrawLib.h"
-#include "../../Game.h"
-#include "../../helpers/Log.h"
-#include "../../helpers/utf8.h"
-#include "../../helpers/RenderSurface.h"
+#include "common/VXml.h"
+#include "xmoto/GameText.h"
+#include "drawlib/DrawLib.h"
+#include "xmoto/Game.h"
+#include "helpers/Log.h"
+#include "helpers/utf8.h"
+#include "helpers/RenderSurface.h"
 
 #ifdef ENABLE_OPENGL
-#include "../../include/xm_OpenGL.h"
+#include "include/xm_OpenGL.h"
 #endif
 
   DrawLib* UIWindow::m_drawLib = NULL;

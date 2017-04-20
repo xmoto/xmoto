@@ -19,7 +19,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 =============================================================================*/
 
 #include "StateSync.h"
-#include "../thread/SyncThread.h"
+#include "thread/SyncThread.h"
 
 StateSync::StateSync(bool drawStateBehind, bool updateStatesBehind) 
 : StateUpdate(drawStateBehind, updateStatesBehind)

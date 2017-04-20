@@ -19,8 +19,8 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 =============================================================================*/
 
 #include "xmDatabase.h"
-#include "../md5sum/md5file.h"
-#include "../helpers/VExcept.h"
+#include "md5sum/md5file.h"
+#include "helpers/VExcept.h"
 
 bool xmDatabase::themes_isIndexUptodate() const {
   return m_requiredThemesUpdateAfterInit == false;

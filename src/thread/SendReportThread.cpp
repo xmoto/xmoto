@@ -19,11 +19,11 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 =============================================================================*/
 
 #include "SendReportThread.h"
-#include "../GameText.h"
-#include "../XMSession.h"
-#include "../WWW.h"
-#include "../helpers/Log.h"
-#include "../db/xmDatabase.h"
+#include "xmoto/GameText.h"
+#include "common/XMSession.h"
+#include "common/WWW.h"
+#include "helpers/Log.h"
+#include "db/xmDatabase.h"
 
 SendReportThread::SendReportThread(const std::string& i_author, const std::string& i_msg)
   : XMThread("SRT")

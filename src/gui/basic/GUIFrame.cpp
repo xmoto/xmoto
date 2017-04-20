@@ -22,8 +22,8 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  *  GUI: Framed window class
  */
 #include "GUI.h"
-#include "../../helpers/utf8.h"
-#include "../../Game.h"
+#include "helpers/utf8.h"
+#include "xmoto/Game.h"
 
   UIFrame::UIFrame() {
     m_bMinimizable = false;

@@ -21,12 +21,12 @@
 /* 
  *  Game state serialization and magic
  */
-#include "PhysSettings.h"
+#include "xmoto/PhysSettings.h"
 #include "xmscene/Scene.h"
 #include "helpers/Log.h"
-#include "GameEvents.h"
-#include "DBuffer.h"
-#include "Game.h"
+#include "xmoto/GameEvents.h"
+#include "common/DBuffer.h"
+#include "xmoto/Game.h"
 #include "xmscene/PhysicsSettings.h"
 
   /*===========================================================================

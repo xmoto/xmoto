@@ -19,7 +19,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 =============================================================================*/
 
 #include "GhostTrail.h"
-#include "../Replay.h"
+#include "xmoto/Replay.h"
 
 #define TRAIL_INTERPOLATED_TRAIL_INTERNODE_LENGTH 0.3
 #define TRAIL_INTERPOLATION_STEP 0.1
