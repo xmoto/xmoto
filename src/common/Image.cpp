@@ -108,12 +108,12 @@ int _image_io_write(void *pvHandle, void *pvBuf, int nSize) {
 
 int _image_io_eof(void *pvHandle) {
   try {
-    if(XMFS::isEnd( (FileHandle *)pvHandle )) return TRUE;
+    if(XMFS::isEnd( (FileHandle *)pvHandle )) return true;
   }
   catch (Exception &e) {
     LogWarning("_image_io_eof() - exception thrown by XMFS::isEnd() when checking: %s\n",((FileHandle *)pvHandle)->Name.c_str());
   }
-  return FALSE;
+  return false;
 }
 
 /*==============================================================================

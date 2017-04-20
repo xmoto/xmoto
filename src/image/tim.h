@@ -22,26 +22,6 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #ifndef __TIM_H__ /* TIM */
 #define __TIM_H__
 
-#ifdef __cplusplus /* C/C++ glue */
-extern "C" {
-#endif
-
-/*==============================================================================
-Basic defines
-==============================================================================*/
-
-#ifndef NULL
-#define NULL 0
-#endif
-
-#ifndef FALSE
-#define FALSE 0
-#endif
-
-#ifndef TRUE
-#define TRUE 1
-#endif
-
 /*==============================================================================
 Return values
 ==============================================================================*/
@@ -297,10 +277,6 @@ int tim_add_jpeg_support(tim_session_t *pSession);
 
 /* PNG support */
 int tim_add_png_support(tim_session_t *pSession);
-
-#ifdef __cplusplus /* C/C++ glue */
-}
-#endif
 
 #endif
 

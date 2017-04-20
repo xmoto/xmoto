@@ -1,136 +1,110 @@
-CMAKE_MINIMUM_REQUIRED(VERSION 2.6 FATAL_ERROR)
+cmake_minimum_required(VERSION 2.6 FATAL_ERROR)
 
-# cmake -D CMAKE_GENERATOR="Unix Makefiles" ../trunk/src
-SET(CMAKE_GENERATOR "Unix Makefiles")
-PROJECT(xmoto)
-SET(CMAKE_MODULE_PATH ${PROJECT_SOURCE_DIR}/../cmake_modules)
+project(xmoto)
+set(CMAKE_MODULE_PATH ${PROJECT_SOURCE_DIR}/../cmake_modules)
 
 # the name of the target operating system
 #SET(CMAKE_SYSTEM_NAME Windows)
 #SET(CMAKE_SYSTEM_NAME Linux)
 
 # cross compilation on windows
-MESSAGE("System: " ${CMAKE_SYSTEM_NAME})
-IF(CMAKE_SYSTEM_NAME MATCHES Windows)
+message("System: " ${CMAKE_SYSTEM_NAME})
+if(CMAKE_SYSTEM_NAME MATCHES Windows)
 
- IF(CMAKE_HOST_UNIX) # cross compiling windows version from unix system
+ if(CMAKE_HOST_UNIX) # cross compiling windows version from unix system
   # which compilers to use for C and C++
-  SET(CMAKE_C_COMPILER i586-mingw32msvc-gcc)
-  SET(CMAKE_CXX_COMPILER i586-mingw32msvc-g++)
+  set(CMAKE_C_COMPILER i586-mingw32msvc-gcc)
+  set(CMAKE_CXX_COMPILER i586-mingw32msvc-g++)
   # here is the target environment located
-  SET(CMAKE_FIND_ROOT_PATH  /usr/i586-mingw32msvc)
+  set(CMAKE_FIND_ROOT_PATH  /usr/i586-mingw32msvc)
 
   # adjust the default behaviour of the FIND_XXX() commands:
-  # search headers and libraries in the target environment, search 
+  # search headers and libraries in the target environment, search
   # programs in the host environment
   set(CMAKE_FIND_ROOT_PATH_MODE_PROGRAM NEVER)
   set(CMAKE_FIND_ROOT_PATH_MODE_LIBRARY ONLY)
   set(CMAKE_FIND_ROOT_PATH_MODE_INCLUDE ONLY)
- ENDIF(CMAKE_HOST_UNIX)
+ endif()
 
- ADD_DEFINITIONS(-mthreads -MD)
- link_libraries (mingw32 SDLmain SDL opengl32 glu32 -mwindows userenv intl)
-ENDIF(CMAKE_SYSTEM_NAME MATCHES Windows)
+ add_definitions(-mthreads -MD)
+ link_libraries(mingw32 SDLmain SDL opengl32 glu32 -mwindows userenv intl)
+endif()
+
+if(CMAKE_GENERATOR MATCHES "Ninja")
+  message("-- Using Ninja, try to colorize")
+  check_cxx_compiler_flag(-fdiagnostics-color FLAG_CXX_DIAGNOSTICS_COLOR)
+  if (FLAG_CXX_DIAGNOSTICS_COLOR)
+    add_compile_options("-fdiagnostics-color")
+  endif()
+else()
+  message("-- Using " ${CMAKE_GENERATOR})
+endif()
 
 # find dependencies
-FIND_PACKAGE(Lua51 REQUIRED)
-ADD_DEFINITIONS(-DCMAKE_LUA_H)
-MESSAGE("--    Including from: " ${LUA_INCLUDE_DIR})
-INCLUDE_DIRECTORIES(${LUA_INCLUDE_DIR})
-FIND_PACKAGE(OpenGL REQUIRED)
-FIND_PACKAGE(SDL REQUIRED)
-FIND_PACKAGE(SDL_mixer REQUIRED)
-FIND_PACKAGE(SDL_net REQUIRED)
-FIND_PACKAGE(SDL_ttf REQUIRED)
-
-IF(CMAKE_SYSTEM_NAME MATCHES Windows)
+if(CMAKE_SYSTEM_NAME MATCHES Windows)
  set(bzip2internal_src
-     bzip2/crctable.c bzip2/bzlib_private.h bzip2/blocksort.c bzip2/bzlib.c bzip2/decompress.c
-     bzip2/huffman.c bzip2/bzlib.h bzip2/compress.c bzip2/randtable.c
+   bzip2/blocksort.c
+   bzip2/bzlib.c
+   bzip2/bzlib.h
+   bzip2/bzlib_private.h
+   bzip2/compress.c
+   bzip2/crctable.c
+   bzip2/decompress.c
+   bzip2/huffman.c
+   bzip2/randtable.c
  )
-ELSE(CMAKE_SYSTEM_NAME MATCHES Windows)
+else()
  set(bzip2internal_src)
- FIND_PACKAGE(BZip2 REQUIRED)
-ENDIF(CMAKE_SYSTEM_NAME MATCHES Windows)
+ find_package(BZip2 REQUIRED)
+endif()
 
-FIND_PACKAGE(CURL REQUIRED)
-FIND_PACKAGE(Gettext)
-FIND_PACKAGE(JPEG REQUIRED)
-FIND_PACKAGE(LibXml2 REQUIRED)
-INCLUDE_DIRECTORIES(${LIBXML2_INCLUDE_DIR})
-FIND_PACKAGE(ODE REQUIRED)
-FIND_PACKAGE(PNG REQUIRED)
-FIND_PACKAGE(SQLITE3 REQUIRED)
-FIND_PACKAGE(XDG REQUIRED)
-FIND_PACKAGE(ZLIB REQUIRED)
+find_package(CURL REQUIRED)
+find_package(Gettext)
+find_package(JPEG REQUIRED)
 
-SET(DATADIR ${CMAKE_INSTALL_PREFIX}/share)
-SET(GAMEDATADIR ${DATADIR}/${CMAKE_PROJECT_NAME})
+find_package(LibXml2 REQUIRED)
+include_directories(${LIBXML2_INCLUDE_DIR})
+
+find_package(Lua51 REQUIRED)
+add_definitions(-DCMAKE_LUA_H)
+message("--    Including from: " ${LUA_INCLUDE_DIR})
+include_directories(${LUA_INCLUDE_DIR})
+
+find_package(ODE REQUIRED)
+find_package(OpenGL REQUIRED)
+find_package(PNG REQUIRED)
+
+find_package(SDL REQUIRED)
+find_package(SDL_mixer REQUIRED)
+find_package(SDL_net REQUIRED)
+find_package(SDL_ttf REQUIRED)
+
+find_package(SQLITE3 REQUIRED)
+find_package(XDG REQUIRED)
+find_package(ZLIB REQUIRED)
+
+set(DATADIR ${CMAKE_INSTALL_PREFIX}/share)
+set(GAMEDATADIR ${DATADIR}/${CMAKE_PROJECT_NAME})
 
 # include languages
-IF(GETTEXT_FOUND)
+if(GETTEXT_FOUND)
 # GETTEXT_CREATE_TRANSLATIONS(../po/xmoto.pot ../po/fr_FR.po ../po/de_DE.po)
-ENDIF(GETTEXT_FOUND)
+endif()
 
-ADD_DEFINITIONS(-DSVN_REV=\"git\")
+add_definitions(-DSVN_REV=\"git\")
 
 # options
 #ADD_DEFINITIONS(-O2) # g++ optimisations
-ADD_DEFINITIONS(-DGAMEDATADIR=\"${GAMEDATADIR}\")
-ADD_DEFINITIONS(-DCONFIGURE_DEFAULT_THEME=\"Modern\")
+add_definitions(-DGAMEDATADIR=\"${GAMEDATADIR}\")
+add_definitions(-DCONFIGURE_DEFAULT_THEME=\"Modern\")
 
-IF(CMAKE_SYSTEM_NAME MATCHES Windows)
-  ADD_DEFINITIONS(-DDEFAULT_ASIAN_TTF_FILE=\"Textures/Fonts/bkai00mp.ttf\")
-ELSE(CMAKE_SYSTEM_NAME MATCHES Windows)
-  ADD_DEFINITIONS(-DDEFAULT_ASIAN_TTF_FILE=\"/usr/share/fonts/truetype/arphic/bkai00mp.ttf\")
-ENDIF(CMAKE_SYSTEM_NAME MATCHES Windows)
+if(CMAKE_SYSTEM_NAME MATCHES Windows)
+  add_definitions(-DDEFAULT_ASIAN_TTF_FILE=\"Textures/Fonts/bkai00mp.ttf\")
+else()
+  add_definitions(-DDEFAULT_ASIAN_TTF_FILE=\"/usr/share/fonts/truetype/arphic/bkai00mp.ttf\")
+endif()
 
-set(xmincludes_src
-  include/xm_OpenGL.h
-  include/xm_SDL.h
-  include/xm_SDL_mixer.h
-  include/xm_SDL_net.h
-  include/xm_SDL_ttf.h
-  include/xm_endian.h
-  include/xm_hashmap.h
-  include/xm_lua.h
-  include/xm_ode.h
-)
-
-set(image_src
-  image/tim.cpp image/tim.h
-  image/tim_io_stdio.cpp
-  image/tim_jpeg.cpp
-  image/tim_memory_crt.cpp
-  image/tim_png.cpp
-)
-
-set(md5sum_src
-  md5sum/md5.c md5sum/md5.h
-  md5sum/md5file.cpp md5sum/md5file.h
-)
-
-set(gui_src
-  gui/basic/GUI.cpp gui/basic/GUI.h
-  gui/basic/GUIButton.cpp
-  gui/basic/GUIButtonDrawn.cpp
-  gui/basic/GUIConsole.cpp gui/basic/GUIConsole.h
-  gui/basic/GUIEdit.cpp
-  gui/basic/GUIFrame.cpp
-  gui/basic/GUIList.cpp
-  gui/basic/GUIStatic.cpp
-  gui/basic/GUITabView.cpp
-
-  gui/specific/GUIXMoto.cpp gui/specific/GUIXMoto.h
-)
-
-set(drawlib_src
-  drawlib/DrawLib.cpp drawlib/DrawLib.h
-
-  # Needs proper library integration
-  drawlib/DrawLibOpenGL.cpp drawlib/DrawLibOpenGL.h
-# drawlib/DrawLibSDLgfx.cpp drawlib/DrawLibSDLgfx.h
-)
+# sources
 
 set(chipmunk_src
   chipmunk/chipmunk.c chipmunk/chipmunk.h
@@ -147,27 +121,6 @@ set(chipmunk_src
   chipmunk/cpSpaceHash.c chipmunk/cpSpaceHash.h
   chipmunk/cpVect.c chipmunk/cpVect.h
   chipmunk/prime.h
-)
-
-set (helpers_src
-  helpers/CmdArgumentParser.cpp helpers/CmdArgumentParser.h
-  helpers/Color.h
-  helpers/Environment.cpp helpers/Environment.h
-  helpers/FileCompression.cpp helpers/FileCompression.h
-  helpers/HighPrecisionTimer.h
-  helpers/Log.cpp helpers/Log.h
-  helpers/MultiSingleton.h
-  helpers/Random.cpp helpers/Random.h
-  helpers/RenderSurface.cpp helpers/RenderSurface.h
-  helpers/Singleton.h
-  helpers/SwapEndian.cpp helpers/SwapEndian.h
-  helpers/System.cpp helpers/System.h
-  helpers/TFunctor.h
-  helpers/Text.cpp helpers/Text.h
-  helpers/VExcept.h
-  helpers/VMath.cpp helpers/VMath.h
-  helpers/iqsort.h
-  helpers/utf8.cpp helpers/utf8.h
 )
 
 set(common_src
@@ -215,6 +168,93 @@ set(common_src
   common/XMotoLoadReplaysInterface.h
   common/svn_version.cpp
   common/svn_version.h
+)
+
+set(db_src
+  db/xmDatabase.cpp db/xmDatabase.h
+  db/xmDatabaseUpdateInterface.h
+  db/xmDatabase_config.cpp
+  db/xmDatabase_fixes.cpp
+  db/xmDatabase_levels.cpp
+  db/xmDatabase_profiles.cpp
+  db/xmDatabase_replays.cpp
+  db/xmDatabase_srv.cpp
+  db/xmDatabase_stats.cpp
+  db/xmDatabase_sync.cpp
+  db/xmDatabase_themes.cpp
+  db/xmDatabase_votes.cpp
+  db/xmDatabase_web.cpp
+)
+
+set(drawlib_src
+  drawlib/DrawLib.cpp drawlib/DrawLib.h
+
+  # Needs proper library integration
+  drawlib/DrawLibOpenGL.cpp drawlib/DrawLibOpenGL.h
+# drawlib/DrawLibSDLgfx.cpp drawlib/DrawLibSDLgfx.h
+)
+
+set(gui_src
+  gui/basic/GUI.cpp gui/basic/GUI.h
+  gui/basic/GUIButton.cpp
+  gui/basic/GUIButtonDrawn.cpp
+  gui/basic/GUIConsole.cpp gui/basic/GUIConsole.h
+  gui/basic/GUIEdit.cpp
+  gui/basic/GUIFrame.cpp
+  gui/basic/GUIList.cpp
+  gui/basic/GUIStatic.cpp
+  gui/basic/GUITabView.cpp
+
+  gui/specific/GUIXMoto.cpp gui/specific/GUIXMoto.h
+)
+
+set(helpers_src
+  helpers/CmdArgumentParser.cpp helpers/CmdArgumentParser.h
+  helpers/Color.h
+  helpers/Environment.cpp helpers/Environment.h
+  helpers/FileCompression.cpp helpers/FileCompression.h
+  helpers/HighPrecisionTimer.h
+  helpers/Log.cpp helpers/Log.h
+  helpers/MultiSingleton.h
+  helpers/Random.cpp helpers/Random.h
+  helpers/RenderSurface.cpp helpers/RenderSurface.h
+  helpers/Singleton.h
+  helpers/SwapEndian.cpp helpers/SwapEndian.h
+  helpers/System.cpp helpers/System.h
+  helpers/TFunctor.h
+  helpers/Text.cpp helpers/Text.h
+  helpers/VExcept.h
+  helpers/VMath.cpp helpers/VMath.h
+  helpers/iqsort.h
+  helpers/utf8.cpp helpers/utf8.h
+)
+
+set(image_src
+  image/tim.cpp image/tim.h
+  image/tim_io_stdio.cpp
+  image/tim_jpeg.cpp
+  image/tim_memory_crt.cpp
+  image/tim_png.cpp
+)
+
+set(md5sum_src
+  md5sum/md5.c md5sum/md5.h
+  md5sum/md5file.cpp md5sum/md5file.h
+)
+
+set(net_src
+  net/ActionReader.cpp net/ActionReader.h
+  net/BasicStructures.h
+  net/NetActions.cpp net/NetActions.h
+  net/NetClient.cpp net/NetClient.h
+  net/NetServer.cpp net/NetServer.h
+  net/ServerRules.cpp net/ServerRules.h
+  net/VirtualNetLevelsList.cpp net/VirtualNetLevelsList.h
+  net/extSDL_net.cpp net/extSDL_net.h
+
+  net/helpers/Net.cpp net/helpers/Net.h
+
+  net/thread/ServerThread.cpp net/thread/ServerThread.h
 )
 
 set(states_src
@@ -267,30 +307,7 @@ set(states_src
   states/StateWaiting.cpp states/StateWaiting.h
 )
 
-set(xdgbasedir_src
-  xdgbasedir/include/basedir.h
-  xdgbasedir/include/basedir_fs.h
-  xdgbasedir/src/basedir.c
-)
-
-set(thread_net_src
-  net/ActionReader.cpp net/ActionReader.h
-  net/BasicStructures.h
-  net/NetActions.cpp net/NetActions.h
-  net/NetClient.cpp net/NetClient.h
-  net/NetServer.cpp net/NetServer.h
-  net/ServerRules.cpp net/ServerRules.h
-  net/VirtualNetLevelsList.cpp net/VirtualNetLevelsList.h
-  net/extSDL_net.cpp net/extSDL_net.h
-
-  net/helpers/Net.cpp net/helpers/Net.h
-
-  net/thread/ServerThread.cpp net/thread/ServerThread.h
-)
-
 set(thread_src
-  ${thread_net_src}
-
   thread/CheckWwwThread.cpp thread/CheckWwwThread.h
   thread/DownloadReplaysThread.cpp thread/DownloadReplaysThread.h
   thread/LevelsPacksCountUpdateThread.cpp thread/LevelsPacksCountUpdateThread.h
@@ -309,20 +326,55 @@ set(thread_src
   thread/XMThreads.cpp thread/XMThreads.h
 )
 
-set(db_src
-  db/xmDatabase.cpp db/xmDatabase.h
-  db/xmDatabaseUpdateInterface.h
-  db/xmDatabase_config.cpp
-  db/xmDatabase_fixes.cpp
-  db/xmDatabase_levels.cpp
-  db/xmDatabase_profiles.cpp
-  db/xmDatabase_replays.cpp
-  db/xmDatabase_srv.cpp
-  db/xmDatabase_stats.cpp
-  db/xmDatabase_sync.cpp
-  db/xmDatabase_themes.cpp
-  db/xmDatabase_votes.cpp
-  db/xmDatabase_web.cpp
+set(xdgbasedir_src
+  xdgbasedir/include/basedir.h
+  xdgbasedir/include/basedir_fs.h
+  xdgbasedir/src/basedir.c
+)
+
+set(xmincludes_src
+  include/xm_OpenGL.h
+  include/xm_SDL.h
+  include/xm_SDL_mixer.h
+  include/xm_SDL_net.h
+  include/xm_SDL_ttf.h
+  include/xm_endian.h
+  include/xm_hashmap.h
+  include/xm_lua.h
+  include/xm_ode.h
+)
+
+set(xmoto_src
+  xmoto/BSP.cpp xmoto/BSP.h
+  xmoto/Collision.cpp xmoto/Collision.h
+  xmoto/Credits.cpp xmoto/Credits.h
+  xmoto/GUIBestTimes.cpp
+  xmoto/Game.cpp xmoto/Game.h
+  xmoto/GameEvents.cpp xmoto/GameEvents.h
+  xmoto/GameInit.cpp xmoto/GameText.h
+  xmoto/GeomsManager.cpp xmoto/GeomsManager.h
+  xmoto/Input.cpp xmoto/Input.h
+  xmoto/LevelsManager.cpp xmoto/LevelsManager.h
+  xmoto/LevelsText.h
+  xmoto/LuaLibBase.cpp xmoto/LuaLibBase.h
+  xmoto/LuaLibGame.cpp xmoto/LuaLibGame.h
+  xmoto/PhysSettings.h
+  xmoto/Renderer.cpp xmoto/Renderer.h
+  xmoto/RendererFBO.cpp
+  xmoto/Replay.cpp xmoto/Replay.h
+  xmoto/ScriptDynamicObjects.cpp xmoto/ScriptDynamicObjects.h
+  xmoto/SomersaultCounter.cpp xmoto/SomersaultCounter.h
+  xmoto/Sound.cpp xmoto/Sound.h
+  xmoto/SysMessage.cpp xmoto/SysMessage.h
+  xmoto/Trainer.cpp xmoto/Trainer.h
+  xmoto/Universe.cpp xmoto/Universe.h
+  xmoto/UserConfig.cpp xmoto/UserConfig.h
+  xmoto/VideoRecorder.cpp xmoto/VideoRecorder.h
+  xmoto/VirtualLevelsList.cpp xmoto/VirtualLevelsList.h
+  xmoto/XMDemo.cpp xmoto/XMDemo.h
+  xmoto/XMKey.cpp xmoto/XMKey.h
+  xmoto/glext.h
+  xmoto/sqlqueries.h
 )
 
 set(xmscene_src
@@ -365,40 +417,7 @@ set(xmscene_src
   xmscene/Zone.h
 )
 
-set(xmoto_src
-  xmoto/BSP.cpp xmoto/BSP.h
-  xmoto/Collision.cpp xmoto/Collision.h
-  xmoto/Credits.cpp xmoto/Credits.h
-  xmoto/GUIBestTimes.cpp
-  xmoto/Game.cpp xmoto/Game.h
-  xmoto/GameEvents.cpp xmoto/GameEvents.h
-  xmoto/GameInit.cpp xmoto/GameText.h
-  xmoto/GeomsManager.cpp xmoto/GeomsManager.h
-  xmoto/Input.cpp xmoto/Input.h
-  xmoto/LevelsManager.cpp xmoto/LevelsManager.h
-  xmoto/LevelsText.h
-  xmoto/LuaLibBase.cpp xmoto/LuaLibBase.h
-  xmoto/LuaLibGame.cpp xmoto/LuaLibGame.h
-  xmoto/PhysSettings.h
-  xmoto/Renderer.cpp xmoto/Renderer.h
-  xmoto/RendererFBO.cpp
-  xmoto/Replay.cpp xmoto/Replay.h
-  xmoto/ScriptDynamicObjects.cpp xmoto/ScriptDynamicObjects.h
-  xmoto/SomersaultCounter.cpp xmoto/SomersaultCounter.h
-  xmoto/Sound.cpp xmoto/Sound.h
-  xmoto/SysMessage.cpp xmoto/SysMessage.h
-  xmoto/Trainer.cpp xmoto/Trainer.h
-  xmoto/Universe.cpp xmoto/Universe.h
-  xmoto/UserConfig.cpp xmoto/UserConfig.h
-  xmoto/VideoRecorder.cpp xmoto/VideoRecorder.h
-  xmoto/VirtualLevelsList.cpp xmoto/VirtualLevelsList.h
-  xmoto/XMDemo.cpp xmoto/XMDemo.h
-  xmoto/XMKey.cpp xmoto/XMKey.h
-  xmoto/glext.h
-  xmoto/sqlqueries.h
-)
-
-include_directories("${PROJECT_SOURCE_DIR}")
+include_directories(${PROJECT_SOURCE_DIR})
 
 add_executable(xmoto
   ${bzip2internal_src}
@@ -414,14 +433,13 @@ add_executable(xmoto
   ${net_src}
   ${states_src}
   ${thread_src}
-  ${tinyxml_src}
   ${xdgbasedir_src}
   ${xmincludes_src}
   ${xmoto_src}
   ${xmscene_src}
 )
 
-TARGET_LINK_LIBRARIES(xmoto
+target_link_libraries(xmoto
   ${BZIP2_LIBRARIES}
   ${CURL_LIBRARIES}
   ${JPEG_LIBRARIES}
@@ -430,34 +448,40 @@ TARGET_LINK_LIBRARIES(xmoto
   ${ODE_LIBRARY}
   ${OPENGL_LIBRARIES}
   ${PNG_LIBRARY}
+  ${SDL_LIBRARY}
   ${SDLMIXER_LIBRARY}
   ${SDLNET_LIBRARY}
   ${SDLTTF_LIBRARY}
-  ${SDL_LIBRARY}
   ${SQLITE3_LIBRARIES}
   ${XDG_LIBRARY}
   ${ZLIB_LIBRARIES}
 )
 
+#target_compile_options(xmoto PRIVATE -Wall)
+#target_compile_options(xmoto PRIVATE -Werror)
 
-INSTALL(TARGETS xmoto RUNTIME DESTINATION ${CMAKE_INSTALL_PREFIX}/bin)
+install(TARGETS xmoto RUNTIME DESTINATION ${CMAKE_INSTALL_PREFIX}/bin)
 
-MESSAGE("Bzip2     libraries: " ${BZIP2_LIBRARIES})
-MESSAGE("Curl      libraries: " ${CURL_LIBRARIES})
-MESSAGE("Jpeg      libraries: " ${JPEG_LIBRARIES})
-MESSAGE("LibXml2   libraries: " ${LIBXML2_LIBRARIES})
-MESSAGE("Lua       libraries: " ${LUA_LIBRARIES})
-MESSAGE("Ode       libraries: " ${ODE_LIBRARY})
-MESSAGE("OpenGL    libraries: " ${OPENGL_LIBRARIES})
-MESSAGE("Png       libraries: " ${PNG_LIBRARY})
-MESSAGE("SDL       libraries: " ${SDL_LIBRARY})
-MESSAGE("SDL_net   libraries: " ${SDLNET_LIBRARY})
-MESSAGE("SDL_ttf   libraries: " ${SDLTTF_LIBRARY})
-MESSAGE("SDM_mixer libraries: " ${SDLMIXER_LIBRARY})
-MESSAGE("Sqlite3   libraries: " ${SQLITE3_LIBRARIES})
-MESSAGE("Xdg       libraries: " ${XDG_LIBRARY})
-MESSAGE("Zlib      libraries: " ${ZLIB_LIBRARIES})
-MESSAGE("")
+message("BZip2     libraries: " ${BZIP2_LIBRARIES})
+message("Curl      libraries: " ${CURL_LIBRARIES})
+message("Jpeg      libraries: " ${JPEG_LIBRARIES})
+message("LibXml2   libraries: " ${LIBXML2_LIBRARIES})
+message("Lua       libraries: " ${LUA_LIBRARIES})
+message("Ode       libraries: " ${ODE_LIBRARY})
+message("OpenGL    libraries: " ${OPENGL_LIBRARIES})
+message("Png       libraries: " ${PNG_LIBRARY})
+message("SDL       libraries: " ${SDL_LIBRARY})
+message("SDL_mixer libraries: " ${SDLMIXER_LIBRARY})
+message("SDL_net   libraries: " ${SDLNET_LIBRARY})
+message("SDL_ttf   libraries: " ${SDLTTF_LIBRARY})
+message("Sqlite3   libraries: " ${SQLITE3_LIBRARIES})
+message("Xdg       libraries: " ${XDG_LIBRARY})
+message("Zlib      libraries: " ${ZLIB_LIBRARIES})
+message("")
 
-MESSAGE("Installation path: " ${CMAKE_INSTALL_PREFIX})
-MESSAGE("Game data path: " ${GAMEDATADIR})
+message("Installation path: " ${CMAKE_INSTALL_PREFIX})
+message("Game data path: " ${GAMEDATADIR})
+message("Flags:")
+if(${ALLOW_DEV})
+  message("-- Dev enabled")
+endif()

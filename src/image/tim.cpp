@@ -19,7 +19,7 @@
   =============================================================================*/
 
 /* tim.cpp
- * 
+ *
  * TinyImage API main.
  */
 #include <string.h>
@@ -257,13 +257,13 @@ int tim_is_hint(tim_session_t *pSession,char *pcExt,char *pcTag) {
 	
   /* Find format */
   pFormat=tim_find_file_format(pSession,pcExt);
-  if(!pFormat) return FALSE;
+  if(!pFormat) return false;
 	
   /* Hint there? */
-  if(tim_find_file_format_hint(pFormat,pcTag)) return TRUE;
+  if(tim_find_file_format_hint(pFormat,pcTag)) return true;
 	
   /* No such hint */
-  return FALSE;
+  return false;
 }
 
 char *tim_get_hint(tim_session_t *pSession,char *pcExt,char *pcTag,char *pcDefaultValue) {
@@ -404,8 +404,8 @@ int tim_is_image_readable(tim_session_t *pSession,char *pcFileName) {
 
   /* Find file format */
   pFileFormat=tim_determine_file_format(pSession,pcFileName);
-  if(pFileFormat && pFileFormat->tim_callback_load) return TRUE;
-  return FALSE;
+  if(pFileFormat && pFileFormat->tim_callback_load) return true;
+  return false;
 }
 
 int tim_is_image_writable(tim_session_t *pSession,char *pcFileName) {
@@ -413,8 +413,8 @@ int tim_is_image_writable(tim_session_t *pSession,char *pcFileName) {
 
   /* Find file format */
   pFileFormat=tim_determine_file_format(pSession,pcFileName);
-  if(pFileFormat && pFileFormat->tim_callback_save) return TRUE;
-  return FALSE;
+  if(pFileFormat && pFileFormat->tim_callback_save) return true;
+  return false;
 }
 
 int tim_get_image_info(tim_session_t *pSession,char *pcFileName,tim_image_info_t *pInfo) {
