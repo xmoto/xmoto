@@ -22,7 +22,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #define __VIRTUALNETLEVELSLIST_H__
 
 #include <string>
-#include "../VirtualLevelsList.h"
+#include "xmoto/VirtualLevelsList.h"
 
 class NetClient;
 class xmDatabase;

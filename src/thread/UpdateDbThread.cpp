@@ -19,11 +19,11 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 =============================================================================*/
 
 #include "UpdateDbThread.h"
-#include "../helpers/Log.h"
-#include "../GameText.h"
-#include "../Game.h"
-#include "../states/StateManager.h"
-#include "../Theme.h"
+#include "helpers/Log.h"
+#include "xmoto/GameText.h"
+#include "xmoto/Game.h"
+#include "states/StateManager.h"
+#include "common/Theme.h"
 
 UpdateDbThread::UpdateDbThread(bool i_loadMainLayerOnly)
   : XMThread("UDT")

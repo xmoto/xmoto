@@ -22,8 +22,8 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #define __GUIXMOTO_H__
 
 #include "../basic/GUI.h"
-#include "../../helpers/VMath.h"
-#include "../../VirtualLevelsList.h"
+#include "helpers/VMath.h"
+#include "xmoto/VirtualLevelsList.h"
 
 class LevelsPack;
 

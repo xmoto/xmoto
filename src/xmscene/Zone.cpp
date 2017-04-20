@@ -19,8 +19,8 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 =============================================================================*/
 
 #include "Zone.h"
-#include "../VFileIO.h"
-#include "../VXml.h"
+#include "common/VFileIO.h"
+#include "common/VXml.h"
 #include <sstream>
 
 ZonePrim::ZonePrim() {

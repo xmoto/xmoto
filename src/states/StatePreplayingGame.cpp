@@ -21,14 +21,14 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "StatePreplayingGame.h"
 #include "StatePlayingLocal.h"
 #include "StateManager.h"
-#include "../XMSession.h"
-#include "../Universe.h"
-#include "../Replay.h"
-#include "../helpers/Log.h"
-#include "../xmscene/Camera.h"
-#include "../xmscene/Level.h"
-#include "../Game.h"
-#include "../xmscene/BikePlayer.h"
+#include "common/XMSession.h"
+#include "xmoto/Universe.h"
+#include "xmoto/Replay.h"
+#include "helpers/Log.h"
+#include "xmscene/Camera.h"
+#include "xmscene/Level.h"
+#include "xmoto/Game.h"
+#include "xmscene/BikePlayer.h"
 
 StatePreplayingGame::StatePreplayingGame(const std::string i_idlevel, bool i_sameLevel)
 : StatePreplaying(i_idlevel, i_sameLevel) {

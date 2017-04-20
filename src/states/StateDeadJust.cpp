@@ -19,16 +19,16 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 =============================================================================*/
 
 #include "StateDeadJust.h"
-#include "../Game.h"
+#include "xmoto/Game.h"
 #include "StateDeadMenu.h"
-#include "../GameText.h"
-#include "../Universe.h"
-#include "../xmscene/Camera.h"
+#include "xmoto/GameText.h"
+#include "xmoto/Universe.h"
+#include "xmscene/Camera.h"
 #include "StateVote.h"
 #include "StatePlayingLocal.h"
-#include "../thread/SendVoteThread.h"
-#include "../drawlib/DrawLib.h"
-#include "../helpers/Log.h"
+#include "thread/SendVoteThread.h"
+#include "drawlib/DrawLib.h"
+#include "helpers/Log.h"
 
 #define STATE_DEAD_MAX_TIME 2000
 #define VELOCITY_UNTIL_TORSO_RIP 0.05

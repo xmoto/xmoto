@@ -19,16 +19,16 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 =============================================================================*/
 
 #include "StateViewHighscore.h"
-#include "../GameText.h"
+#include "xmoto/GameText.h"
 #include "StatePreplayingReplay.h"
-#include "../helpers/Log.h"
-#include "../XMSession.h"
-#include "../SysMessage.h"
-#include "../Game.h"
-#include "../VFileIO.h"
-#include "../drawlib/DrawLib.h"
+#include "helpers/Log.h"
+#include "common/XMSession.h"
+#include "xmoto/SysMessage.h"
+#include "xmoto/Game.h"
+#include "common/VFileIO.h"
+#include "drawlib/DrawLib.h"
 #include "StateManager.h"
-#include "../thread/DownloadReplaysThread.h"
+#include "thread/DownloadReplaysThread.h"
 
 StateViewHighscore::StateViewHighscore(const std::string& i_id_level,
 				       bool drawStateBehind,

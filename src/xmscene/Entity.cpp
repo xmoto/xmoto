@@ -19,17 +19,17 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 =============================================================================*/
 
 #include "Entity.h"
-#include "../VXml.h"
-#include "../PhysSettings.h"
-#include "../VFileIO.h"
-#include "../Theme.h"
-#include "../helpers/Log.h"
-#include "../helpers/Random.h"
+#include "common/VXml.h"
+#include "xmoto/PhysSettings.h"
+#include "common/VFileIO.h"
+#include "common/Theme.h"
+#include "helpers/Log.h"
+#include "helpers/Random.h"
 #include "Level.h"
-#include "../chipmunk/chipmunk.h"
+#include "chipmunk/chipmunk.h"
 #include "Block.h"
 #include "ChipmunkWorld.h"
-#include "../XMSession.h"
+#include "common/XMSession.h"
 #include "PhysicsSettings.h"
 #include <sstream>
 

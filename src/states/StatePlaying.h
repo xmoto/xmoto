@@ -22,7 +22,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #define __STATEPLAYING_H__
 
 #include "StateScene.h"
-#include "../Input.h"
+#include "xmoto/Input.h"
 
 class StatePlaying : public StateScene {
   public:

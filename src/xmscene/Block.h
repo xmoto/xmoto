@@ -24,10 +24,10 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 class CollisionSystem;
 class Line;
 
-#include "../helpers/VMath.h"
-#include "../helpers/Color.h"
-#include "../VTexture.h"
-#include "../VXml.h"
+#include "helpers/VMath.h"
+#include "helpers/Color.h"
+#include "common/VTexture.h"
+#include "common/VXml.h"
 #include <vector>
 
 class FileHandle;

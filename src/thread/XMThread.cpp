@@ -19,10 +19,10 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 =============================================================================*/
 
 #include "XMThread.h"
-#include "../VCommon.h"
-#include "../Game.h"
-#include "../helpers/Log.h"
-#include "../VFileIO.h"
+#include "common/VCommon.h"
+#include "xmoto/Game.h"
+#include "helpers/Log.h"
+#include "common/VFileIO.h"
 
 XMThread::XMThread(const std::string& i_dbKey, bool i_dbReadOnly)
 {

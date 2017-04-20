@@ -19,24 +19,24 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 =============================================================================*/
 
 #include "ServerThread.h"
-#include "../../helpers/Log.h"
-#include "../../helpers/VExcept.h"
-#include "../../helpers/utf8.h"
-#include "../../helpers/System.h"
+#include "helpers/Log.h"
+#include "helpers/VExcept.h"
+#include "helpers/utf8.h"
+#include "helpers/System.h"
 #include <string>
 #include <sstream>
 #include "../helpers/Net.h"
-#include "../../XMSession.h"
-#include "../../states/StateManager.h"
+#include "common/XMSession.h"
+#include "states/StateManager.h"
 #include "../ActionReader.h"
 #include "../NetActions.h"
-#include "../../GameText.h"
-#include "../../Universe.h"
-#include "../../DBuffer.h"
-#include "../../Game.h"
-#include "../../db/xmDatabase.h"
-#include "../../xmscene/Level.h"
-#include "../../xmscene/BikeController.h"
+#include "xmoto/GameText.h"
+#include "xmoto/Universe.h"
+#include "common/DBuffer.h"
+#include "xmoto/Game.h"
+#include "db/xmDatabase.h"
+#include "xmscene/Level.h"
+#include "xmscene/BikeController.h"
 #include "../ServerRules.h"
 
 #define XM_SERVER_SLAVE_MODE_MIN_PROTOCOL_VERSION 1

@@ -21,12 +21,12 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "StatePreplayingReplay.h"
 #include "StateReplaying.h"
 #include "StateManager.h"
-#include "../Universe.h"
-#include "../XMSession.h"
-#include "../helpers/Log.h"
-#include "../Replay.h"
-#include "../xmscene/Camera.h"
-#include "../xmscene/BikePlayer.h"
+#include "xmoto/Universe.h"
+#include "common/XMSession.h"
+#include "helpers/Log.h"
+#include "xmoto/Replay.h"
+#include "xmscene/Camera.h"
+#include "xmscene/BikePlayer.h"
 
 StatePreplayingReplay::StatePreplayingReplay(const std::string i_replay, bool i_sameLevel)
 : StatePreplaying("", i_sameLevel) {

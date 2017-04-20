@@ -19,10 +19,10 @@
   =============================================================================*/
 
 #include "GUIConsole.h"
-#include "../../drawlib/DrawLib.h"
-#include "../../include/xm_SDL.h"
-#include "../../helpers/utf8.h"
-#include "../../Game.h"
+#include "drawlib/DrawLib.h"
+#include "include/xm_SDL.h"
+#include "helpers/utf8.h"
+#include "xmoto/Game.h"
 
 #define UIC_PROMPT "$ "
 #define UIC_CURSOR "_"

@@ -19,13 +19,13 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 =============================================================================*/
 
 #include "StatePause.h"
-#include "../Game.h"
-#include "../drawlib/DrawLib.h"
-#include "../GameText.h"
-#include "../Sound.h"
+#include "xmoto/Game.h"
+#include "drawlib/DrawLib.h"
+#include "xmoto/GameText.h"
+#include "xmoto/Sound.h"
 #include "StateMessageBox.h"
-#include "../helpers/Log.h"
-#include "../Universe.h"
+#include "helpers/Log.h"
+#include "xmoto/Universe.h"
 
 /* static members */
 UIRoot*  StatePause::m_sGUI = NULL;

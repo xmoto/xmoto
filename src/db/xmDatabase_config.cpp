@@ -19,9 +19,9 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 =============================================================================*/
 
 #include "xmDatabase.h"
-#include "../VXml.h"
-#include "../helpers/VExcept.h"
-#include "../helpers/Log.h"
+#include "common/VXml.h"
+#include "helpers/VExcept.h"
+#include "helpers/Log.h"
 
 std::string xmDatabase::config_getValue(const std::string& i_id_profile, const std::string& i_key, unsigned int& o_nrow) {
   char **v_result;

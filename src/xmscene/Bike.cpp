@@ -19,17 +19,17 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 =============================================================================*/
 
 #include "Bike.h"
-#include "../Replay.h"
+#include "xmoto/Replay.h"
 #include "Scene.h"
-#include "../GameEvents.h"
-#include "../GameText.h"
-#include "../PhysSettings.h"
-#include "../Game.h"
+#include "xmoto/GameEvents.h"
+#include "xmoto/GameText.h"
+#include "xmoto/PhysSettings.h"
+#include "xmoto/Game.h"
 #include "BikeParameters.h"
 #include "BikeAnchors.h"
 #include "BikeController.h"
-#include "../Sound.h"
-#include "../helpers/Log.h"
+#include "xmoto/Sound.h"
+#include "helpers/Log.h"
 #include "PhysicsSettings.h"
 
 #define MINIMUM_VELOCITY_TO_GET_MAXIMUM_DEATH_SOUND 80.0

@@ -19,11 +19,11 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 =============================================================================*/
 
 #include "StateServerConsole.h"
-#include "../Game.h"
-#include "../GameText.h"
-#include "../drawlib/DrawLib.h"
-#include "../gui/basic/GUIConsole.h"
-#include "../net/NetClient.h"
+#include "xmoto/Game.h"
+#include "xmoto/GameText.h"
+#include "drawlib/DrawLib.h"
+#include "gui/basic/GUIConsole.h"
+#include "net/NetClient.h"
 #include "StateManager.h"
 
 /* static members */

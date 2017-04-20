@@ -22,7 +22,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #define __UPLOADHIGHSCORETHREAD_H__
 
 #include "XMThread.h"
-#include "../WWWAppInterface.h"
+#include "common/WWWAppInterface.h"
 
 class UploadHighscoreThread : public XMThread, public WWWAppInterface {
   public:

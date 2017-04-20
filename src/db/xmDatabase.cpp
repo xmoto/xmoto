@@ -19,13 +19,13 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 =============================================================================*/
 
 #include "xmDatabase.h"
-#include "../helpers/VExcept.h"
-#include "../GameText.h"
-#include "../WWW.h"
-#include "../Game.h"
-#include "../helpers/Log.h"
-#include "../XMSession.h"
-#include "../VFileIO.h"
+#include "helpers/VExcept.h"
+#include "xmoto/GameText.h"
+#include "common/WWW.h"
+#include "xmoto/Game.h"
+#include "helpers/Log.h"
+#include "common/XMSession.h"
+#include "common/VFileIO.h"
 #include <sstream>
 
 #define XMDB_VERSION         36

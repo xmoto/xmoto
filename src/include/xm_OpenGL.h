@@ -14,6 +14,6 @@
 #endif
 #undef __glext_h_
 
-#include "../glext.h"
+#include "xmoto/glext.h"
 
 #endif

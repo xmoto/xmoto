@@ -19,13 +19,13 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 =============================================================================*/
 
 #include "StateMenu.h"
-#include "../gui/basic/GUI.h"
-#include "../Game.h"
-#include "../XMSession.h"
-#include "../drawlib/DrawLib.h"
+#include "gui/basic/GUI.h"
+#include "xmoto/Game.h"
+#include "common/XMSession.h"
+#include "drawlib/DrawLib.h"
 #include "StateUpdateDb.h"
-#include "../helpers/Log.h"
-#include "../xmscene/Camera.h"
+#include "helpers/Log.h"
+#include "xmscene/Camera.h"
 
 StateMenu::StateMenu(bool drawStateBehind,
 		     bool updateStatesBehind):

@@ -19,7 +19,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 =============================================================================*/
 
 #include "StateUploadHighscore.h"
-#include "../thread/UploadHighscoreThread.h"
+#include "thread/UploadHighscoreThread.h"
 
 StateUploadHighscore::StateUploadHighscore(const std::string& i_replayPath,
 					   bool drawStateBehind,

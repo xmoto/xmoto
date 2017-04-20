@@ -21,11 +21,11 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #ifndef __STATEMANAGER_H__
 #define __STATEMANAGER_H__
 
-#include "../helpers/Singleton.h"
-#include "../VCommon.h"
-#include "../XMKey.h"
-#include "../helpers/RenderSurface.h"
-#include "../include/xm_SDL.h"
+#include "helpers/Singleton.h"
+#include "common/VCommon.h"
+#include "xmoto/XMKey.h"
+#include "helpers/RenderSurface.h"
+#include "include/xm_SDL.h"
 #include <string>
 #include <vector>
 #include <map>

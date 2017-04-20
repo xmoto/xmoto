@@ -19,13 +19,13 @@
   =============================================================================*/
 
 #include "Camera.h"
-#include "../Game.h"
+#include "xmoto/Game.h"
 #include "Bike.h"
 #include "BikeGhost.h"
-#include "../helpers/Log.h"
+#include "helpers/Log.h"
 #include <sstream>
-#include "../SysMessage.h"
-#include "../drawlib/DrawLib.h"
+#include "xmoto/SysMessage.h"
+#include "drawlib/DrawLib.h"
 
 #define ZOOM_DEFAULT 0.24
 #define ZOOM_DEFAULT_NO_AUTOZOOM 0.195

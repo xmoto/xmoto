@@ -30,7 +30,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "PolyDraw.h"
 #include "SDL_gfxPrimitives.h"
 #include "SDL_rotozoom.h"
-#include "iqsort.h"
+#include "helpers/iqsort.h"
 //#define islt(a,b) ((*(const int *)a) - (*(const int *)b))
 #define islt(a,b) ((*a)<(*b))
 

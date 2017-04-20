@@ -19,7 +19,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 =============================================================================*/
 
 #include "xmDatabase.h"
-#include "../GameText.h"
+#include "xmoto/GameText.h"
 #include <sstream>
 #include <math.h>
 

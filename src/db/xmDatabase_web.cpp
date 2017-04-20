@@ -19,11 +19,11 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 =============================================================================*/
 
 #include "xmDatabase.h"
-#include "../GameText.h"
-#include "../VXml.h"
-#include "../helpers/VExcept.h"
-#include "../helpers/Log.h"
-#include "../WWW.h"
+#include "xmoto/GameText.h"
+#include "common/VXml.h"
+#include "helpers/VExcept.h"
+#include "helpers/Log.h"
+#include "common/WWW.h"
 #include <sstream>
 
 #define XM_NB_THIEFS_MAX 3

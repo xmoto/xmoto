@@ -20,10 +20,10 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
 #include "StatePlayingNet.h"
 #include "StatePreplayingNet.h"
-#include "../Universe.h"
+#include "xmoto/Universe.h"
 #include "StateManager.h"
-#include "../net/NetClient.h"
-#include "../XMSession.h"
+#include "net/NetClient.h"
+#include "common/XMSession.h"
 
 StatePlayingNet::StatePlayingNet(Universe* i_universe, GameRenderer* i_renderer):
 StatePlaying(i_universe, i_renderer)

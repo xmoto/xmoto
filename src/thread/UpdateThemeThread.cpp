@@ -19,13 +19,13 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 =============================================================================*/
 
 #include "UpdateThemeThread.h"
-#include "../helpers/Log.h"
-#include "../GameText.h"
-#include "../Game.h"
-#include "../WWW.h"
-#include "../XMSession.h"
-#include "../states/StateManager.h"
-#include "../VFileIO.h"
+#include "helpers/Log.h"
+#include "xmoto/GameText.h"
+#include "xmoto/Game.h"
+#include "common/WWW.h"
+#include "common/XMSession.h"
+#include "states/StateManager.h"
+#include "common/VFileIO.h"
 
 UpdateThemeThread::UpdateThemeThread(const std::string& i_id_theme)
   : XMThread("UTT")

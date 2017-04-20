@@ -22,9 +22,9 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #ifndef __MOTOGAME_H__
 #define __MOTOGAME_H__
 
-#include "../helpers/VMath.h"
-#include "../Collision.h"
-#include "../helpers/Color.h"
+#include "helpers/VMath.h"
+#include "xmoto/Collision.h"
+#include "helpers/Color.h"
 #include "BasicSceneStructs.h"
 #include "Bike.h"
 #include "BikeGhost.h"

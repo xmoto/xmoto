@@ -19,16 +19,16 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 =============================================================================*/
 
 #include "NetActions.h"
-#include "../helpers/VExcept.h"
-#include "../helpers/Log.h"
-#include "../helpers/Text.h"
+#include "helpers/VExcept.h"
+#include "helpers/Log.h"
+#include "helpers/Text.h"
 #include "NetClient.h"
-#include "../XMSession.h"
-#include "../XMBuild.h"
-#include "../DBuffer.h"
+#include "common/XMSession.h"
+#include "common/XMBuild.h"
+#include "common/DBuffer.h"
 #include "extSDL_net.h"
 #include <sstream>
-#include "../helpers/SwapEndian.h"
+#include "helpers/SwapEndian.h"
 #include "helpers/Net.h"
 #include "helpers/utf8.h"
 

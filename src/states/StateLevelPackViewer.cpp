@@ -19,16 +19,16 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 =============================================================================*/
 
 #include "StateLevelPackViewer.h"
-#include "../helpers/Text.h"
-#include "../Game.h"
-#include "../drawlib/DrawLib.h"
-#include "../GameText.h"
-#include "../gui/specific/GUIXMoto.h"
-#include "../XMSession.h"
+#include "helpers/Text.h"
+#include "xmoto/Game.h"
+#include "drawlib/DrawLib.h"
+#include "xmoto/GameText.h"
+#include "gui/specific/GUIXMoto.h"
+#include "common/XMSession.h"
 #include "StatePreplayingGame.h"
 #include "StateLevelInfoViewer.h"
 #include "StateViewHighscore.h"
-#include "../helpers/Log.h"
+#include "helpers/Log.h"
 
 /* static members */
 UIRoot*  StateLevelPackViewer::m_sGUI = NULL;

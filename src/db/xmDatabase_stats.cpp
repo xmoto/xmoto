@@ -19,10 +19,10 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 =============================================================================*/
 
 #include "xmDatabase.h"
-#include "../helpers/VExcept.h"
-#include "../VXml.h"
-#include "../GameText.h"
-#include "../Game.h"
+#include "helpers/VExcept.h"
+#include "common/VXml.h"
+#include "xmoto/GameText.h"
+#include "xmoto/Game.h"
 #include <sstream>
 
 /*

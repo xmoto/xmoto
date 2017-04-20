@@ -19,9 +19,9 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 =============================================================================*/
 
 #include "StateMessageBox.h"
-#include "../Game.h"
-#include "../drawlib/DrawLib.h"
-#include "../GameText.h"
+#include "xmoto/Game.h"
+#include "drawlib/DrawLib.h"
+#include "xmoto/GameText.h"
 
 void StateMessageBox::initStateMessageBox(StateMessageBoxReceiver* i_receiver,
 					  const std::string& i_text,

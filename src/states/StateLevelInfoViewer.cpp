@@ -20,15 +20,15 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
 #include "StateLevelInfoViewer.h"
 #include "StatePreplayingReplay.h"
-#include "../drawlib/DrawLib.h"
-#include "../GameText.h"
-#include "../XMSession.h"
+#include "drawlib/DrawLib.h"
+#include "xmoto/GameText.h"
+#include "common/XMSession.h"
 #include "StateReplaying.h"
 #include "StateMessageBox.h"
-#include "../Replay.h"
-#include "../Game.h"
-#include "../helpers/Log.h"
-#include "../helpers/Text.h"
+#include "xmoto/Replay.h"
+#include "xmoto/Game.h"
+#include "helpers/Log.h"
+#include "helpers/Text.h"
 
 /* static members */
 UIRoot*  StateLevelInfoViewer::m_sGUI = NULL;

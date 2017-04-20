@@ -19,11 +19,11 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 =============================================================================*/
 
 #include "StateUpdateTheme.h"
-#include "../Game.h"
-#include "../GameText.h"
+#include "xmoto/Game.h"
+#include "xmoto/GameText.h"
 #include "StateMessageBox.h"
-#include "../thread/UpdateThemeThread.h"
-#include "../helpers/Log.h"
+#include "thread/UpdateThemeThread.h"
+#include "helpers/Log.h"
 
 StateUpdateTheme::StateUpdateTheme(const std::string& i_id_theme,
 				   bool drawStateBehind,

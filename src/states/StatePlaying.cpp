@@ -19,13 +19,13 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 =============================================================================*/
 
 #include "StatePlaying.h"
-#include "../xmscene/BikeController.h"
-#include "../LuaLibGame.h"
-#include "../XMSession.h"
-#include "../xmscene/Bike.h"
-#include "../Universe.h"
-#include "../xmscene/BikePlayer.h"
-#include "../Renderer.h"
+#include "xmscene/BikeController.h"
+#include "xmoto/LuaLibGame.h"
+#include "common/XMSession.h"
+#include "xmscene/Bike.h"
+#include "xmoto/Universe.h"
+#include "xmscene/BikePlayer.h"
+#include "xmoto/Renderer.h"
 
 StatePlaying::StatePlaying(Universe* i_universe, GameRenderer* i_renderer)
 : StateScene(i_universe, i_renderer) {

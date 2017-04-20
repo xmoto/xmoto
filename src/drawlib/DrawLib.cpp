@@ -22,10 +22,10 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  *  Simple 2D drawing library, built closely on top of OpenGL.
  */
 #include "DrawLib.h"
-#include "../GameText.h"
-#include "../include/xm_SDL.h"
-#include "../VFileIO.h"
-#include "../VFileIO_types.h"
+#include "xmoto/GameText.h"
+#include "include/xm_SDL.h"
+#include "common/VFileIO.h"
+#include "common/VFileIO_types.h"
 
 #define DRAW_FONT_FILE_GENERAL   "Textures/Fonts/DejaVuSans.ttf"
 #define DRAW_FONT_FILE_MONOSPACE "Textures/Fonts/DejaVuSansMono.ttf"

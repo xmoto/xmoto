@@ -22,7 +22,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #define __SKYAPPARENCE_H__
 
 #include <string>
-#include "../helpers/Color.h"
+#include "helpers/Color.h"
   
   class SkyApparence {
     public:

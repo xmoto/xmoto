@@ -22,16 +22,16 @@
  *  Simple 2D drawing library, built closely on top of OpenGL.
  */
 #include "DrawLibOpenGL.h"
-#include "../helpers/utf8.h"
-#include "../xmscene/Camera.h"
-#include "../helpers/Log.h"
-#include "../Image.h"
-#include "../VFileIO.h"
-#include "../VTexture.h"
-#include "../include/xm_hashmap.h"
-#include "../helpers/Singleton.h"
-#include "../VFileIO_types.h"
-#include "../helpers/RenderSurface.h"
+#include "helpers/utf8.h"
+#include "xmscene/Camera.h"
+#include "helpers/Log.h"
+#include "common/Image.h"
+#include "common/VFileIO.h"
+#include "common/VTexture.h"
+#include "include/xm_hashmap.h"
+#include "helpers/Singleton.h"
+#include "common/VFileIO_types.h"
+#include "helpers/RenderSurface.h"
 
 #define UTF8_INTERLINE_SPACE 2
 #define UTF8_INTERCHAR_SPACE 0

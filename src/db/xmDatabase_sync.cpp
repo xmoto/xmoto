@@ -19,10 +19,10 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 =============================================================================*/
 
 #include "xmDatabase.h"
-#include "../VFileIO.h"
-#include "../VXml.h"
-#include "../XMSession.h"
-#include "../helpers/VExcept.h"
+#include "common/VFileIO.h"
+#include "common/VXml.h"
+#include "common/XMSession.h"
+#include "helpers/VExcept.h"
 #include <sstream>
 
 void xmDatabase::sync_buildServerFile(const std::string& i_outFile, const std::string& i_sitekey, const std::string& i_profile) {

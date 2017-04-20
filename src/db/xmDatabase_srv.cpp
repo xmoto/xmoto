@@ -19,7 +19,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 =============================================================================*/
 
 #include "xmDatabase.h"
-#include "../md5sum/md5file.h"
+#include "md5sum/md5file.h"
 #include <sstream>
 
 bool xmDatabase::srv_isAdmin(const std::string& i_profile, const std::string& i_password) {
