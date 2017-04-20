@@ -348,18 +348,16 @@ void StateScene::xmKey(InputEventType i_type, const XMKey& i_xmkey) {
   }
 
   else if(i_type == INPUT_DOWN && i_xmkey == (*InputHandler::instance()->getGlobalKey(INPUT_SWITCHSAFEMODE))) {
-    if (this->isSafeMode()){
-      this->setSafeMode(false);
-      SysMessage::instance()->displayText(GAMETEXT_SAFEMODE_DISABLED);
-    } 
-    else{
-      this->setSafeMode(true);
-      SysMessage::instance()->displayText(GAMETEXT_SAFEMODE_ENABLED);
-    }
+    bool bSafemodeNotActive = !XMSession::instance()->isSafemodeActive();
+
+    XMSession::instance()->setSafemodeActive(bSafemodeNotActive);
+    SysMessage::instance()->displayText(bSafemodeNotActive ?
+          GAMETEXT_SAFEMODE_ENABLED : GAMETEXT_SAFEMODE_DISABLED);
   }
 
   else if(i_type == INPUT_DOWN && i_xmkey == (*InputHandler::instance()->getGlobalKey(INPUT_RESTARTLEVEL))) {
-    if (!GameState::isSafeMode()) restartLevel();
+    if (!XMSession::instance()->isSafemodeActive())
+      restartLevel();
   }
   
   else if(i_type == INPUT_DOWN && i_xmkey == (*InputHandler::instance()->getGlobalKey(INPUT_SWITCHPLAYER))) {
@@ -421,11 +419,13 @@ void StateScene::xmKey(InputEventType i_type, const XMKey& i_xmkey) {
   }
 
   else if(i_type == INPUT_DOWN && i_xmkey == (*InputHandler::instance()->getGlobalKey(INPUT_NEXTLEVEL))) {
-    if (!GameState::isSafeMode()) nextLevel();
+    if (!XMSession::instance()->isSafemodeActive())
+      nextLevel();
   }
 
   else if(i_type == INPUT_DOWN && i_xmkey == (*InputHandler::instance()->getGlobalKey(INPUT_PREVIOUSLEVEL))) {
-    if (!GameState::isSafeMode()) nextLevel(false);
+    if (!XMSession::instance()->isSafemodeActive())
+      nextLevel(false);
   }
   
   
