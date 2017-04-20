@@ -433,6 +433,13 @@ public:
   bool m_musicOnAllLevels;
   bool m_noLog;
   bool m_adminMode;
+
+
+  bool m_bSafemodeActive;
+
+public:
+  inline bool isSafemodeActive() { return m_bSafemodeActive; }
+  inline void setSafemodeActive(bool isSafemodeActive) { m_bSafemodeActive = isSafemodeActive; }
 };
 
 #endif
