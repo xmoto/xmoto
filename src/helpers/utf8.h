@@ -18,8 +18,8 @@ along with XMOTO; if not, write to the Free Software
 Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 =============================================================================*/
 
-#ifndef __UTF8_H__
-#define __UTF8_H__
+#ifndef __XMOTO_UTF8_H__
+#define __XMOTO_UTF8_H__
 
 #include <vector>
 #include <string>
