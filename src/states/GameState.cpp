@@ -44,6 +44,7 @@ GameState::GameState(bool drawStateBehind,
 		     bool updateStatesBehind)
 {
   m_isHide             = false;
+  m_isSafeMode         = false;
   m_drawStateBehind    = drawStateBehind;
   m_updateStatesBehind = updateStatesBehind;
   m_requestForEnd      = false;
