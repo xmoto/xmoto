@@ -62,12 +62,7 @@ public:
   void setHide(bool isHide){
     m_isHide = isHide;
   }
-  bool isSafeMode(){
-    return this->m_isSafeMode;
-  }
-  void setSafeMode(bool isSafeMode){
-    this->m_isSafeMode = isSafeMode;
-  }
+
   bool drawStatesBehind(){
     return m_drawStateBehind;
   }

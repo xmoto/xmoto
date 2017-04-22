@@ -37,6 +37,8 @@ XMSession::XMSession() {
   /* don't set them by default */
   m_webConfAtInit   = DEFAULT_WEBCONFATINIT;
   m_profile         = DEFAULT_PROFILE;
+
+  m_bSafemodeActive = false;
 }
 
 void XMSession::setToDefault() {
