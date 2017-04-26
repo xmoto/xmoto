@@ -122,7 +122,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
     SDL_WM_SetCaption(XMBuild::getVersionString(true).c_str(), XMBuild::getVersionString(true).c_str());
 
 #if !defined(WIN32) && !defined(__APPLE__) && !defined(__amigaos4__) 
-    SDL_Surface *v_icon = SDL_LoadBMP(GAMEDATADIR "/xmoto_icone_x.ico");
+    SDL_Surface *v_icon = SDL_LoadBMP((XMFS::getSystemDataDir() + std::string("/xmoto_icone_x.ico")).c_str());
     if(v_icon != NULL) {
       SDL_SetColorKey(v_icon, SDL_SRCCOLORKEY,
 		      SDL_MapRGB(v_icon->format, 236, 45, 211));

@@ -1,34 +1,6 @@
-cmake_minimum_required(VERSION 2.6 FATAL_ERROR)
-
-project(xmoto)
-set(CMAKE_MODULE_PATH ${PROJECT_SOURCE_DIR}/../cmake_modules)
-
-# the name of the target operating system
-#SET(CMAKE_SYSTEM_NAME Windows)
-#SET(CMAKE_SYSTEM_NAME Linux)
-
-# cross compilation on windows
-message("System: " ${CMAKE_SYSTEM_NAME})
-if(CMAKE_SYSTEM_NAME MATCHES Windows)
-
- if(CMAKE_HOST_UNIX) # cross compiling windows version from unix system
-  # which compilers to use for C and C++
-  set(CMAKE_C_COMPILER i586-mingw32msvc-gcc)
-  set(CMAKE_CXX_COMPILER i586-mingw32msvc-g++)
-  # here is the target environment located
-  set(CMAKE_FIND_ROOT_PATH  /usr/i586-mingw32msvc)
-
-  # adjust the default behaviour of the FIND_XXX() commands:
-  # search headers and libraries in the target environment, search
-  # programs in the host environment
-  set(CMAKE_FIND_ROOT_PATH_MODE_PROGRAM NEVER)
-  set(CMAKE_FIND_ROOT_PATH_MODE_LIBRARY ONLY)
-  set(CMAKE_FIND_ROOT_PATH_MODE_INCLUDE ONLY)
- endif()
-
- add_definitions(-mthreads -MD)
- link_libraries(mingw32 SDLmain SDL opengl32 glu32 -mwindows userenv intl)
-endif()
+option(USE_OPENGL "Build with OpenGL for graphics" ON)
+option(USE_SDLGFX "Build with SDL for graphics" OFF)
+option(ALLOW_DEV "Enable some development/debug features." OFF)
 
 if(CMAKE_GENERATOR MATCHES "Ninja")
   message("-- Using Ninja, try to colorize")
@@ -66,18 +38,22 @@ find_package(LibXml2 REQUIRED)
 include_directories(${LIBXML2_INCLUDE_DIR})
 
 find_package(Lua51 REQUIRED)
-add_definitions(-DCMAKE_LUA_H)
 message("--    Including from: " ${LUA_INCLUDE_DIR})
 include_directories(${LUA_INCLUDE_DIR})
 
 find_package(ODE REQUIRED)
-find_package(OpenGL REQUIRED)
+if(USE_OPENGL)
+  find_package(OpenGL REQUIRED)
+endif()
 find_package(PNG REQUIRED)
 
-find_package(SDL REQUIRED)
-find_package(SDL_mixer REQUIRED)
-find_package(SDL_net REQUIRED)
-find_package(SDL_ttf REQUIRED)
+# Can't disable yet
+if(ON OR USE_SDLGFX)
+  find_package(SDL REQUIRED)
+  find_package(SDL_mixer REQUIRED)
+  find_package(SDL_net REQUIRED)
+  find_package(SDL_ttf REQUIRED)
+endif()
 
 find_package(SQLITE3 REQUIRED)
 find_package(XDG REQUIRED)
@@ -89,19 +65,6 @@ set(GAMEDATADIR ${DATADIR}/${CMAKE_PROJECT_NAME})
 # include languages
 if(GETTEXT_FOUND)
 # GETTEXT_CREATE_TRANSLATIONS(../po/xmoto.pot ../po/fr_FR.po ../po/de_DE.po)
-endif()
-
-add_definitions(-DSVN_REV=\"git\")
-
-# options
-#ADD_DEFINITIONS(-O2) # g++ optimisations
-add_definitions(-DGAMEDATADIR=\"${GAMEDATADIR}\")
-add_definitions(-DCONFIGURE_DEFAULT_THEME=\"Modern\")
-
-if(CMAKE_SYSTEM_NAME MATCHES Windows)
-  add_definitions(-DDEFAULT_ASIAN_TTF_FILE=\"Textures/Fonts/bkai00mp.ttf\")
-else()
-  add_definitions(-DDEFAULT_ASIAN_TTF_FILE=\"/usr/share/fonts/truetype/arphic/bkai00mp.ttf\")
 endif()
 
 # sources
@@ -188,11 +151,17 @@ set(db_src
 
 set(drawlib_src
   drawlib/DrawLib.cpp drawlib/DrawLib.h
-
-  # Needs proper library integration
-  drawlib/DrawLibOpenGL.cpp drawlib/DrawLibOpenGL.h
-# drawlib/DrawLibSDLgfx.cpp drawlib/DrawLibSDLgfx.h
 )
+if(USE_OPENGL)
+  list(APPEND drawlib_src
+    drawlib/DrawLibOpenGL.cpp drawlib/DrawLibOpenGL.h
+  )
+endif()
+if(USE_SDLGFX)
+  list(APPEND drawlib_src
+    drawlib/DrawLibSDLgfx.cpp drawlib/DrawLibSDLgfx.h
+  )
+endif()
 
 set(gui_src
   gui/basic/GUI.cpp gui/basic/GUI.h
@@ -417,7 +386,7 @@ set(xmscene_src
   xmscene/Zone.h
 )
 
-include_directories(${PROJECT_SOURCE_DIR})
+include_directories(${PROJECT_SOURCE_DIR}/src)
 
 add_executable(xmoto
   ${bzip2internal_src}
@@ -457,10 +426,26 @@ target_link_libraries(xmoto
   ${ZLIB_LIBRARIES}
 )
 
+target_compile_definitions(xmoto PUBLIC CMAKE_LUA_H)
+target_compile_definitions(xmoto PUBLIC SVN_REV=\"git\")
+
+# options
+target_compile_definitions(xmoto PRIVATE CONFIGURE_DEFAULT_THEME=\"Modern\")
+
+if(CMAKE_SYSTEM_NAME MATCHES Windows)
+  target_compile_definitions(xmoto PRIVATE
+    DEFAULT_ASIAN_TTF_FILE=\"Textures/Fonts/bkai00mp.ttf\")
+else()
+  target_compile_definitions(xmoto PRIVATE
+    DEFAULT_ASIAN_TTF_FILE=\"/usr/share/fonts/truetype/arphic/bkai00mp.ttf\")
+endif()
+
 #target_compile_options(xmoto PRIVATE -Wall)
 #target_compile_options(xmoto PRIVATE -Werror)
 
-install(TARGETS xmoto RUNTIME DESTINATION ${CMAKE_INSTALL_PREFIX}/bin)
+install(TARGETS xmoto
+  RUNTIME DESTINATION bin
+)
 
 message("BZip2     libraries: " ${BZIP2_LIBRARIES})
 message("Curl      libraries: " ${CURL_LIBRARIES})
@@ -480,7 +465,6 @@ message("Zlib      libraries: " ${ZLIB_LIBRARIES})
 message("")
 
 message("Installation path: " ${CMAKE_INSTALL_PREFIX})
-message("Game data path: " ${GAMEDATADIR})
 message("Flags:")
 if(${ALLOW_DEV})
   message("-- Dev enabled")

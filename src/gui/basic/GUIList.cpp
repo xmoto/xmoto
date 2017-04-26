@@ -25,6 +25,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "drawlib/DrawLib.h"
 #include "xmoto/Game.h"
 #include "xmoto/Sound.h"
+#include "helpers/utf8.h"
 #include <sstream>
 
 #define GUILIST_SCROLL_SIZE 10

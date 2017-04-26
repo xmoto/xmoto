@@ -42,6 +42,8 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "XMSession_default.h"
 #include "xmoto/UserConfig.h"
 
+#include <iostream>
+
 #ifdef WIN32
 std::string win32_getHomeDir(bool i_asUtf8 = false) {
   HANDLE hToken;
@@ -1192,12 +1194,23 @@ void XMFS::init(const std::string& AppDir, const std::string& i_binFile, const s
   }
 
   /* And the data dir? */
-  m_SystemDataDir = std::string(GAMEDATADIR);
-  if(isDir(m_SystemDataDir)) {
-    /* Got a system-wide installation to fall back to! */
-    m_bGotSystemDataDir = true;
+  for (char const* const *c_dir = xdgDataDirectories(m_xdgHd); *c_dir != NULL; c_dir++) {
+    std::string dir {*c_dir};
+    if(isDir(dir + "xmoto")) {
+      /* Got a system-wide installation to fall back to! */
+      m_SystemDataDir = std::move(dir);
+      m_bGotSystemDataDir = true;
+      break;
+    }
   }
-#endif    
+  if (!m_bGotSystemDataDir) {
+    m_SystemDataDir = std::string("/usr/share/");
+    if(isDir(m_SystemDataDir)) {
+      m_bGotSystemDataDir = true;
+    }
+  }
+  m_SystemDataDir.append("xmoto");
+#endif
 
   bool v_requireMigration = false;
 
