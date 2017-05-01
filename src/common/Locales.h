@@ -37,7 +37,7 @@ class Locales {
   public:
   /* return the locales set */
   static std::string init(std::string i_locale = "");
-  static std::string changeLocale(const std::string& i_locale);
+  static std::pair<std::string, std::string> changeLocale(const std::string& i_locale);
   static std::string default_LANGUAGE;
 };
 

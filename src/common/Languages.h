@@ -27,27 +27,27 @@ const char* LANGUAGES[][3] = {
   {"Català",      "Catala",      "ca_ES"}, // analpaper at gmail dot com
   {"Èesky",       "Eesky",       "cs_CZ"}, // tomas.chvatal at gmail dot com
   {"Dansk",       "Dansk",       "da_DK"}, // kristianjagd at gmail dot com
-  {"Deutsch",     "Deutsch",     "de_DE"}, // mothbox at gmx dot net
+  {"Deutsch",     "Deutsch",     "de"   }, // mothbox at gmx dot net
   {"American",    "American",    "en_US"},
-  {"Español",     "Espanol",     "es_ES"}, // analpaper at gmail dot com
-  {"Suomi",       "Suomi",       "fi_FI"}, // tuhoojabotti at gmail dot com
-  {"Français",    "Francais",    "fr_FR"}, // nicolas.adenis.lamarre at gmail dot com
+  {"Español",     "Espanol",     "es"   }, // analpaper at gmail dot com
+  {"Suomi",       "Suomi",       "fi"   }, // tuhoojabotti at gmail dot com
+  {"Français",    "Francais",    "fr"   }, // nicolas.adenis.lamarre at gmail dot com
   {"Gallego",     "Galego",      "gl_ES"}, // adriyetichaves at gmail dot com
-  {"Magyar",      "Magyar",      "hu_HU"}, // ttapecs at gmail dot com
-  {"Italiano",    "Italiano",    "it_IT"}, // earcar at gmail dot com
-  {"Latviešu",    "Latviesu",    "lv_LV"}, // parasti at gmail dot com
-  {"Lietuvių",    "Lietuviu",    "lt_LT"}, // tadzikaz at gmail dot com
+  {"Magyar",      "Magyar",      "hu"   }, // ttapecs at gmail dot com
+  {"Italiano",    "Italiano",    "it"   }, // earcar at gmail dot com
+  {"Latviešu",    "Latviesu",    "lv"   }, // parasti at gmail dot com
+  {"Lietuvių",    "Lietuviu",    "lt"   }, // tadzikaz at gmail dot com
   {"Norsk",       "Norsk",       "nb_NO"},
   {"Norsk",       "Norsk",       "nn_NO"},
-  {"Nederlands",  "Nederlands",  "nl_NL"}, // dyingmuppet at gmail dot com
-  {"Polski",      "Polski",      "pl_PL"},
+  {"Nederlands",  "Nederlands",  "nl"   }, // dyingmuppet at gmail dot com
+  {"Polski",      "Polski",      "pl"   },
   {"Brasileiro",  "Brasileiro",  "pt_BR"}, // kkndrox at gmail dot com
-  {"Portugues",   "Portugues",   "pt_PT"}, // smarquespt at gmail dot com
-  {"Русский",     "Russian",     "ru_RU"}, // thecentury at gmail dot com
-  {"Slovensky",   "Slovensky",   "sk_SK"}, // jose1711 at gmail dot com
+  {"Portugues",   "Portugues",   "pt"   }, // smarquespt at gmail dot com
+  {"Русский",     "Russian",     "ru"   }, // thecentury at gmail dot com
+  {"Slovensky",   "Slovensky",   "sk"   }, // jose1711 at gmail dot com
   {"Svenska",     "Svenska",     "sv_SE"}, // terra.unknown at yahoo dot com
-  {"Türkçe",       "Turkce",     "tr_TR"}, // ozbekanil at gmail dot com
-  {"Taiwanese",   "繁體中文",      "zh_TW"}, // azazabc123 at gmail dot com
+  {"Türkçe",      "Turkce",      "tr"   }, // ozbekanil at gmail dot com
+  {"Taiwanese",   "繁體中文",    "zh_TW"}, // azazabc123 at gmail dot com
   {NULL, NULL, NULL}
 };
 

@@ -1233,8 +1233,6 @@ UIWindow* StateOptions::makeWindowOptions_infos(UIWindow* i_parent) {
   int p=25;
   makeWindowOptions_infos_line(v_window, "Version", "X-Moto " + XMBuild::getVersionString(true), p);
   p+=20;
-  makeWindowOptions_infos_line(v_window, "Compilation date", __DATE__ " " __TIME__, p);
-  p+=20;
   makeWindowOptions_infos_line(v_window, "User data directory", XMFS::getUserDir(FDT_DATA), p);
   p+=20;
   makeWindowOptions_infos_line(v_window, "User config directory", XMFS::getUserDir(FDT_CONFIG), p);

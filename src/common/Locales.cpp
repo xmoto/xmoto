@@ -19,10 +19,13 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 =============================================================================*/
 
 #include "Locales.h"
+#include <libintl.h>
 #include <iostream>
 #include "BuildConfig.h"
 #include "helpers/Environment.h"
 #include "helpers/VExcept.h"
+#include "helpers/Log.h"
+#include "common/VFileIO.h"
 
 #define PACKAGE_LANG "xmoto"
 
@@ -37,39 +40,44 @@ char* ngettext(char* msgid, char* msgid_plural, unsigned long int n) {
 }
 #endif
 
-std::string Locales::changeLocale(const std::string& i_locale) {
-  char *locale = NULL;
-
-  try {
-    if(i_locale != "") {
-      // this var is looked by gettext in priority (and it is set on most environment, then change it to change the lang)
-      Environment::set_variable("LANGUAGE", i_locale);
-    } else {
-      Environment::set_variable("LANGUAGE", default_LANGUAGE);
-    }
-  } catch(Exception &e) {
-    /* hum, ok */
+std::pair<std::string, std::string> Locales::changeLocale(const std::string& i_locale) {
+  if(i_locale != "") {
+    // this var is looked by gettext in priority (and it is set on most environment, then change it to change the lang)
+    Environment::set_variable("LANGUAGE", i_locale);
+  } else {
+    Environment::set_variable("LANGUAGE", default_LANGUAGE);
   }
 
+  std::pair<const char*, const char*> locale {NULL, NULL};
 #ifdef WIN32
-    /* gettext at 0.13 - not enought for LC_MESSAGE */
+    /* gettext at 0.13 - not enough for LC_MESSAGE */
     /* LC_CTYPE seems to work */
-    locale = setlocale(LC_CTYPE, "");
+    locale.first = setlocale(LC_CTYPE, "");
 #else
-    locale = setlocale(LC_CTYPE, "");
-    locale = setlocale(LC_MESSAGES, "");
+    LogInfo("Before CTYPE / MESSAGES to %s: %s / %s", i_locale.c_str(),
+            setlocale(LC_CTYPE, NULL), setlocale(LC_MESSAGES, NULL));
+    locale.first = setlocale(LC_CTYPE, i_locale.c_str());
+    locale.second = setlocale(LC_MESSAGES, i_locale.c_str());
+    LogInfo("After CTYPE / MESSAGES: %s / %s", setlocale(LC_CTYPE, NULL), setlocale(LC_MESSAGES, NULL));
 #endif
 
-  if(locale == NULL) {
-    return "";
+  /* Make change known.  */
+  {
+    extern int _nl_msg_cat_cntr;
+    ++_nl_msg_cat_cntr;
   }
 
-  return locale;
+  std::pair<std::string, std::string> locale_str (
+    locale.first == NULL ? std::string("") : std::string(locale.first),
+    locale.second == NULL ? std::string("") : std::string(locale.second)
+  );
+
+  return locale_str;
 }
 
 std::string Locales::init(std::string i_locale) {
 #ifdef USE_GETTEXT
-  std::string locale;
+  std::pair<std::string, std::string> locale;
   char* btd;
   char* cs;
 
@@ -77,23 +85,18 @@ std::string Locales::init(std::string i_locale) {
 
   locale = changeLocale(i_locale);
 
-  if(locale == "") {
-    return locale;
-  }
-
   textdomain(PACKAGE_LANG);
-  if((btd=bindtextdomain(PACKAGE_LANG, LOCALESDIR)) == NULL) {
+  std::string locale_dir = XMFS::getSystemLocaleDir();
+  LogInfo("%s (%s / %s): %s", i_locale.c_str(), locale.first.c_str(),
+          locale.second.c_str(), locale_dir.c_str());
+  if((btd=bindtextdomain(PACKAGE_LANG, locale_dir.c_str())) == NULL) {
+    LogInfo("Bad bindtextdomain");
     return "";
   }
 
   cs = bind_textdomain_codeset(PACKAGE_LANG, "UTF-8");
 
-  if(cs == NULL) {
-    /* outch not enough memory, no real thing to do */
-    return locale;
-  }
-
-  return locale;
+  return locale.second;
 
 #endif
   return "";

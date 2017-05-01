@@ -1,5 +1,6 @@
 option(USE_OPENGL "Build with OpenGL for graphics" ON)
 option(USE_SDLGFX "Build with SDL for graphics" OFF)
+option(USE_GETTEXT "Build with Gettext for internationalization" ON)
 option(ALLOW_DEV "Enable some development/debug features." OFF)
 
 if(CMAKE_GENERATOR MATCHES "Ninja")
@@ -31,7 +32,10 @@ else()
 endif()
 
 find_package(CURL REQUIRED)
-find_package(Gettext)
+if(USE_GETTEXT)
+  find_package(Gettext REQUIRED)
+  find_package(Intl REQUIRED)
+endif()
 find_package(JPEG REQUIRED)
 
 find_package(LibXml2 REQUIRED)
@@ -58,14 +62,6 @@ endif()
 find_package(SQLITE3 REQUIRED)
 find_package(XDG REQUIRED)
 find_package(ZLIB REQUIRED)
-
-set(DATADIR ${CMAKE_INSTALL_PREFIX}/share)
-set(GAMEDATADIR ${DATADIR}/${CMAKE_PROJECT_NAME})
-
-# include languages
-if(GETTEXT_FOUND)
-# GETTEXT_CREATE_TRANSLATIONS(../po/xmoto.pot ../po/fr_FR.po ../po/de_DE.po)
-endif()
 
 # sources
 
@@ -411,6 +407,7 @@ add_executable(xmoto
 target_link_libraries(xmoto
   ${BZIP2_LIBRARIES}
   ${CURL_LIBRARIES}
+  ${Intl_LIBRARIES}
   ${JPEG_LIBRARIES}
   ${LIBXML2_LIBRARIES}
   ${LUA_LIBRARIES}
@@ -426,6 +423,17 @@ target_link_libraries(xmoto
   ${ZLIB_LIBRARIES}
 )
 
+set_property(TARGET xmoto PROPERTY CXX_STANDARD 11)
+
+check_symbol_exists(putenv stdlib.h HAVE_PUTENV)
+check_symbol_exists(setenv stdlib.h HAVE_SETENV)
+target_compile_definitions(xmoto PUBLIC HAVE_PUTENV=$<BOOL:${HAVE_PUTENV}>)
+target_compile_definitions(xmoto PUBLIC HAVE_SETENV=$<BOOL:${HAVE_SETENV}>)
+
+target_compile_definitions(xmoto PUBLIC USE_OPENGL=$<BOOL:${USE_OPENGL}>)
+target_compile_definitions(xmoto PUBLIC USE_SDLGFX=$<BOOL:${USE_SDLGFX}>)
+target_compile_definitions(xmoto PUBLIC USE_GETTEXT=$<BOOL:${USE_GETTEXT}>)
+target_compile_definitions(xmoto PUBLIC ALLOW_DEV=$<BOOL:${ALLOW_DEV}>)
 target_compile_definitions(xmoto PUBLIC CMAKE_LUA_H)
 target_compile_definitions(xmoto PUBLIC SVN_REV=\"git\")
 
@@ -440,6 +448,39 @@ else()
     DEFAULT_ASIAN_TTF_FILE=\"/usr/share/fonts/truetype/arphic/bkai00mp.ttf\")
 endif()
 
+# Handle localization
+# Based on Dolphin Emulator's Source/Core/DolphinWX/CMakeLists.txt (831ae6a)
+if(USE_GETTEXT AND GETTEXT_MSGMERGE_EXECUTABLE AND GETTEXT_MSGFMT_EXECUTABLE)
+  set(pot_file "${CMAKE_SOURCE_DIR}/i18n/po/xmoto.pot")
+  file(GLOB LINGUAS ${CMAKE_SOURCE_DIR}/i18n/po/*.po)
+
+  target_sources(xmoto PRIVATE ${pot_file} ${LINGUAS})
+  source_group("i18n" FILES ${LINGUAS})
+  source_group("i18n\\\\generated" FILES ${pot_file})
+
+  foreach(po ${LINGUAS})
+    get_filename_component(lang ${po} NAME_WE)
+    set(mo_dir ${CMAKE_CURRENT_BINARY_DIR}/${lang})
+    set(mo ${mo_dir}/xmoto.mo)
+
+    target_sources(xmoto PRIVATE ${mo})
+    source_group("i18n\\\\generated" FILES ${mo})
+
+    if(CMAKE_SYSTEM_NAME STREQUAL "Darwin")
+      set_source_files_properties(${mo} PROPERTIES MACOSX_PACKAGE_LOCATION "Resources/${lang}.lproj")
+    else()
+      install(FILES ${mo} DESTINATION share/locale/${lang}/LC_MESSAGES)
+    endif()
+
+    add_custom_command(OUTPUT ${mo}
+      COMMAND mkdir -p ${mo_dir}
+      COMMAND ${GETTEXT_MSGMERGE_EXECUTABLE} --quiet --update --backup=none -s ${po} ${pot_file}
+      COMMAND ${GETTEXT_MSGFMT_EXECUTABLE} -o ${mo} ${po}
+      DEPENDS ${po}
+    )
+  endforeach()
+endif()
+
 #target_compile_options(xmoto PRIVATE -Wall)
 #target_compile_options(xmoto PRIVATE -Werror)
 
@@ -449,6 +490,7 @@ install(TARGETS xmoto
 
 message("BZip2     libraries: " ${BZIP2_LIBRARIES})
 message("Curl      libraries: " ${CURL_LIBRARIES})
+message("Intl      libraries: " ${Intl_LIBRARIES})
 message("Jpeg      libraries: " ${JPEG_LIBRARIES})
 message("LibXml2   libraries: " ${LIBXML2_LIBRARIES})
 message("Lua       libraries: " ${LUA_LIBRARIES})

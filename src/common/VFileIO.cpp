@@ -193,6 +193,10 @@ std::string XMFS::getSystemDataDir() {
   return m_SystemDataDir;
 }
 
+std::string XMFS::getSystemLocaleDir() {
+  return m_SystemLocaleDir;
+}
+
 std::string XMFS::getUserDir(FileDataType i_fdt) {
   switch(i_fdt) {
 
@@ -1080,6 +1084,7 @@ std::string XMFS::m_UserConfigDir   ="";
 std::string XMFS::m_UserCacheDir    ="";
 std::string XMFS::m_UserDataDirUTF8 ="";
 std::string XMFS::m_SystemDataDir   = ""; /* Globals */
+std::string XMFS::m_SystemLocaleDir = "";
 bool XMFS::m_bGotSystemDataDir;
 std::string XMFS::m_BinDataFile = "";
 std::string XMFS::m_binCheckSum = "";
@@ -1092,6 +1097,7 @@ void XMFS::init(const std::string& AppDir, const std::string& i_binFile, const s
   m_UserCacheDir    = "";
   m_UserDataDirUTF8 = "";
   m_SystemDataDir   = "";
+  m_SystemLocaleDir = "";
 
   std::string v_mod_userCustomDirPath     = i_userCustomDirPath;
   std::string v_mod_userCustomDirPathUtf8 = i_userCustomDirPath; // the argument must be utf8 -- so it can not work on windows for example
@@ -1195,10 +1201,10 @@ void XMFS::init(const std::string& AppDir, const std::string& i_binFile, const s
 
   /* And the data dir? */
   for (char const* const *c_dir = xdgDataDirectories(m_xdgHd); *c_dir != NULL; c_dir++) {
-    std::string dir {*c_dir};
+    std::string dir = std::string(*c_dir);
     if(isDir(dir + "xmoto")) {
       /* Got a system-wide installation to fall back to! */
-      m_SystemDataDir = std::move(dir);
+      m_SystemDataDir = dir;
       m_bGotSystemDataDir = true;
       break;
     }
@@ -1209,7 +1215,9 @@ void XMFS::init(const std::string& AppDir, const std::string& i_binFile, const s
       m_bGotSystemDataDir = true;
     }
   }
+  m_SystemLocaleDir = std::string(m_SystemDataDir);
   m_SystemDataDir.append("xmoto");
+  m_SystemLocaleDir.append("locale");
 #endif
 
   bool v_requireMigration = false;

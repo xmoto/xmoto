@@ -166,6 +166,7 @@ class XMFS {
   static std::string getUserDir(FileDataType i_fdt);
   static std::string getUserDirUTF8(FileDataType i_fdt);
   static std::string getSystemDataDir();
+  static std::string getSystemLocaleDir();
   static bool isSystemDataDirAvailable() {return m_bGotSystemDataDir;}
   
   static std::string getUserReplaysDir() {return m_UserDataDir + std::string("/Replays");}
@@ -204,7 +205,7 @@ class XMFS {
   static void _FindFilesRecursive(const std::string &Dir,const std::string &Wildcard,std::vector<std::string> &List);
   
   /* Data */
-  static std::string m_UserDataDir, m_UserDataDirUTF8, m_UserConfigDir, m_UserCacheDir, m_SystemDataDir;
+  static std::string m_UserDataDir, m_UserDataDirUTF8, m_UserConfigDir, m_UserCacheDir, m_SystemDataDir, m_SystemLocaleDir;
   static bool m_bGotSystemDataDir;
   
   static std::string m_BinDataFile;      

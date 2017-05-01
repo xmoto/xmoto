@@ -56,7 +56,13 @@ void Environment::set_variable(const std::string& i_variable, const std::string&
     v_set = true;
 #endif
 
-#if defined(HAVE_PUTENV)
+#if defined(HAVE_SETENV)
+    if(setenv(i_variable.c_str(), i_value.c_str(), 1) != 0) {
+      throw Exception("Set Env failed (setenv)");
+    }
+    v_set = true;
+#elif defined(HAVE_PUTENV)
+    #warning "Missing setenv"
     std::string v_buffer;
     char* v_str;
 
@@ -64,39 +70,37 @@ void Environment::set_variable(const std::string& i_variable, const std::string&
     v_str = (char*)malloc(v_buffer.length() + 1);
 
     if(v_str == NULL) {
-      throw Exception("Set Env failed");
+      throw Exception("Set Env failed (malloc)");
     }
 
-    strncpy(v_str, v_buffer.c_str(), v_buffer.length() +1);
+    strncpy(v_str, v_buffer.c_str(), v_buffer.length() + 1);
 
     if(putenv(v_str) != 0) {
       free(v_str);
-      throw Exception("Set Env failed");
+      throw Exception("Set Env failed (putenv)");
     }
     // free(v_str); MUST NOT BE FREED
     m_chars.push_back(v_str);
     v_set = true;
 
-#elif defined(HAVE_SETENV)
-    if(setenv(i_variable.c_str(), i_value.c_str(), 1) != 0) {
-      throw Exception("Set Env failed");
-    }
-    v_set = true;
+#else
+    #warning "Missing putenv"
+    #warning "No C environment capabilities"
 #endif
 
     if(v_set == false) {
-      throw Exception("Set Env failed");
+      throw Exception("Set Env failed (no available set)");
     }
 }
 
 std::string Environment::get_variable(const std::string& i_variable) {
 #ifdef WIN32
-  return "";
+  return std::string("");
 #else
   char* v_res =  getenv(i_variable.c_str());
   if(v_res == NULL) {
-    return "";
+    return std::string("");
   }
-  return v_res;
+  return std::string(v_res);
 #endif
 }

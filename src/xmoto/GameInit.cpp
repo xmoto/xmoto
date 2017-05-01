@@ -248,7 +248,6 @@ void GameApp::run_load(int nNumArgs, char** ppcArgs) {
   Logger::setActiv(XMSession::instance()->noLog() == false); /* apply log activ mode */
 
   LogInfo(std::string("X-Moto " + XMBuild::getVersionString(true)).c_str());
-  LogInfo("compiled at "__DATE__" "__TIME__);
   if(SwapEndian::bigendien) {
     LogInfo("Systeme is bigendien");
   } else {
@@ -314,7 +313,8 @@ void GameApp::run_load(int nNumArgs, char** ppcArgs) {
 
 #ifdef USE_GETTEXT
   std::string v_locale = Locales::init(XMSession::instance()->language());
-  LogInfo("Locales set to '%s' (directory '%s')", v_locale.c_str(), LOCALESDIR);
+  LogInfo("Locales set to '%s' (directory '%s')", v_locale.c_str(), XMFS::getSystemLocaleDir().c_str());
+  LogInfo("LANGUAGE=%s", Environment::get_variable("LANGUAGE").c_str());
 
   // some asian langages require ttf files ; change to us in case of problem
   try {
