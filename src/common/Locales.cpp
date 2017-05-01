@@ -83,6 +83,7 @@ std::string Locales::init(std::string i_locale) {
 
   default_LANGUAGE = Environment::get_variable("LANGUAGE");
 
+  setlocale(LC_ALL, "");
   locale = changeLocale(i_locale);
 
   textdomain(PACKAGE_LANG);
