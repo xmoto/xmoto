@@ -1,10 +1,12 @@
 cmake_minimum_required(VERSION 3.7 FATAL_ERROR)
-project(xmoto)
+project(xmoto C CXX)
 
-list(APPEND CMAKE_MODULE_PATH ${CMAKE_SOURCE_DIR}/cmake_modules)
+list(APPEND CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/CMake")
 
-include(CheckCXXCompilerFlag)
 include(CPack)
+include(CheckCXXCompilerFlag)
+include(CheckPrototypeDefinition)
+include(CheckSymbolExists)
 
 # packaging
 include(cpack/cpack.cmake)

@@ -81,8 +81,9 @@ static void xdgZeroMemory(void* p, size_t n)
 #  define NO_ESCAPES_IN_PATHS
 #endif
 
-#include <basedir.h>
-#include <basedir_fs.h>
+// Xmoto
+#include "../include/basedir.h"
+#include "../include/basedir_fs.h"
 
 #ifndef MAX
 #define MAX(a, b) ((b) > (a) ? (b) : (a))
@@ -506,7 +507,11 @@ int xdgMakePath(const char * path, mode_t mode)
 		if (*tmpPtr == DIR_SEPARATOR_CHAR)
 		{
 			*tmpPtr = '\0';
+      #if MS_MKDIR
+			if (mkdir(tmpPath) == -1)
+      #else
 			if (mkdir(tmpPath, mode) == -1)
+      #endif
 			{
 				if (errno != EEXIST)
 				{
@@ -517,7 +522,11 @@ int xdgMakePath(const char * path, mode_t mode)
 			*tmpPtr = DIR_SEPARATOR_CHAR;
 		}
 	}
+  #if MS_MKDIR
+	ret = mkdir(tmpPath);
+  #else
 	ret = mkdir(tmpPath, mode);
+  #endif
 	free(tmpPath);
 	return ret;
 }

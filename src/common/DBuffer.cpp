@@ -221,6 +221,19 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
       *this >> sn;
       n = (unsigned long) sn;
   }
+
+
+  void DBuffer::operator <<(unsigned long long n) {
+      int sn;
+      sn = (int) (n);
+      *this << sn;
+  }
+  
+  void DBuffer::operator >>(unsigned long long &n) {
+      int sn;
+      *this >> sn;
+      n = (unsigned long long) sn;
+  }
   
   void DBuffer::operator <<(float n) {
     writeBuf_LE((char *)&n, sizeof(float));

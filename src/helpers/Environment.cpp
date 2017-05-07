@@ -56,12 +56,12 @@ void Environment::set_variable(const std::string& i_variable, const std::string&
     v_set = true;
 #endif
 
-#if defined(HAVE_SETENV)
+#if HAVE_SETENV
     if(setenv(i_variable.c_str(), i_value.c_str(), 1) != 0) {
       throw Exception("Set Env failed (setenv)");
     }
     v_set = true;
-#elif defined(HAVE_PUTENV)
+#elif HAVE_PUTENV
     #warning "Missing setenv"
     std::string v_buffer;
     char* v_str;
