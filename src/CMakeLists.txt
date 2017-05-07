@@ -36,7 +36,7 @@ include_directories("${LIBXML2_INCLUDE_DIR}")
 find_package(Lua51)
 set(USE_SYSTEM_LUA $<AND:$<BOOL:${PREFER_SYSTEM_LUA}>,$<BOOL:${LUA51_FOUND}>>)
 message("--    Including from: ${LUA_INCLUDE_DIR}")
-include_directories($<${USE_SYSTEM_LUA}:"${LUA_INCLUDE_DIR}">)
+include_directories("$<${USE_SYSTEM_LUA}:${LUA_INCLUDE_DIR}>")
 
 find_package(ODE)
 set(USE_SYSTEM_ODE $<AND:$<BOOL:${PREFER_SYSTEM_ODE}>,$<BOOL:${ODE_FOUND}>>)
@@ -548,7 +548,7 @@ include_directories(
 #endif()
 
 add_executable(xmoto
-  $<$<NOT:${USE_SYSTEM_BZip2}>:${bzip2internal_src}>
+  "$<$<NOT:${USE_SYSTEM_BZip2}>:${bzip2internal_src}>"
   ${chipmunk_src}
   ${common_src}
   ${db_src}
@@ -557,13 +557,13 @@ add_executable(xmoto
   ${helpers_src}
   ${image_src}
   ${include_src}
-  $<$<NOT:${USE_SYSTEM_LUA}>:${lua_vendored_src}>
+  "$<$<NOT:${USE_SYSTEM_LUA}>:${lua_vendored_src}>"
   ${md5sum_src}
   ${net_src}
-  $<$<NOT:${USE_SYSTEM_ODE}>:${ode_src}>
+  "$<$<NOT:${USE_SYSTEM_ODE}>:${ode_src}>"
   ${states_src}
   ${thread_src}
-  $<$<NOT:${USE_SYSTEM_XDG}>:${xdgbasedir_src}>
+  "$<$<NOT:${USE_SYSTEM_XDG}>:${xdgbasedir_src}>"
   ${xmincludes_src}
   ${xmoto_src}
   ${xmscene_src}
@@ -572,7 +572,7 @@ add_executable(xmoto
 target_link_libraries(xmoto
   $<$<PLATFORM_ID:Windows>:userenv>
 
-  $<${USE_SYSTEM_BZip2}:${BZIP2_LIBRARIES}>
+  "$<${USE_SYSTEM_BZip2}:${BZIP2_LIBRARIES}>"
   ${CURL_LIBRARIES}
     $<$<BOOL:${STATIC_BUILD}>:gnutls>
       #$<$<BOOL:${STATIC_BUILD}>:idn>
@@ -586,8 +586,8 @@ target_link_libraries(xmoto
   ${Intl_LIBRARIES}
   ${JPEG_LIBRARIES}
   ${LIBXML2_LIBRARIES}
-    $<$<BOOL:${STATIC_BUILD}>:${LIBLZMA_LIBRARIES}>
-  $<${USE_SYSTEM_LUA}:${LUA_LIBRARIES}>
+    "$<$<BOOL:${STATIC_BUILD}>:${LIBLZMA_LIBRARIES}>"
+  "$<${USE_SYSTEM_LUA}:${LUA_LIBRARIES}>"
   $<${USE_SYSTEM_ODE}:${ODE_LIBRARY}>
   ${OPENGL_LIBRARIES}
   ${PNG_LIBRARY}
@@ -673,7 +673,7 @@ endif()
 #target_compile_options(xmoto PRIVATE -Wall)
 #target_compile_options(xmoto PRIVATE -Werror)
 # chipmunk on Windows
-target_compile_options(xmoto PRIVATE -fpermissive)
+target_compile_options(xmoto PRIVATE $<$<COMPILE_LANGUAGE:CXX>:-fpermissive>)
 
 install(TARGETS xmoto
   RUNTIME DESTINATION bin
