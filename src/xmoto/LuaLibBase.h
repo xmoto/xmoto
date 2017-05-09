@@ -22,7 +22,11 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #define __LUALIBBASE_H__
 
 #include <string>
-#include "include/xm_lua.h"
+extern "C" {
+#include "lua/lua.h"
+#include "lua/lauxlib.h"
+#include "lua/lualib.h"
+}
 
 class LuaLibBase {
 public:

@@ -24,7 +24,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "xmscene/Level.h"
 #include "xmscene/Entity.h"
 #include "xmscene/Block.h"
-#include "chipmunk/chipmunk.h"
+#include <chipmunk.h>
 
 SDynamicObject::SDynamicObject(int p_startTime, int p_endTime, int pPeriod) {
   m_time = 0;

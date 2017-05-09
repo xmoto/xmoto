@@ -3,7 +3,6 @@ option(USE_OPENGL "Build with OpenGL for graphics" ON)
 option(USE_SDLGFX "Build with SDL for graphics" OFF)
 option(USE_GETTEXT "Build with Gettext for internationalization" ON)
 option(PREFER_SYSTEM_BZip2 "Prefer system BZip2" ON)
-option(PREFER_SYSTEM_LUA "Prefer system Lua" ON)
 option(PREFER_SYSTEM_ODE "Prefer system ODE" ON)
 option(PREFER_SYSTEM_XDG "Prefer system XDG" ON)
 option(ALLOW_DEV "Enable some development/debug features" OFF)
@@ -31,12 +30,6 @@ find_package(JPEG REQUIRED)
 
 find_package(LibLZMA)
 find_package(LibXml2 REQUIRED)
-include_directories("${LIBXML2_INCLUDE_DIR}")
-
-find_package(Lua51)
-set(USE_SYSTEM_LUA $<AND:$<BOOL:${PREFER_SYSTEM_LUA}>,$<BOOL:${LUA51_FOUND}>>)
-message("--    Including from: ${LUA_INCLUDE_DIR}")
-include_directories("$<${USE_SYSTEM_LUA}:${LUA_INCLUDE_DIR}>")
 
 find_package(ODE)
 set(USE_SYSTEM_ODE $<AND:$<BOOL:${PREFER_SYSTEM_ODE}>,$<BOOL:${ODE_FOUND}>>)
@@ -62,34 +55,11 @@ find_package(ZLIB REQUIRED)
 
 # sources
 
-set(bzip2internal_src
-  bzip2/blocksort.c
-  bzip2/bzlib.c
-  bzip2/bzlib.h
-  bzip2/bzlib_private.h
-  bzip2/compress.c
-  bzip2/crctable.c
-  bzip2/decompress.c
-  bzip2/huffman.c
-  bzip2/randtable.c
-)
-
-set(chipmunk_src
-  chipmunk/chipmunk.c chipmunk/chipmunk.h
-  chipmunk/cpArbiter.c chipmunk/cpArbiter.h
-  chipmunk/cpArray.c chipmunk/cpArray.h
-  chipmunk/cpBB.c chipmunk/cpBB.h
-  chipmunk/cpBody.c chipmunk/cpBody.h
-  chipmunk/cpCollision.c chipmunk/cpCollision.h
-  chipmunk/cpHashSet.c chipmunk/cpHashSet.h
-  chipmunk/cpJoint.c chipmunk/cpJoint.h
-  chipmunk/cpPolyShape.c chipmunk/cpPolyShape.h
-  chipmunk/cpShape.c chipmunk/cpShape.h
-  chipmunk/cpSpace.c chipmunk/cpSpace.h
-  chipmunk/cpSpaceHash.c chipmunk/cpSpaceHash.h
-  chipmunk/cpVect.c chipmunk/cpVect.h
-  chipmunk/prime.h
-)
+add_subdirectory("${PROJECT_SOURCE_DIR}/vendor/bzip2" bzip2)
+add_subdirectory("${PROJECT_SOURCE_DIR}/vendor/libccd" libccd)
+add_subdirectory("${PROJECT_SOURCE_DIR}/vendor/chipmunk" chipmunk)
+add_subdirectory("${PROJECT_SOURCE_DIR}/vendor/lua" lua)
+add_subdirectory("${PROJECT_SOURCE_DIR}/vendor/ode" ode)
 
 set(common_src
   common/BuildConfig.h
@@ -211,46 +181,6 @@ set(image_src
   image/tim_png.cpp
 )
 
-set(lua_vendored_src
-  lua_vendored/lapi.c lua_vendored/lapi.h
-  lua_vendored/lauxlib.c lua_vendored/lauxlib.h
-  lua_vendored/lbaselib.c
-  lua_vendored/lcode.c lua_vendored/lcode.h
-  lua_vendored/ldblib.c
-  lua_vendored/ldebug.c lua_vendored/ldebug.h
-  lua_vendored/ldo.c lua_vendored/ldo.h
-  lua_vendored/ldump.c
-  lua_vendored/lfunc.c lua_vendored/lfunc.h
-  lua_vendored/lgc.c lua_vendored/lgc.h
-  lua_vendored/linit.c
-  lua_vendored/liolib.c
-  lua_vendored/llex.c lua_vendored/llex.h
-  lua_vendored/llimits.h
-  lua_vendored/lmathlib.c
-  lua_vendored/lmem.c lua_vendored/lmem.h
-  lua_vendored/loadlib.c
-  lua_vendored/lobject.c lua_vendored/lobject.h
-  lua_vendored/lopcodes.c lua_vendored/lopcodes.h
-  lua_vendored/loslib.c
-  lua_vendored/lparser.c lua_vendored/lparser.h
-  lua_vendored/lstate.c lua_vendored/lstate.h
-  lua_vendored/lstring.c lua_vendored/lstring.h
-  lua_vendored/lstrlib.c
-  lua_vendored/ltable.c lua_vendored/ltable.h
-  lua_vendored/ltablib.c
-  lua_vendored/ltm.c lua_vendored/ltm.h
-  # Don't want extra mains messing up things.
-  # lua_vendored/lua.c
-  # lua_vendored/luac.c
-  lua_vendored/luaconf.h
-  lua_vendored/lua.h
-  lua_vendored/lualib.h
-  lua_vendored/lundump.c lua_vendored/lundump.h
-  lua_vendored/lvm.c lua_vendored/lvm.h
-  lua_vendored/lzio.c lua_vendored/lzio.h
-  lua_vendored/print.c
-)
-
 set(md5sum_src
   md5sum/md5.c md5sum/md5.h
   md5sum/md5file.cpp md5sum/md5file.h
@@ -269,112 +199,6 @@ set(net_src
   net/helpers/Net.cpp net/helpers/Net.h
 
   net/thread/ServerThread.cpp net/thread/ServerThread.h
-)
-
-set(ODE_INCLUDE_DIR "${PROJECT_SOURCE_DIR}/src/ode")
-set(ccd_src
-  ccd/alloc.h
-  ccd/ccd.h
-  ccd/compiler.h
-  ccd/config.h
-  ccd/dbg.h
-  ccd/list.h
-  ccd/polytope.h
-  ccd/quat.h
-  ccd/simplex.h
-  ccd/support.h
-  ccd/vec3.h
-
-  libccd/alloc.c
-  libccd/ccd.c
-  libccd/mpr.c
-  libccd/polytope.c
-  libccd/support.c
-  libccd/vec3.c
-)
-set(ode_src
-  ${ccd_src}
-
-  ode/src/array.cpp ode/src/array.h
-  ode/src/box.cpp
-  ode/src/capsule.cpp
-  ode/src/collision_cylinder_box.cpp
-  ode/src/collision_cylinder_plane.cpp
-  ode/src/collision_cylinder_sphere.cpp
-  ode/src/collision_cylinder_trimesh.cpp
-  ode/src/collision_kernel.cpp ode/src/collision_kernel.h
-  ode/src/collision_libccd.cpp ode/src/collision_libccd.h
-  ode/src/collision_quadtreespace.cpp
-  ode/src/collision_sapspace.cpp
-  ode/src/collision_space.cpp
-  ode/src/collision_space_internal.h
-  ode/src/collision_std.h
-  ode/src/collision_transform.cpp ode/src/collision_transform.h
-  ode/src/collision_trimesh_box.cpp
-  ode/src/collision_trimesh_ccylinder.cpp
-  ode/src/collision_trimesh_colliders.h
-  ode/src/collision_trimesh_disabled.cpp
-  ode/src/collision_trimesh_distance.cpp
-  ode/src/collision_trimesh_gimpact.cpp
-  ode/src/collision_trimesh_internal.h
-  ode/src/collision_trimesh_opcode.cpp
-  ode/src/collision_trimesh_plane.cpp
-  ode/src/collision_trimesh_ray.cpp
-  ode/src/collision_trimesh_sphere.cpp
-  ode/src/collision_trimesh_trimesh.cpp
-  ode/src/collision_trimesh_trimesh_new.cpp
-  ode/src/collision_util.cpp ode/src/collision_util.h
-  ode/src/config.h ode/src/config.h.origin
-  ode/src/convex.cpp
-  ode/src/cylinder.cpp
-  ode/src/error.cpp
-  ode/src/export-dif.cpp
-  ode/src/fastdot.c
-  ode/src/fastldlt.c
-  ode/src/fastlsolve.c
-  ode/src/fastltsolve.c
-  ode/src/heightfield.cpp ode/src/heightfield.h
-
-  ode/src/joints/amotor.cpp ode/src/joints/amotor.h
-  ode/src/joints/ball.cpp ode/src/joints/ball.h
-  ode/src/joints/contact.cpp ode/src/joints/contact.h
-  ode/src/joints/fixed.cpp ode/src/joints/fixed.h
-  ode/src/joints/hinge2.cpp ode/src/joints/hinge2.h
-  ode/src/joints/hinge.cpp ode/src/joints/hinge.h
-  ode/src/joints/joint.cpp ode/src/joints/joint.h
-  ode/src/joints/joint_internal.h
-  ode/src/joints/joints.h
-  ode/src/joints/lmotor.cpp ode/src/joints/lmotor.h
-  ode/src/joints/null.cpp ode/src/joints/null.h
-  ode/src/joints/piston.cpp ode/src/joints/piston.h
-  ode/src/joints/plane2d.cpp ode/src/joints/plane2d.h
-  ode/src/joints/pr.cpp ode/src/joints/pr.h
-  ode/src/joints/pu.cpp ode/src/joints/pu.h
-  ode/src/joints/slider.cpp ode/src/joints/slider.h
-  ode/src/joints/universal.cpp ode/src/joints/universal.h
-
-  ode/src/lcp.cpp ode/src/lcp.h
-  ode/src/mass.cpp
-  ode/src/mat.cpp ode/src/mat.h
-  ode/src/matrix.cpp
-  ode/src/memory.cpp
-  ode/src/misc.cpp
-  ode/src/nextafterf.c
-  ode/src/objects.h
-  ode/src/obstack.cpp ode/src/obstack.h
-  ode/src/ode.cpp
-  ode/src/odeinit.cpp
-  ode/src/odemath.cpp
-  ode/src/odeou.cpp ode/src/odeou.h
-  ode/src/odetls.cpp ode/src/odetls.h
-  ode/src/plane.cpp
-  ode/src/quickstep.cpp ode/src/quickstep.h
-  ode/src/ray.cpp
-  ode/src/rotation.cpp
-  ode/src/sphere.cpp
-  ode/src/step.cpp ode/src/step.h
-  ode/src/timer.cpp
-  ode/src/util.cpp ode/src/util.h
 )
 
 set(states_src
@@ -460,8 +284,6 @@ set(xmincludes_src
   include/xm_SDL_ttf.h
   include/xm_endian.h
   include/xm_hashmap.h
-  include/xm_lua.h
-  include/xm_ode.h
 )
 
 set(xmoto_src
@@ -537,10 +359,6 @@ set(xmscene_src
   xmscene/Zone.h
 )
 
-include_directories(
-  "${PROJECT_SOURCE_DIR}/src"
-)
-
 #if(STATIC_BUILD)
   #set(CMAKE_FIND_LIBRARY_SUFFIXES ".a")
   #set(BUILD_SHARED_LIBRARIES OFF)
@@ -548,8 +366,6 @@ include_directories(
 #endif()
 
 add_executable(xmoto
-  "$<$<NOT:${USE_SYSTEM_BZip2}>:${bzip2internal_src}>"
-  ${chipmunk_src}
   ${common_src}
   ${db_src}
   ${drawlib_src}
@@ -557,7 +373,6 @@ add_executable(xmoto
   ${helpers_src}
   ${image_src}
   ${include_src}
-  "$<$<NOT:${USE_SYSTEM_LUA}>:${lua_vendored_src}>"
   ${md5sum_src}
   ${net_src}
   "$<$<NOT:${USE_SYSTEM_ODE}>:${ode_src}>"
@@ -569,10 +384,18 @@ add_executable(xmoto
   ${xmscene_src}
 )
 
-target_link_libraries(xmoto
+target_include_directories(xmoto
+  PRIVATE
+
+  "${PROJECT_SOURCE_DIR}/src"
+  "${LIBXML2_INCLUDE_DIR}"
+)
+
+target_link_libraries(xmoto PUBLIC
   $<$<PLATFORM_ID:Windows>:userenv>
 
-  "$<${USE_SYSTEM_BZip2}:${BZIP2_LIBRARIES}>"
+  "$<IF:${USE_SYSTEM_BZip2},${BZIP2_LIBRARIES},bzip2>"
+  chipmunk
   ${CURL_LIBRARIES}
     $<$<BOOL:${STATIC_BUILD}>:gnutls>
       #$<$<BOOL:${STATIC_BUILD}>:idn>
@@ -587,8 +410,8 @@ target_link_libraries(xmoto
   ${JPEG_LIBRARIES}
   ${LIBXML2_LIBRARIES}
     "$<$<BOOL:${STATIC_BUILD}>:${LIBLZMA_LIBRARIES}>"
-  "$<${USE_SYSTEM_LUA}:${LUA_LIBRARIES}>"
-  $<${USE_SYSTEM_ODE}:${ODE_LIBRARY}>
+  lua
+  $<IF:${USE_SYSTEM_ODE},${ODE_LIBRARY},ode>
   ${OPENGL_LIBRARIES}
   ${PNG_LIBRARY}
   ${SDL_LIBRARY}
@@ -619,8 +442,6 @@ target_compile_definitions(xmoto PUBLIC USE_SDLGFX=$<BOOL:${USE_SDLGFX}>)
 target_compile_definitions(xmoto PUBLIC USE_GETTEXT=$<BOOL:${USE_GETTEXT}>)
 target_compile_definitions(xmoto PUBLIC ALLOW_DEV=$<BOOL:${ALLOW_DEV}>)
 
-target_compile_definitions(xmoto PUBLIC CMAKE_LUA_H)
-target_compile_definitions(xmoto PUBLIC dDOUBLE)
 target_compile_definitions(xmoto PUBLIC $<$<BOOL:${STATIC_BUILD}>:CURL_STATICLIB>)
 target_compile_definitions(xmoto PUBLIC $<$<BOOL:${STATIC_BUILD}>:LIBXML_STATIC>)
 
@@ -684,7 +505,6 @@ message("Curl      libraries: ${CURL_LIBRARIES}")
 message("Intl      libraries: ${Intl_LIBRARIES}")
 message("Jpeg      libraries: ${JPEG_LIBRARIES}")
 message("LibXml2   libraries: ${LIBXML2_LIBRARIES}")
-message("Lua       libraries: ${LUA_LIBRARIES}")
 message("LibLZMA   libraries: ${LIBLZMA_LIBRARIES}")
 message("Ode       libraries: ${ODE_LIBRARY}")
 message("OpenGL    libraries: ${OPENGL_LIBRARIES}")

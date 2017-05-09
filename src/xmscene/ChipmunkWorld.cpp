@@ -19,7 +19,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 =============================================================================*/
 
 #include "ChipmunkWorld.h"
-#include "chipmunk/chipmunk.h"
+#include <chipmunk.h>
 #include "xmoto/PhysSettings.h"
 #include "helpers/Log.h"
 #include "BikePlayer.h"

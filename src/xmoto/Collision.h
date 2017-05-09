@@ -23,7 +23,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
 #include "common/VCommon.h"
 #include "helpers/VMath.h"
-#include "include/xm_ode.h"
+#include <ode/ode.h>
 #include <vector>
 
 class Block;
