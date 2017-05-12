@@ -29,9 +29,9 @@
 #include <config.h>
 #endif
 
-#if STDC_HEADERS || HAVE_STDLIB_H || !defined(HAVE_CONFIG_H)
+//#if STDC_HEADERS || HAVE_STDLIB_H || !defined(HAVE_CONFIG_H)
 #  include <stdlib.h>
-#endif
+//#endif
 #if HAVE_MEMORY_H || !defined(HAVE_CONFIG_H)
 #  include <memory.h>
 #endif
@@ -43,6 +43,7 @@
 #endif
 
 #include <errno.h>
+#include <sys/stat.h>
 
 #ifdef FALSE
 #undef FALSE
@@ -80,8 +81,9 @@ static void xdgZeroMemory(void* p, size_t n)
 #  define NO_ESCAPES_IN_PATHS
 #endif
 
-#include <basedir.h>
-#include <basedir_fs.h>
+// Xmoto
+#include "../include/basedir.h"
+#include "../include/basedir_fs.h"
 
 #ifndef MAX
 #define MAX(a, b) ((b) > (a) ? (b) : (a))
@@ -140,14 +142,14 @@ static void xdgFreeStringList(char** list)
 /** Free all data in the cache and set pointers to null. */
 static void xdgFreeData(xdgCachedData *cache)
 {
-	if (cache->dataHome);
+	if (cache->dataHome)
 	{
 		/* the first element of the directory lists is usually the home directory */
 		if (cache->searchableDataDirectories[0] != cache->dataHome)
 			free(cache->dataHome);
 		cache->dataHome = 0;
 	}
-	if (cache->configHome);
+	if (cache->configHome)
 	{
 		if (cache->searchableConfigDirectories[0] != cache->configHome)
 			free(cache->configHome);
@@ -277,7 +279,9 @@ static char** xdgGetPathListEnv(const char* name, const char ** strings)
 	else
 	{
 		if (!strings) return NULL;
-		for (size = 0; strings[size]; ++size) ; ++size;
+		for (size = 0; strings[size]; ++size)
+      ;
+    ++size;
 		if (!(itemlist = (char**)malloc(sizeof(char*)*size))) return NULL;
 		xdgZeroMemory(itemlist, sizeof(char*)*(size));
 
@@ -503,7 +507,11 @@ int xdgMakePath(const char * path, mode_t mode)
 		if (*tmpPtr == DIR_SEPARATOR_CHAR)
 		{
 			*tmpPtr = '\0';
+      #if MS_MKDIR
+			if (mkdir(tmpPath) == -1)
+      #else
 			if (mkdir(tmpPath, mode) == -1)
+      #endif
 			{
 				if (errno != EEXIST)
 				{
@@ -514,7 +522,11 @@ int xdgMakePath(const char * path, mode_t mode)
 			*tmpPtr = DIR_SEPARATOR_CHAR;
 		}
 	}
+  #if MS_MKDIR
+	ret = mkdir(tmpPath);
+  #else
 	ret = mkdir(tmpPath, mode);
+  #endif
 	free(tmpPath);
 	return ret;
 }

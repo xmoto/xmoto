@@ -19,9 +19,9 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 =============================================================================*/
 
 #include "ActionReader.h"
-#include "../helpers/Log.h"
-#include "../helpers/VExcept.h"
-#include "../XMSession.h"
+#include "helpers/Log.h"
+#include "helpers/VExcept.h"
+#include "common/XMSession.h"
 #include <sstream>
 #include <string.h>
 #include <stdlib.h>

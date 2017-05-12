@@ -24,8 +24,8 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #define EVERY_KEY -1
 #define NO_KEY -2
 
-#include "../VCommon.h"
-#include "../include/xm_SDL.h"
+#include "common/VCommon.h"
+#include "include/xm_SDL.h"
 
 class AttractMode {
 public:

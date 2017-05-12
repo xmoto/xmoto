@@ -30,8 +30,8 @@ class Sprite;
 class GameApp;
 class RenderSurface;
 
-#include "../../Theme.h"
-#include "../../include/xm_SDL.h"
+#include "common/Theme.h"
+#include "include/xm_SDL.h"
 
 #define GUI_JOYSTICK_MINIMUM_DETECTION 3000
 #define UGLY_MODE_WINDOW_BG MAKE_COLOR(35,35,35,255)

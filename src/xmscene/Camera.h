@@ -21,7 +21,7 @@
 #ifndef __CAMERA_H__
 #define __CAMERA_H__
 
-#include "../VCommon.h"
+#include "common/VCommon.h"
 #include "Bike.h"
 #include "../helpers/RenderSurface.h"
 

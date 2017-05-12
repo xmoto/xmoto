@@ -2,8 +2,8 @@
 #define __SWAPENDIAN_H__
 
 #include <iterator>
-#include "../VCommon.h"	// For XMOTO_LITTLE_ENDIAN
-#include "../xmscene/Scene.h"	// For SerializedBikeState
+#include "common/VCommon.h"	// For XMOTO_LITTLE_ENDIAN
+#include "xmscene/Scene.h"	// For SerializedBikeState
 
 class SwapEndian {
  public:

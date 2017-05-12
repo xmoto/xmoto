@@ -19,12 +19,12 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 =============================================================================*/
 
 #include "StateWaitServerInstructions.h"
-#include "../net/NetClient.h"
+#include "net/NetClient.h"
 #include "StateManager.h"
 #include "StatePreplayingNet.h"
-#include "../Game.h"
-#include "../GameText.h"
-#include "../drawlib/DrawLib.h"
+#include "xmoto/Game.h"
+#include "xmoto/GameText.h"
+#include "drawlib/DrawLib.h"
 
 StateWaitServerInstructions::StateWaitServerInstructions():
 GameState(true, false)

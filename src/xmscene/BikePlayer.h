@@ -23,8 +23,8 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
 #include "Bike.h"
 #include "BikeGhost.h"
-#include "../SomersaultCounter.h"
-#include "../include/xm_ode.h"
+#include "xmoto/SomersaultCounter.h"
+#include <ode/ode.h>
 
 class BikeController;
 class BikeControllerNet;

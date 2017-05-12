@@ -19,9 +19,9 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 =============================================================================*/
 
 #include "LevelsPacksCountUpdateThread.h"
-#include "../XMSession.h"
-#include "../states/StateManager.h"
-#include "../LevelsManager.h"
+#include "common/XMSession.h"
+#include "states/StateManager.h"
+#include "xmoto/LevelsManager.h"
 
 LevelsPacksCountUpdateThread::LevelsPacksCountUpdateThread() : XMThread("LPCU", true) {
   if(XMSession::instance()->debug() == true) {

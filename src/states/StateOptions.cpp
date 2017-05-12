@@ -19,27 +19,27 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 =============================================================================*/
 
 #include "StateOptions.h"
-#include "../GameText.h"
-#include "../Languages.h"
-#include "../Game.h"
-#include "../drawlib/DrawLib.h"
-#include "../helpers/Text.h"
-#include "../helpers/System.h"
+#include "xmoto/GameText.h"
+#include "common/Languages.h"
+#include "xmoto/Game.h"
+#include "drawlib/DrawLib.h"
+#include "helpers/Text.h"
+#include "helpers/System.h"
 #include "StateUpdateThemesList.h"
 #include "StateUpdateRoomsList.h"
 #include "StateUploadAllHighscores.h"
 #include "StateUpdateTheme.h"
 #include "StateCheckWww.h"
 #include "StateSync.h"
-#include "../Sound.h"
+#include "xmoto/Sound.h"
 #include "StateRequestKey.h"
 #include "StateEditWebConfig.h"
-#include "../helpers/Log.h"
-#include "../helpers/CmdArgumentParser.h"
+#include "helpers/Log.h"
+#include "helpers/CmdArgumentParser.h"
 #include "StateMessageBox.h"
-#include "../SysMessage.h"
-#include "../net/NetServer.h"
-#include "../net/NetActions.h"
+#include "xmoto/SysMessage.h"
+#include "net/NetServer.h"
+#include "net/NetActions.h"
 #include <sstream>
 
 /* static members */
@@ -1232,8 +1232,6 @@ UIWindow* StateOptions::makeWindowOptions_infos(UIWindow* i_parent) {
 
   int p=25;
   makeWindowOptions_infos_line(v_window, "Version", "X-Moto " + XMBuild::getVersionString(true), p);
-  p+=20;
-  makeWindowOptions_infos_line(v_window, "Compilation date", __DATE__ " " __TIME__, p);
   p+=20;
   makeWindowOptions_infos_line(v_window, "User data directory", XMFS::getUserDir(FDT_DATA), p);
   p+=20;

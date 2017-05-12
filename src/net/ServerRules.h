@@ -21,7 +21,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #ifndef __SERVERRULES_H__
 #define __SERVERRULES_H__
 
-#include "../LuaLibBase.h"
+#include "xmoto/LuaLibBase.h"
 
 class ServerThread;
 

@@ -19,11 +19,11 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 =============================================================================*/
 
 #include "GUIXMoto.h"
-#include "../../GameText.h"
-#include "../../VFileIO.h"
-#include "../../LevelsManager.h"
-#include "../../drawlib/DrawLib.h"
-#include "../../helpers/Text.h"
+#include "xmoto/GameText.h"
+#include "common/VFileIO.h"
+#include "xmoto/LevelsManager.h"
+#include "drawlib/DrawLib.h"
+#include "helpers/Text.h"
 #include <sstream>
 
 #define UIQUICKSTART_BORDER 25

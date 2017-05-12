@@ -22,9 +22,10 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  *  GUI: list control
  */
 #include "GUI.h"
-#include "../../drawlib/DrawLib.h"
-#include "../../Game.h"
-#include "../../Sound.h"
+#include "drawlib/DrawLib.h"
+#include "xmoto/Game.h"
+#include "xmoto/Sound.h"
+#include "helpers/utf8.h"
 #include <sstream>
 
 #define GUILIST_SCROLL_SIZE 10

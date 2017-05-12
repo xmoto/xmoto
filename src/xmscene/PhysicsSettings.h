@@ -22,7 +22,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #define __PHYSICSSETTINGS_H__
 
 #include <string>
-#include "../VFileIO_types.h"
+#include "common/VFileIO_types.h"
 
 /* ODE to Chipmunk Scaling Ratio */
 #define CHIP_SCALE_RATIO   10.0

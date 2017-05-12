@@ -28,7 +28,7 @@
 #ifndef XDG_BASEDIR_FS_H
 #define XDG_BASEDIR_FS_H
 
-#include <basedir.h>
+#include "basedir.h"
 #include <stdio.h>
 #include <sys/types.h>
 

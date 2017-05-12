@@ -19,8 +19,8 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 =============================================================================*/
 
 #include "StateCheckWww.h"
-#include "../thread/CheckWwwThread.h"
-#include "../Input.h"
+#include "thread/CheckWwwThread.h"
+#include "xmoto/Input.h"
 
 StateCheckWww::StateCheckWww(bool forceUpdate,
 			     bool drawStateBehind,

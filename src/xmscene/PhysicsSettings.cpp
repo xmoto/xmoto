@@ -19,8 +19,8 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 =============================================================================*/
 
 #include "PhysicsSettings.h"
-#include "../VXml.h"
-#include "../helpers/VExcept.h"
+#include "common/VXml.h"
+#include "helpers/VExcept.h"
 
 PhysicsSettings::PhysicsSettings(const std::string& i_filename) {
     load(FDT_DATA, i_filename);

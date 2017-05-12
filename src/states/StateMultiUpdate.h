@@ -22,7 +22,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #define __STATEUPDATE_H__
 
 #include "StateMenu.h"
-#include "../thread/XMThreads.h"
+#include "thread/XMThreads.h"
 #include <map>
 
 class UIRoot;

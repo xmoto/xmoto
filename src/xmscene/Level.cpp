@@ -25,23 +25,23 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
 #include "Level.h"
-#include "../VFileIO.h"
-#include "../XMBuild.h"
-#include "../VXml.h"
-#include "../helpers/Color.h"
-#include "../helpers/Log.h"
-#include "../db/xmDatabase.h"
-#include "../helpers/Text.h"
+#include "common/VFileIO.h"
+#include "common/XMBuild.h"
+#include "common/VXml.h"
+#include "helpers/Color.h"
+#include "helpers/Log.h"
+#include "db/xmDatabase.h"
+#include "helpers/Text.h"
 #include "Block.h"
 #include "Entity.h"
 #include "Zone.h"
 #include "SkyApparence.h"
-#include "../Collision.h"
+#include "xmoto/Collision.h"
 #include "Scene.h"
-#include "../chipmunk/chipmunk.h"
+#include <chipmunk.h>
 #include "ChipmunkWorld.h"
 #include "PhysicsSettings.h"
-#include "../Theme.h"
+#include "common/Theme.h"
 
 Level::Level() {
   m_xmotoTooOld = false;
