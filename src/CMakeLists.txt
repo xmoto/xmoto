@@ -394,7 +394,8 @@ target_include_directories(xmoto
 target_link_libraries(xmoto PUBLIC
   $<$<PLATFORM_ID:Windows>:userenv>
 
-  "$<IF:${USE_SYSTEM_BZip2},${BZIP2_LIBRARIES},bzip2>"
+  "$<${USE_SYSTEM_BZip2}:${BZIP2_LIBRARIES}>"
+  "$<$<NOT:${USE_SYSTEM_BZip2}>:bzip2>"
   chipmunk
   ${CURL_LIBRARIES}
     $<$<BOOL:${STATIC_BUILD}>:gnutls>
@@ -411,7 +412,8 @@ target_link_libraries(xmoto PUBLIC
   ${LIBXML2_LIBRARIES}
     "$<$<BOOL:${STATIC_BUILD}>:${LIBLZMA_LIBRARIES}>"
   lua
-  $<IF:${USE_SYSTEM_ODE},${ODE_LIBRARY},ode>
+  $<${USE_SYSTEM_ODE}:${ODE_LIBRARY}>
+  $<$<NOT:${USE_SYSTEM_ODE}>:ode>
   ${OPENGL_LIBRARIES}
   ${PNG_LIBRARY}
   ${SDL_LIBRARY}
