@@ -19,25 +19,25 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 =============================================================================*/
 
 #define VR_DEFAULT_FRAMERATE 20
-#define VR_DEFAULT_DIVISION  2
+#define VR_DEFAULT_DIVISION 2
 
 #include <string>
 
 class VideoRecorder {
-
-  public:
-  VideoRecorder(const std::string& i_videoName, int i_division = VR_DEFAULT_DIVISION, int i_frameRate = VR_DEFAULT_FRAMERATE);
+public:
+  VideoRecorder(const std::string &i_videoName,
+                int i_division = VR_DEFAULT_DIVISION,
+                int i_frameRate = VR_DEFAULT_FRAMERATE);
   ~VideoRecorder();
 
   void read(int i_time);
 
-  private:
+private:
   std::string m_name;
   int m_division;
   std::string m_directory;
-  int   m_framerate;
-  int   m_nbFrames;
+  int m_framerate;
+  int m_nbFrames;
 
-	FILE* m_fd;
+  FILE *m_fd;
 };
-

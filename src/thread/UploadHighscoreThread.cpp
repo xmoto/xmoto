@@ -19,32 +19,28 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 =============================================================================*/
 
 #include "UploadHighscoreThread.h"
-#include "helpers/Log.h"
-#include "xmoto/GameText.h"
-#include "xmoto/Game.h"
-#include "common/XMSession.h"
-#include "states/StateManager.h"
-#include "common/WWW.h"
 #include "common/VFileIO.h"
+#include "common/WWW.h"
+#include "common/XMSession.h"
+#include "helpers/Log.h"
+#include "states/StateManager.h"
+#include "xmoto/Game.h"
+#include "xmoto/GameText.h"
 #include "xmoto/Replay.h"
 
-UploadHighscoreThread::UploadHighscoreThread(const std::string& i_highscorePath)
-  : XMThread("UHT")
-{
+UploadHighscoreThread::UploadHighscoreThread(const std::string &i_highscorePath)
+  : XMThread("UHT") {
   m_highscorePath = i_highscorePath;
 }
 
-UploadHighscoreThread::~UploadHighscoreThread()
-{
-}
+UploadHighscoreThread::~UploadHighscoreThread() {}
 
-int UploadHighscoreThread::realThreadFunction()
-{
+int UploadHighscoreThread::realThreadFunction() {
   bool v_msg_status_ok;
   std::string webRoomName;
   bool v_failed = false;
   int v_room_time;
-  ReplayInfo* v_replayInfos;
+  ReplayInfo *v_replayInfos;
   int v_replayTime;
   std::string v_replayLevel;
   std::string v_tmpMsg;
@@ -53,38 +49,47 @@ int UploadHighscoreThread::realThreadFunction()
   setThreadProgress(0);
 
   v_replayInfos = Replay::getReplayInfos(m_highscorePath);
-  if(v_replayInfos == NULL) {
+  if (v_replayInfos == NULL) {
     LogWarning("Unable to read the replay to send");
     return 1;
   }
-  v_replayTime  = v_replayInfos->finishTime;
+  v_replayTime = v_replayInfos->finishTime;
   v_replayLevel = v_replayInfos->Level;
   delete v_replayInfos;
 
-  for(unsigned int i=0; i<XMSession::instance()->nbRoomsEnabled(); i++) {    
+  for (unsigned int i = 0; i < XMSession::instance()->nbRoomsEnabled(); i++) {
     try {
-      v_room_time = m_pDb->webrooms_getHighscoreTime(XMSession::instance()->idRoom(i), v_replayLevel);
+      v_room_time = m_pDb->webrooms_getHighscoreTime(
+        XMSession::instance()->idRoom(i), v_replayLevel);
 
-      if(v_replayTime < v_room_time || v_room_time < 0) { /* upload only if it is a highscore in the room */
-	
-	webRoomName  = GameApp::instance()->getWebRoomName(i, m_pDb);
-	setThreadCurrentOperation(GAMETEXT_UPLOADING_HIGHSCORE + std::string(" (") + webRoomName + ")");
-	
-	FSWeb::uploadReplay(m_highscorePath,
-			    XMSession::instance()->idRoom(i),
-			    XMSession::instance()->profile(),
-			    XMSession::instance()->wwwPassword(),
-			    XMSession::instance()->uploadHighscoreUrl(),
-			    this, XMSession::instance()->proxySettings(), v_msg_status_ok, v_tmpMsg);
-	if(v_msg_status_ok) {
-	  m_msg = m_msg + webRoomName + ":\n" + v_tmpMsg + "\n \n";
-	} else {
-	  m_msg = m_msg + webRoomName + ":\n" + std::string(GAMETEXT_UPLOAD_HIGHSCORE_WEB_WARNING_BEFORE) + "\n" + v_tmpMsg + "\n \n";
-	  v_failed = true;
-	}
+      if (v_replayTime < v_room_time ||
+          v_room_time < 0) { /* upload only if it is a highscore in the room */
+
+        webRoomName = GameApp::instance()->getWebRoomName(i, m_pDb);
+        setThreadCurrentOperation(GAMETEXT_UPLOADING_HIGHSCORE +
+                                  std::string(" (") + webRoomName + ")");
+
+        FSWeb::uploadReplay(m_highscorePath,
+                            XMSession::instance()->idRoom(i),
+                            XMSession::instance()->profile(),
+                            XMSession::instance()->wwwPassword(),
+                            XMSession::instance()->uploadHighscoreUrl(),
+                            this,
+                            XMSession::instance()->proxySettings(),
+                            v_msg_status_ok,
+                            v_tmpMsg);
+        if (v_msg_status_ok) {
+          m_msg = m_msg + webRoomName + ":\n" + v_tmpMsg + "\n \n";
+        } else {
+          m_msg = m_msg + webRoomName + ":\n" +
+                  std::string(GAMETEXT_UPLOAD_HIGHSCORE_WEB_WARNING_BEFORE) +
+                  "\n" + v_tmpMsg + "\n \n";
+          v_failed = true;
+        }
       }
-    } catch(Exception &e) {
-      m_msg = m_msg + webRoomName + ":\n" + GAMETEXT_UPLOAD_ERROR + std::string("\n") + v_tmpMsg + "\n \n";
+    } catch (Exception &e) {
+      m_msg = m_msg + webRoomName + ":\n" + GAMETEXT_UPLOAD_ERROR +
+              std::string("\n") + v_tmpMsg + "\n \n";
       v_failed = true;
     }
   }

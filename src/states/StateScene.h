@@ -30,79 +30,86 @@ class GameRenderer;
 class StateScene : public GameState {
 public:
   StateScene(bool i_doShade = false, bool i_doShadeAnim = false);
-  StateScene(Universe* i_universe, GameRenderer* i_renderer, bool i_doShade = false, bool i_doShadeAnim = false); // for state which doesn't create the universe
+  StateScene(
+    Universe *i_universe,
+    GameRenderer *i_renderer,
+    bool i_doShade = false,
+    bool i_doShadeAnim = false); // for state which doesn't create the universe
   virtual ~StateScene();
- 
- virtual void enter();
- virtual void enterAfterPop();
- virtual void leaveAfterPush();
- virtual void leaveType();
 
- virtual bool update();
- virtual bool render();
- virtual void onRenderFlush();
+  virtual void enter();
+  virtual void enterAfterPop();
+  virtual void leaveAfterPush();
+  virtual void leaveType();
 
- /* input */
- virtual void xmKey(InputEventType i_type, const XMKey& i_xmkey);
+  virtual bool update();
+  virtual bool render();
+  virtual void onRenderFlush();
 
- virtual void sendFromMessageBox(const std::string& i_id, UIMsgBoxButton i_button, const std::string& i_input);
+  /* input */
+  virtual void xmKey(InputEventType i_type, const XMKey &i_xmkey);
 
- virtual void restartLevel(bool i_reloadLevel = false);
- virtual void nextLevel(bool i_positifOrder = true);
+  virtual void sendFromMessageBox(const std::string &i_id,
+                                  UIMsgBoxButton i_button,
+                                  const std::string &i_input);
+
+  virtual void restartLevel(bool i_reloadLevel = false);
+  virtual void nextLevel(bool i_positifOrder = true);
 
 protected:
- virtual void executeOneCommand(std::string cmd, std::string args);
- void makeStatsStr();
+  virtual void executeOneCommand(std::string cmd, std::string args);
+  void makeStatsStr();
 
- double m_fLastPhysTime; /* When the last frama was initiated */
- bool   m_isLockedScene;
- bool   m_autoZoom;      /* true : the key is pressed so that it zooms out to see the level */
+  double m_fLastPhysTime; /* When the last frama was initiated */
+  bool m_isLockedScene;
+  bool m_autoZoom; /* true : the key is pressed so that it zooms out to see the
+                      level */
 
- void setScoresTimes();
+  void setScoresTimes();
 
- void restartLevelToPlay(bool i_reloadLevel = false);
- void nextLevelToPlay(bool i_positifOrder = true);
+  void restartLevelToPlay(bool i_reloadLevel = false);
+  void nextLevelToPlay(bool i_positifOrder = true);
 
- void closePlaying();
- virtual void abortPlaying();
+  void closePlaying();
+  virtual void abortPlaying();
 
- bool isLockedScene() const;
- void lockScene(bool i_value);
- void setAutoZoom(bool i_value);
- bool autoZoom() const;
- void runAutoZoom();
+  bool isLockedScene() const;
+  void lockScene(bool i_value);
+  void setAutoZoom(bool i_value);
+  bool autoZoom() const;
+  void runAutoZoom();
 
- void displayStats();
+  void displayStats();
 
- // next level when you play levels (it can be different, replaying for exemple)
- void playingNextLevel(bool i_positifOrder);
+  // next level when you play levels (it can be different, replaying for
+  // exemple)
+  void playingNextLevel(bool i_positifOrder);
 
- /* animation */
- CameraAnimation* m_cameraAnim;
+  /* animation */
+  CameraAnimation *m_cameraAnim;
 
- Universe* m_universe;
- GameRenderer* m_renderer;
+  Universe *m_universe;
+  GameRenderer *m_renderer;
 
- int m_benchmarkNbFrame;
- float m_benchmarkStartTime;
+  int m_benchmarkNbFrame;
+  float m_benchmarkStartTime;
 
- /* stats to display */
- std::string m_statsStr;
- float m_difficulty, m_quality;
- Texture *m_uncheckedTex, *m_qualityTex, *m_difficultyTex;
+  /* stats to display */
+  std::string m_statsStr;
+  float m_difficulty, m_quality;
+  Texture *m_uncheckedTex, *m_qualityTex, *m_difficultyTex;
 
- void playLevelMusic();
- void playToCheckpoint();
+  void playLevelMusic();
+  void playToCheckpoint();
 
 private:
- void init(bool i_doShade, bool i_doShadeAnim);
- void initMessageRegistering();
- bool m_trackingShotMode;
+  void init(bool i_doShade, bool i_doShadeAnim);
+  void initMessageRegistering();
+  bool m_trackingShotMode;
 
   // shade
-  bool  m_doShade;
-  bool  m_doShadeAnim;
-
+  bool m_doShade;
+  bool m_doShadeAnim;
 };
 
 #endif

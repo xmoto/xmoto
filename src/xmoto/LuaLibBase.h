@@ -23,29 +23,33 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
 #include <string>
 extern "C" {
-#include "lua/lua.h"
 #include "lua/lauxlib.h"
+#include "lua/lua.h"
 #include "lua/lualib.h"
 }
 
 class LuaLibBase {
 public:
-  LuaLibBase(const std::string& i_libname, luaL_Reg i_reg[]);
+  LuaLibBase(const std::string &i_libname, luaL_Reg i_reg[]);
   virtual ~LuaLibBase();
 
-  void loadScriptFile(const std::string& i_scriptFilename);
-  void loadScript(const std::string& i_scriptCode, const std::string& i_scriptFilename);
+  void loadScriptFile(const std::string &i_scriptFilename);
+  void loadScript(const std::string &i_scriptCode,
+                  const std::string &i_scriptFilename);
   std::string getErrorMsg();
 
-  bool scriptCallBool(const std::string& FuncName, bool bDefault=false);
-  void scriptCallVoid(const std::string& FuncName);
-  void scriptCallTblVoid(const std::string& Table, const std::string& FuncName);
-  void scriptCallTblVoid(const std::string& Table, const std::string& FuncName, int n);
-  void scriptCallVoidNumberArg(const std::string& FuncName, int n);
-  void scriptCallVoidNumberArg(const std::string& FuncName, int n1, int n2);
+  bool scriptCallBool(const std::string &FuncName, bool bDefault = false);
+  void scriptCallVoid(const std::string &FuncName);
+  void scriptCallTblVoid(const std::string &Table, const std::string &FuncName);
+  void scriptCallTblVoid(const std::string &Table,
+                         const std::string &FuncName,
+                         int n);
+  void scriptCallVoidNumberArg(const std::string &FuncName, int n);
+  void scriptCallVoidNumberArg(const std::string &FuncName, int n1, int n2);
 
 protected:
-  // lua requires static values due to the static functions. So, set the instance used if needed.
+  // lua requires static values due to the static functions. So, set the
+  // instance used if needed.
   // setInstance must be set before lua call
   virtual void setInstance() = 0;
 
@@ -53,13 +57,14 @@ protected:
   static int args_numberOfArguments(lua_State *pL);
 
   /* arguments checks ; throw exception on failure */
-  static void args_CheckNumberOfArguments(lua_State *pL, int i_from, int i_to = -1);
+  static void args_CheckNumberOfArguments(lua_State *pL,
+                                          int i_from,
+                                          int i_to = -1);
 
-  static lua_Number X_luaL_check_number(lua_State *L,int narg);
+  static lua_Number X_luaL_check_number(lua_State *L, int narg);
 
 private:
   lua_State *m_pL;
 };
-
 
 #endif

@@ -25,19 +25,20 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
 #ifndef USE_GETTEXT
 #define _(A) A
-char* ngettext(char* msgid, char* msgid_plural, unsigned long int n);
+char *ngettext(char *msgid, char *msgid_plural, unsigned long int n);
 #else
-#include <locale.h>
 #include <libintl.h>
+#include <locale.h>
 #define _(A) gettext(A)
 #endif
 #include <string>
 
 class Locales {
-  public:
+public:
   /* return the locales set */
   static std::string init(std::string i_locale = "");
-  static std::pair<std::string, std::string> changeLocale(const std::string& i_locale);
+  static std::pair<std::string, std::string> changeLocale(
+    const std::string &i_locale);
   static std::string default_LANGUAGE;
 };
 

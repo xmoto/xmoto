@@ -19,41 +19,38 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 =============================================================================*/
 
 #include "UpdateDbThread.h"
-#include "helpers/Log.h"
-#include "xmoto/GameText.h"
-#include "xmoto/Game.h"
-#include "states/StateManager.h"
 #include "common/Theme.h"
+#include "helpers/Log.h"
+#include "states/StateManager.h"
+#include "xmoto/Game.h"
+#include "xmoto/GameText.h"
 
 UpdateDbThread::UpdateDbThread(bool i_loadMainLayerOnly)
-  : XMThread("UDT")
-{
+  : XMThread("UDT") {
   m_loadMainLayerOnly = i_loadMainLayerOnly;
 
-  if(XMSession::instance()->debug() == true) {
+  if (XMSession::instance()->debug() == true) {
     StateManager::instance()->registerAsEmitter("LEVELS_UPDATED");
     StateManager::instance()->registerAsEmitter("REPLAYS_UPDATED");
     StateManager::instance()->registerAsEmitter("THEMES_UPDATED");
   }
 }
 
-UpdateDbThread::~UpdateDbThread()
-{
-}
+UpdateDbThread::~UpdateDbThread() {}
 
-int UpdateDbThread::realThreadFunction()
-{
+int UpdateDbThread::realThreadFunction() {
   setThreadCurrentOperation(GAMETEXT_RELOADINGLEVELS);
   // initialize to -1, so we put it to 0 so that the current operation
   // text is update in the state
   setThreadProgress(0);
-  LevelsManager::instance()->reloadLevelsFromLvl(m_pDb, m_loadMainLayerOnly, this);
+  LevelsManager::instance()->reloadLevelsFromLvl(
+    m_pDb, m_loadMainLayerOnly, this);
   StateManager::instance()->sendAsynchronousMessage("LEVELS_UPDATED");
 
   setThreadCurrentOperation(GAMETEXT_RELOADINGREPLAYS);
   GameApp::instance()->initReplaysFromDir(m_pDb, this);
   StateManager::instance()->sendAsynchronousMessage("REPLAYS_UPDATED");
-  
+
   setThreadCurrentOperation(GAMETEXT_RELOADINGTHEMES);
   ThemeChoicer::initThemesFromDir(m_pDb);
   StateManager::instance()->sendAsynchronousMessage("THEMES_UPDATED");
@@ -61,16 +58,12 @@ int UpdateDbThread::realThreadFunction()
   return 0;
 }
 
-void UpdateDbThread::loadLevelHook(std::string i_level,
-				       int i_percentage)
-{
+void UpdateDbThread::loadLevelHook(std::string i_level, int i_percentage) {
   setThreadProgress(i_percentage);
   setThreadCurrentMicroOperation(i_level);
 }
 
-void UpdateDbThread::loadReplayHook(std::string i_replay,
-					int i_percentage)
-{
+void UpdateDbThread::loadReplayHook(std::string i_replay, int i_percentage) {
   setThreadProgress(i_percentage);
   setThreadCurrentMicroOperation(i_replay);
 }

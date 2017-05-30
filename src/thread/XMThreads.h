@@ -21,26 +21,26 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #ifndef __XMTHREADS_H__
 #define __XMTHREADS_H__
 
-#include <string>
 #include <map>
+#include <string>
 
 class XMThread;
 
 class XMThreads {
- public:
+public:
   XMThreads();
   virtual ~XMThreads();
 
-  void addThread(std::string threadId, XMThread* pThread);
+  void addThread(std::string threadId, XMThread *pThread);
   // delete the XMThread
   void removeThread(std::string threadId);
-  XMThread* getThread(std::string threadId);
+  XMThread *getThread(std::string threadId);
 
   int getNumberThreads();
   int getNumberRunningThreads();
 
- protected:
-  std::map<std::string, XMThread*> m_threads;
+protected:
+  std::map<std::string, XMThread *> m_threads;
 };
 
 #endif

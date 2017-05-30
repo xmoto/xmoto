@@ -24,13 +24,12 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include <string>
 
 class VirtualLevelsList {
-  public:
+public:
   VirtualLevelsList();
   virtual ~VirtualLevelsList();
 
-  virtual std::string determinePreviousLevel(const std::string& i_id_level) = 0;
-  virtual std::string determineNextLevel(const std::string& i_id_level) = 0;
-
+  virtual std::string determinePreviousLevel(const std::string &i_id_level) = 0;
+  virtual std::string determineNextLevel(const std::string &i_id_level) = 0;
 };
 
 #endif

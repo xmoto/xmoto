@@ -30,43 +30,42 @@ class xmDatabase;
 class Universe;
 
 class StateFinished : public StateMenu {
-  public:
-  StateFinished(Universe* i_universe,
-		const std::string& i_parentId,
-		bool drawStateBehind    = true,
-		bool updateStatesBehind = false
-		);
+public:
+  StateFinished(Universe *i_universe,
+                const std::string &i_parentId,
+                bool drawStateBehind = true,
+                bool updateStatesBehind = false);
   virtual ~StateFinished();
-  
+
   virtual void enter();
   virtual void leave();
-  
+
   /* input */
-  virtual void xmKey(InputEventType i_type, const XMKey& i_xmkey);
-  
+  virtual void xmKey(InputEventType i_type, const XMKey &i_xmkey);
+
   static void clean();
 
-  virtual void sendFromMessageBox(const std::string& i_id,
-				  UIMsgBoxButton i_button,
-				  const std::string& i_input);
+  virtual void sendFromMessageBox(const std::string &i_id,
+                                  UIMsgBoxButton i_button,
+                                  const std::string &i_input);
   virtual void executeOneCommand(std::string cmd, std::string args);
-  
- protected:
+
+protected:
   virtual void checkEvents();
-  Universe* m_universe;
+  Universe *m_universe;
   std::string m_roomsTimes;
 
-  private:
+private:
   std::string m_parentId;
 
-  void makeBestTimesWindow(UIBestTimes* pWindow,
-			   const std::string& PlayerName,
-			   const std::string& LevelID,
-			   int i_finishTime);      
+  void makeBestTimesWindow(UIBestTimes *pWindow,
+                           const std::string &PlayerName,
+                           const std::string &LevelID,
+                           int i_finishTime);
 
   /* GUI */
-  static UIRoot* m_sGUI;
-  static void createGUIIfNeeded(RenderSurface* i_screen);
+  static UIRoot *m_sGUI;
+  static void createGUIIfNeeded(RenderSurface *i_screen);
 
   std::string m_replayName; // to save temporarly the replay name
 };

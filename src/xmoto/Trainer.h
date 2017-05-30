@@ -21,10 +21,9 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #ifndef __TRAINER_H__
 #define __TRAINER_H__
 
-#include "helpers/VMath.h"
 #include "helpers/Singleton.h"
+#include "helpers/VMath.h"
 #include <vector>
-
 
 class Trainer : public Singleton<Trainer> {
   friend class Singleton<Trainer>;
@@ -34,26 +33,25 @@ private:
   ~Trainer();
 
 public:
-  bool isRestorePositionAvailable( std::string levelId );
+  bool isRestorePositionAvailable(std::string levelId);
   int getCurrentRestoreIndex();
   int getMaxRestoreIndex();
-  Vector2f getCurrentRestorePosition( std::string levelId );
-  Vector2f getPreviousRestorePosition( std::string levelId );
-  Vector2f getNextRestorePosition( std::string levelId );
-  void storePosition( std::string levelId, Vector2f pos );
+  Vector2f getCurrentRestorePosition(std::string levelId);
+  Vector2f getPreviousRestorePosition(std::string levelId);
+  Vector2f getNextRestorePosition(std::string levelId);
+  void storePosition(std::string levelId, Vector2f pos);
 
   void resetTrainerUse();
   bool trainerHasBeenUsed();
 
 private:
-  void changeLevel( std::string toLevelId );
+  void changeLevel(std::string toLevelId);
 
 private:
-  std::string m_forLevelId;  // restore positions are invalidated on level change
+  std::string m_forLevelId; // restore positions are invalidated on level change
   std::vector<Vector2f> m_storePos;
   int m_storePosReadIndex;
   bool m_trainerHasBeenUsed;
-
 };
 
 #endif

@@ -22,21 +22,22 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #define __BIKECONTROLER_H__
 
 class BikeController {
-  public:
+public:
   BikeController();
   virtual ~BikeController();
 
-  virtual void setBreak(float i_break)        = 0;
-  virtual void setThrottle(float i_throttle)  = 0;
-  virtual void setPull(float i_pull)          = 0;
+  virtual void setBreak(float i_break) = 0;
+  virtual void setThrottle(float i_throttle) = 0;
+  virtual void setPull(float i_pull) = 0;
   virtual void setChangeDir(bool i_changeDir) = 0;
-  virtual void stopControls()                 = 0; // inform the contoller that controls must stop
+  virtual void
+  stopControls() = 0; // inform the contoller that controls must stop
 
   virtual bool isDriving() = 0;
 };
 
 class BikeControllerPlayer : public BikeController {
-  public:
+public:
   BikeControllerPlayer();
   virtual ~BikeControllerPlayer();
 
@@ -46,16 +47,17 @@ class BikeControllerPlayer : public BikeController {
   virtual void setChangeDir(bool i_changeDir);
   virtual void stopControls();
 
-  float Drive()    const;
-  float Pull()     const;
-  bool  ChangeDir() const;
+  float Drive() const;
+  float Pull() const;
+  bool ChangeDir() const;
 
   virtual bool isDriving();
   void breakBreaks();
 
-  private:
-  float m_drive;    /* Throttle [0; 1] or Brake [-1; 0] */
-  float m_pull;     /* Pull back on the handle bar [0; 1] or push forward on the handle bar [-1; 0] */
+private:
+  float m_drive; /* Throttle [0; 1] or Brake [-1; 0] */
+  float m_pull; /* Pull back on the handle bar [0; 1] or push forward on the
+                   handle bar [-1; 0] */
   bool m_changeDir; /* Change direction */
 
   // store this two key pressed in order to be able to brake while
@@ -70,7 +72,7 @@ class BikeControllerPlayer : public BikeController {
 };
 
 class BikeControllerNet : public BikeController {
-  public:
+public:
   BikeControllerNet(int i_localNetId);
   virtual ~BikeControllerNet();
 
@@ -83,7 +85,7 @@ class BikeControllerNet : public BikeController {
   virtual void stopControls();
   void setLocalNetId(int i_value);
 
-  private:
+private:
   int m_localNetId;
 };
 

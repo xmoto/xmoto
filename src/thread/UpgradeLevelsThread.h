@@ -29,13 +29,16 @@ class GameState;
 
 class UpgradeLevelsThread : public XMThread, public WWWAppInterface {
 public:
-  UpgradeLevelsThread(const std::string& i_id_theme, bool i_loadMainLayerOnly, bool i_updateAutomaticallyLevels = false);
+  UpgradeLevelsThread(const std::string &i_id_theme,
+                      bool i_loadMainLayerOnly,
+                      bool i_updateAutomaticallyLevels = false);
   virtual ~UpgradeLevelsThread();
 
   void setTaskProgress(float p_percent);
   std::string getMsg() const;
 
-  virtual void setBeingDownloadedInformation(const std::string &p_information,bool p_isNew=true);
+  virtual void setBeingDownloadedInformation(const std::string &p_information,
+                                             bool p_isNew = true);
   virtual bool shouldLevelBeUpdated(const std::string &LevelID);
 
   virtual int realThreadFunction();
@@ -44,7 +47,7 @@ public:
   void setNbLevels(unsigned int i_nb_levels = -1 /* -1 means all */);
 
 private:
-  WebLevels*  m_pWebLevels;
+  WebLevels *m_pWebLevels;
 
   bool m_updateAutomaticallyLevels;
   std::string m_msg;

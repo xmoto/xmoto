@@ -29,9 +29,9 @@ class LevelsPack;
 
 class StateLevelPackViewer : public StateMenu {
 public:
-  StateLevelPackViewer(LevelsPack* pActiveLevelPack,
-		       bool drawStateBehind    = true,
-		       bool updateStatesBehind = true);
+  StateLevelPackViewer(LevelsPack *pActiveLevelPack,
+                       bool drawStateBehind = true,
+                       bool updateStatesBehind = true);
   virtual ~StateLevelPackViewer();
 
   virtual void enter();
@@ -40,21 +40,21 @@ public:
   virtual void enterAfterPop();
 
   /* input */
-  virtual void xmKey(InputEventType i_type, const XMKey& i_xmkey);
+  virtual void xmKey(InputEventType i_type, const XMKey &i_xmkey);
 
   void checkEvents();
   static void clean();
-    
+
   virtual void executeOneCommand(std::string cmd, std::string args);
 
 private:
   /* GUI */
-  static UIRoot* m_sGUI;
-  static void createGUIIfNeeded(RenderSurface* i_screen);
+  static UIRoot *m_sGUI;
+  static void createGUIIfNeeded(RenderSurface *i_screen);
   void updateGUI();
   void updateLevelsList();
 
-  LevelsPack* m_pActiveLevelPack;
+  LevelsPack *m_pActiveLevelPack;
   bool m_require_updateLevelsList;
 
   void updateInfoFrame();

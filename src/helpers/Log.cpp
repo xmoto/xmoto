@@ -20,29 +20,29 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
 #include "Log.h"
 #include "VExcept.h"
-#include "common/VFileIO.h"
 #include "assert.h"
-#include <stdarg.h>
+#include "common/VFileIO.h"
 #include <cstdio>
+#include <stdarg.h>
 
-bool  Logger::m_isInitialized = false;
-bool  Logger::m_activ         = true;
-bool  Logger::m_verbose       = false;
-FILE* Logger::m_fd            = NULL;
+bool Logger::m_isInitialized = false;
+bool Logger::m_activ = true;
+bool Logger::m_verbose = false;
+FILE *Logger::m_fd = NULL;
 
-void Logger::init(const std::string& i_logFile) {
+void Logger::init(const std::string &i_logFile) {
   std::string v_logPath = XMFS::getUserDir(FDT_CACHE) + "/" + i_logFile;
 
   assert(XMFS::isInitialized());
 
   m_verbose = false;
 
-  if(XMFS::fileExists(FDT_CACHE, v_logPath)) {
+  if (XMFS::fileExists(FDT_CACHE, v_logPath)) {
     XMFS::deleteFile(FDT_CACHE, v_logPath);
   }
 
   m_fd = fopen(v_logPath.c_str(), "w");
-  if(m_fd == NULL) {
+  if (m_fd == NULL) {
     throw Exception("Unable to open log file");
   }
 
@@ -71,14 +71,14 @@ void Logger::setActiv(bool i_value) {
 }
 
 void Logger::LogRaw(const std::string &s) {
-  if(m_activ == false) {
+  if (m_activ == false) {
     return;
   }
 
   fprintf(m_fd, "%s\n", s.c_str());
   fflush(m_fd);
-  
-  if(m_verbose) {
+
+  if (m_verbose) {
     printf("%s\n", s.c_str());
   }
 }
@@ -89,26 +89,25 @@ void Logger::LogLevelMsg(LogLevel i_level, const char *pcFmt, ...) {
   va_start(List, pcFmt);
   vsnprintf(cBuf, 4096, pcFmt, List);
   va_end(List);
-  
-  switch(i_level) {
-  case LOG_ERROR:
-    LogRaw(std::string("** Error ** : ")   + cBuf);
-    break;
-  case LOG_WARNING:
-    LogRaw(std::string("** Warning ** : ") + cBuf);
-    break;
-  case LOG_INFO:
-    LogRaw(cBuf);
-    break;
-  case LOG_DEBUG:
-    LogRaw(std::string("** Debug ** : ")   + cBuf);
-    break;
-  }
 
+  switch (i_level) {
+    case LOG_ERROR:
+      LogRaw(std::string("** Error ** : ") + cBuf);
+      break;
+    case LOG_WARNING:
+      LogRaw(std::string("** Warning ** : ") + cBuf);
+      break;
+    case LOG_INFO:
+      LogRaw(cBuf);
+      break;
+    case LOG_DEBUG:
+      LogRaw(std::string("** Debug ** : ") + cBuf);
+      break;
+  }
 }
 
-void Logger::LogData(void* data, unsigned int len) {
-  if(m_activ == false) {
+void Logger::LogData(void *data, unsigned int len) {
+  if (m_activ == false) {
     return;
   }
 

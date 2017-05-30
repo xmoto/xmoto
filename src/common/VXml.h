@@ -21,38 +21,43 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #ifndef __VXML_H__
 #define __VXML_H__
 
-#include <string>
 #include "VFileIO_types.h"
 #include <libxml/parser.h>
 #include <libxml/tree.h>
+#include <string>
 
 class XMLDocument {
-  public:
+public:
   XMLDocument();
   ~XMLDocument();
 
   // clean the class
   static void clean();
-  
+
   /* Methods */
-  void readFromFile(FileDataType i_fdt, std::string File, bool i_includeCurrentDir=false);
+  void readFromFile(FileDataType i_fdt,
+                    std::string File,
+                    bool i_includeCurrentDir = false);
 
-  xmlNodePtr getRootNode(const char* rootNameToCheck = NULL);
+  xmlNodePtr getRootNode(const char *rootNameToCheck = NULL);
 
-  static xmlNodePtr subElement (xmlNodePtr node, const char* name);
-  static xmlNodePtr nextElement(xmlNodePtr node, const char* name = NULL);
+  static xmlNodePtr subElement(xmlNodePtr node, const char *name);
+  static xmlNodePtr nextElement(xmlNodePtr node, const char *name = NULL);
 
-  static std::string getOption(xmlNodePtr node, const char* name, std::string Default = "");
-  static std::string getOption(xmlNodePtr node, xmlChar*    name, std::string Default = "");
+  static std::string getOption(xmlNodePtr node,
+                               const char *name,
+                               std::string Default = "");
+  static std::string getOption(xmlNodePtr node,
+                               xmlChar *name,
+                               std::string Default = "");
   static std::string getElementText(xmlNodePtr node);
 
   static std::string str2xmlstr(std::string str);
-  
-  private:
-  static void XMLDocumentErrorFunc(void* ctx, const char* msg, ...);
+
+private:
+  static void XMLDocumentErrorFunc(void *ctx, const char *msg, ...);
 
   xmlDocPtr m_doc;
 };
 
 #endif
-

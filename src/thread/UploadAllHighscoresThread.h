@@ -25,7 +25,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "common/WWWAppInterface.h"
 
 class UploadAllHighscoresThread : public XMThread, public WWWAppInterface {
-  public:
+public:
   UploadAllHighscoresThread(unsigned int i_number);
   virtual ~UploadAllHighscoresThread();
   std::string getMsg() const;

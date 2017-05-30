@@ -19,35 +19,36 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 =============================================================================*/
 
 #include "StateSendReport.h"
-#include "thread/SendReportThread.h"
 #include "common/XMSession.h"
+#include "thread/SendReportThread.h"
 #include "xmoto/Input.h"
 
-StateSendReport::StateSendReport(const std::string& i_author, const std::string& i_msg, bool drawStateBehind, bool updateStatesBehind)
-: StateUpdate(drawStateBehind, updateStatesBehind)
-{
+StateSendReport::StateSendReport(const std::string &i_author,
+                                 const std::string &i_msg,
+                                 bool drawStateBehind,
+                                 bool updateStatesBehind)
+  : StateUpdate(drawStateBehind, updateStatesBehind) {
   m_pThread = new SendReportThread(i_author, i_msg);
-  m_name    = "StateSendReport";
-  
-  m_messageOnSuccess      = true;
+  m_name = "StateSendReport";
+
+  m_messageOnSuccess = true;
   m_messageOnSuccessModal = false;
-  m_messageOnFailure      = true;
+  m_messageOnFailure = true;
   m_messageOnFailureModal = false;
 }
 
-StateSendReport::~StateSendReport()
-{
+StateSendReport::~StateSendReport() {
   delete m_pThread;
 }
 
-void StateSendReport::callAfterThreadFinished(int threadResult)
-{
-  m_msg = ((SendReportThread*)m_pThread)->getMsg();
+void StateSendReport::callAfterThreadFinished(int threadResult) {
+  m_msg = ((SendReportThread *)m_pThread)->getMsg();
 }
 
-void StateSendReport::xmKey(InputEventType i_type, const XMKey& i_xmkey) {
-  if(i_type == INPUT_DOWN && i_xmkey == (*InputHandler::instance()->getGlobalKey(INPUT_KILLPROCESS))) {
-    if(m_threadStarted == true) {
+void StateSendReport::xmKey(InputEventType i_type, const XMKey &i_xmkey) {
+  if (i_type == INPUT_DOWN &&
+      i_xmkey == (*InputHandler::instance()->getGlobalKey(INPUT_KILLPROCESS))) {
+    if (m_threadStarted == true) {
       m_pThread->safeKill();
     }
   }

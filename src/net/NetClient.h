@@ -21,12 +21,12 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #ifndef __XMNETCLIENT_H__
 #define __XMNETCLIENT_H__
 
-#include "../include/xm_SDL_net.h"
-#include <string>
-#include <vector>
 #include "../helpers/Singleton.h"
 #include "../include/xm_SDL.h"
+#include "../include/xm_SDL_net.h"
 #include "NetActions.h"
+#include <string>
+#include <vector>
 
 #define XM_CLIENT_MAX_UDP_PACKET_SIZE 1024 // bytes
 
@@ -38,31 +38,31 @@ class VirtualNetLevelsList;
 class ActionReader;
 
 class NetOtherClient {
- public:
-  NetOtherClient(int i_id, const std::string& i_name);
+public:
+  NetOtherClient(int i_id, const std::string &i_name);
   ~NetOtherClient();
 
   int id() const;
 
   std::string name() const;
   NetClientMode mode() const;
-  void setName(const std::string& i_name);
+  void setName(const std::string &i_name);
   void setMode(NetClientMode i_netMode);
 
   std::string lastPlayingLevelId();
-  void setPlayingLevelId(xmDatabase* pDb, const std::string& i_idlevel);
+  void setPlayingLevelId(xmDatabase *pDb, const std::string &i_idlevel);
   std::string playingLevelName();
 
-  NetGhost* netGhost(unsigned int i_subsrc);
-  void setNetGhost(unsigned int i_subsrc, NetGhost* i_netGhost);
+  NetGhost *netGhost(unsigned int i_subsrc);
+  void setNetGhost(unsigned int i_subsrc, NetGhost *i_netGhost);
 
   int points() const;
   void setPoints(int i_points);
 
- private:
+private:
   int m_id;
-  std::string  m_name;
-  NetGhost*    m_ghosts[NETACTION_MAX_SUBSRC];
+  std::string m_name;
+  NetGhost *m_ghosts[NETACTION_MAX_SUBSRC];
   NetClientMode m_netMode;
   std::string m_playingLevelId;
   std::string m_playingLevelName;
@@ -71,82 +71,87 @@ class NetOtherClient {
 };
 
 class NetClient : public Singleton<NetClient> {
-  public:
+public:
   NetClient();
   ~NetClient();
 
   // wake up the server ; don't abuse of this function
-  static void fastConnectDisconnect(const std::string& i_server, int i_port);
+  static void fastConnectDisconnect(const std::string &i_server, int i_port);
 
-  void connect(const std::string& i_server, int i_port);
+  void connect(const std::string &i_server, int i_port);
   void disconnect();
   bool isConnected();
-  void send(NetAction* i_netAction, int i_subsrc, bool i_forceUdp = false);
-  TCPsocket* tcpSocket();
-  UDPsocket* udpSocket();
-  UDPpacket* sendPacket();
+  void send(NetAction *i_netAction, int i_subsrc, bool i_forceUdp = false);
+  TCPsocket *tcpSocket();
+  UDPsocket *udpSocket();
+  UDPpacket *sendPacket();
   std::string udpBindKey() const;
 
-  void manageNetwork(int i_timeout, xmDatabase* pDb);
+  void manageNetwork(int i_timeout, xmDatabase *pDb);
 
   void changeMode(NetClientMode i_mode);
   NetClientMode mode() const;
   int points() const;
 
-  void startPlay(Universe* i_universe);
+  void startPlay(Universe *i_universe);
   bool isPlayInitialized();
   void endPlay();
 
-  void getOtherClientsNameList(std::vector<std::string>& io_list, const std::string& i_suffix);
-  void addChatTransformations(std::vector<std::string>& io_clientList, const std::string& i_suffix);
-  std::string getDisplayMessage(const std::string& i_msg, const std::string& i_author);
+  void getOtherClientsNameList(std::vector<std::string> &io_list,
+                               const std::string &i_suffix);
+  void addChatTransformations(std::vector<std::string> &io_clientList,
+                              const std::string &i_suffix);
+  std::string getDisplayMessage(const std::string &i_msg,
+                                const std::string &i_author);
 
-  std::vector<NetOtherClient*>& otherClients();
-  void fillPrivatePeople(const std::string& i_msg, const std::string& i_private_suffix, std::vector<int>& io_private_people,
-			 std::vector<std::string>& o_unknown_players);
+  std::vector<NetOtherClient *> &otherClients();
+  void fillPrivatePeople(const std::string &i_msg,
+                         const std::string &i_private_suffix,
+                         std::vector<int> &io_private_people,
+                         std::vector<std::string> &o_unknown_players);
 
   int getOwnFrameFPS() const;
-  VirtualNetLevelsList* getOtherClientLevelsList(xmDatabase* pDb);
+  VirtualNetLevelsList *getOtherClientLevelsList(xmDatabase *pDb);
 
-  void memoriesPP(const std::vector<int>& i_private_people);
-  std::string getMemoriedPPAsString(const std::string& i_suffix);
+  void memoriesPP(const std::vector<int> &i_private_people);
+  std::string getMemoriedPPAsString(const std::string &i_suffix);
 
-  private:
+private:
   bool m_isConnected;
   IPaddress serverIp;
   bool m_serverReceivesUdp;
   bool m_serverSendsUdp;
   TCPsocket m_tcpsd;
   UDPsocket m_udpsd;
-  UDPpacket* m_udpSendPacket;
+  UDPpacket *m_udpSendPacket;
   std::string m_udpBindKey;
   NetActionU m_preAllocatedNA;
 
   unsigned int getOtherClientNumberById(int i_id) const;
 
-  Universe* m_universe;
+  Universe *m_universe;
   NetClientMode m_mode;
 
-  std::vector<NetOtherClient*> m_otherClients;
+  std::vector<NetOtherClient *> m_otherClients;
   int m_points;
 
-  void manageNetworkOneStep(int i_timeout, xmDatabase* pDb);
+  void manageNetworkOneStep(int i_timeout, xmDatabase *pDb);
   void openListenConnectionGroup();
   void closeListenConnectionGroup();
   SDLNet_SocketSet m_listenSet;
-  UDPpacket* m_udpReceiptPacket;
-  ActionReader* m_tcpReader;
+  UDPpacket *m_udpReceiptPacket;
+  ActionReader *m_tcpReader;
 
   void updateOtherClientsMode(std::vector<int> i_slavePlayers);
 
-  void manageAction(xmDatabase* pDb, NetAction* i_netAction);
+  void manageAction(xmDatabase *pDb, NetAction *i_netAction);
   void cleanOtherClientsGhosts();
 
   int m_lastOwnFPS;
   int m_currentOwnFramesNb;
   int m_currentOwnFramesTime;
 
-  VirtualNetLevelsList* m_otherClientsLevelsList;
+  VirtualNetLevelsList *m_otherClientsLevelsList;
   std::vector<int> m_previous_private_people;
 
   NetPing m_lastPing;

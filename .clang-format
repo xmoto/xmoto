@@ -37,8 +37,6 @@ DisableFormat: false
 ExperimentalAutoDetectBinPacking: false
 ForEachMacros: [ foreach, BOOST_FOREACH ]
 IncludeCategories:
-  - Regex: '^"(llvm|llvm-c|clang|clang-c)/'
-    Priority: 2
   - Regex: '^(<|"(gtest|isl|json)/)'
     Priority: 3
   - Regex: '.*'

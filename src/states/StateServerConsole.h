@@ -21,36 +21,36 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #ifndef __STATESERVERCONSOLE_H__
 #define __STATESERVERCONSOLE_H__
 
-#include "StateMenu.h"
 #include "../gui/basic/GUIConsole.h"
+#include "StateMenu.h"
 
 class UIRoot;
 class UIConsole;
 
 class StateServerConsole : public StateMenu, public UIConsoleHook {
- public:
-  StateServerConsole(bool drawStateBehind    = true,
-		     bool updateStatesBehind = false);
+public:
+  StateServerConsole(bool drawStateBehind = true,
+                     bool updateStatesBehind = false);
   virtual ~StateServerConsole();
 
   void enter();
 
   /* input */
-  virtual void xmKey(InputEventType i_type, const XMKey& i_xmkey);
+  virtual void xmKey(InputEventType i_type, const XMKey &i_xmkey);
   void executeOneCommand(std::string cmd, std::string args);
 
   static void clean();
 
   /* console implementation */
-  void exec(const std::string& i_cmd);
+  void exec(const std::string &i_cmd);
   void exit();
 
- protected:
+protected:
   virtual void checkEvents();
 
- private:
+private:
   /* GUI */
-  static UIRoot* m_sGUI;
+  static UIRoot *m_sGUI;
   UIConsole *m_console;
 
   void createGUIIfNeeded();

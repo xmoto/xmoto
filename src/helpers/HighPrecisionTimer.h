@@ -26,28 +26,27 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "../BuildConfig.h"
 
 class HighPrecisionTimer {
-  public:
-    /* Types */
-    struct TimeCheck {
-      char cWhere[64];
-      double fTime;
-      double fAbsTime;
-    };
-  
-    /* Methods */
-    #if defined(PROFILE_MAIN_LOOP)
-      static void reset(void);        
-      static void checkTime(const std::string &Where);
-      static int numTimeChecks(void);
-      static HighPrecisionTimer::TimeCheck *getTimeCheck(int nIdx);
-    #else
-      /* Dummy implementation */
-      static void reset(void) {}
-      static void checkTime(const std::string &Where) {}
-      static int numTimeChecks(void) {return 0;}
-      static HighPrecisionTimer::TimeCheck *getTimeCheck(int nIdx) {return NULL;}
-    #endif
+public:
+  /* Types */
+  struct TimeCheck {
+    char cWhere[64];
+    double fTime;
+    double fAbsTime;
+  };
+
+/* Methods */
+#if defined(PROFILE_MAIN_LOOP)
+  static void reset(void);
+  static void checkTime(const std::string &Where);
+  static int numTimeChecks(void);
+  static HighPrecisionTimer::TimeCheck *getTimeCheck(int nIdx);
+#else
+  /* Dummy implementation */
+  static void reset(void) {}
+  static void checkTime(const std::string &Where) {}
+  static int numTimeChecks(void) { return 0; }
+  static HighPrecisionTimer::TimeCheck *getTimeCheck(int nIdx) { return NULL; }
+#endif
 };
 
 #endif
-

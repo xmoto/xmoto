@@ -33,25 +33,25 @@ public:
   struct Entry {
     std::string Left, Right;
   };
-    
+
   /* Construction/destruction */
   Credits();
   ~Credits();
-      
+
   /* Methods */
   void init(int backgroundReplayLength,
-	    int fadeInLength,
-	    int fadeOutLength,
-	    const char *pcCredits);
-  void render(RenderSurface* i_screen, int i_time);
+            int fadeInLength,
+            int fadeOutLength,
+            const char *pcCredits);
+  void render(RenderSurface *i_screen, int i_time);
   bool isFinished(void);
-      
+
 private:
   /* Data */
   std::vector<Entry *> m_Entries;
-  int m_time,m_replayLength,m_fadeIn,m_fadeOut;
+  int m_time, m_replayLength, m_fadeIn, m_fadeOut;
   bool m_bBlackBackground;
-  FontManager* m_font;
+  FontManager *m_font;
   bool m_bFinished;
 };
 
