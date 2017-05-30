@@ -23,10 +23,12 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
 #include <string>
 
-std::string txtToLower(const std::string& i_str);
+std::string txtToLower(const std::string &i_str);
 std::string splitText(const std::string &str, int p_breakLineLength);
 std::string formatTime(int i_time);
 std::string unicode2utf8(unsigned int unicode);
-std::string& replaceAll(std::string& context, const std::string& from, const std::string& to);
+std::string &replaceAll(std::string &context,
+                        const std::string &from,
+                        const std::string &to);
 
 #endif

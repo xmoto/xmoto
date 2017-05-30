@@ -21,19 +21,19 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #ifndef __SYSMESSAGE_H__
 #define __SYSMESSAGE_H__
 
-#include <string>
-#include <vector>
-#include "helpers/Singleton.h"
 #include "helpers/Color.h"
 #include "helpers/RenderSurface.h"
+#include "helpers/Singleton.h"
+#include <string>
+#include <vector>
 
 class DrawLib;
 
-enum SysMsgType {SYSMSG_INFORMATION, SYSMSG_ERROR};
+enum SysMsgType { SYSMSG_INFORMATION, SYSMSG_ERROR };
 
 class SysMsg {
- public:
-  SysMsg(const std::string& i_msg, SysMsgType i_type);
+public:
+  SysMsg(const std::string &i_msg, SysMsgType i_type);
   ~SysMsg();
 
   std::string text;
@@ -41,7 +41,13 @@ class SysMsg {
   SysMsgType type;
 };
 
-enum consoleLineType { CLT_NORMAL, CLT_INFORMATION, CLT_GAMEINFORMATION, CLT_SERVER, CLT_PRIVATE };
+enum consoleLineType {
+  CLT_NORMAL,
+  CLT_INFORMATION,
+  CLT_GAMEINFORMATION,
+  CLT_SERVER,
+  CLT_PRIVATE
+};
 
 struct consoleLine {
   std::string cltxt;
@@ -56,11 +62,12 @@ private:
   ~SysMessage();
 
 public:
-  void setDrawLib(DrawLib* i_drawLib);
-  void displayText(const std::string& i_msg);
-  void displayError(const std::string& i_msg);
-  void displayInformation(const std::string& i_msg);
-  void addConsoleLine(const std::string& i_line, consoleLineType i_clt = CLT_NORMAL);
+  void setDrawLib(DrawLib *i_drawLib);
+  void displayText(const std::string &i_msg);
+  void displayError(const std::string &i_msg);
+  void displayInformation(const std::string &i_msg);
+  void addConsoleLine(const std::string &i_line,
+                      consoleLineType i_clt = CLT_NORMAL);
   void showConsole();
   void alterConsoleSize(int i_diffLines);
   unsigned int consoleSize() const;
@@ -74,9 +81,9 @@ private:
 
   /* error msg */
   /* information msg */
-  std::vector<SysMsg*> m_sysMsg;
+  std::vector<SysMsg *> m_sysMsg;
 
-  void displayMsg(const std::string& i_msg, SysMsgType i_type);
+  void displayMsg(const std::string &i_msg, SysMsgType i_type);
   void cleanBoxMsg();
   void drawBoxMsg();
   void drawBoxMsg_one(unsigned int i, float i_time, int x_offset, int y_offset);
@@ -93,9 +100,12 @@ private:
   int m_consoleTextHeight;
 
   void resetBackgroundbox();
-  void consoleText_computeAndDraw(int i_shadow, int i_xoffset, int i_yoffset, bool i_draw);
+  void consoleText_computeAndDraw(int i_shadow,
+                                  int i_xoffset,
+                                  int i_yoffset,
+                                  bool i_draw);
 
-  DrawLib* m_drawLib;
+  DrawLib *m_drawLib;
 
   RenderSurface m_screen;
 };

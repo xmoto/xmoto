@@ -25,9 +25,9 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
 class StateUploadHighscore : public StateUpdate {
 public:
-  StateUploadHighscore(const std::string& i_replayPath,
-		       bool drawStateBehind    = true,
-		       bool updateStatesBehind = false);
+  StateUploadHighscore(const std::string &i_replayPath,
+                       bool drawStateBehind = true,
+                       bool updateStatesBehind = false);
   virtual ~StateUploadHighscore();
 
 protected:

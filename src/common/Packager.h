@@ -21,19 +21,21 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #ifndef __PACKAGER_H__
 #define __PACKAGER_H__
 
-  /*===========================================================================
-  Packager class
-  ===========================================================================*/
-  class Packager {
-    public:
-      /* Methods */
-      static void go(const std::string &BinFile, const std::string &DataDir);
-      static void goUnpack(const std::string &BinFile,const std::string &OutPath,bool bWritePackageList);
-      
-    private:
-      /* Helpers */
-      static FILE *createFile(const std::string &TargetDir,const std::string &Path);
-  };
+/*===========================================================================
+Packager class
+===========================================================================*/
+class Packager {
+public:
+  /* Methods */
+  static void go(const std::string &BinFile, const std::string &DataDir);
+  static void goUnpack(const std::string &BinFile,
+                       const std::string &OutPath,
+                       bool bWritePackageList);
+
+private:
+  /* Helpers */
+  static FILE *createFile(const std::string &TargetDir,
+                          const std::string &Path);
+};
 
 #endif
-

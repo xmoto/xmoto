@@ -19,38 +19,41 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 =============================================================================*/
 
 #include "XMDemo.h"
-#include "common/VXml.h"
 #include "common/VFileIO.h"
+#include "common/VXml.h"
 #include "common/WWW.h"
 #include "helpers/VExcept.h"
 
 XMDemo::XMDemo(const std::string i_demoFile) {
-    XMLDocument v_xml;
-    xmlNodePtr  v_xmlElt;
+  XMLDocument v_xml;
+  xmlNodePtr v_xmlElt;
 
-    v_xml.readFromFile(FDT_DATA, i_demoFile, true);
+  v_xml.readFromFile(FDT_DATA, i_demoFile, true);
 
-    v_xmlElt = v_xml.getRootNode("demo");
-    if(v_xmlElt == NULL) {
-      throw Exception("failed to load demo XML " + i_demoFile);
-    }
+  v_xmlElt = v_xml.getRootNode("demo");
+  if (v_xmlElt == NULL) {
+    throw Exception("failed to load demo XML " + i_demoFile);
+  }
 
-    /* Get URLs */
-    m_levelUrl = XMLDocument::getOption(v_xmlElt, "level_url");
-    if(m_levelUrl == "") throw Exception("no level URL specified in XML");
+  /* Get URLs */
+  m_levelUrl = XMLDocument::getOption(v_xmlElt, "level_url");
+  if (m_levelUrl == "")
+    throw Exception("no level URL specified in XML");
 
-    m_replayUrl = XMLDocument::getOption(v_xmlElt, "replay_url");
-    if(m_replayUrl == "") throw Exception("no replay URL specified in XML");
+  m_replayUrl = XMLDocument::getOption(v_xmlElt, "replay_url");
+  if (m_replayUrl == "")
+    throw Exception("no replay URL specified in XML");
 
-    m_levelFile  = XMFS::getUserDir(FDT_CACHE) + "/demo/" + XMFS::getFileBaseName(m_levelUrl) + ".lvl";
-    m_replayFile = XMFS::getUserDir(FDT_CACHE) + "/demo/" + XMFS::getFileBaseName(m_replayUrl) + ".rpl";
+  m_levelFile = XMFS::getUserDir(FDT_CACHE) + "/demo/" +
+                XMFS::getFileBaseName(m_levelUrl) + ".lvl";
+  m_replayFile = XMFS::getUserDir(FDT_CACHE) + "/demo/" +
+                 XMFS::getFileBaseName(m_replayUrl) + ".rpl";
 
-    XMFS::mkArborescence(m_levelFile);
-    XMFS::mkArborescence(m_replayFile);
+  XMFS::mkArborescence(m_levelFile);
+  XMFS::mkArborescence(m_replayFile);
 }
 
-XMDemo::~XMDemo() {
-}
+XMDemo::~XMDemo() {}
 
 std::string XMDemo::levelFile() const {
   return m_levelFile;
@@ -60,11 +63,11 @@ std::string XMDemo::replayFile() const {
   return m_replayFile;
 }
 
-void XMDemo::getLevel(ProxySettings* i_proxy) {
+void XMDemo::getLevel(ProxySettings *i_proxy) {
   FSWeb::downloadFile(m_levelFile, m_levelUrl, NULL, NULL, i_proxy);
 }
 
-void XMDemo::getReplay(ProxySettings* i_proxy) {
+void XMDemo::getReplay(ProxySettings *i_proxy) {
   FSWeb::downloadFile(m_replayFile, m_replayUrl, NULL, NULL, i_proxy);
 }
 

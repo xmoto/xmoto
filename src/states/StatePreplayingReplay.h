@@ -26,19 +26,18 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 class ReplayBiker;
 
 class StatePreplayingReplay : public StatePreplaying {
-  public:
+public:
   StatePreplayingReplay(const std::string i_replay, bool i_sameLevel);
   virtual ~StatePreplayingReplay();
-  
-  protected:
+
+protected:
   virtual void initUniverse();
   virtual void preloadLevels();
   virtual void initPlayers();
   virtual void runPlaying();
 
   std::string m_replay;
-  ReplayBiker* m_replayBiker; /* replay watched */
-
+  ReplayBiker *m_replayBiker; /* replay watched */
 };
 
 #endif

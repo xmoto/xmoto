@@ -20,52 +20,54 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
 #include "StateCreditsMode.h"
 #include "xmoto/Credits.h"
-#include "xmscene/BikePlayer.h"
-#include "xmoto/GameText.h"
 #include "xmoto/Game.h"
-#include "xmoto/Universe.h"
+#include "xmoto/GameText.h"
 #include "xmoto/Renderer.h"
+#include "xmoto/Universe.h"
+#include "xmscene/BikePlayer.h"
 
-StateCreditsMode::StateCreditsMode(Universe* i_universe, GameRenderer* i_renderer, const std::string& i_replay, ReplayBiker* i_replayBiker):
-StateReplaying(i_universe, i_renderer, i_replay, i_replayBiker)
-{
+StateCreditsMode::StateCreditsMode(Universe *i_universe,
+                                   GameRenderer *i_renderer,
+                                   const std::string &i_replay,
+                                   ReplayBiker *i_replayBiker)
+  : StateReplaying(i_universe, i_renderer, i_replay, i_replayBiker) {
   m_credits = new Credits();
-  m_name    = "StateCreditsMode";
+  m_name = "StateCreditsMode";
 }
 
-StateCreditsMode::~StateCreditsMode()
-{
+StateCreditsMode::~StateCreditsMode() {
   delete m_credits;
 }
 
-void StateCreditsMode::enter()
-{
+void StateCreditsMode::enter() {
   StateReplaying::enter();
 
-  if(m_universe != NULL) {
+  if (m_universe != NULL) {
     m_renderer->hideReplayHelp();
     m_renderer->setShowTimePanel(false);
     m_renderer->setShowMinimap(false);
     m_renderer->setShowGhostsText(false);
   }
 
-  if(m_universe != NULL) {
-    for(unsigned int i=0; i<m_universe->getScenes().size(); i++) {
+  if (m_universe != NULL) {
+    for (unsigned int i = 0; i < m_universe->getScenes().size(); i++) {
       m_universe->getScenes()[i]->setInfos("");
     }
   }
 
-  m_credits->init(m_replayBiker->getFinishTime(), 400, 400, std::string(GAMETEXT_CREDITS).c_str());
+  m_credits->init(m_replayBiker->getFinishTime(),
+                  400,
+                  400,
+                  std::string(GAMETEXT_CREDITS).c_str());
 }
 
-bool StateCreditsMode::render()
-{
-  if(StateReplaying::render() == false){
+bool StateCreditsMode::render() {
+  if (StateReplaying::render() == false) {
     return false;
   }
 
-  if(m_universe != NULL) {
-    if(m_universe->getScenes().size() > 0) {
+  if (m_universe != NULL) {
+    if (m_universe->getScenes().size() > 0) {
       m_credits->render(&m_screen, m_universe->getScenes()[0]->getTime());
     }
   }
@@ -78,8 +80,8 @@ void StateCreditsMode::abort() {
   closePlaying();
 }
 
-void StateCreditsMode::xmKey(InputEventType i_type, const XMKey& i_xmkey) {
-  if(!i_xmkey.isDirectionnel()) {
+void StateCreditsMode::xmKey(InputEventType i_type, const XMKey &i_xmkey) {
+  if (!i_xmkey.isDirectionnel()) {
     abort();
   }
 }

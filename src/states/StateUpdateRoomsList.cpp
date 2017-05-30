@@ -18,20 +18,19 @@ along with XMOTO; if not, write to the Free Software
 Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 =============================================================================*/
 
-#include "xmoto/GameText.h"
 #include "StateUpdateRoomsList.h"
 #include "thread/UpdateRoomsListThread.h"
+#include "xmoto/GameText.h"
 
 StateUpdateRoomsList::StateUpdateRoomsList(bool drawStateBehind,
-					   bool updateStatesBehind)
-  : StateUpdate(drawStateBehind, updateStatesBehind)
-{
+                                           bool updateStatesBehind)
+  : StateUpdate(drawStateBehind, updateStatesBehind) {
   m_pThread = new UpdateRoomsListThread();
-  m_name    = "StateUpdateRoomsList";
-  m_msg     = GAMETEXT_FAILEDDLROOMSLIST + std::string("\n") + GAMETEXT_CHECK_YOUR_WWW;
+  m_name = "StateUpdateRoomsList";
+  m_msg =
+    GAMETEXT_FAILEDDLROOMSLIST + std::string("\n") + GAMETEXT_CHECK_YOUR_WWW;
 }
 
-StateUpdateRoomsList::~StateUpdateRoomsList()
-{
+StateUpdateRoomsList::~StateUpdateRoomsList() {
   delete m_pThread;
 }

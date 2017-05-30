@@ -30,15 +30,14 @@ class Biker;
 class PhysicsSettings;
 class Level;
 
-class ChipmunkWorld
-{
+class ChipmunkWorld {
 public:
-  ChipmunkWorld(PhysicsSettings* i_physicsSettings, Level* i_level);
+  ChipmunkWorld(PhysicsSettings *i_physicsSettings, Level *i_level);
   ~ChipmunkWorld();
   void resizeHashes(float i_dim, unsigned int i_size);
 
   cpSpace *getSpace();
-  void setSpace(cpSpace* s);
+  void setSpace(cpSpace *s);
 
   cpBody *getBody();
   cpBody *getFrontWheel(unsigned int i_player);
@@ -48,18 +47,18 @@ public:
   void setBackWheel(cpBody *body, unsigned int i_player);
   void setGravity(float i_x, float i_y);
 
-  void addPlayer(PlayerLocalBiker* i_biker);
-  void updateWheelsPosition(const std::vector<Biker*>& i_players);
+  void addPlayer(PlayerLocalBiker *i_biker);
+  void updateWheelsPosition(const std::vector<Biker *> &i_players);
 
 private:
-  void initPhysics(PhysicsSettings* i_physicsSettings, Level* i_level);
+  void initPhysics(PhysicsSettings *i_physicsSettings, Level *i_level);
   cpSpace *m_space;
   cpBody *m_body;
 
-  std::vector<cpBody*> m_ab; // wheel anchors
-  std::vector<cpBody*> m_af;
-  std::vector<cpBody*> m_wb; // wheel bodies
-  std::vector<cpBody*> m_wf;
+  std::vector<cpBody *> m_ab; // wheel anchors
+  std::vector<cpBody *> m_af;
+  std::vector<cpBody *> m_wb; // wheel bodies
+  std::vector<cpBody *> m_wf;
 };
 
 #endif

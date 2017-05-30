@@ -18,15 +18,10 @@ along with XMOTO; if not, write to the Free Software
 Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 =============================================================================*/
 
-
 #ifndef __XMCONF_H__
 #define __XMCONF_H__
 
-enum GraphicsLevel {
-  GFX_LOW,
-  GFX_MEDIUM,
-  GFX_HIGH
-};
+enum GraphicsLevel { GFX_LOW, GFX_MEDIUM, GFX_HIGH };
 
 enum MultiGameMode {
   MULTI_MODE_TIME_ATTACK,
@@ -36,9 +31,9 @@ enum MultiGameMode {
 
 #include "XMSession_default.h"
 
-#include <string>
 #include "helpers/MultiSingleton.h"
 #include "helpers/TFunctor.h"
+#include <string>
 
 /*
   XMSession   : current session options
@@ -47,7 +42,8 @@ enum MultiGameMode {
   DB::profiles_configs : config specific to the profile
 
   first, XMSession constructor init session values,
-  then, UserConfig are loaded, and finally, XMArguments overwrite session's values if they are defined
+  then, UserConfig are loaded, and finally, XMArguments overwrite session's
+  values if they are defined
 */
 
 class XMArguments;
@@ -55,13 +51,14 @@ class UserConfig;
 class xmDatabase;
 
 class ProxySettings {
- public:
+public:
   ProxySettings();
-  void operator=(const ProxySettings& i_copy);
+  void operator=(const ProxySettings &i_copy);
 
   void setServer(std::string p_server);
   void setPort(long p_port);
-  void setType(const std::string& p_type); /* CURLPROXY_HTTP OR CURLPROXY_SOCKS5 */
+  void setType(
+    const std::string &p_type); /* CURLPROXY_HTTP OR CURLPROXY_SOCKS5 */
   void setAuthentification(std::string p_user, std::string p_password);
 
   void setDefault();
@@ -77,12 +74,13 @@ class ProxySettings {
   std::string getAuthentificationUser() const;
   std::string getAuthentificationPassword() const;
 
-  /* default means : curl try to find default values (no proxy, or environment vars) */
+  /* default means : curl try to find default values (no proxy, or environment
+   * vars) */
   bool useDefaultServer() const;
   bool useDefaultPort() const;
   bool useDefaultAuthentification() const;
 
- private:
+private:
   bool m_useProxy;
   std::string m_server;
   long m_port;
@@ -96,17 +94,20 @@ class XMSession : public MultiSingleton<XMSession> {
 
 private:
   XMSession();
-  virtual ~XMSession() {};
+  virtual ~XMSession(){};
 
 public:
-  void load(const XMArguments* i_xmargs);
-  void load(UserConfig* m_Config);
-  void loadProfile(const std::string& i_id_profile, xmDatabase* pDb); /* give the database as argument ; to be use that any developper call it before db is initialized */
-  void save(UserConfig* m_Config, xmDatabase* pDb);
-  void saveProfile(xmDatabase* pDb);
+  void load(const XMArguments *i_xmargs);
+  void load(UserConfig *m_Config);
+  void loadProfile(const std::string &i_id_profile,
+                   xmDatabase *pDb); /* give the database as argument ; to be
+                                        use that any developper call it before
+                                        db is initialized */
+  void save(UserConfig *m_Config, xmDatabase *pDb);
+  void saveProfile(xmDatabase *pDb);
   void setToDefault();
   bool isVerbose() const;
-  static void createDefaultConfig(UserConfig* v_config);
+  static void createDefaultConfig(UserConfig *v_config);
 
   void setUseGraphics(bool i_value);
   bool useGraphics() const;
@@ -128,10 +129,10 @@ public:
   bool debug() const;
   bool sqlTrace() const;
   std::string profile() const;
-  void setProfile(const std::string& i_profile);
+  void setProfile(const std::string &i_profile);
   std::string sitekey() const;
   std::string wwwPassword() const;
-  void setWwwPassword(const std::string& i_password);
+  void setWwwPassword(const std::string &i_password);
   bool gDebug() const;
   std::string gDebugFile() const;
   bool timedemo() const;
@@ -202,7 +203,7 @@ public:
   bool multiScenes() const;
   void setEnableContextHelp(bool i_value);
   bool enableContextHelp() const;
-  void setTheme(const std::string& i_value);
+  void setTheme(const std::string &i_value);
   std::string theme() const;
   void setEnableAudio(bool i_value);
   bool enableAudio() const;
@@ -222,7 +223,7 @@ public:
   bool showHighscoreInGame() const;
   void setNextMedalInGame(bool i_value);
   bool showNextMedalInGame() const;
-  void setIdRoom(unsigned int i_number, const std::string& i_value);
+  void setIdRoom(unsigned int i_number, const std::string &i_value);
   std::string idRoom(unsigned int i_number) const;
   void setNbRoomsEnabled(unsigned int i_value);
   unsigned int nbRoomsEnabled() const;
@@ -240,8 +241,8 @@ public:
   std::string webThemesURL() const;
   std::string webThemesURLBase() const;
   std::string webRoomsURL() const;
-  ProxySettings* proxySettings();
-  void setProxySettings(const ProxySettings& i_value);
+  ProxySettings *proxySettings();
+  void setProxySettings(const ProxySettings &i_value);
   void markProxyUpdated();
   void setWebConfAtInit(bool i_value);
   bool webConfAtInit() const;
@@ -251,7 +252,7 @@ public:
   std::string uploadHighscoreUrl() const;
   std::string screenshotFormat() const;
   std::string language() const;
-  void setLanguage(const std::string& i_value);
+  void setLanguage(const std::string &i_value);
   void setNotifyAtInit(bool i_value);
   bool notifyAtInit() const;
   std::string webLevelsUrl() const;
@@ -293,7 +294,7 @@ public:
   unsigned int serverMaxClients() const;
   void setServerMaxClients(unsigned int i_value);
   std::string clientServerName() const;
-  void setClientServerName(const std::string& i_value);
+  void setClientServerName(const std::string &i_value);
   bool clientGhostMode() const;
   void setClientGhostMode(bool i_value);
   int clientServerPort() const;
@@ -303,30 +304,39 @@ public:
   bool musicOnAllLevels() const;
   void setMusicOnAllLevels(bool i_value);
 
-  // there are two dbSync values, one for the profile side, one on the serveur side
-  // note that because these values must always be synchronised with db, there are always read and write from and to the db
+  // there are two dbSync values, one for the profile side, one on the serveur
+  // side
+  // note that because these values must always be synchronised with db, there
+  // are always read and write from and to the db
   /**
      dbSync field is the revision in which you upload the line.
      -> tagging lines where upd=0 and dbsync is null to the last dbsync
      -> sending via xml all the lines where synchronized=0
-     
+
      if server answer ko : do nothing
      if server answer ok : update synchronized to 1
-     if xmoto crashes, when you restart, xmoto doesn't know the answer of the server :
-     - if the answer was ok, lines with synchronized=0 are resend, but will not be used on the server side on the next update
-     - if the answer was ko, lines with synchronized=0 are resend, and will be used on the server side.
+     if xmoto crashes, when you restart, xmoto doesn't know the answer of the
+     server :
+     - if the answer was ok, lines with synchronized=0 are resend, but will not
+     be used on the server side on the next update
+     - if the answer was ko, lines with synchronized=0 are resend, and will be
+     used on the server side.
   */
-  int dbSync(xmDatabase* pDb, const std::string& i_id_profile);
-  void setDbSync(xmDatabase* pDb, const std::string& i_id_profile, int i_dbSync);
-  int dbSyncServer(xmDatabase* pDb, const std::string& i_id_profile);
-  void setDbSyncServer(xmDatabase* pDb, const std::string& i_id_profile, int i_dbSyncServer);
+  int dbSync(xmDatabase *pDb, const std::string &i_id_profile);
+  void setDbSync(xmDatabase *pDb,
+                 const std::string &i_id_profile,
+                 int i_dbSync);
+  int dbSyncServer(xmDatabase *pDb, const std::string &i_id_profile);
+  void setDbSyncServer(xmDatabase *pDb,
+                       const std::string &i_id_profile,
+                       int i_dbSyncServer);
 
-  private:
+private:
   bool m_verbose;
-  int  m_resolutionWidth;
-  int  m_resolutionHeight;
-  int  m_bpp;
-  int  m_maxRenderFps;
+  int m_resolutionWidth;
+  int m_resolutionHeight;
+  int m_bpp;
+  int m_maxRenderFps;
   bool m_windowed;
   bool m_glExts;
   bool m_glVOBS;
@@ -355,8 +365,10 @@ public:
   bool m_enableEngineSound;
   bool m_showEngineCounter;
   bool m_showMinimap;
-  bool m_multiStopWhenOneFinishes; /* in multiplayer, stop the game when one finishes the level */
-  MultiGameMode m_multiGameMode; /* sets mode for multiplayer game: race, time attack or teamplay */
+  bool m_multiStopWhenOneFinishes; /* in multiplayer, stop the game when one
+                                      finishes the level */
+  MultiGameMode m_multiGameMode; /* sets mode for multiplayer game: race, time
+                                    attack or teamplay */
   bool m_enableMenuMusic;
   bool m_enableGameMusic;
   bool m_enableInitZoom; /* true: Perform initial level scroll/zoom */
@@ -385,7 +397,7 @@ public:
   bool m_checkNewLevelsAtStartup;
   bool m_checkNewHighscoresAtStartup;
   bool m_showHighscoreInGame;
-  bool m_showNextMedalInGame;  
+  bool m_showNextMedalInGame;
   std::string m_uploadHighscoreUrl;
   std::string m_idRoom[ROOMS_NB_MAX];
   unsigned int m_nbRoomsEnabled;
@@ -438,8 +450,9 @@ public:
 
 public:
   inline bool isSafemodeActive() { return m_bSafemodeActive; }
-  inline void setSafemodeActive(bool isSafemodeActive) { m_bSafemodeActive = isSafemodeActive; }
+  inline void setSafemodeActive(bool isSafemodeActive) {
+    m_bSafemodeActive = isSafemodeActive;
+  }
 };
 
 #endif
-

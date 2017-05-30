@@ -25,11 +25,10 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "StateMenu.h"
 
 class StateVote : public StateMenu {
-  public:
-  StateVote(const std::string& i_idlevel,
-	    bool drawStateBehind    = true,
-	    bool updateStatesBehind = false
-	    );
+public:
+  StateVote(const std::string &i_idlevel,
+            bool drawStateBehind = true,
+            bool updateStatesBehind = false);
   virtual ~StateVote();
 
   static void clean();
@@ -37,17 +36,17 @@ class StateVote : public StateMenu {
   virtual void enter();
   virtual void leave();
 
-  virtual void xmKey(InputEventType i_type, const XMKey& i_xmkey);
+  virtual void xmKey(InputEventType i_type, const XMKey &i_xmkey);
 
-  protected:
+protected:
   virtual void checkEvents();
 
-  private:
+private:
   std::string m_idlevel;
 
   /* GUI */
-  static UIRoot* m_sGUI;
-  static void createGUIIfNeeded(RenderSurface* i_screen);
+  static UIRoot *m_sGUI;
+  static void createGUIIfNeeded(RenderSurface *i_screen);
 
   bool isToSkip();
   void updateRights();

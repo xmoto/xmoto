@@ -20,41 +20,32 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
 #include "AttractMode.h"
 
-AttractMode::AttractMode()
-{
+AttractMode::AttractMode() {
   m_inAttractMode = false;
-  m_quitKey       = EVERY_KEY;
+  m_quitKey = EVERY_KEY;
 }
 
-AttractMode::~AttractMode()
-{
-}
+AttractMode::~AttractMode() {}
 
-void AttractMode::enterAttractMode(int quitAttractKey)
-{
+void AttractMode::enterAttractMode(int quitAttractKey) {
   m_inAttractMode = true;
-  m_quitKey       = quitAttractKey;
+  m_quitKey = quitAttractKey;
 }
 
-void AttractMode::exitAttractMode()
-{
+void AttractMode::exitAttractMode() {
   m_inAttractMode = false;
 }
 
-bool AttractMode::inAttractMode()
-{
+bool AttractMode::inAttractMode() {
   return m_inAttractMode;
 }
 
-void AttractMode::attractModeKeyDown(SDLKey nKey)
-{
-  if(m_quitKey == NO_KEY){
+void AttractMode::attractModeKeyDown(SDLKey nKey) {
+  if (m_quitKey == NO_KEY) {
     return;
-  }
-  else if(m_quitKey == EVERY_KEY){
+  } else if (m_quitKey == EVERY_KEY) {
     m_inAttractMode = false;
-  }
-  else if(m_quitKey == nKey){
+  } else if (m_quitKey == nKey) {
     m_inAttractMode = false;
   }
 }

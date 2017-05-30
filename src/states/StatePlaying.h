@@ -25,24 +25,24 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "xmoto/Input.h"
 
 class StatePlaying : public StateScene {
-  public:
-  StatePlaying(Universe* i_universe, GameRenderer* i_renderer);
-  virtual ~StatePlaying() =0;
+public:
+  StatePlaying(Universe *i_universe, GameRenderer *i_renderer);
+  virtual ~StatePlaying() = 0;
 
   virtual void enter();
   virtual void enterAfterPop();
   virtual void executeOneCommand(std::string cmd, std::string args);
   virtual bool renderOverShadow();
 
-  protected:
-  void handleControllers(InputEventType Type, const XMKey& i_xmkey);
-  void handleScriptKeys(InputEventType Type, const XMKey& i_xmkey);
+protected:
+  void handleControllers(InputEventType Type, const XMKey &i_xmkey);
+  void handleScriptKeys(InputEventType Type, const XMKey &i_xmkey);
   void dealWithActivedKeys(); // apply already pressed keys
   void updateWithOptions();
-  
+
   bool m_displayStats;
 
-  private:
+private:
   bool m_changeDirKeyAlreadyPress[INPUT_NB_PLAYERS]; // to avoid key repetition
 };
 

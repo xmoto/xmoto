@@ -21,5 +21,4 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "../helpers/Random.h"
 
 unsigned int NotSoRandom::m_current = 0;
-float        NotSoRandom::m_random[NB_RANDOM];
-
+float NotSoRandom::m_random[NB_RANDOM];

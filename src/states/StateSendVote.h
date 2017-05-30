@@ -25,14 +25,15 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
 class StateSendVote : public StateUpdate {
 public:
-  StateSendVote(const std::string& i_idlevel,
-		const std::string& i_difficulty_value, const std::string& i_quality_value,
-		bool drawStateBehind    = true,
-		bool updateStatesBehind = false);
+  StateSendVote(const std::string &i_idlevel,
+                const std::string &i_difficulty_value,
+                const std::string &i_quality_value,
+                bool drawStateBehind = true,
+                bool updateStatesBehind = false);
   virtual ~StateSendVote();
 
   void callAfterThreadFinished(int threadResult);
-  virtual void xmKey(InputEventType i_type, const XMKey& i_xmkey);
+  virtual void xmKey(InputEventType i_type, const XMKey &i_xmkey);
 
 protected:
   virtual void checkEvents() {}

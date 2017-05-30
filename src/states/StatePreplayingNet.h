@@ -24,25 +24,25 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "StatePreplaying.h"
 
 class StatePreplayingNet : public StatePreplaying {
-  public:
+public:
   StatePreplayingNet(const std::string i_idlevel, bool i_sameLevel);
   virtual ~StatePreplayingNet();
 
-  virtual bool updateWhenUnvisible() {return true;}
+  virtual bool updateWhenUnvisible() { return true; }
 
   virtual void executeOneCommand(std::string cmd, std::string args);
   virtual void abortPlaying();
 
-  protected:
+protected:
   virtual void initUniverse();
   virtual void preloadLevels();
   virtual void initPlayers();
   virtual void runPlaying();
   virtual bool allowGhosts();
 
-  virtual void onLoadingFailure(const std::string& i_msg);
+  virtual void onLoadingFailure(const std::string &i_msg);
 
-  private:
+private:
 };
 
 #endif

@@ -21,36 +21,26 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "CmdArgumentParser.h"
 #include <sstream>
 
-float
-CmdArgumentParser::getFloat(std::string& args)
-{
+float CmdArgumentParser::getFloat(std::string &args) {
   std::string token = nextToken(args);
-  if(token.size() == 0){
-
+  if (token.size() == 0) {
   }
   return atof(token.c_str());
 }
 
-int
-CmdArgumentParser::getInt(std::string& args)
-{
+int CmdArgumentParser::getInt(std::string &args) {
   std::string token = nextToken(args);
-  if(token.size() == 0){
-
+  if (token.size() == 0) {
   }
   return atoi(token.c_str());
 }
 
-std::string
-CmdArgumentParser::getString(std::string& args)
-{
+std::string CmdArgumentParser::getString(std::string &args) {
   return nextToken(args);
 }
 
-void
-CmdArgumentParser::addFloat(float value, std::string& args)
-{
-  if(args.size() != 0)
+void CmdArgumentParser::addFloat(float value, std::string &args) {
+  if (args.size() != 0)
     args += " ";
 
   std::ostringstream oss;
@@ -58,10 +48,8 @@ CmdArgumentParser::addFloat(float value, std::string& args)
   args += oss.str();
 }
 
-void
-CmdArgumentParser::addInt(int value, std::string& args)
-{
-  if(args.size() != 0)
+void CmdArgumentParser::addInt(int value, std::string &args) {
+  if (args.size() != 0)
     args += " ";
 
   std::ostringstream oss;
@@ -69,48 +57,44 @@ CmdArgumentParser::addInt(int value, std::string& args)
   args += oss.str();
 }
 
-void
-CmdArgumentParser::addString(std::string value, std::string& args)
-{
-  if(args.size() != 0)
+void CmdArgumentParser::addString(std::string value, std::string &args) {
+  if (args.size() != 0)
     args += " ";
 
   args = args + "\"" + value + "\"";
 }
 
-std::string
-CmdArgumentParser::nextToken(std::string& args)
-{
-  unsigned int cur  = 0;
+std::string CmdArgumentParser::nextToken(std::string &args) {
+  unsigned int cur = 0;
   unsigned int size = args.size();
   std::string token = "";
 
   // skip space
-  while(cur < size && args[cur] == ' '){
+  while (cur < size && args[cur] == ' ') {
     cur++;
   }
 
   // handle quoted strings
-  if(args[cur] == '\"'){
+  if (args[cur] == '\"') {
     cur++;
-    while(cur < size && args[cur] != '\"'){
+    while (cur < size && args[cur] != '\"') {
       token += args[cur];
       cur++;
     }
   }
   // handle other tokens
   else {
-    while(cur < size && args[cur] != ' ') {
+    while (cur < size && args[cur] != ' ') {
       token += args[cur];
       cur++;
     }
   }
 
   // update args to remove parsed token
-  if(cur == size){
+  if (cur == size) {
     args = "";
   } else {
-    args = args.substr(cur, size-cur);
+    args = args.substr(cur, size - cur);
   }
 
   return token;

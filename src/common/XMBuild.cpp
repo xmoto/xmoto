@@ -21,27 +21,26 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
 std::string XMBuild::getVersionString(bool i_extended) {
   std::ostringstream v_version;
-  
+
   v_version << BUILD_MAJORVERSION;
   v_version << ".";
   v_version << BUILD_VERSION;
   v_version << ".";
   v_version << BUILD_MINORVERSION;
 
-
-  if(i_extended) {
+  if (i_extended) {
     std::string v_svn = svn_version();
 
-    if(std::string(BUILD_EXTRAINFO) != "") {
+    if (std::string(BUILD_EXTRAINFO) != "") {
       v_version << " ";
       v_version << BUILD_EXTRAINFO;
-    }    
+    }
 
-    if(std::string(BUILD_EXTRAINFO) != "" && v_svn != "") {
+    if (std::string(BUILD_EXTRAINFO) != "" && v_svn != "") {
       v_version << " (svn " + v_svn + ")";
     }
   }
-  
+
   return v_version.str();
 }
 

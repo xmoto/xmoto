@@ -24,16 +24,15 @@ SomersaultCounter::SomersaultCounter() {
   init();
 }
 
-SomersaultCounter::~SomersaultCounter() {
-}
+SomersaultCounter::~SomersaultCounter() {}
 
 void SomersaultCounter::init() {
   m_last_initialized = false;
-  m_last_state   = 0;
-  m_min_move     = 0;
-  m_max_move     = 0;
+  m_last_state = 0;
+  m_min_move = 0;
+  m_max_move = 0;
   m_current_move = 0;
-  m_nbClockwise  = 0;
+  m_nbClockwise = 0;
   m_nbCounterClockwise = 0;
 }
 
@@ -50,43 +49,43 @@ int SomersaultCounter::getTotal() {
 }
 
 bool SomersaultCounter::update(double p_angle, bool &bCounterclock) {
-  bool   v_res;
+  bool v_res;
   double v_diff;
   v_res = false;
 
   /* update the last states */
-  if(m_last_initialized == false) {
-    m_last_state  = p_angle;
+  if (m_last_initialized == false) {
+    m_last_state = p_angle;
     m_last_initialized = true;
     return false;
   }
 
   v_diff = m_last_state - p_angle;
   /* break the circle */
-  if(v_diff >= 3.14159f/2.0) {
+  if (v_diff >= 3.14159f / 2.0) {
     v_diff -= 2.0 * 3.14159f;
   } else {
-    if(v_diff <= -3.14159f/2.0) {
+    if (v_diff <= -3.14159f / 2.0) {
       v_diff += 2.0 * 3.14159f;
     }
   }
 
   /* update only if the state change (at some degrees) */
-  if(v_diff < 0.05 && v_diff > -0.05) {
+  if (v_diff < 0.05 && v_diff > -0.05) {
     return false;
   }
 
   m_current_move += v_diff;
   m_min_move = m_current_move < m_min_move ? m_current_move : m_min_move;
   m_max_move = m_current_move > m_max_move ? m_current_move : m_max_move;
-    
-  v_res = m_max_move - m_min_move >= 2*3.14159f;
 
-  //printf("min=%.2f, max=%.2f, diff=%.2f\n", m_min_move, m_max_move, v_diff);
+  v_res = m_max_move - m_min_move >= 2 * 3.14159f;
 
-  if(v_res) {
+  // printf("min=%.2f, max=%.2f, diff=%.2f\n", m_min_move, m_max_move, v_diff);
+
+  if (v_res) {
     /* increase number of somersaults */
-    if(v_diff > 0.0) {
+    if (v_diff > 0.0) {
       m_nbClockwise++;
       bCounterclock = true;
     } else {
@@ -95,8 +94,8 @@ bool SomersaultCounter::update(double p_angle, bool &bCounterclock) {
     }
 
     // reinit to detect a new one
-    m_min_move     = 0.0;
-    m_max_move     = 0.0;
+    m_min_move = 0.0;
+    m_max_move = 0.0;
     m_current_move = 0.0;
   }
 

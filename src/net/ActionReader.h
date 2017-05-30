@@ -30,13 +30,14 @@ class NetAction;
 struct NetActionU;
 
 class ActionReader {
-  public:
+public:
   ActionReader();
   ~ActionReader();
 
-  // return true if a packet is returned ; you should reread to get more action (socket in not read while true is returned)
-  bool TCPReadAction(TCPsocket* i_tcpsd, NetActionU* o_netAction);
-  static void UDPReadAction(Uint8* data, int len, NetActionU* o_netAction);
+  // return true if a packet is returned ; you should reread to get more action
+  // (socket in not read while true is returned)
+  bool TCPReadAction(TCPsocket *i_tcpsd, NetActionU *o_netAction);
+  static void UDPReadAction(Uint8 *data, int len, NetActionU *o_netAction);
 
   static void logStats();
 
@@ -49,13 +50,15 @@ class ActionReader {
   static unsigned int m_UDPPacketsSizeReceived;
   /* ***** */
 
-  private:
+private:
   unsigned int m_tcpPacketOffset;
   bool m_tcpNotEnoughData;
   char m_tcpBuffer[XM_MAX_PACKET_SIZE];
   bool m_tcpPossiblyInBuffer; // an action is possibly in the buffer
 
-  static unsigned int getSubPacketSize(void* data, unsigned int len, unsigned int& o_cmdStart);
+  static unsigned int getSubPacketSize(void *data,
+                                       unsigned int len,
+                                       unsigned int &o_cmdStart);
 };
 
 #endif

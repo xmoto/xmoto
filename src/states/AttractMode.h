@@ -41,7 +41,7 @@ public:
 
 protected:
   bool m_inAttractMode;
-  int  m_quitKey;
+  int m_quitKey;
 };
 
 #endif

@@ -25,34 +25,50 @@
 #include <vector>
 
 class UIConsoleHook {
- public:
+public:
   UIConsoleHook();
   virtual ~UIConsoleHook();
 
-  virtual void exec(const std::string& i_cmd) = 0;
+  virtual void exec(const std::string &i_cmd) = 0;
   virtual void exit() = 0;
 };
 
 class UIConsole : public UIWindow {
- public:
-  UIConsole(UIWindow *pParent, std::vector<std::string>& completionList, int x=0, int y=0, std::string Caption="", int nWidth=0, int nHeight=0);
-  UIConsole(UIWindow *pParent, int x=0, int y=0, std::string Caption="", int nWidth=0, int nHeight=0);
+public:
+  UIConsole(UIWindow *pParent,
+            std::vector<std::string> &completionList,
+            int x = 0,
+            int y = 0,
+            std::string Caption = "",
+            int nWidth = 0,
+            int nHeight = 0);
+  UIConsole(UIWindow *pParent,
+            int x = 0,
+            int y = 0,
+            std::string Caption = "",
+            int nWidth = 0,
+            int nHeight = 0);
 
   ~UIConsole();
 
-  void setHook(UIConsoleHook* i_hook);
+  void setHook(UIConsoleHook *i_hook);
   virtual void paint();
   virtual bool offerActivation();
-  virtual bool keyDown(int nKey, SDLMod mod, const std::string& i_utf8Char);
-  void giveAnswer(const std::string& i_line);
-  void reset(const std::string& i_cmd = ""); /* command to run at startup */
-  void execCommand(const std::string& i_action);
-  void addCompletionCommand(const std::string& i_cmd);
+  virtual bool keyDown(int nKey, SDLMod mod, const std::string &i_utf8Char);
+  void giveAnswer(const std::string &i_line);
+  void reset(const std::string &i_cmd = ""); /* command to run at startup */
+  void execCommand(const std::string &i_action);
+  void addCompletionCommand(const std::string &i_cmd);
 
- private:
-  void initConsole(UIWindow *pParent, int x, int y, std::string Caption, int nWidth, int nHeight);
+private:
+  void initConsole(UIWindow *pParent,
+                   int x,
+                   int y,
+                   std::string Caption,
+                   int nWidth,
+                   int nHeight);
 
-  UIConsoleHook* m_hook;
+  UIConsoleHook *m_hook;
   int m_cursorChar;
   std::vector<std::string> m_lines;
   std::vector<std::string> m_history;
@@ -61,14 +77,13 @@ class UIConsole : public UIWindow {
   std::string m_lastEdit;
   bool m_waitAnswer;
 
-  void changeLine(const std::string& i_action);
-  std::string actionFromLine(const std::string& i_line);
-  void addNewLine(const std::string& i_line);
-  void addHistory(const std::string& i_action);
-  void execLine(const std::string& i_line);
-  bool execInternal(const std::string& i_action);
+  void changeLine(const std::string &i_action);
+  std::string actionFromLine(const std::string &i_line);
+  void addNewLine(const std::string &i_line);
+  void addHistory(const std::string &i_action);
+  void execLine(const std::string &i_line);
+  bool execInternal(const std::string &i_action);
   void completeCommand();
 };
 
 #endif
-

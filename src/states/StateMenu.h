@@ -27,28 +27,27 @@ class UIRoot;
 class GameApp;
 
 class StateMenu : public GameState {
- public:
-  StateMenu(bool drawStateBehind,
-	    bool updateStatesBehind);
+public:
+  StateMenu(bool drawStateBehind, bool updateStatesBehind);
   virtual ~StateMenu();
-  
+
   virtual void enter();
   virtual void leave();
   /* called when a new state is pushed or poped on top of the
      current one*/
   virtual void enterAfterPop();
   virtual void leaveAfterPush();
-  
+
   virtual bool update();
   virtual bool render();
   /* input */
-  virtual void xmKey(InputEventType i_type, const XMKey& i_xmkey);
+  virtual void xmKey(InputEventType i_type, const XMKey &i_xmkey);
 
- protected:
+protected:
   virtual void checkEvents() = 0;
   UIRoot *m_GUI;
 
- private:
+private:
 };
 
 #endif

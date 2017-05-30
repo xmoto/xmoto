@@ -19,25 +19,20 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 =============================================================================*/
 
 #include "UpdateThemesListThread.h"
-#include "helpers/Log.h"
-#include "xmoto/GameText.h"
-#include "xmoto/Game.h"
-#include "common/XMSession.h"
-#include "states/StateManager.h"
-#include "common/WWW.h"
 #include "common/VFileIO.h"
+#include "common/WWW.h"
+#include "common/XMSession.h"
+#include "helpers/Log.h"
+#include "states/StateManager.h"
+#include "xmoto/Game.h"
+#include "xmoto/GameText.h"
 
 UpdateThemesListThread::UpdateThemesListThread()
-  : XMThread("UTLT")
-{
-}
+  : XMThread("UTLT") {}
 
-UpdateThemesListThread::~UpdateThemesListThread()
-{
-}
+UpdateThemesListThread::~UpdateThemesListThread() {}
 
-int UpdateThemesListThread::realThreadFunction()
-{
+int UpdateThemesListThread::realThreadFunction() {
   setThreadCurrentOperation(GAMETEXT_DLTHEMESLISTCHECK);
   setThreadProgress(0);
 
@@ -46,8 +41,9 @@ int UpdateThemesListThread::realThreadFunction()
     setSafeKill(true);
     WebThemes::updateThemeList(m_pDb, this);
     setSafeKill(false);
-    StateManager::instance()->sendAsynchronousMessage(std::string("THEMES_UPDATED"));
-  } catch(Exception &e) {
+    StateManager::instance()->sendAsynchronousMessage(
+      std::string("THEMES_UPDATED"));
+  } catch (Exception &e) {
     /* file probably doesn't exist */
     LogWarning("Failed to analyse web-themes file");
     return 1;

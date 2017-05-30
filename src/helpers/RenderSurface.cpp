@@ -20,20 +20,19 @@
 
 #include "RenderSurface.h"
 
-RenderSurface::RenderSurface() {
-}
+RenderSurface::RenderSurface() {}
 
 RenderSurface::RenderSurface(Vector2i downleft, Vector2i upright) {
   update(downleft, upright);
 }
 
-void RenderSurface::update(Vector2i downleft, Vector2i upright){
+void RenderSurface::update(Vector2i downleft, Vector2i upright) {
   m_downleft = downleft;
   m_upright = upright;
   m_size = upright - downleft;
 }
 
-Vector2i& RenderSurface::size(){
+Vector2i &RenderSurface::size() {
   return m_size;
 }
 
@@ -45,10 +44,10 @@ int RenderSurface::getDispHeight() const {
   return m_size.y;
 }
 
-Vector2i& RenderSurface::downleft(){
+Vector2i &RenderSurface::downleft() {
   return m_downleft;
 }
 
-Vector2i& RenderSurface::upright(){
+Vector2i &RenderSurface::upright() {
   return m_upright;
 }

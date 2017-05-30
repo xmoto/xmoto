@@ -25,13 +25,14 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
 class StateSendReport : public StateUpdate {
 public:
-  StateSendReport(const std::string& i_author, const std::string& i_msg,
-		bool drawStateBehind    = true,
-		bool updateStatesBehind = false);
+  StateSendReport(const std::string &i_author,
+                  const std::string &i_msg,
+                  bool drawStateBehind = true,
+                  bool updateStatesBehind = false);
   virtual ~StateSendReport();
 
   void callAfterThreadFinished(int threadResult);
-  virtual void xmKey(InputEventType i_type, const XMKey& i_xmkey);
+  virtual void xmKey(InputEventType i_type, const XMKey &i_xmkey);
 
 protected:
   virtual void checkEvents() {}

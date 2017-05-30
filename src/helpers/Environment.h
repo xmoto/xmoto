@@ -25,15 +25,16 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include <vector>
 
 class Environment {
-  public:
+public:
   static void init();
   static void uninit();
 
-  static void set_variable(const std::string& i_variable, const std::string& i_value);
-  static std::string get_variable(const std::string& i_variable);
+  static void set_variable(const std::string &i_variable,
+                           const std::string &i_value);
+  static std::string get_variable(const std::string &i_variable);
 
-  private:
-  static std::vector<char*> m_chars;
+private:
+  static std::vector<char *> m_chars;
 };
 
 #endif

@@ -21,27 +21,26 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #ifndef __STATEWAITING_H__
 #define __STATEWAITING_H__
 
+#include "../thread/XMThread.h"
 #include "StateManager.h"
 #include "StateMenu.h"
-#include "../thread/XMThread.h"
 #include <string>
 
 class UIRoot;
 
 class StateWaiting : public StateMenu {
 public:
-  StateWaiting(bool drawStateBehind,
-	      bool updateStatesBehind);			 
+  StateWaiting(bool drawStateBehind, bool updateStatesBehind);
   virtual ~StateWaiting();
 
   virtual void enter();
   virtual void leave();
 
   virtual bool update();
-  virtual bool updateWhenUnvisible() {return true;}
+  virtual bool updateWhenUnvisible() { return true; }
 
   /* input */
-  virtual void xmKey(InputEventType i_type, const XMKey& i_xmkey);
+  virtual void xmKey(InputEventType i_type, const XMKey &i_xmkey);
 
   static void clean();
 
@@ -49,14 +48,14 @@ protected:
   virtual void updateGUI();
 
   // updated by the child class
-  int         m_progress;
+  int m_progress;
   std::string m_currentOperation;
   std::string m_currentMicroOperation;
 
 private:
   /* GUI */
-  static UIRoot* m_sGUI;
-  static void createGUIIfNeeded(RenderSurface* i_screen);
+  static UIRoot *m_sGUI;
+  static void createGUIIfNeeded(RenderSurface *i_screen);
 
   void init();
 };

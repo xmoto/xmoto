@@ -19,83 +19,76 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 =============================================================================*/
 
 #include "StateUpdate.h"
-#include "xmoto/Game.h"
+#include "StateMessageBox.h"
+#include "common/XMSession.h"
 #include "drawlib/DrawLib.h"
+#include "helpers/Log.h"
+#include "xmoto/Game.h"
 #include "xmoto/GameText.h"
 #include "xmoto/SysMessage.h"
-#include "common/XMSession.h"
-#include "StateMessageBox.h"
-#include "helpers/Log.h"
 
-StateUpdate::StateUpdate(bool drawStateBehind,
-			 bool updateStatesBehind):
-  StateWaiting(drawStateBehind,
-	       updateStatesBehind)
-{
-  m_name             = "StateUpdate";
-  m_threadStarted    = false;
-  m_threadFinished   = false;
-  m_pThread          = NULL;
-  m_msg              = "";
+StateUpdate::StateUpdate(bool drawStateBehind, bool updateStatesBehind)
+  : StateWaiting(drawStateBehind, updateStatesBehind) {
+  m_name = "StateUpdate";
+  m_threadStarted = false;
+  m_threadFinished = false;
+  m_pThread = NULL;
+  m_msg = "";
   m_messageOnSuccess = false;
   m_messageOnFailure = true;
   m_messageOnSuccessModal = true;
   m_messageOnFailureModal = true;
 }
 
-StateUpdate::~StateUpdate()
-{
-}
+StateUpdate::~StateUpdate() {}
 
-void StateUpdate::enter()
-{
+void StateUpdate::enter() {
   StateWaiting::enter();
 }
 
-void StateUpdate::leave()
-{
+void StateUpdate::leave() {
   StateWaiting::leave();
 }
 
-bool StateUpdate::update()
-{
-  if(StateWaiting::update() == false){
+bool StateUpdate::update() {
+  if (StateWaiting::update() == false) {
     return false;
   }
 
   // thread finished. we leave the state.
-  if(m_threadStarted == true && m_pThread->isThreadRunning() == false){
-    m_threadStarted  = false;
+  if (m_threadStarted == true && m_pThread->isThreadRunning() == false) {
+    m_threadStarted = false;
     m_threadFinished = true;
     int v_thread_res = m_pThread->waitForThreadEnd();
     callAfterThreadFinished(v_thread_res);
 
-    if(v_thread_res == 0) {
-      if(m_messageOnSuccess == true && m_msg != "") {
-	if(m_messageOnSuccessModal) {
-	  StateMessageBox* v_msgboxState = new StateMessageBox(this, m_msg, UI_MSGBOX_OK);
-	  v_msgboxState->setMsgBxId("SUCCESS");
-	  StateManager::instance()->pushState(v_msgboxState);
-	} else {
-	  SysMessage::instance()->displayInformation(m_msg);
-	  m_requestForEnd = true;
-	}
+    if (v_thread_res == 0) {
+      if (m_messageOnSuccess == true && m_msg != "") {
+        if (m_messageOnSuccessModal) {
+          StateMessageBox *v_msgboxState =
+            new StateMessageBox(this, m_msg, UI_MSGBOX_OK);
+          v_msgboxState->setMsgBxId("SUCCESS");
+          StateManager::instance()->pushState(v_msgboxState);
+        } else {
+          SysMessage::instance()->displayInformation(m_msg);
+          m_requestForEnd = true;
+        }
       } else {
-	m_requestForEnd = true;
+        m_requestForEnd = true;
       }
-    }
-    else {
-      if(m_messageOnFailure == true && m_msg != "") {
-	if(m_messageOnFailureModal) {
-	  StateMessageBox* v_msgboxState = new StateMessageBox(this, m_msg, UI_MSGBOX_OK);
-	  v_msgboxState->setMsgBxId("ERROR");
-	  StateManager::instance()->pushState(v_msgboxState);
-	} else {
-	  SysMessage::instance()->displayError(m_msg);
-	  m_requestForEnd = true;
-	}
+    } else {
+      if (m_messageOnFailure == true && m_msg != "") {
+        if (m_messageOnFailureModal) {
+          StateMessageBox *v_msgboxState =
+            new StateMessageBox(this, m_msg, UI_MSGBOX_OK);
+          v_msgboxState->setMsgBxId("ERROR");
+          StateManager::instance()->pushState(v_msgboxState);
+        } else {
+          SysMessage::instance()->displayError(m_msg);
+          m_requestForEnd = true;
+        }
       } else {
-	m_requestForEnd = true;
+        m_requestForEnd = true;
       }
     }
 
@@ -104,8 +97,8 @@ bool StateUpdate::update()
     return true;
   }
 
-  if(m_threadStarted == false && m_threadFinished == false){
-    if(callBeforeLaunchingThread() == false){
+  if (m_threadStarted == false && m_threadFinished == false) {
+    if (callBeforeLaunchingThread() == false) {
       return true;
     }
 
@@ -115,39 +108,34 @@ bool StateUpdate::update()
     LogInfo("thread started");
   }
 
-  if(m_threadStarted == true){
+  if (m_threadStarted == true) {
     // update the frame with the thread informations only when progress change
     // to avoid spending tooo much time waiting for mutexes.
     int progress = m_pThread->getThreadProgress();
-    if(progress != m_progress){
-      m_progress              = progress;
-      m_currentOperation      = m_pThread->getThreadCurrentOperation();
+    if (progress != m_progress) {
+      m_progress = progress;
+      m_currentOperation = m_pThread->getThreadCurrentOperation();
       m_currentMicroOperation = m_pThread->getThreadCurrentMicroOperation();
 
       updateGUI();
     }
   }
 
-  return true;  
-}
-
-void StateUpdate::xmKey(InputEventType i_type, const XMKey& i_xmkey) {
-}
-
-void StateUpdate::callAfterThreadFinished(int threadResult)
-{
-}
-
-bool StateUpdate::callBeforeLaunchingThread()
-{
   return true;
 }
 
-void StateUpdate::sendFromMessageBox(const std::string& i_id,
-		       UIMsgBoxButton i_button,
-		       const std::string& i_input)
-{
-  if(i_id == "ERROR" || i_id == "SUCCESS") {
+void StateUpdate::xmKey(InputEventType i_type, const XMKey &i_xmkey) {}
+
+void StateUpdate::callAfterThreadFinished(int threadResult) {}
+
+bool StateUpdate::callBeforeLaunchingThread() {
+  return true;
+}
+
+void StateUpdate::sendFromMessageBox(const std::string &i_id,
+                                     UIMsgBoxButton i_button,
+                                     const std::string &i_input) {
+  if (i_id == "ERROR" || i_id == "SUCCESS") {
     m_requestForEnd = true;
   }
 
@@ -156,5 +144,4 @@ void StateUpdate::sendFromMessageBox(const std::string& i_id,
   }
 }
 
-void StateUpdate::onThreadFinishes(bool i_res) {
-}
+void StateUpdate::onThreadFinishes(bool i_res) {}

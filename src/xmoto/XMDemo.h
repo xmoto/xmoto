@@ -26,18 +26,18 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 class ProxySettings;
 
 class XMDemo {
-  public:
+public:
   XMDemo(const std::string i_demoFile);
   ~XMDemo();
 
-  void getLevel(ProxySettings* i_proxy);
-  void getReplay(ProxySettings* i_proxy);
+  void getLevel(ProxySettings *i_proxy);
+  void getReplay(ProxySettings *i_proxy);
   void destroyFiles();
 
-  std::string levelFile()  const;
+  std::string levelFile() const;
   std::string replayFile() const;
 
-  private:
+private:
   std::string m_levelUrl;
   std::string m_replayUrl;
   std::string m_levelFile;

@@ -25,36 +25,40 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "StateMenu.h"
 
 class StateOptions : public StateMenu {
-  public:
-  StateOptions(bool drawStateBehind     = true,
-		bool updateStatesBehind = false);
+public:
+  StateOptions(bool drawStateBehind = true, bool updateStatesBehind = false);
   virtual ~StateOptions();
 
   virtual void enter();
-  static void clean();  
+  static void clean();
 
-  virtual void sendFromMessageBox(const std::string& i_id, UIMsgBoxButton i_button, const std::string& i_input);
+  virtual void sendFromMessageBox(const std::string &i_id,
+                                  UIMsgBoxButton i_button,
+                                  const std::string &i_input);
   virtual void executeOneCommand(std::string cmd, std::string args);
 
-  protected:
+protected:
   virtual void checkEvents();
 
-  private:
+private:
   /* GUI */
-  static UIRoot* m_sGUI;
-  static void createGUIIfNeeded(RenderSurface* i_screen);
+  static UIRoot *m_sGUI;
+  static void createGUIIfNeeded(RenderSurface *i_screen);
 
-  static UIWindow* makeWindowOptions_general(UIWindow* i_parent);
-  static UIWindow* makeWindowOptions_video(UIWindow* i_parent);
-  static UIWindow* makeWindowOptions_audio(UIWindow* i_parent);
-  static UIWindow* makeWindowOptions_controls(UIWindow* i_parent);
-  static UIWindow* makeWindowOptions_rooms(UIWindow* i_parent);
-  static UIWindow* makeWindowOptions_ghosts(UIWindow* i_parent);
-  static UIWindow* makeWindowOptions_db(UIWindow* i_parent);
-  static UIWindow* makeWindowOptions_language(UIWindow* i_parent);
-  static UIWindow* makeRoomTab(UIWindow* i_parent, unsigned int i_number);
-  static UIWindow* makeWindowOptions_infos(UIWindow* i_parent);
-  static void makeWindowOptions_infos_line(UIWindow* i_parent, const std::string& i_name, const std::string& i_value, int hpos);
+  static UIWindow *makeWindowOptions_general(UIWindow *i_parent);
+  static UIWindow *makeWindowOptions_video(UIWindow *i_parent);
+  static UIWindow *makeWindowOptions_audio(UIWindow *i_parent);
+  static UIWindow *makeWindowOptions_controls(UIWindow *i_parent);
+  static UIWindow *makeWindowOptions_rooms(UIWindow *i_parent);
+  static UIWindow *makeWindowOptions_ghosts(UIWindow *i_parent);
+  static UIWindow *makeWindowOptions_db(UIWindow *i_parent);
+  static UIWindow *makeWindowOptions_language(UIWindow *i_parent);
+  static UIWindow *makeRoomTab(UIWindow *i_parent, unsigned int i_number);
+  static UIWindow *makeWindowOptions_infos(UIWindow *i_parent);
+  static void makeWindowOptions_infos_line(UIWindow *i_parent,
+                                           const std::string &i_name,
+                                           const std::string &i_value,
+                                           int hpos);
 
   void updateOptions();
   void createThemesList(UIList *pList);
@@ -73,7 +77,7 @@ class StateOptions : public StateMenu {
   void updateJoysticksStrings();
   void updateServerStrings();
 
-  void setInputKey(const std::string& i_strKey, const std::string& i_key);
+  void setInputKey(const std::string &i_strKey, const std::string &i_key);
 };
 
 #endif

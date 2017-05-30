@@ -27,47 +27,47 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
   Exceptions
   ===========================================================================*/
 class Exception {
-  public:
-  Exception(const std::string &iMsg){
-   setMsg(iMsg);
-  }
+public:
+  Exception(const std::string &iMsg) { setMsg(iMsg); }
 
-  Exception(const char *pc){
-    setMsg(std::string(pc));
-  }
+  Exception(const char *pc) { setMsg(std::string(pc)); }
 
-  std::string &getMsg() {return m_Msg;}
+  std::string &getMsg() { return m_Msg; }
 
-  protected:
-  void setMsg(std::string message){ 
-      m_Msg = message;
-      // printf("Exception :  %s \n",message.c_str());
+protected:
+  void setMsg(std::string message) {
+    m_Msg = message;
+    // printf("Exception :  %s \n",message.c_str());
   };
-  private: 
+
+private:
   std::string m_Msg;
 };
-  
- 
+
 class SyntaxError : public Exception {
- public:
+public:
   SyntaxError(const std::string &iMsg)
     : Exception(iMsg) {}
   SyntaxError(const char *pc)
     : Exception(std::string(pc)) {}
- private:
+
+private:
 };
 
 class InvalidSystemKeyException : public Exception {
- public:
-  InvalidSystemKeyException() : Exception("Invalid Key") {}
- private:
+public:
+  InvalidSystemKeyException()
+    : Exception("Invalid Key") {}
+
+private:
 };
 
 class DisconnectedException : public Exception {
- public:
-  DisconnectedException() : Exception("Disconnected") {}
- private:
+public:
+  DisconnectedException()
+    : Exception("Disconnected") {}
+
+private:
 };
 
 #endif
-

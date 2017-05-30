@@ -21,22 +21,21 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #ifndef __CRCHASH_H__
 #define __CRCHASH_H__
 
-  /*===========================================================================
-  Static CRC32 class
-  ===========================================================================*/
-  class CRC32 {
-    public:
-      /* Methods */
-      static unsigned long computeCRC32(const unsigned char *pcData,int nDataLen);
-    
-    private:
-      /* Helper methods and data */
-      static unsigned int m_nCRCTable[256];
-      static bool m_bCRCInit;
-      
-      static void _InitCRC32(void);
-      static unsigned int _ReflectCRC32(unsigned int nData,unsigned char cBits);
-  };
+/*===========================================================================
+Static CRC32 class
+===========================================================================*/
+class CRC32 {
+public:
+  /* Methods */
+  static unsigned long computeCRC32(const unsigned char *pcData, int nDataLen);
+
+private:
+  /* Helper methods and data */
+  static unsigned int m_nCRCTable[256];
+  static bool m_bCRCInit;
+
+  static void _InitCRC32(void);
+  static unsigned int _ReflectCRC32(unsigned int nData, unsigned char cBits);
+};
 
 #endif
-

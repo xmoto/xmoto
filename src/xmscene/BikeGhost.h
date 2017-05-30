@@ -24,12 +24,13 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "Bike.h"
 
 class Ghost : public Biker {
-  public:
-  Ghost(PhysicsSettings* i_physicsSettings,
-	bool i_engineSound,
-	Theme *i_theme, BikerTheme* i_bikerTheme,
-	const TColor& i_colorFilter,
-	const TColor& i_uglyColorFilter);
+public:
+  Ghost(PhysicsSettings *i_physicsSettings,
+        bool i_engineSound,
+        Theme *i_theme,
+        BikerTheme *i_bikerTheme,
+        const TColor &i_colorFilter,
+        const TColor &i_uglyColorFilter);
   ~Ghost();
 
   virtual bool diffToPlayerAvailable() const { return true; };
@@ -37,37 +38,39 @@ class Ghost : public Biker {
   virtual bool isNetGhost() const { return false; };
   float diffToPlayer() const;
   virtual bool getRenderBikeFront();
-  void setInfo(const std::string& i_info);
+  void setInfo(const std::string &i_info);
 
   void setReference(bool i_value);
   bool isReference() const;
-  
-  protected:
+
+protected:
   float m_diffToPlayer; /* time diff between the ghost and the player */
   std::string m_info;
   bool m_reference;
 };
 
 class FileGhost : public Ghost {
- public:
+public:
   FileGhost(std::string i_replayFile,
-	    PhysicsSettings* i_physicsSettings,
-	    bool i_isActiv,
-	    bool i_engineSound,
-	    Theme *i_theme,
-	    BikerTheme* i_bikerTheme,
-	    const TColor& i_colorFilter,
-	    const TColor& i_uglyColorFilter);
+            PhysicsSettings *i_physicsSettings,
+            bool i_isActiv,
+            bool i_engineSound,
+            Theme *i_theme,
+            BikerTheme *i_bikerTheme,
+            const TColor &i_colorFilter,
+            const TColor &i_uglyColorFilter);
   ~FileGhost();
 
   std::string playerName();
   std::string levelId();
   int getFinishTime();
-  void initLastToTakeEntities(Level* i_level);
+  void initLastToTakeEntities(Level *i_level);
   virtual void updateDiffToPlayer(std::vector<float> &i_lastToTakeEntities);
-  virtual void updateToTime(int i_time, int i_timeStep,
-			    CollisionSystem *i_collisionSystem, Vector2f i_gravity,
-			    Scene *i_motogame);
+  virtual void updateToTime(int i_time,
+                            int i_timeStep,
+                            CollisionSystem *i_collisionSystem,
+                            Vector2f i_gravity,
+                            Scene *i_motogame);
   virtual bool isNetGhost() const { return false; };
   std::string getDescription() const;
   std::string getQuickDescription() const;
@@ -76,45 +79,52 @@ class FileGhost : public Ghost {
   float getBikeLinearVel();
   float getTorsoVelocity();
   double getAngle();
-  Replay* getReplay() { return m_replay; };
+  Replay *getReplay() { return m_replay; };
 
-  virtual void initToPosition(Vector2f i_position, DriveDir i_direction, Vector2f i_gravity);
+  virtual void initToPosition(Vector2f i_position,
+                              DriveDir i_direction,
+                              Vector2f i_gravity);
 
- protected:
-  Replay* m_replay;
+protected:
+  Replay *m_replay;
 
- private:
+private:
   std::vector<float> m_lastToTakeEntities;
   bool m_isActiv;
   double m_linearVelocity;
-  bool m_teleportationOccured; // true if the teleportation occured since the last update
+  bool m_teleportationOccured; // true if the teleportation occured since the
+  // last update
 
- /* because we have not the real one, but the one before and the one after */
- std::vector<BikeState*> m_ghostBikeStates;
+  /* because we have not the real one, but the one before and the one after */
+  std::vector<BikeState *> m_ghostBikeStates;
 
- void execReplayEvents(int i_time, Scene *i_motogame);
-  
-  //stuff needed for GhostTrail
- PhysicsSettings* m_pyhsicsSettings;
+  void execReplayEvents(int i_time, Scene *i_motogame);
+
+  // stuff needed for GhostTrail
+  PhysicsSettings *m_pyhsicsSettings;
 };
 
 class ReplayBiker : public FileGhost {
- public:
-  ReplayBiker(std::string i_replayFile, PhysicsSettings* i_physicsSettings,
-	      bool i_engineSound,
-	      Theme *i_theme, BikerTheme* i_bikerTheme);
+public:
+  ReplayBiker(std::string i_replayFile,
+              PhysicsSettings *i_physicsSettings,
+              bool i_engineSound,
+              Theme *i_theme,
+              BikerTheme *i_bikerTheme);
   std::string getQuickDescription() const;
   std::string getVeryQuickDescription() const;
- private:
+
+private:
 };
 
 class NetGhost : public Ghost {
- public:
-  NetGhost(PhysicsSettings* i_physicsSettings,
-	   bool i_engineSound,
-	   Theme *i_theme, BikerTheme* i_bikerTheme,
-	   const TColor& i_colorFilter,
-	   const TColor& i_uglyColorFilter);
+public:
+  NetGhost(PhysicsSettings *i_physicsSettings,
+           bool i_engineSound,
+           Theme *i_theme,
+           BikerTheme *i_bikerTheme,
+           const TColor &i_colorFilter,
+           const TColor &i_uglyColorFilter);
   ~NetGhost();
 
   virtual bool diffToPlayerAvailable() const { return false; };
@@ -127,7 +137,7 @@ class NetGhost : public Ghost {
   float getBikeLinearVel();
   float getTorsoVelocity();
   double getAngle();
- 
- private:
+
+private:
 };
 #endif

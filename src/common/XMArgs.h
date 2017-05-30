@@ -24,24 +24,24 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include <string>
 
 class XMArguments {
-  public:
+public:
   XMArguments();
   void parse(int i_argc, char **i_argv);
-  void help(const std::string& i_cmd);
+  void help(const std::string &i_cmd);
 
   bool isOptPack() const;
   std::string getOpt_pack_bin() const;
   std::string getOpt_pack_dir() const;
   bool isOptUnPack() const;
-  std::string getOpt_unpack_bin()    const;
-  std::string getOpt_unpack_dir()    const;
-  bool        getOpt_unpack_noList() const;
+  std::string getOpt_unpack_bin() const;
+  std::string getOpt_unpack_dir() const;
+  bool getOpt_unpack_noList() const;
   bool isOptVerbose() const;
   bool isOptRes() const;
-  int  getOpt_res_dispWidth() const;
-  int  getOpt_res_dispHeight() const;
+  int getOpt_res_dispWidth() const;
+  int getOpt_res_dispHeight() const;
   bool isOptBpp() const;
-  int  getOpt_bpp_value() const;
+  int getOpt_bpp_value() const;
   bool isOptWindowed() const;
   bool isOptFs() const;
   bool isOptNoExts() const;
@@ -104,7 +104,7 @@ class XMArguments {
   bool isOptAdminMode() const;
   bool isOptBuildQueries() const;
 
-  private:
+private:
   /* pack options */
   bool m_opt_pack;
   std::string m_pack_bin;
@@ -143,7 +143,7 @@ class XMArguments {
   bool m_opt_debug;
   bool m_opt_sqlTrace;
   bool m_opt_fps;
-  bool m_opt_gdebug;  
+  bool m_opt_gdebug;
   std::string m_gdebug_file;
 
   /* replays */
@@ -183,9 +183,11 @@ class XMArguments {
   int m_opt_videoRecordingDivision_value;
   bool m_opt_videoRecordingFramerate;
   int m_opt_videoRecordingFramerate_value;
-  bool m_opt_videoRecordingStartTime; /* value in cent of seconds, a negativ value for always */
+  bool m_opt_videoRecordingStartTime; /* value in cent of seconds, a negativ
+                                         value for always */
   int m_opt_videoRecordingStartTime_value;
-  bool m_opt_videoRecordingEndTime; /* value in cent of seconds, a negativ value for always */
+  bool m_opt_videoRecordingEndTime; /* value in cent of seconds, a negativ value
+                                       for always */
   int m_opt_videoRecordingEndTime_value;
   bool m_opt_hidePlayingInformation;
 
@@ -195,7 +197,7 @@ class XMArguments {
   /* server */
   bool m_opt_serverOnly;
   bool m_opt_serverPort;
-  int  m_opt_serverPort_value;
+  int m_opt_serverPort_value;
   bool m_opt_serverAdminPassword;
   std::string m_opt_serverAdminPassword_value;
 
@@ -204,7 +206,7 @@ class XMArguments {
 
   /* specific */
   bool m_opt_noDBDirsCheck;
-  
+
   /* default config replacement for new profiles */
   bool m_opt_default_theme;
   std::string m_opt_default_theme_value;
@@ -220,4 +222,3 @@ class XMArguments {
 };
 
 #endif
-

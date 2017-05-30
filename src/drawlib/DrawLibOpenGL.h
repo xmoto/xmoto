@@ -25,18 +25,20 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "include/xm_OpenGL.h"
 
 class DrawLibOpenGL : public DrawLib {
-  public:
+public:
   DrawLibOpenGL();
   virtual ~DrawLibOpenGL();
 
-  virtual void init(unsigned int nDispWidth, unsigned int nDispHeight, unsigned int nDispBPP,
-		    bool bWindowed);
+  virtual void init(unsigned int nDispWidth,
+                    unsigned int nDispHeight,
+                    unsigned int nDispBPP,
+                    bool bWindowed);
   virtual void unInit();
 
   virtual void glVertexSP(float x, float y);
   virtual void glVertex(float x, float y);
-  
-  //texture coordinate
+
+  // texture coordinate
   virtual void glTexCoord(float x, float y);
   virtual void setColor(Color color);
 
@@ -45,25 +47,27 @@ class DrawLibOpenGL : public DrawLib {
    * the value may be NULL to disable texture
    * every end draw will reset the texture to NULL
    **/
-  virtual void setTexture(Texture* texture, BlendMode blendMode);
+  virtual void setTexture(Texture *texture, BlendMode blendMode);
   virtual void setBlendMode(BlendMode blendMode);
 
   /**
    * enables clipping and sets the clipping borders
    **/
   virtual void setClipRect(int x, int y, unsigned int w, unsigned int h);
-  virtual void setClipRect(SDL_Rect* i_clip_rect);
+  virtual void setClipRect(SDL_Rect *i_clip_rect);
   virtual void setScale(float x, float y);
   virtual void setTranslate(float x, float y);
   virtual void setMirrorY();
   virtual void setRotateZ(float i_angle);
   virtual void setLineWidth(float width);
-  
+
   /**
    * returns the current screen clipping
    **/
-  virtual void getClipRect(int *o_px, int *o_py, int *o_pnWidth,
-			   int *o_pnHeight);
+  virtual void getClipRect(int *o_px,
+                           int *o_py,
+                           int *o_pnWidth,
+                           int *o_pnHeight);
 
   /**
    * Start drawing ... used in combination with glVertex
@@ -74,21 +78,27 @@ class DrawLibOpenGL : public DrawLib {
    * End draw
    **/
   virtual void endDraw();
-  virtual void endDrawKeepProperties(); /* to keep textures, ... to render several times the same entity fastly */
-  virtual void removePropertiesAfterEnd(); /* remove properties endDraw = endDrawKeepProperties + removePropertiesAfterEnd */
+  virtual void endDrawKeepProperties(); /* to keep textures, ... to render
+                                           several times the same entity fastly
+                                           */
+  virtual void removePropertiesAfterEnd(); /* remove properties endDraw =
+                                              endDrawKeepProperties +
+                                              removePropertiesAfterEnd */
 
   /**
    * Clears the screen with the configured background
    **/
   virtual void clearGraphics();
-  
+
   /**
    * Flush the graphics. In memory graphics will now be displayed
    **/
   virtual void flushGraphics();
-  
-  virtual FontManager* getFontManager(const std::string &i_fontFile, unsigned int i_fontSize, unsigned int i_fixedFontSize = 0);
-  
+
+  virtual FontManager *getFontManager(const std::string &i_fontFile,
+                                      unsigned int i_fontSize,
+                                      unsigned int i_fixedFontSize = 0);
+
   virtual Img *grabScreen(int i_reduce = 1);
   virtual bool isExtensionSupported(std::string Ext);
 
@@ -117,7 +127,7 @@ class DrawLibOpenGL : public DrawLib {
   PFNGLGETFRAMEBUFFERATTACHMENTPARAMETERIVEXTPROC
   glGetFramebufferAttachmentParameterivEXT;
   PFNGLGENERATEMIPMAPEXTPROC glGenerateMipmapEXT;
-  
+
   /* Extensions (for shaders) */
   PFNGLBINDATTRIBLOCATIONARBPROC glBindAttribLocationARB;
   PFNGLGETACTIVEATTRIBARBPROC glGetActiveAttribARB;

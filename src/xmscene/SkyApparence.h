@@ -21,44 +21,44 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #ifndef __SKYAPPARENCE_H__
 #define __SKYAPPARENCE_H__
 
-#include <string>
 #include "helpers/Color.h"
-  
-  class SkyApparence {
-    public:
-	SkyApparence();
-    ~SkyApparence();
-    
-    std::string Texture() const;
-    std::string BlendTexture() const;
-    float Zoom() const;
-    float Offset() const;
-    const TColor& TextureColor() const;
-    bool Drifted() const;
-    float DriftZoom() const;
-    const TColor& DriftTextureColor() const;
-    
-    void setTexture(std::string i_texture);
-    void setBlendTexture(std::string i_texture);
-    void setZoom(float i_zoom);
-    void setOffset(float i_offset);
-    void setTextureColor(const TColor& i_color);
-    void setDrifted(bool i_drifted);
-    void setDriftZoom(float i_driftZoom);
-    void setDriftTextureColor(const TColor& i_driftedColor);
-    
-    void setOldXmotoValuesFromTextureName();
-    void reInit();
-    
-    private:
-    std::string                 m_texture;
-    std::string                 m_blendTexture;
-    float  			m_zoom;
-    float  			m_offset;
-    TColor 			m_color;
-    float  			m_driftZoom;
-    TColor 			m_driftColor;
-    bool   			m_drifted;
-  };
+#include <string>
+
+class SkyApparence {
+public:
+  SkyApparence();
+  ~SkyApparence();
+
+  std::string Texture() const;
+  std::string BlendTexture() const;
+  float Zoom() const;
+  float Offset() const;
+  const TColor &TextureColor() const;
+  bool Drifted() const;
+  float DriftZoom() const;
+  const TColor &DriftTextureColor() const;
+
+  void setTexture(std::string i_texture);
+  void setBlendTexture(std::string i_texture);
+  void setZoom(float i_zoom);
+  void setOffset(float i_offset);
+  void setTextureColor(const TColor &i_color);
+  void setDrifted(bool i_drifted);
+  void setDriftZoom(float i_driftZoom);
+  void setDriftTextureColor(const TColor &i_driftedColor);
+
+  void setOldXmotoValuesFromTextureName();
+  void reInit();
+
+private:
+  std::string m_texture;
+  std::string m_blendTexture;
+  float m_zoom;
+  float m_offset;
+  TColor m_color;
+  float m_driftZoom;
+  TColor m_driftColor;
+  bool m_drifted;
+};
 
 #endif

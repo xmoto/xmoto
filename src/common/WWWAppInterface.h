@@ -25,32 +25,32 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
 #include <string>
 
-  class WWWAppInterface {
-  public:  
-    WWWAppInterface() {m_cancel_as_soon_as_possible=false;}
-    virtual ~WWWAppInterface() {}
-    
-    /* Task management */
-    virtual void setTaskProgress(float p_percent) = 0;
+class WWWAppInterface {
+public:
+  WWWAppInterface() { m_cancel_as_soon_as_possible = false; }
+  virtual ~WWWAppInterface() {}
 
-    /* Data interface */
-    void setCancelAsSoonAsPossible() {m_cancel_as_soon_as_possible = true;}
-    bool isCancelAsSoonAsPossible() {return m_cancel_as_soon_as_possible;}
+  /* Task management */
+  virtual void setTaskProgress(float p_percent) = 0;
 
-    void clearCancelAsSoonAsPossible() {m_cancel_as_soon_as_possible = false;}
+  /* Data interface */
+  void setCancelAsSoonAsPossible() { m_cancel_as_soon_as_possible = true; }
+  bool isCancelAsSoonAsPossible() { return m_cancel_as_soon_as_possible; }
 
-    /* p_isNew is true if it's a new level, false if it's just an update */
-  virtual void setBeingDownloadedInformation(const std::string &p_information,bool p_isNew=true) {}
+  void clearCancelAsSoonAsPossible() { m_cancel_as_soon_as_possible = false; }
 
-    /* Ask the user whether he want a level to be updated */
-  virtual bool shouldLevelBeUpdated(const std::string &LevelID) {return false;};
+  /* p_isNew is true if it's a new level, false if it's just an update */
+  virtual void setBeingDownloadedInformation(const std::string &p_information,
+                                             bool p_isNew = true) {}
 
-
-
-  private:
-    /* Data */
-    bool m_cancel_as_soon_as_possible;
+  /* Ask the user whether he want a level to be updated */
+  virtual bool shouldLevelBeUpdated(const std::string &LevelID) {
+    return false;
   };
 
-#endif
+private:
+  /* Data */
+  bool m_cancel_as_soon_as_possible;
+};
 
+#endif

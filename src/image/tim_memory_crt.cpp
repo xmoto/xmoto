@@ -19,14 +19,14 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 =============================================================================*/
 
 /* tim_memory_crt.cpp
- * 
+ *
  * CRT memory driver.
  */
 
 #if defined(__FreeBSD__) || (defined(__APPLE__) && defined(__MACH__))
-  #include <stdlib.h>
+#include <stdlib.h>
 #else
-  #include <malloc.h>
+#include <malloc.h>
 #endif
 
 #include "tim.h"
@@ -36,24 +36,22 @@ Memory system - Standard CRT
 ==============================================================================*/
 
 void *tim_crt_alloc(int nSize) {
-	/* Allocate memory using malloc() */
-	return malloc(nSize);
+  /* Allocate memory using malloc() */
+  return malloc(nSize);
 }
 
-void *tim_crt_realloc(void *pvBlock,int nSize) {
-	/* Re-allocate memory using realloc() */
-	return realloc(pvBlock,nSize);
+void *tim_crt_realloc(void *pvBlock, int nSize) {
+  /* Re-allocate memory using realloc() */
+  return realloc(pvBlock, nSize);
 }
 
 void tim_crt_free(void *pvBlock) {
-	/* Free memory using free() */
-	free(pvBlock);
+  /* Free memory using free() */
+  free(pvBlock);
 }
 
 /*==============================================================================
 Globals
 ==============================================================================*/
 
-tim_memory_t g_Memory_CRT={
-	tim_crt_alloc,tim_crt_realloc,tim_crt_free
-};
+tim_memory_t g_Memory_CRT = { tim_crt_alloc, tim_crt_realloc, tim_crt_free };

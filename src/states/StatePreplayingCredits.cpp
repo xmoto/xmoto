@@ -23,15 +23,16 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "StateManager.h"
 
 StatePreplayingCredits::StatePreplayingCredits(const std::string i_replay)
-: StatePreplayingReplay(i_replay, false) {
-    m_name  = "StatePreplayingCredit";
+  : StatePreplayingReplay(i_replay, false) {
+  m_name = "StatePreplayingCredit";
 }
 
-StatePreplayingCredits::~StatePreplayingCredits() {
-}
+StatePreplayingCredits::~StatePreplayingCredits() {}
 
 void StatePreplayingCredits::runPlaying() {
-  StateManager::instance()->replaceState(new StateCreditsMode(m_universe, m_renderer, m_replay, m_replayBiker), getStateId());
+  StateManager::instance()->replaceState(
+    new StateCreditsMode(m_universe, m_renderer, m_replay, m_replayBiker),
+    getStateId());
 }
 
 bool StatePreplayingCredits::shouldBeAnimated() const {

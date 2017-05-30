@@ -19,39 +19,40 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 =============================================================================*/
 
 #include "UpdateRoomsListThread.h"
-#include "helpers/Log.h"
-#include "xmoto/GameText.h"
-#include "xmoto/Game.h"
-#include "common/XMSession.h"
-#include "states/StateManager.h"
-#include "common/WWW.h"
 #include "common/VFileIO.h"
+#include "common/WWW.h"
+#include "common/XMSession.h"
+#include "helpers/Log.h"
+#include "states/StateManager.h"
+#include "xmoto/Game.h"
+#include "xmoto/GameText.h"
 
 UpdateRoomsListThread::UpdateRoomsListThread()
-  : XMThread("URLT")
-{
-}
+  : XMThread("URLT") {}
 
-UpdateRoomsListThread::~UpdateRoomsListThread()
-{
-}
+UpdateRoomsListThread::~UpdateRoomsListThread() {}
 
-int UpdateRoomsListThread::realThreadFunction()
-{
+int UpdateRoomsListThread::realThreadFunction() {
   setThreadCurrentOperation(GAMETEXT_DLROOMSLISTCHECK);
   setThreadProgress(0);
 
   try {
-    std::string v_destinationFile = XMFS::getUserDir(FDT_CACHE) + "/" + DEFAULT_WEBROOMS_FILENAME;
+    std::string v_destinationFile =
+      XMFS::getUserDir(FDT_CACHE) + "/" + DEFAULT_WEBROOMS_FILENAME;
 
     LogInfo("WWW: Checking for rooms...");
 
     /* download xml file */
-    FSWeb::downloadFileBz2UsingMd5(v_destinationFile, XMSession::instance()->webRoomsURL(), NULL, NULL, XMSession::instance()->proxySettings());
+    FSWeb::downloadFileBz2UsingMd5(v_destinationFile,
+                                   XMSession::instance()->webRoomsURL(),
+                                   NULL,
+                                   NULL,
+                                   XMSession::instance()->proxySettings());
     setThreadProgress(90);
     m_pDb->webrooms_updateDB(FDT_CACHE, v_destinationFile);
-    StateManager::instance()->sendAsynchronousMessage(std::string("ROOMS_UPDATED"));
-  } catch(Exception &e) {
+    StateManager::instance()->sendAsynchronousMessage(
+      std::string("ROOMS_UPDATED"));
+  } catch (Exception &e) {
     /* file probably doesn't exist */
     LogWarning("Failed to analyse webrooms file");
     return 1;

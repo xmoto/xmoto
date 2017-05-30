@@ -27,17 +27,17 @@ class ServerThread;
 
 class ServerRules : public LuaLibBase {
 public:
-  ServerRules(ServerThread* i_st);
+  ServerRules(ServerThread *i_st);
   ~ServerRules();
 
 protected:
   void setInstance();
 
 private:
-  ServerThread* m_server;
+  ServerThread *m_server;
 
   static luaL_Reg m_rulesFuncs[];
-  static ServerThread* m_exec_server;
+  static ServerThread *m_exec_server;
 
   /* Lua library prototypes */
   // system

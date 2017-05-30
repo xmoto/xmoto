@@ -26,25 +26,28 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 class ReplayBiker;
 
 class StateReplaying : public StateScene {
-  public:
-  StateReplaying(Universe* i_universe, GameRenderer* i_renderer, const std::string& i_replay, ReplayBiker* i_replayBiker);
+public:
+  StateReplaying(Universe *i_universe,
+                 GameRenderer *i_renderer,
+                 const std::string &i_replay,
+                 ReplayBiker *i_replayBiker);
   virtual ~StateReplaying();
-  
+
   virtual void enter();
   virtual void leave();
-  
+
   virtual bool update();
   virtual void nextLevel(bool i_positifOrder = true);
 
   /* input */
-  virtual void xmKey(InputEventType i_type, const XMKey& i_xmkey);
+  virtual void xmKey(InputEventType i_type, const XMKey &i_xmkey);
 
   virtual void restartLevel(bool i_reloadLevel = false);
 
   std::string m_replay;
-  ReplayBiker* m_replayBiker; /* replay watched */
+  ReplayBiker *m_replayBiker; /* replay watched */
 
-  private:
+private:
   bool m_stopToUpdate;
 };
 

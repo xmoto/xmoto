@@ -25,11 +25,10 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
 class StateSync : public StateUpdate {
 public:
-  StateSync(bool drawStateBehind    = true,
-	    bool updateStatesBehind = false);
+  StateSync(bool drawStateBehind = true, bool updateStatesBehind = false);
   virtual ~StateSync();
 
-  virtual void xmKey(InputEventType i_type, const XMKey& i_xmkey);
+  virtual void xmKey(InputEventType i_type, const XMKey &i_xmkey);
 
 protected:
   virtual void callAfterThreadFinished(int threadResult);

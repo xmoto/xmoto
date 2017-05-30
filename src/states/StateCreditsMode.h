@@ -27,18 +27,21 @@ class Credits;
 class ReplayBiker;
 
 class StateCreditsMode : public StateReplaying {
-  public:
-  StateCreditsMode(Universe* i_universe, GameRenderer* i_renderer, const std::string& i_replay, ReplayBiker* i_replayBiker);
+public:
+  StateCreditsMode(Universe *i_universe,
+                   GameRenderer *i_renderer,
+                   const std::string &i_replay,
+                   ReplayBiker *i_replayBiker);
   virtual ~StateCreditsMode();
-  
+
   virtual void enter();
-  
+
   virtual bool render();
   /* input */
-  virtual void xmKey(InputEventType i_type, const XMKey& i_xmkey);
-  
-  private:
-  Credits* m_credits;
+  virtual void xmKey(InputEventType i_type, const XMKey &i_xmkey);
+
+private:
+  Credits *m_credits;
 
   void abort();
 };

@@ -25,34 +25,34 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "BikeParameters.h"
 
 class BikeAnchors {
-  public:
+public:
   Vector2f GroundPoint() const;
-  void update(BikeParameters* i_bikeParameters);
+  void update(BikeParameters *i_bikeParameters);
 
   //  private:
-  Vector2f Tp;          /* Point on the ground, exactly between the wheels */
-  Vector2f Rp;          /* Center of rear wheel */
-  Vector2f Fp;          /* Center of front wheel */
-  Vector2f AR;          /* Rear suspension anchor */
-  Vector2f AF;          /* Front suspension anchor */
-  Vector2f AR2;         /* Rear suspension anchor (Alt.) */
-  Vector2f AF2;         /* Front suspension anchor (Alt.) */
-  
-  Vector2f PTp;         /* Player torso center */
-  Vector2f PULp;        /* Player upper leg center */
-  Vector2f PLLp;        /* Player lower leg center */
-  Vector2f PUAp;        /* Player upper arm center */
-  Vector2f PLAp;        /* Player lower arm center */
-  Vector2f PHp;         /* Player hand center */
-  Vector2f PFp;         /* Player foot center */
-  
-  Vector2f PTp2;        /* Player torso center (Alt.) */
-  Vector2f PULp2;       /* Player upper leg center (Alt.) */
-  Vector2f PLLp2;       /* Player lower leg center (Alt.) */
-  Vector2f PUAp2;       /* Player upper arm center (Alt.) */
-  Vector2f PLAp2;       /* Player lower arm center (Alt.) */
-  Vector2f PHp2;        /* Player hand center (Alt.) */
-  Vector2f PFp2;        /* Player foot center (Alt.) */
+  Vector2f Tp; /* Point on the ground, exactly between the wheels */
+  Vector2f Rp; /* Center of rear wheel */
+  Vector2f Fp; /* Center of front wheel */
+  Vector2f AR; /* Rear suspension anchor */
+  Vector2f AF; /* Front suspension anchor */
+  Vector2f AR2; /* Rear suspension anchor (Alt.) */
+  Vector2f AF2; /* Front suspension anchor (Alt.) */
+
+  Vector2f PTp; /* Player torso center */
+  Vector2f PULp; /* Player upper leg center */
+  Vector2f PLLp; /* Player lower leg center */
+  Vector2f PUAp; /* Player upper arm center */
+  Vector2f PLAp; /* Player lower arm center */
+  Vector2f PHp; /* Player hand center */
+  Vector2f PFp; /* Player foot center */
+
+  Vector2f PTp2; /* Player torso center (Alt.) */
+  Vector2f PULp2; /* Player upper leg center (Alt.) */
+  Vector2f PLLp2; /* Player lower leg center (Alt.) */
+  Vector2f PUAp2; /* Player upper arm center (Alt.) */
+  Vector2f PLAp2; /* Player lower arm center (Alt.) */
+  Vector2f PHp2; /* Player hand center (Alt.) */
+  Vector2f PFp2; /* Player foot center (Alt.) */
 };
 
 #endif /* BIKEANCHORS */

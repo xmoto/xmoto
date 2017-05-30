@@ -23,13 +23,16 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
 #include <string>
 
-  class FileCompression {
-    public:
-    static void bunzip2(std::string p_fileIN, std::string p_fileOUT);
-    static void bzip2(std::string p_fileIN, std::string p_fileOUT);
+class FileCompression {
+public:
+  static void bunzip2(std::string p_fileIN, std::string p_fileOUT);
+  static void bzip2(std::string p_fileIN, std::string p_fileOUT);
 
-    static char* zcompress(const char* i_data, int i_len, int& o_outputLen);
-    static void zuncompress(const char* i_compressedData, int i_compressedLen, char* io_outputData, int i_outputDataLen);
-  };
+  static char *zcompress(const char *i_data, int i_len, int &o_outputLen);
+  static void zuncompress(const char *i_compressedData,
+                          int i_compressedLen,
+                          char *io_outputData,
+                          int i_outputDataLen);
+};
 
 #endif /* __FILECOMPRESSION_H__ */

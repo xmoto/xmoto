@@ -21,61 +21,71 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #ifndef __BSP_H__
 #define __BSP_H__
 
-#include "helpers/VMath.h"
 #include "common/VTexture.h"
+#include "helpers/VMath.h"
 
 class BSPLine {
-  public:
-  BSPLine(const Vector2f& i_p0, const Vector2f& i_p1);
-  BSPLine(const BSPLine& i_line);
+public:
+  BSPLine(const Vector2f &i_p0, const Vector2f &i_p1);
+  BSPLine(const BSPLine &i_line);
   ~BSPLine();
 
   // public, for avoiding calls (perf)
   Vector2f P0, P1; /* Line */
-  Vector2f Normal;   /* Linenormal (meaningless, but hey :P)*/
+  Vector2f Normal; /* Linenormal (meaningless, but hey :P)*/
 
-  private:
+private:
   void computeNormal();
-};  
+};
 
 class BSPPoly {
- public:
+public:
   BSPPoly();
-  BSPPoly(const BSPPoly& i_poly);
+  BSPPoly(const BSPPoly &i_poly);
   ~BSPPoly();
 
   std::vector<Vector2f> &Vertices();
-  void addVertice(const Vector2f& i_vertice);
-  void addVerticesOf(const BSPPoly* i_poly);
+  void addVertice(const Vector2f &i_vertice);
+  void addVerticesOf(const BSPPoly *i_poly);
 
- private:
+private:
   std::vector<Vector2f> m_vertices;
 };
 
 class BSP {
- public:
+public:
   BSP();
   ~BSP();
 
   int getNumErrors();
-  void addLineDefinition(const Vector2f& i_p0, const Vector2f& i_p1);
+  void addLineDefinition(const Vector2f &i_p0, const Vector2f &i_p1);
 
-  /* build some polygons ; don't delete the result, it's in memory in the class BSP */
-  std::vector<BSPPoly *>* compute();
-      
- private:
-  int m_nNumErrors;               /* Number of errors found */
+  /* build some polygons ; don't delete the result, it's in memory in the class
+   * BSP */
+  std::vector<BSPPoly *> *compute();
+
+private:
+  int m_nNumErrors; /* Number of errors found */
   std::vector<BSPLine *> m_lines; /* Input data set */
   std::vector<BSPPoly *> m_polys; /* Output data set */
 
-  void recurse(BSPPoly *pSubSpace,std::vector<BSPLine *> &Lines);
+  void recurse(BSPPoly *pSubSpace, std::vector<BSPLine *> &Lines);
 
-  BSPLine* findBestSplitter(std::vector<BSPLine *>& i_lines);
-  /* if bProbe is true, pnNumFront, pnNumBack and pnNumSplits must not be NULL to be filled AND Front and Back will not be filled */
-  void splitLines(std::vector<BSPLine *> &Lines, std::vector<BSPLine *> &Front, std::vector<BSPLine *> &Back,
-		   BSPLine *pLine, bool bProbe = false, int* pnNumFront = NULL, int* pnNumBack = NULL, int* pnNumSplits = NULL);
-  void splitPoly(BSPPoly *pPoly, BSPPoly *pFront, BSPPoly *pBack, BSPLine *pLine);
-
+  BSPLine *findBestSplitter(std::vector<BSPLine *> &i_lines);
+  /* if bProbe is true, pnNumFront, pnNumBack and pnNumSplits must not be NULL
+   * to be filled AND Front and Back will not be filled */
+  void splitLines(std::vector<BSPLine *> &Lines,
+                  std::vector<BSPLine *> &Front,
+                  std::vector<BSPLine *> &Back,
+                  BSPLine *pLine,
+                  bool bProbe = false,
+                  int *pnNumFront = NULL,
+                  int *pnNumBack = NULL,
+                  int *pnNumSplits = NULL);
+  void splitPoly(BSPPoly *pPoly,
+                 BSPPoly *pFront,
+                 BSPPoly *pBack,
+                 BSPLine *pLine);
 };
 
 #endif
