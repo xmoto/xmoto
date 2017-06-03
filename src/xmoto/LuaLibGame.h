@@ -21,8 +21,8 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #ifndef __LUALIBGAME_H__
 #define __LUALIBGAME_H__
 
-#include <string>
 #include "LuaLibBase.h"
+#include <string>
 
 class Scene;
 class InputHandler;
@@ -40,12 +40,12 @@ protected:
   void setInstance();
 
 private:
-  Scene* m_pScene;
+  Scene *m_pScene;
   InputHandler *m_pActiveInputHandler;
 
-  static InputHandler* m_exec_activeInputHandler;
-  static Scene*        m_exec_world;
-  static luaL_Reg      m_gameFuncs[];
+  static InputHandler *m_exec_activeInputHandler;
+  static Scene *m_exec_world;
+  static luaL_Reg m_gameFuncs[];
 
   /* Lua library prototypes */
   static int L_Game_GetTime(lua_State *pL);
@@ -58,8 +58,8 @@ private:
   static int L_Game_PlaceScreenArrow(lua_State *pL);
   static int L_Game_HideArrow(lua_State *pL);
   static int L_Game_ClearMessages(lua_State *pL);
-  static int L_Game_SetGravity(lua_State *pL);  
-  static int L_Game_GetGravity(lua_State *pL);  
+  static int L_Game_SetGravity(lua_State *pL);
+  static int L_Game_GetGravity(lua_State *pL);
   static int L_Game_SetPlayerPosition(lua_State *pL);
   static int L_Game_GetPlayerPosition(lua_State *pL);
   static int L_Game_AddForceToPlayer(lua_State *pL);
@@ -78,7 +78,7 @@ private:
   static int L_Game_SetDynamicBlockRotation(lua_State *pL);
   static int L_Game_SetDynamicBlockSelfRotation(lua_State *pL);
   static int L_Game_SetPhysicsBlockSelfRotation(lua_State *pL);
-  static int L_Game_SetPhysicsBlockTranslation(lua_State* pL);
+  static int L_Game_SetPhysicsBlockTranslation(lua_State *pL);
   static int L_Game_SetDynamicBlockTranslation(lua_State *pL);
   static int L_Game_SetDynamicBlockNone(lua_State *pL);
   static int L_Game_CameraZoom(lua_State *pL);
@@ -108,10 +108,9 @@ private:
   static int L_Game_SetCameraPosition(lua_State *pL);
   static int L_Game_GetPlayerProfileName(lua_State *pL);
   /* Script Timer Functions*/
-  static int L_Game_StartTimer(lua_State *pL);  
-  static int L_Game_SetTimerDelay(lua_State *pL);  
+  static int L_Game_StartTimer(lua_State *pL);
+  static int L_Game_SetTimerDelay(lua_State *pL);
   static int L_Game_StopTimer(lua_State *pL);
 };
-
 
 #endif

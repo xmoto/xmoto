@@ -27,19 +27,21 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 class ServerThread;
 
 class NetServer : public Singleton<NetServer> {
-  public:
+public:
   NetServer();
   ~NetServer();
 
-  void start(bool i_deamon, int i_port, const std::string& i_adminPassword = "");
+  void start(bool i_deamon,
+             int i_port,
+             const std::string &i_adminPassword = "");
   void stop();
   bool isStarted();
   void wait();
   bool acceptConnections();
-  void setStandAloneOptions(); 
+  void setStandAloneOptions();
 
-  private:
-  ServerThread* m_serverThread;
+private:
+  ServerThread *m_serverThread;
   bool m_isStarted;
 };
 

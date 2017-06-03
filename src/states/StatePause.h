@@ -28,34 +28,35 @@ class UIRoot;
 class Universe;
 
 class StatePause : public StateMenu {
-  public:
-  StatePause(Universe* i_universe,
-	     const std::string& i_parentId,
-	     bool drawStateBehind    = true,
-	     bool updateStatesBehind = false
-	     );
+public:
+  StatePause(Universe *i_universe,
+             const std::string &i_parentId,
+             bool drawStateBehind = true,
+             bool updateStatesBehind = false);
   virtual ~StatePause();
-  
+
   virtual void enter();
   virtual void leave();
-  
+
   /* input */
-  virtual void xmKey(InputEventType i_type, const XMKey& i_xmkey);
-  
+  virtual void xmKey(InputEventType i_type, const XMKey &i_xmkey);
+
   static void clean();
 
-  virtual void sendFromMessageBox(const std::string& i_id, UIMsgBoxButton i_button, const std::string& i_input);
+  virtual void sendFromMessageBox(const std::string &i_id,
+                                  UIMsgBoxButton i_button,
+                                  const std::string &i_input);
 
- protected:
+protected:
   virtual void checkEvents();
-  Universe* m_universe;
+  Universe *m_universe;
 
-  private:
+private:
   std::string m_parentId;
 
   /* GUI */
-  static UIRoot* m_sGUI;
-  static void createGUIIfNeeded(RenderSurface* i_screen);
+  static UIRoot *m_sGUI;
+  static void createGUIIfNeeded(RenderSurface *i_screen);
 };
 
 #endif

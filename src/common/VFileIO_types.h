@@ -21,10 +21,6 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #ifndef __VFILEIOTYPE_H__
 #define __VFILEIOTYPE_H__
 
-enum FileDataType {
-  FDT_DATA,
-  FDT_CONFIG,
-  FDT_CACHE
-};
+enum FileDataType { FDT_DATA, FDT_CONFIG, FDT_CACHE };
 
 #endif

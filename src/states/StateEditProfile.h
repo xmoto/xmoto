@@ -28,30 +28,31 @@ class UIRoot;
 
 class StateEditProfile : public StateMenu {
 public:
-  StateEditProfile(bool drawStateBehind    = true,
-		   bool updateStatesBehind = false
-		   );
+  StateEditProfile(bool drawStateBehind = true,
+                   bool updateStatesBehind = false);
   virtual ~StateEditProfile();
-  
+
   virtual void enter();
-  
+
   /* input */
-  virtual void xmKey(InputEventType i_type, const XMKey& i_xmkey);
+  virtual void xmKey(InputEventType i_type, const XMKey &i_xmkey);
 
   static void clean();
-  virtual void sendFromMessageBox(const std::string& i_id, UIMsgBoxButton i_button, const std::string& i_input);
+  virtual void sendFromMessageBox(const std::string &i_id,
+                                  UIMsgBoxButton i_button,
+                                  const std::string &i_input);
 
 protected:
   virtual void checkEvents();
-  
+
 private:
   static void createProfileList();
 
   void updateOptions();
 
   /* GUI */
-  static UIRoot* m_sGUI;
-  static void createGUIIfNeeded(RenderSurface* i_screen);
+  static UIRoot *m_sGUI;
+  static void createGUIIfNeeded(RenderSurface *i_screen);
 };
 
 #endif

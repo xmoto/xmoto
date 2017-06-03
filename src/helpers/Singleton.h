@@ -23,36 +23,34 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
 #include <stdlib.h>
 
-template<typename T> class Singleton {
+template<typename T>
+class Singleton {
 public:
-  static bool exists() {
-    return m_pInstance != NULL;
-  }
+  static bool exists() { return m_pInstance != NULL; }
 
-  static T* instance() {
-    if(m_pInstance == NULL){
+  static T *instance() {
+    if (m_pInstance == NULL) {
       m_pInstance = new T();
     }
     return m_pInstance;
   }
 
   static void destroy() {
-    if(m_pInstance != NULL){
+    if (m_pInstance != NULL) {
       delete m_pInstance;
       m_pInstance = NULL;
     }
   }
 
 protected:
-  Singleton() {
-  }
-  virtual ~Singleton() {
-  }
+  Singleton() {}
+  virtual ~Singleton() {}
 
 private:
-  static T* m_pInstance;
+  static T *m_pInstance;
 };
 
-template<typename T> T* Singleton<T>::m_pInstance = NULL;
+template<typename T>
+T *Singleton<T>::m_pInstance = NULL;
 
 #endif

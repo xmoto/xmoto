@@ -29,7 +29,7 @@ class WebRoom;
 
 class DownloadReplaysThread : public XMThread {
 public:
-  DownloadReplaysThread(StateManager* i_manager);
+  DownloadReplaysThread(StateManager *i_manager);
   virtual ~DownloadReplaysThread();
 
   void add(const std::string i_url);
@@ -37,12 +37,12 @@ public:
 
   int realThreadFunction();
 
-  private:
+private:
   void play();
 
-  WebRoom*    m_pWebRoom;
-  SDL_mutex* m_urlsMutex;
-  StateManager* m_manager; // for the communication
+  WebRoom *m_pWebRoom;
+  SDL_mutex *m_urlsMutex;
+  StateManager *m_manager; // for the communication
   std::vector<std::string> m_replaysUrls;
 };
 

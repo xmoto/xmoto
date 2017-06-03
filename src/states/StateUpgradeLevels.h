@@ -27,23 +27,23 @@ class UpgradeLevelsThread;
 
 class StateUpgradeLevels : public StateUpdate {
 public:
-  StateUpgradeLevels(bool drawStateBehind    = true,
-		     bool updateStatesBehind = false);
+  StateUpgradeLevels(bool drawStateBehind = true,
+                     bool updateStatesBehind = false);
   virtual ~StateUpgradeLevels();
 
-  virtual void sendFromMessageBox(const std::string& i_id,
-				  UIMsgBoxButton i_button,
-				  const std::string& i_input);
+  virtual void sendFromMessageBox(const std::string &i_id,
+                                  UIMsgBoxButton i_button,
+                                  const std::string &i_input);
   virtual void executeOneCommand(std::string cmd, std::string args);
 
   void callAfterThreadFinished(int threadResult);
-  virtual void xmKey(InputEventType i_type, const XMKey& i_xmkey);
+  virtual void xmKey(InputEventType i_type, const XMKey &i_xmkey);
 
 protected:
   virtual void checkEvents() {}
 
 private:
-  UpgradeLevelsThread* m_ult;
+  UpgradeLevelsThread *m_ult;
 };
 
 #endif

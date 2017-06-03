@@ -26,51 +26,51 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 class PhysicsSettings;
 
 class BikeParameters {
-  public:
-  BikeParameters(PhysicsSettings* i_physicsSettings);
+public:
+  BikeParameters(PhysicsSettings *i_physicsSettings);
   ~BikeParameters();
 
-  void setDefaults(PhysicsSettings* i_physicsSettings);
+  void setDefaults(PhysicsSettings *i_physicsSettings);
 
   float WheelRadius() const;
-  float HeadSize()    const;
-  float MaxEngine()   const;
+  float HeadSize() const;
+  float MaxEngine() const;
 
   //  private:
 
   /* Geometrical */
-  float WR;             /* Wheel radius */
-  float Ch;             /* Center of mass height */
-  float Wb;             /* Wheel base */
-  float RVx,RVy;        /* Position of rear susp. anchor */
-  float FVx,FVy;        /* Position of front susp. anchor */
-  
-  float PSVx,PSVy;      /* Position of player shoulder */
-  float PEVx,PEVy;      /* Position of player elbow */
-  float PHVx,PHVy;      /* Position of player hand */
-  float PLVx,PLVy;      /* Position of player lower body */
-  float PKVx,PKVy;      /* Position of player knee */
-  float PFVx,PFVy;      /* Position of player foot */
-  
-  float fHeadSize;      /* Radius */
-  float fNeckLength;    /* Length of neck */
-  
+  float WR; /* Wheel radius */
+  float Ch; /* Center of mass height */
+  float Wb; /* Wheel base */
+  float RVx, RVy; /* Position of rear susp. anchor */
+  float FVx, FVy; /* Position of front susp. anchor */
+
+  float PSVx, PSVy; /* Position of player shoulder */
+  float PEVx, PEVy; /* Position of player elbow */
+  float PHVx, PHVy; /* Position of player hand */
+  float PLVx, PLVy; /* Position of player lower body */
+  float PKVx, PKVy; /* Position of player knee */
+  float PFVx, PFVy; /* Position of player foot */
+
+  float fHeadSize; /* Radius */
+  float fNeckLength; /* Length of neck */
+
   /* Physical */
-  float Wm;             /* Wheel mass [kg] */
-  float BPm_torso;            /* Player body part mass [kg] */
+  float Wm; /* Wheel mass [kg] */
+  float BPm_torso; /* Player body part mass [kg] */
   float BPm_uleg;
   float BPm_lleg;
   float BPm_uarm;
   float BPm_larm;
   float BPm_foot;
   float BPm_hand;
-  float Fm;             /* Frame mass [kg] */
-  float IL;             /* Frame "inertia" length [m] */
-  float IH;             /* Frame "inertia" height [m] */
+  float Fm; /* Frame mass [kg] */
+  float IL; /* Frame "inertia" length [m] */
+  float IH; /* Frame "inertia" height [m] */
 
   float RErp;
   float RCfm;
-  
+
   /* Braking/engine performance */
   float fMaxEngine;
 };

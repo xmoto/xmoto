@@ -24,7 +24,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "helpers/VMath.h"
 
 class SomersaultCounter {
-  public:
+public:
   SomersaultCounter();
   ~SomersaultCounter();
 
@@ -35,7 +35,7 @@ class SomersaultCounter {
   int getTotalCounterClockwise();
   int getTotal();
 
-  private:
+private:
   bool m_last_initialized;
   double m_last_state;
   double m_min_move;

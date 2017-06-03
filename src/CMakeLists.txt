@@ -59,7 +59,9 @@ add_subdirectory("${PROJECT_SOURCE_DIR}/vendor/bzip2" bzip2)
 add_subdirectory("${PROJECT_SOURCE_DIR}/vendor/libccd" libccd)
 add_subdirectory("${PROJECT_SOURCE_DIR}/vendor/chipmunk" chipmunk)
 add_subdirectory("${PROJECT_SOURCE_DIR}/vendor/lua" lua)
+add_subdirectory("${PROJECT_SOURCE_DIR}/vendor/md5sum" md5sum)
 add_subdirectory("${PROJECT_SOURCE_DIR}/vendor/ode" ode)
+add_subdirectory("${PROJECT_SOURCE_DIR}/vendor/xdgbasedir" xdgbasedir)
 
 set(common_src
   common/BuildConfig.h
@@ -181,11 +183,6 @@ set(image_src
   image/tim_png.cpp
 )
 
-set(md5sum_src
-  md5sum/md5.c md5sum/md5.h
-  md5sum/md5file.cpp md5sum/md5file.h
-)
-
 set(net_src
   net/ActionReader.cpp net/ActionReader.h
   net/BasicStructures.h
@@ -268,12 +265,6 @@ set(thread_src
   thread/XMThread.cpp thread/XMThread.h
   thread/XMThreadStats.cpp thread/XMThreadStats.h
   thread/XMThreads.cpp thread/XMThreads.h
-)
-
-set(xdgbasedir_src
-  xdgbasedir/include/basedir.h
-  xdgbasedir/include/basedir_fs.h
-  xdgbasedir/src/basedir.c
 )
 
 set(xmincludes_src
@@ -373,12 +364,9 @@ add_executable(xmoto
   ${helpers_src}
   ${image_src}
   ${include_src}
-  ${md5sum_src}
   ${net_src}
-  "$<$<NOT:${USE_SYSTEM_ODE}>:${ode_src}>"
   ${states_src}
   ${thread_src}
-  "$<$<NOT:${USE_SYSTEM_XDG}>:${xdgbasedir_src}>"
   ${xmincludes_src}
   ${xmoto_src}
   ${xmscene_src}
@@ -412,6 +400,7 @@ target_link_libraries(xmoto PUBLIC
   ${LIBXML2_LIBRARIES}
     "$<$<BOOL:${STATIC_BUILD}>:${LIBLZMA_LIBRARIES}>"
   lua
+  md5sum
   $<${USE_SYSTEM_ODE}:${ODE_LIBRARY}>
   $<$<NOT:${USE_SYSTEM_ODE}>:ode>
   ${OPENGL_LIBRARIES}
@@ -422,6 +411,7 @@ target_link_libraries(xmoto PUBLIC
   ${SDLTTF_LIBRARY}
   ${SQLITE3_LIBRARIES}
   $<${USE_SYSTEM_XDG}:${XDG_LIBRARY}>
+  $<$<NOT:${USE_SYSTEM_XDG}>:xdgbasedir>
   ${ZLIB_LIBRARIES}
 )
 

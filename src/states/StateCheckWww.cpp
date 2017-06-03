@@ -23,27 +23,25 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "xmoto/Input.h"
 
 StateCheckWww::StateCheckWww(bool forceUpdate,
-			     bool drawStateBehind,
-			     bool updateStatesBehind)
-  : StateUpdate(drawStateBehind, updateStatesBehind)
-{
+                             bool drawStateBehind,
+                             bool updateStatesBehind)
+  : StateUpdate(drawStateBehind, updateStatesBehind) {
   m_pThread = new CheckWwwThread(forceUpdate);
-  m_name    = "StateCheckWww";
+  m_name = "StateCheckWww";
 }
 
-StateCheckWww::~StateCheckWww()
-{
+StateCheckWww::~StateCheckWww() {
   delete m_pThread;
 }
 
-void StateCheckWww::callAfterThreadFinished(int threadResult)
-{
-  m_msg = ((CheckWwwThread*)m_pThread)->getMsg();
+void StateCheckWww::callAfterThreadFinished(int threadResult) {
+  m_msg = ((CheckWwwThread *)m_pThread)->getMsg();
 }
 
-void StateCheckWww::xmKey(InputEventType i_type, const XMKey& i_xmkey) {
-  if(i_type == INPUT_DOWN && i_xmkey == (*InputHandler::instance()->getGlobalKey(INPUT_KILLPROCESS))) {
-    if(m_threadStarted == true) {
+void StateCheckWww::xmKey(InputEventType i_type, const XMKey &i_xmkey) {
+  if (i_type == INPUT_DOWN &&
+      i_xmkey == (*InputHandler::instance()->getGlobalKey(INPUT_KILLPROCESS))) {
+    if (m_threadStarted == true) {
       m_pThread->safeKill();
     }
   }

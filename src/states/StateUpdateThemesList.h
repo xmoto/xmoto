@@ -25,10 +25,10 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
 class StateUpdateThemesList : public StateUpdate {
 public:
-  StateUpdateThemesList(bool drawStateBehind    = true,
-			bool updateStatesBehind = false);
+  StateUpdateThemesList(bool drawStateBehind = true,
+                        bool updateStatesBehind = false);
   virtual ~StateUpdateThemesList();
-  virtual void xmKey(InputEventType i_type, const XMKey& i_xmkey);
+  virtual void xmKey(InputEventType i_type, const XMKey &i_xmkey);
 
 protected:
   virtual void checkEvents() {}

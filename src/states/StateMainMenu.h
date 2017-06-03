@@ -30,37 +30,38 @@ class LevelsPacksCountUpdateThread;
 class CheckWwwThread;
 
 class StateMainMenu : public StateMenu {
-  public:
-  StateMainMenu(bool drawStateBehind    = false,
-		bool updateStatesBehind = false);
+public:
+  StateMainMenu(bool drawStateBehind = false, bool updateStatesBehind = false);
   virtual ~StateMainMenu();
-  
+
   virtual void enter();
   virtual void leave();
   /* called when a new state is pushed or poped on top of the
      current one*/
   virtual void enterAfterPop();
-  
+
   virtual bool render();
   /* input */
-  virtual void xmKey(InputEventType i_type, const XMKey& i_xmkey);
-  
+  virtual void xmKey(InputEventType i_type, const XMKey &i_xmkey);
+
   static void clean();
   static void refreshStaticCaptions();
-  
-  virtual void sendFromMessageBox(const std::string& i_id, UIMsgBoxButton i_button, const std::string& i_input);
+
+  virtual void sendFromMessageBox(const std::string &i_id,
+                                  UIMsgBoxButton i_button,
+                                  const std::string &i_input);
   virtual void executeOneCommand(std::string cmd, std::string args);
 
-  protected:
+protected:
   virtual void checkEvents();
 
-  private:
+private:
   /* GUI */
-  static UIRoot* m_sGUI;
-  static void createGUIIfNeeded(RenderSurface* i_screen);
-  static UIWindow* makeWindowReplays(UIWindow* i_parent);
-  static UIWindow* makeWindowLevels(UIWindow* i_parent);
-  static UIWindow* makeWindowStats(UIWindow* i_parent);
+  static UIRoot *m_sGUI;
+  static void createGUIIfNeeded(RenderSurface *i_screen);
+  static UIWindow *makeWindowReplays(UIWindow *i_parent);
+  static UIWindow *makeWindowLevels(UIWindow *i_parent);
+  static UIWindow *makeWindowStats(UIWindow *i_parent);
 
   void updateProfileStrings();
 
@@ -76,15 +77,16 @@ class StateMainMenu : public StateMenu {
   void remakePacks();
 
   /* Main menu background / title */
-  Texture *m_pTitleBL,*m_pTitleBR,*m_pTitleTL,*m_pTitleTR;      
-  void drawBackground(); 
+  Texture *m_pTitleBL, *m_pTitleBR, *m_pTitleTL, *m_pTitleTR;
+  void drawBackground();
 
   /* lists */
-  UILevelList* m_quickStartList;
-  UILevelList* buildQuickStartList();
-  void createLevelListsSql(UILevelList* io_levelsList, const std::string& i_sql);
-  void createLevelLists(UILevelList *i_list, const std::string& i_packageName);
-  void updateLevelsPackInPackList(const std::string& v_levelPack);
+  UILevelList *m_quickStartList;
+  UILevelList *buildQuickStartList();
+  void createLevelListsSql(UILevelList *io_levelsList,
+                           const std::string &i_sql);
+  void createLevelLists(UILevelList *i_list, const std::string &i_packageName);
+  void updateLevelsPackInPackList(const std::string &v_levelPack);
 
   void checkEventsLevelsFavoriteTab();
   void checkEventsLevelsNewTab();
@@ -98,7 +100,7 @@ class StateMainMenu : public StateMenu {
   void updateInfoFrame();
   void updateReplaysRights();
 
-  UILevelList* getInfoFrameLevelsList();
+  UILevelList *getInfoFrameLevelsList();
   std::string getInfoFrameLevelId();
 
   bool m_require_updateFavoriteLevelsList;
@@ -106,10 +108,9 @@ class StateMainMenu : public StateMenu {
   bool m_require_updateLevelsList;
   bool m_require_updateStats;
 
-  LevelsPacksCountUpdateThread* m_levelsPacksCountThread;
+  LevelsPacksCountUpdateThread *m_levelsPacksCountThread;
   bool m_initialLevelsPacksDone;
-  CheckWwwThread* m_checkWwwThread;
-
+  CheckWwwThread *m_checkWwwThread;
 };
 
 #endif

@@ -25,8 +25,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
 class StateUpdateDb : public StateUpdate {
 public:
-  StateUpdateDb(bool drawStateBehind    = true,
-		bool updateStatesBehind = false);
+  StateUpdateDb(bool drawStateBehind = true, bool updateStatesBehind = false);
   virtual ~StateUpdateDb();
 
 protected:

@@ -21,5 +21,5 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "BasicSceneStructs.h"
 
 bool PlayerControl_isValid(PlayerControl p) {
-    return p >= 1 && p <= 5;
+  return p >= 1 && p <= 5;
 }

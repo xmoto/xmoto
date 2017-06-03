@@ -24,56 +24,57 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #define XM_CONFIGFILE "config.dat"
 
 #include "common/VCommon.h"
+#include <string>
+#include <vector>
 
+/*===========================================================================
+User variable
+===========================================================================*/
+struct UserConfigVar {
+  std::string Name;
+  std::string Value;
+  std::string DefaultValue;
+};
 
-	/*===========================================================================
-	User variable
-	===========================================================================*/
-	struct UserConfigVar {
-	  std::string Name;
-	  std::string Value;
-	  std::string DefaultValue;	  
-	};
-	
-	/*===========================================================================
-	User config class
-	===========================================================================*/
-	class UserConfig {
-	  public:
-	    ~UserConfig() {_FreeUserConfig();}
-	  
-	    /* Methods */
-	    void loadFile(void);
-	    void saveFile(void);
-	    UserConfigVar *createVar(std::string Name,std::string DefaultValue);
-	    std::string getDefaultValue(std::string Name);
-	    std::string getValue(std::string Name);
-	    void setValue(std::string Name,std::string Value);
-	    
-	    /* Public helpers */
-	    float getFloat(std::string Name);
-	    std::string getString(std::string Name);
-	    bool getBool(std::string Name);
-	    int getInteger(std::string Name);
-	    void setFloat(std::string Name,float v);
-	    void setString(std::string Name,std::string v);
-	    void setBool(std::string Name,bool v);
-	    void setInteger(std::string Name,int v);
-	    	  
-	    /* Data interface */
-	    std::vector<UserConfigVar *> &getVars(void) {return m_Vars;}	   	    
-	    bool isChanged(void) {return m_bChangeFlag;}
-	    void setChanged(bool b) {m_bChangeFlag = b;}
-	    
-	  private:
-	    /* Data */
-	    std::vector<UserConfigVar *> m_Vars;
-	    bool m_bChangeFlag;                     /* Set when anything is changed */
-	    
-	    /* Helpers */
-	    void _FreeUserConfig(void);
-	    
-	    UserConfigVar *_FindVarByName(std::string Name);
-	};
+/*===========================================================================
+User config class
+===========================================================================*/
+class UserConfig {
+public:
+  ~UserConfig() { _FreeUserConfig(); }
+
+  /* Methods */
+  void loadFile(void);
+  void saveFile(void);
+  UserConfigVar *createVar(std::string Name, std::string DefaultValue);
+  std::string getDefaultValue(std::string Name);
+  std::string getValue(std::string Name);
+  void setValue(std::string Name, std::string Value);
+
+  /* Public helpers */
+  float getFloat(std::string Name);
+  std::string getString(std::string Name);
+  bool getBool(std::string Name);
+  int getInteger(std::string Name);
+  void setFloat(std::string Name, float v);
+  void setString(std::string Name, std::string v);
+  void setBool(std::string Name, bool v);
+  void setInteger(std::string Name, int v);
+
+  /* Data interface */
+  std::vector<UserConfigVar *> &getVars(void) { return m_Vars; }
+  bool isChanged(void) { return m_bChangeFlag; }
+  void setChanged(bool b) { m_bChangeFlag = b; }
+
+private:
+  /* Data */
+  std::vector<UserConfigVar *> m_Vars;
+  bool m_bChangeFlag; /* Set when anything is changed */
+
+  /* Helpers */
+  void _FreeUserConfig(void);
+
+  UserConfigVar *_FindVarByName(std::string Name);
+};
 
 #endif

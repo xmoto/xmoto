@@ -21,9 +21,9 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #ifndef __PHYSSETTINGS_H__
 #define __PHYSSETTINGS_H__
 
-#define CHIP_WHEEL_MASS               20.0f
-#define CHIP_WHEEL_FRICTION           1.0f
-#define CHIP_WHEEL_ELASTICITY         0.1f
-#define CHIP_WHEEL_DAMPENING          5.0f
+#define CHIP_WHEEL_MASS 20.0f
+#define CHIP_WHEEL_FRICTION 1.0f
+#define CHIP_WHEEL_ELASTICITY 0.1f
+#define CHIP_WHEEL_DAMPENING 5.0f
 
 #endif

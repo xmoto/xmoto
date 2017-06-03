@@ -24,16 +24,16 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "StatePreplayingReplay.h"
 
 class StatePreplayingCredits : public StatePreplayingReplay {
-  public:
+public:
   StatePreplayingCredits(const std::string i_replay);
   virtual ~StatePreplayingCredits();
-  
-  protected:
+
+protected:
   virtual void runPlaying();
   virtual bool shouldBeAnimated() const;
   virtual bool allowGhosts();
 
-  private:
+private:
 };
 
 #endif

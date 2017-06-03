@@ -1,5 +1,5 @@
-#include "md5file.h"
-#include "md5.h"
+#include "md5sum/md5file.h"
+#include "md5sum/md5.h"
 //#include "VFileIO.h"
 
 #define MD5_BUFFER_SIZE 8192

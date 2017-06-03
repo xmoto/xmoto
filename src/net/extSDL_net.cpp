@@ -25,45 +25,45 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #if !defined(WIN32) && !defined(__APPLE__)
 #include <sys/socket.h>
 
-#define SOCKET	int
+#define SOCKET int
 
 struct _TCPsocket {
-	int ready;
-	SOCKET channel;
-	IPaddress remoteAddress;
-	IPaddress localAddress;
-	int sflag;
+  int ready;
+  SOCKET channel;
+  IPaddress remoteAddress;
+  IPaddress localAddress;
+  int sflag;
 };
 
-int SDLNet_TCP_Send_noBlocking(TCPsocket sock, const void *datap, int len)
-{
-	const Uint8 *data = (const Uint8 *)datap;	/* For pointer arithmetic */
-	int sent, left;
+int SDLNet_TCP_Send_noBlocking(TCPsocket sock, const void *datap, int len) {
+  const Uint8 *data = (const Uint8 *)datap; /* For pointer arithmetic */
+  int sent, left;
 
-	/* Server sockets are for accepting connections only */
-	if ( sock->sflag ) {
-		SDLNet_SetError("Server sockets cannot send");
-		return(-1);
-	}
+  /* Server sockets are for accepting connections only */
+  if (sock->sflag) {
+    SDLNet_SetError("Server sockets cannot send");
+    return (-1);
+  }
 
-	/* Keep sending data until it's sent or an error occurs */
-	left = len;
-	sent = 0;
-	errno = 0;
-	do {
-		len = send(sock->channel, (const char *) data, left, MSG_DONTWAIT);
-		if ( len > 0 ) {
-			sent += len;
-			left -= len;
-			data += len;
-		}
-	} while ( (left > 0) && ((len > 0) || (errno == EINTR)) );
+  /* Keep sending data until it's sent or an error occurs */
+  left = len;
+  sent = 0;
+  errno = 0;
+  do {
+    len = send(sock->channel, (const char *)data, left, MSG_DONTWAIT);
+    if (len > 0) {
+      sent += len;
+      left -= len;
+      data += len;
+    }
+  } while ((left > 0) && ((len > 0) || (errno == EINTR)));
 
-	return(sent);
+  return (sent);
 }
 
 #else
-// i don't know whether it's blocking or not ; i mainly want it works for the servers on linux
+// i don't know whether it's blocking or not ; i mainly want it works for the
+// servers on linux
 int SDLNet_TCP_Send_noBlocking(TCPsocket sock, const void *datap, int len) {
   return SDLNet_TCP_Send(sock, datap, len);
 }

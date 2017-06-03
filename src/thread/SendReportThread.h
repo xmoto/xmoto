@@ -27,8 +27,8 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 class xmDatabase;
 
 class SendReportThread : public XMThread, public WWWAppInterface {
-  public:
-  SendReportThread(const std::string& i_author, const std::string& i_msg);
+public:
+  SendReportThread(const std::string &i_author, const std::string &i_msg);
   virtual ~SendReportThread();
   std::string getMsg() const;
 

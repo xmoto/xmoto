@@ -21,7 +21,11 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #ifndef __NETBASICSTRUCTURES_H__
 #define __NETBASICSTRUCTURES_H__
 
-enum NetClientMode { NETCLIENT_ANY_MODE = 1, NETCLIENT_GHOST_MODE = 2, NETCLIENT_SLAVE_MODE = 3 };
+enum NetClientMode {
+  NETCLIENT_ANY_MODE = 1,
+  NETCLIENT_GHOST_MODE = 2,
+  NETCLIENT_SLAVE_MODE = 3
+};
 
 struct NetPing {
   int id;
@@ -29,4 +33,4 @@ struct NetPing {
   int pongTime;
 };
 
- #endif
+#endif

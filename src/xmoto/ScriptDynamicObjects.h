@@ -28,24 +28,22 @@ class Entity;
 class Block;
 
 class SDynamicObject {
- public:
+public:
   SDynamicObject(int p_startTime, int p_endTime, int pPeriod);
   virtual ~SDynamicObject();
-  
+
   /* return false if the dynamic is finished */
-  bool nextState(Scene* v_motoGame, int i_nbCents);
-  inline std::string& getObjectId() {
-    return m_objectId;
-  }
-  
- protected:
+  bool nextState(Scene *v_motoGame, int i_nbCents);
+  inline std::string &getObjectId() { return m_objectId; }
+
+protected:
   bool isTimeToMove();
-  virtual void performMove(Scene* v_motoGame, int i_nbCents) = 0;  
+  virtual void performMove(Scene *v_motoGame, int i_nbCents) = 0;
   int Period() const;
 
   std::string m_objectId;
 
- private:
+private:
   int m_time;
   int m_startTime;
   int m_endTime;
@@ -53,12 +51,12 @@ class SDynamicObject {
 };
 
 class SDynamicRotation {
- public:
+public:
   SDynamicRotation(float pInitAngle, float pRadius, int pPeriod);
   virtual ~SDynamicRotation();
   virtual void performXY(float *vx, float *vy);
 
- private:
+private:
   float m_Speed;
 
   float m_Angle;
@@ -72,24 +70,24 @@ class SDynamicRotation {
 };
 
 class SDynamicSelfRotation {
- public:
+public:
   SDynamicSelfRotation(int i_period);
   virtual ~SDynamicSelfRotation();
   virtual void performXY(float *vAngle);
 
- private:
+private:
   int m_incr;
   float m_totalAngle;
   int m_period;
 };
 
 class SDynamicTranslation {
- public:
+public:
   SDynamicTranslation(float pX, float pY, int pPeriod);
   virtual ~SDynamicTranslation();
   virtual void performXY(float *vx, float *vy);
 
- private:
+private:
   float m_Speed;
   float m_X, m_Y;
 
@@ -102,111 +100,149 @@ class SDynamicTranslation {
 
 /* entity */
 class SDynamicEntityMove : public SDynamicObject {
- public:
-  SDynamicEntityMove(std::string pEntity, int p_startTime, int p_endTime, int pPeriod);
+public:
+  SDynamicEntityMove(std::string pEntity,
+                     int p_startTime,
+                     int p_endTime,
+                     int pPeriod);
   virtual ~SDynamicEntityMove();
 
-  void performMove(Scene* p_motoGame, int i_nbCents);
+  void performMove(Scene *p_motoGame, int i_nbCents);
 
- protected:
+protected:
   virtual void performXY(float *vx, float *vy, float *vAngle) = 0;
 
- private:
+private:
   std::string m_entityName;
-  Entity*     m_entity;
+  Entity *m_entity;
 };
 
-class SDynamicEntityRotation : public SDynamicEntityMove, public SDynamicRotation {
- public:
-  SDynamicEntityRotation(std::string pEntity, float pInitAngle, float pRadius, int pPeriod, int p_startTime, int p_endTime);
+class SDynamicEntityRotation : public SDynamicEntityMove,
+                               public SDynamicRotation {
+public:
+  SDynamicEntityRotation(std::string pEntity,
+                         float pInitAngle,
+                         float pRadius,
+                         int pPeriod,
+                         int p_startTime,
+                         int p_endTime);
   virtual ~SDynamicEntityRotation();
 
   void performXY(float *vx, float *vy, float *vAngle);
 
- private:
+private:
 };
 
-class SDynamicEntityTranslation : public SDynamicEntityMove, public SDynamicTranslation {
- public:
-  SDynamicEntityTranslation(std::string pEntity, float pX, float pY, int pPeriod, int p_startTime, int p_endTime);
+class SDynamicEntityTranslation : public SDynamicEntityMove,
+                                  public SDynamicTranslation {
+public:
+  SDynamicEntityTranslation(std::string pEntity,
+                            float pX,
+                            float pY,
+                            int pPeriod,
+                            int p_startTime,
+                            int p_endTime);
   virtual ~SDynamicEntityTranslation();
 
   void performXY(float *vx, float *vy, float *vAngle);
 
- private:
+private:
 };
 
-class SDynamicEntitySelfRotation : public SDynamicEntityMove, public SDynamicSelfRotation {
- public:
-  SDynamicEntitySelfRotation(std::string pEntity, int pPeriod, int p_startTime, int p_endTime);
+class SDynamicEntitySelfRotation : public SDynamicEntityMove,
+                                   public SDynamicSelfRotation {
+public:
+  SDynamicEntitySelfRotation(std::string pEntity,
+                             int pPeriod,
+                             int p_startTime,
+                             int p_endTime);
   virtual ~SDynamicEntitySelfRotation();
 
   void performXY(float *vx, float *vy, float *vAngle);
 
- private:
+private:
 };
 
 /* block */
 class SDynamicBlockMove : public SDynamicObject {
- public:
-  SDynamicBlockMove(std::string pBlock, int p_startTime, int p_endTime, int pPeriod);
+public:
+  SDynamicBlockMove(std::string pBlock,
+                    int p_startTime,
+                    int p_endTime,
+                    int pPeriod);
   virtual ~SDynamicBlockMove();
 
-  void performMove(Scene* p_motoGame, int i_nbCents);
+  void performMove(Scene *p_motoGame, int i_nbCents);
 
- protected:
+protected:
   virtual void performXY(float *vx, float *vy, float *vAngle) = 0;
 
- private:
+private:
   std::string m_blockName;
-  Block*      m_block;
+  Block *m_block;
 };
 
-class SDynamicBlockRotation : public SDynamicBlockMove, public SDynamicRotation {
- public:
-  SDynamicBlockRotation(std::string pBlock, float pInitAngle, float pRadius, int pPeriod, int p_startTime, int p_endTime);
+class SDynamicBlockRotation : public SDynamicBlockMove,
+                              public SDynamicRotation {
+public:
+  SDynamicBlockRotation(std::string pBlock,
+                        float pInitAngle,
+                        float pRadius,
+                        int pPeriod,
+                        int p_startTime,
+                        int p_endTime);
   virtual ~SDynamicBlockRotation();
 
   void performXY(float *vx, float *vy, float *vAngle);
 
- private:
+private:
 };
 
-class SDynamicBlockSelfRotation : public SDynamicBlockMove, public SDynamicSelfRotation {
- public:
-  SDynamicBlockSelfRotation(std::string pBlock, int pPeriod, int p_startTime, int p_endTime);
+class SDynamicBlockSelfRotation : public SDynamicBlockMove,
+                                  public SDynamicSelfRotation {
+public:
+  SDynamicBlockSelfRotation(std::string pBlock,
+                            int pPeriod,
+                            int p_startTime,
+                            int p_endTime);
   virtual ~SDynamicBlockSelfRotation();
 
   void performXY(float *vx, float *vy, float *vAngle);
 
- private:
+private:
 };
 
-class SDynamicBlockTranslation : public SDynamicBlockMove, public SDynamicTranslation {
- public:
-  SDynamicBlockTranslation(std::string pBlock, float pX, float pY, int pPeriod, int p_startTime, int p_endTime);
+class SDynamicBlockTranslation : public SDynamicBlockMove,
+                                 public SDynamicTranslation {
+public:
+  SDynamicBlockTranslation(std::string pBlock,
+                           float pX,
+                           float pY,
+                           int pPeriod,
+                           int p_startTime,
+                           int p_endTime);
   virtual ~SDynamicBlockTranslation();
 
   void performXY(float *vx, float *vy, float *vAngle);
 
- private:
+private:
 };
-
-
-
 
 /* chipmunk blocks */
 
 class SPhysicBlockMove : public SDynamicObject {
 public:
-  SPhysicBlockMove(std::string blockName, int startTime, int endTime, int period);
+  SPhysicBlockMove(std::string blockName,
+                   int startTime,
+                   int endTime,
+                   int period);
   virtual ~SPhysicBlockMove() {}
-  
-  void performMove(Scene* pScene, int i_nbCents);
+
+  void performMove(Scene *pScene, int i_nbCents);
 
 protected:
   virtual void applyForce() = 0;
-  Block* m_block;
+  Block *m_block;
 
 private:
   std::string m_blockName;
@@ -214,7 +250,10 @@ private:
 
 class SPhysicBlockSelfRotation : public SPhysicBlockMove {
 public:
-  SPhysicBlockSelfRotation(std::string blockName, int startTime, int endTime, int torque);
+  SPhysicBlockSelfRotation(std::string blockName,
+                           int startTime,
+                           int endTime,
+                           int torque);
   virtual ~SPhysicBlockSelfRotation() {}
 
   void applyForce();
@@ -225,10 +264,16 @@ protected:
 
 class SPhysicBlockTranslation : public SPhysicBlockMove {
 public:
-  SPhysicBlockTranslation(std::string blockName, float x, float y, int period, int startTime, int endTime);
+  SPhysicBlockTranslation(std::string blockName,
+                          float x,
+                          float y,
+                          int period,
+                          int startTime,
+                          int endTime);
   virtual ~SPhysicBlockTranslation() {}
 
   void applyForce();
+
 protected:
   float m_Speed;
   float m_X, m_Y;

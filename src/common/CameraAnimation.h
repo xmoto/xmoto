@@ -29,8 +29,11 @@ class Scene;
 class GameRenderer;
 
 class CameraAnimation {
-  public:
-  CameraAnimation(Camera* i_camera, RenderSurface* i_screen, GameRenderer* i_renderer, Scene* i_motoGame);
+public:
+  CameraAnimation(Camera *i_camera,
+                  RenderSurface *i_screen,
+                  GameRenderer *i_renderer,
+                  Scene *i_motoGame);
   virtual ~CameraAnimation();
 
   virtual void init();
@@ -41,34 +44,37 @@ class CameraAnimation {
   virtual void goNextStep();
 
   float startTime() const;
-  const Vector2f& initialPosition() const;
+  const Vector2f &initialPosition() const;
   float initialZoom() const;
 
   float initialEntitiesToTakeZoom();
   float initialEntitiesWhichMakeWinZoom();
 
- protected:
-  Camera*   m_camera;
-  RenderSurface*  m_screen;
-  GameRenderer* m_renderer;
-  Scene* m_motoGame;
-  int       m_step;
-  bool      m_allowNextStep;
+protected:
+  Camera *m_camera;
+  RenderSurface *m_screen;
+  GameRenderer *m_renderer;
+  Scene *m_motoGame;
+  int m_step;
+  bool m_allowNextStep;
 
- private:
+private:
   // initial values
-  float    m_I_cameraZoom;
+  float m_I_cameraZoom;
   Vector2f m_I_cameraPosition;
-  float    m_I_entitiesToTakeZoom;
-  float    m_I_entitiesWhichMakeWin;
+  float m_I_entitiesToTakeZoom;
+  float m_I_entitiesWhichMakeWin;
 
   // usable values
   float m_startTime;
 };
 
 class AutoZoomCameraAnimation : public CameraAnimation {
- public:
-  AutoZoomCameraAnimation(Camera* i_camera, RenderSurface* i_screen, GameRenderer* i_renderer, Scene* i_motoGame);
+public:
+  AutoZoomCameraAnimation(Camera *i_camera,
+                          RenderSurface *i_screen,
+                          GameRenderer *i_renderer,
+                          Scene *i_motoGame);
   ~AutoZoomCameraAnimation();
 
   virtual void init();
@@ -77,34 +83,37 @@ class AutoZoomCameraAnimation : public CameraAnimation {
   virtual bool step();
   virtual void goNextStep();
 
- private:
-  float    m_zoomX, m_zoomY, m_zoomU;
-  float    m_fAnimPlayStartZoom;
-  float    m_fAnimPlayFinalZoom;
+private:
+  float m_zoomX, m_zoomY, m_zoomU;
+  float m_fAnimPlayStartZoom;
+  float m_fAnimPlayFinalZoom;
   Vector2f m_fPreCameraStart;
   Vector2f m_fPreCameraFinal;
   Vector2f m_fAnimPlayFinalCamera1;
   Vector2f m_fAnimPlayFinalCamera2;
   Vector2f m_fAnimPlayStartCamera;
   Vector2f m_fPrePlayStartCamera;
-  float    m_startTimeUnzooming;
-  float    m_entitiesToTakeZoom;
-  float    m_entitiesWhichMakeWinZoom;
-  bool     m_entitiesGrowing;
-  float    m_previousZoomTime;
+  float m_startTimeUnzooming;
+  float m_entitiesToTakeZoom;
+  float m_entitiesWhichMakeWinZoom;
+  bool m_entitiesGrowing;
+  float m_previousZoomTime;
 };
 
 class ZoomingCameraAnimation : public CameraAnimation {
- public:
-  ZoomingCameraAnimation(Camera* i_camera, RenderSurface* i_screen, GameRenderer* i_renderer, Scene* i_motoGame);
+public:
+  ZoomingCameraAnimation(Camera *i_camera,
+                         RenderSurface *i_screen,
+                         GameRenderer *i_renderer,
+                         Scene *i_motoGame);
   ~ZoomingCameraAnimation();
 
   virtual void init();
   virtual bool step();
 
- private:
-  float    m_zoomX, m_zoomY, m_zoomU;
-  float    m_static_time;
+private:
+  float m_zoomX, m_zoomY, m_zoomU;
+  float m_static_time;
   Vector2f m_fPreCameraStart;
   Vector2f m_fPreCameraFinal;
   Vector2f m_fPrePlayCameraLast;

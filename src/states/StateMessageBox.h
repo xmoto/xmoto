@@ -21,9 +21,9 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #ifndef __STATEMESSAGEBOX_H__
 #define __STATEMESSAGEBOX_H__
 
+#include "../gui/basic/GUI.h"
 #include "StateManager.h"
 #include "StateMenu.h"
-#include "../gui/basic/GUI.h"
 
 class UIRoot;
 class UIMsgBox;
@@ -31,59 +31,62 @@ class StateMessageBoxReceiver;
 
 class StateMessageBox : public StateMenu {
 public:
-  StateMessageBox(StateMessageBoxReceiver* i_receiver,
-		  const std::string& i_text,
-		  int i_buttons,
-		  bool i_input = false,
-		  const std::string& i_inputText = "",
-		  bool i_query = false,
-		  bool drawStateBehind    = true,
-		  bool updateStatesBehind = false,
-		  bool i_verticallyLarge = false);
-  StateMessageBox(StateMessageBoxReceiver* i_receiver,
-		  std::vector<std::string>& completionList,
-  		  const std::string& i_text,
-  		  int i_buttons,
-  		  bool i_input = false,
-  		  const std::string& i_inputText = "",
-  		  bool i_query = false,
-  		  bool drawStateBehind    = true,
-  		  bool updateStatesBehind = false,
-  		  bool i_verticallyLarge = false);
+  StateMessageBox(StateMessageBoxReceiver *i_receiver,
+                  const std::string &i_text,
+                  int i_buttons,
+                  bool i_input = false,
+                  const std::string &i_inputText = "",
+                  bool i_query = false,
+                  bool drawStateBehind = true,
+                  bool updateStatesBehind = false,
+                  bool i_verticallyLarge = false);
+  StateMessageBox(StateMessageBoxReceiver *i_receiver,
+                  std::vector<std::string> &completionList,
+                  const std::string &i_text,
+                  int i_buttons,
+                  bool i_input = false,
+                  const std::string &i_inputText = "",
+                  bool i_query = false,
+                  bool drawStateBehind = true,
+                  bool updateStatesBehind = false,
+                  bool i_verticallyLarge = false);
   virtual ~StateMessageBox();
 
   virtual void enter();
   virtual void leave();
 
   std::string getMsgBxId() const;
-  void setMsgBxId(const std::string& i_id);
+  void setMsgBxId(const std::string &i_id);
 
   /* input */
-  virtual void xmKey(InputEventType i_type, const XMKey& i_xmkey);
+  virtual void xmKey(InputEventType i_type, const XMKey &i_xmkey);
   void makeActiveButton(UIMsgBoxButton i_button);
-  void setCustom(const std::string& i_custom1, const std::string& i_custom2 = "");
-  void setHelp(const std::string& i_help);
+  void setCustom(const std::string &i_custom1,
+                 const std::string &i_custom2 = "");
+  void setHelp(const std::string &i_help);
 
 protected:
   virtual void checkEvents();
 
 private:
-  void initStateMessageBox(StateMessageBoxReceiver* i_receiver,
-			   const std::string& i_text,
-			   int i_buttons,
-			   bool i_input,
-			   const std::string& i_inputText,
-			   bool i_query,
-			   bool i_verticallyLarge);
+  void initStateMessageBox(StateMessageBoxReceiver *i_receiver,
+                           const std::string &i_text,
+                           int i_buttons,
+                           bool i_input,
+                           const std::string &i_inputText,
+                           bool i_query,
+                           bool i_verticallyLarge);
 
-  UIMsgBox* m_msgbox;
-  StateMessageBoxReceiver* m_receiver;
+  UIMsgBox *m_msgbox;
+  StateMessageBoxReceiver *m_receiver;
   UIMsgBoxButton m_clickedButton;
   std::string m_msgbxid;
 
   void createGUI();
 
-  // requirement to build the msgbox. Note that it's not directly done in the constructor while it's forbiden to use the XMScreen into the constructor (set after)
+  // requirement to build the msgbox. Note that it's not directly done in the
+  // constructor while it's forbiden to use the XMScreen into the constructor
+  // (set after)
   std::string m_text;
   int m_buttons;
   bool m_input;

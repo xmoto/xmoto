@@ -21,17 +21,14 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "XMThreads.h"
 #include "XMThread.h"
 
-XMThreads::XMThreads()
-{
-}
+XMThreads::XMThreads() {}
 
-XMThreads::~XMThreads()
-{
+XMThreads::~XMThreads() {
   // emergency stop.
-  std::map<std::string, XMThread*>::iterator iter;
+  std::map<std::string, XMThread *>::iterator iter;
   iter = m_threads.begin();
 
-  while(iter != m_threads.end()){
+  while (iter != m_threads.end()) {
     iter->second->askThreadToEnd();
     iter->second->waitForThreadEnd();
     delete iter->second;
@@ -42,37 +39,32 @@ XMThreads::~XMThreads()
   m_threads.clear();
 }
 
-void XMThreads::addThread(std::string threadId, XMThread* pThread)
-{
+void XMThreads::addThread(std::string threadId, XMThread *pThread) {
   m_threads[threadId] = pThread;
 }
 
-void XMThreads::removeThread(std::string threadId)
-{
-  XMThread* pThread = m_threads[threadId];
+void XMThreads::removeThread(std::string threadId) {
+  XMThread *pThread = m_threads[threadId];
   delete pThread;
   m_threads.erase(threadId);
 }
 
-XMThread* XMThreads::getThread(std::string threadId)
-{
+XMThread *XMThreads::getThread(std::string threadId) {
   return m_threads[threadId];
 }
 
-int XMThreads::getNumberThreads()
-{
+int XMThreads::getNumberThreads() {
   return m_threads.size();
 }
 
-int XMThreads::getNumberRunningThreads()
-{
+int XMThreads::getNumberRunningThreads() {
   int nb = 0;
-  
-  std::map<std::string, XMThread*>::iterator iter;
+
+  std::map<std::string, XMThread *>::iterator iter;
   iter = m_threads.begin();
 
-  while(iter != m_threads.end()){
-    if(iter->second->isThreadRunning() == true){
+  while (iter != m_threads.end()) {
+    if (iter->second->isThreadRunning() == true) {
       nb++;
     }
 
