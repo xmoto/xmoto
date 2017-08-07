@@ -282,12 +282,9 @@ void GameApp::run_load(int nNumArgs, char **ppcArgs) {
   if (v_xmArgs.isOptServerOnly()) {
     struct sigaction v_act;
 
+    memset(&v_act, 0, sizeof(struct sigaction));
     v_act.sa_handler = xmexit_term;
-#if !defined(__APPLE__) && !defined(__FreeBSD__)
-    v_act.sa_restorer = NULL;
-#endif
     sigemptyset(&v_act.sa_mask);
-    v_act.sa_flags = 0;
 
     if (sigaction(SIGTERM, &v_act, NULL) != 0) {
       LogWarning("sigaction failed");
