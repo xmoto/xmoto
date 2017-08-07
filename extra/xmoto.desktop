@@ -6,4 +6,4 @@ GenericName=Motocross game
 GenericName[fr_FR]=Jeu de moto
 Icon=xmoto.xpm
 Exec=xmoto
-Categories=Game;SportsGame;
+Categories=Game;SportsGame;ArcadeGame;
