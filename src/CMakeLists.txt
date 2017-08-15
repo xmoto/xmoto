@@ -5,7 +5,7 @@ option(USE_GETTEXT "Build with Gettext for internationalization" ON)
 option(PREFER_SYSTEM_BZip2 "Prefer system BZip2" ON)
 option(PREFER_SYSTEM_ODE "Prefer system ODE" ON)
 option(PREFER_SYSTEM_XDG "Prefer system XDG" ON)
-option(ALLOW_DEV "Enable some development/debug features" OFF)
+option(ALLOW_DEV "Enable some development/debug features" ON)
 
 if(CMAKE_GENERATOR MATCHES "Ninja")
   message("-- Using Ninja, try to colorize")
@@ -34,6 +34,7 @@ find_package(LibXml2 REQUIRED)
 find_package(ODE)
 set(USE_SYSTEM_ODE $<AND:$<BOOL:${PREFER_SYSTEM_ODE}>,$<BOOL:${ODE_FOUND}>>)
 if(USE_OPENGL)
+  find_package(GLEW REQUIRED)
   find_package(OpenGL REQUIRED)
 endif()
 find_package(PNG REQUIRED)
@@ -403,6 +404,7 @@ target_link_libraries(xmoto PUBLIC
   md5sum
   $<${USE_SYSTEM_ODE}:${ODE_LIBRARY}>
   $<$<NOT:${USE_SYSTEM_ODE}>:ode>
+  ${GLEW_LIBRARIES}
   ${OPENGL_LIBRARIES}
   ${PNG_LIBRARY}
   ${SDL_LIBRARY}
@@ -500,6 +502,7 @@ message("LibXml2   libraries: ${LIBXML2_LIBRARIES}")
 message("LibLZMA   libraries: ${LIBLZMA_LIBRARIES}")
 message("Ode       libraries: ${ODE_LIBRARY}")
 message("OpenGL    libraries: ${OPENGL_LIBRARIES}")
+message("GLEW      libraries: ${GLEW_LIBRARIES}")
 message("Png       libraries: ${PNG_LIBRARY}")
 message("SDL       libraries: ${SDL_LIBRARY}")
 message("SDL_mixer libraries: ${SDLMIXER_LIBRARY}")

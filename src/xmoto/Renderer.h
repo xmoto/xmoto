@@ -83,14 +83,14 @@ private:
 
   /* For shaders */
   bool m_bUseShaders;
-  GLhandleARB m_VertShaderID;
-  GLhandleARB m_FragShaderID;
-  GLhandleARB m_ProgramID;
+  GLuint m_VertShaderID;
+  GLuint m_FragShaderID;
+  GLuint m_ProgramID;
 
   /* Helpers */
-  char **_LoadShaderSource(const std::string &File, unsigned int *pnNumLines);
-  void _FreeShaderSource(char **ppc, unsigned int nNumLines);
-  bool _SetShaderSource(GLhandleARB ShaderID, const std::string &File);
+  std::string _LoadShaderSource(const std::string &File);
+  GLuint _CreateShader(GLenum Type, const std::string &Code);
+  bool _CheckStatus(GLuint Handle, bool IsProg, GLenum Pname, std::string *OutLog = NULL);
 #endif
 
   int m_nOverlayWidth, m_nOverlayHeight;

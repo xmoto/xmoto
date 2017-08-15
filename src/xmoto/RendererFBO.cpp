@@ -50,7 +50,8 @@ void SFXOverlay::init(DrawLib *i_drawLib,
     /* Create overlay */
     glEnable(GL_TEXTURE_2D);
 
-    ((DrawLibOpenGL *)m_drawLib)->glGenFramebuffersEXT(1, &m_FrameBufferID);
+    glGenFramebuffers(1, &m_FrameBufferID);
+
     glGenTextures(1, &m_DynamicTextureID);
     glBindTexture(GL_TEXTURE_2D, m_DynamicTextureID);
     glTexImage2D(GL_TEXTURE_2D,
@@ -72,27 +73,37 @@ void SFXOverlay::init(DrawLib *i_drawLib,
     m_bUseShaders = m_drawLib->useShaders();
 
     if (m_bUseShaders) {
-      m_VertShaderID = ((DrawLibOpenGL *)m_drawLib)
-                         ->glCreateShaderObjectARB(GL_VERTEX_SHADER_ARB);
-      m_FragShaderID = ((DrawLibOpenGL *)m_drawLib)
-                         ->glCreateShaderObjectARB(GL_FRAGMENT_SHADER_ARB);
+      unsigned int numVSSrcLines = 0, numFSSrcLines = 0;
+      std::string vsSource = _LoadShaderSource("SFXOverlay.vert");
+      std::string fsSource = _LoadShaderSource("SFXOverlay.frag");
 
-      if (!_SetShaderSource(m_VertShaderID, "SFXOverlay.vert") ||
-          !_SetShaderSource(m_FragShaderID, "SFXOverlay.frag"))
+      m_VertShaderID = _CreateShader(GL_VERTEX_SHADER, vsSource);
+      m_FragShaderID = _CreateShader(GL_FRAGMENT_SHADER, fsSource);
+      
+      if (false)
         m_bUseShaders = false;
       else {
         /* Source loaded good... Now create the program */
-        m_ProgramID = ((DrawLibOpenGL *)m_drawLib)->glCreateProgramObjectARB();
+        m_ProgramID = glCreateProgram();
 
         /* Attach our shaders to it */
-        ((DrawLibOpenGL *)m_drawLib)
-          ->glAttachObjectARB(m_ProgramID, m_VertShaderID);
-        ((DrawLibOpenGL *)m_drawLib)
-          ->glAttachObjectARB(m_ProgramID, m_FragShaderID);
+        glAttachShader(m_ProgramID, m_VertShaderID);
+        glAttachShader(m_ProgramID, m_FragShaderID);
 
         /* Link it */
-        ((DrawLibOpenGL *)m_drawLib)->glLinkProgramARB(m_ProgramID);
+        glLinkProgram(m_ProgramID);
 
+
+        if (!_CheckStatus(m_ProgramID, true, GL_LINK_STATUS)) {
+        }
+
+        glDetachShader(m_ProgramID, m_VertShaderID);
+        glDetachShader(m_ProgramID, m_FragShaderID);
+
+        glDeleteShader(m_VertShaderID);
+        glDeleteShader(m_FragShaderID);
+
+        /*
         int nStatus = 0;
         ((DrawLibOpenGL *)m_drawLib)
           ->glGetObjectParameterivARB(
@@ -100,7 +111,7 @@ void SFXOverlay::init(DrawLib *i_drawLib,
         if (!nStatus) {
           LogError("-- Failed to link SFXOverlay shader program --");
 
-          /* Retrieve info-log */
+          /* Retrieve info-log * /
           int nInfoLogLen = 0;
           ((DrawLibOpenGL *)m_drawLib)
             ->glGetObjectParameterivARB(m_ProgramID,
@@ -116,8 +127,11 @@ void SFXOverlay::init(DrawLib *i_drawLib,
 
           m_bUseShaders = false;
         } else {
-          /* Linked OK! */
+          /* Linked OK! * /
         }
+        */
+
+        glValidateProgram(m_ProgramID);
       }
     }
   }
@@ -130,8 +144,7 @@ void SFXOverlay::cleanUp(void) {
     if (m_drawLib->useFBOs()) {
       /* Delete stuff */
       glDeleteTextures(1, &m_DynamicTextureID);
-      ((DrawLibOpenGL *)m_drawLib)
-        ->glDeleteFramebuffersEXT(1, &m_FrameBufferID);
+      glDeleteFramebuffers(1, &m_FrameBufferID);
     }
   }
 #endif
@@ -145,14 +158,12 @@ void SFXOverlay::beginRendering(void) {
   if (m_drawLib->useFBOs()) {
     glEnable(GL_TEXTURE_2D);
 
-    ((DrawLibOpenGL *)m_drawLib)
-      ->glBindFramebufferEXT(GL_FRAMEBUFFER_EXT, m_FrameBufferID);
-    ((DrawLibOpenGL *)m_drawLib)
-      ->glFramebufferTexture2DEXT(GL_FRAMEBUFFER_EXT,
-                                  GL_COLOR_ATTACHMENT0_EXT,
-                                  GL_TEXTURE_2D,
-                                  m_DynamicTextureID,
-                                  0);
+    glBindFramebuffer(GL_FRAMEBUFFER, m_FrameBufferID);
+    glFramebufferTexture2D(GL_FRAMEBUFFER,
+                              GL_COLOR_ATTACHMENT0,
+                              GL_TEXTURE_2D,
+                              m_DynamicTextureID,
+                              0);
 
     glDisable(GL_TEXTURE_2D);
 
@@ -164,7 +175,7 @@ void SFXOverlay::beginRendering(void) {
 void SFXOverlay::endRendering(void) {
 #ifdef ENABLE_OPENGL
   if (m_drawLib->useFBOs()) {
-    ((DrawLibOpenGL *)m_drawLib)->glBindFramebufferEXT(GL_FRAMEBUFFER_EXT, 0);
+    glBindFramebuffer(GL_FRAMEBUFFER, 0);
     glViewport(m_screen->downleft().x,
                m_screen->downleft().y,
                m_screen->size().x,
@@ -174,84 +185,101 @@ void SFXOverlay::endRendering(void) {
 }
 
 #ifdef ENABLE_OPENGL
-/*===========================================================================
-Load shader source
-===========================================================================*/
-char **SFXOverlay::_LoadShaderSource(const std::string &File,
-                                     unsigned int *pnNumLines) {
-  FileHandle *pfh = XMFS::openIFile(FDT_DATA, std::string("Shaders/") + File);
-  if (pfh != NULL) {
-    /* Load lines */
-    std::string Line;
-    std::vector<std::string> Lines;
-    while (XMFS::readNextLine(pfh, Line)) {
-      Lines.push_back(Line);
-    }
-    XMFS::closeFile(pfh);
 
-    /* Convert line array into something OpenGL will eat */
-    char **ppc = new char *[Lines.size()];
-    for (unsigned int i = 0; i < Lines.size(); i++) {
-      char *pc = new char[Lines[i].length() + 1];
-      strcpy(pc, Lines[i].c_str());
-      ppc[i] = pc;
-    }
-    *pnNumLines = Lines.size();
+std::string SFXOverlay::_LoadShaderSource(const std::string &File) {
+  std::string result;
 
-    return ppc;
+  FILE* file = fopen(File.c_str(), "r");
+
+  if (!file) {
+    LogError("-- Failed to load file \"%s\" --", File.c_str());
+    return "";
+  } else {
+    int res = fseek(file, 0L, SEEK_END);
+    if (res != 0) {
+      LogError("-- Failed to seek file end (\"%s\") --", File.c_str());
+    } else {
+      long nBytes = ftell(file);
+      res = fseek(file, 0L, SEEK_SET);
+      if (res != 0) {
+        rewind(file);
+      }
+
+      size_t bufSz = (nBytes + 1) * sizeof(char);
+      char *buf = (char *)malloc(bufSz);
+      if (!buf) {
+        LogError("-- malloc failed! --");
+        return "";
+      }
+
+      size_t nBytesRead = fread(buf, sizeof(char), nBytes, file);
+
+      buf = (char *)realloc(buf, nBytesRead + 1);
+      if (!buf) {
+        LogError("-- realloc failed! --");
+        return "";
+      }
+
+      buf[nBytesRead] = '\0';
+
+      result.append(buf);
+
+      free(buf);
+    }
+
+    fclose(file);
   }
-  /* Nothing! */
-  return NULL;
+
+  return result;
 }
 
-bool SFXOverlay::_SetShaderSource(GLhandleARB ShaderID,
-                                  const std::string &File) {
-  /* Try loading file */
-  unsigned int nNumLines;
-  char **ppc = _LoadShaderSource(File, &nNumLines);
-  if (ppc == NULL)
-    return false; /* no shader */
+GLuint SFXOverlay::_CreateShader(GLenum Type, const std::string &Code) {
+  GLuint handle = 0;
 
-  /* Pass it to OpenGL */
-  ((DrawLibOpenGL *)m_drawLib)
-    ->glShaderSourceARB(ShaderID, nNumLines, (const GLcharARB **)ppc, NULL);
+  handle = glCreateShader(Type);
+  const GLchar *code = (const GLchar *)Code.c_str();
+  glShaderSource(handle, 1, &code, 0);
+  glCompileShader(handle);
 
-  /* Compile it! */
-  ((DrawLibOpenGL *)m_drawLib)->glCompileShaderARB(ShaderID);
-  int nStatus = 0;
-  ((DrawLibOpenGL *)m_drawLib)
-    ->glGetObjectParameterivARB(
-      ShaderID, GL_OBJECT_COMPILE_STATUS_ARB, (GLint *)&nStatus);
-  if (!nStatus) {
-    _FreeShaderSource(ppc, nNumLines);
-    LogError("-- Failed to compile shader: %s --", File.c_str());
-
-    /* Retrieve info-log */
-    int nInfoLogLen = 0;
-    ((DrawLibOpenGL *)m_drawLib)
-      ->glGetObjectParameterivARB(
-        ShaderID, GL_OBJECT_INFO_LOG_LENGTH_ARB, (GLint *)&nInfoLogLen);
-    char *pcInfoLog = new char[nInfoLogLen];
-    int nCharsWritten = 0;
-    ((DrawLibOpenGL *)m_drawLib)
-      ->glGetInfoLogARB(
-        ShaderID, nInfoLogLen, (GLsizei *)&nCharsWritten, pcInfoLog);
-    LogInfo(pcInfoLog);
-    delete[] pcInfoLog;
-
-    return false;
+  if (0 == handle) {
+    LogError("-- Failed to create shader: (type: %s) --",
+      GL_VERTEX_SHADER == Type ? "vertex" :
+      (GL_FRAGMENT_SHADER == Type ? "fragment" : "unknown"));
+    return 0;
   }
 
-  /* Free source */
-  _FreeShaderSource(ppc, nNumLines);
-  return true;
+  return handle;
 }
 
-void SFXOverlay::_FreeShaderSource(char **ppc, unsigned int nNumLines) {
-  for (unsigned int i = 0; i < nNumLines; i++) {
-    delete[] ppc[i];
+bool SFXOverlay::_CheckStatus(GLuint Handle, bool IsProg, GLenum Pname, std::string *OutLog) {
+  void (*fn1)(GLuint, GLenum, GLint *) = IsProg ? glGetProgramiv : glGetShaderiv;
+  void (*fn2)(GLuint, GLsizei, GLsizei *, GLchar *) = IsProg ? glGetProgramInfoLog : glGetShaderInfoLog;
+
+  GLint status = 0;
+  
+  fn1(Handle, Pname, &status);
+  
+  if (GL_FALSE == status) {
+    GLint maxLen = 0;
+    fn1(Handle, GL_INFO_LOG_LENGTH, &maxLen);
+    size_t bufLen = maxLen + 1;
+    char *infoLog = (char *)malloc(bufLen * sizeof(char));
+    if (!infoLog) {
+      LogWarning("-- malloc failed! --");
+      return false;
+    }
+
+    fn2(Handle, maxLen, &maxLen, &infoLog[0]);
+    infoLog[maxLen] = '\0';
+
+    if (OutLog) {
+      OutLog->append(infoLog);
+    } else {
+      LogInfo("%s", infoLog);
+    }
+
+    free(infoLog);
   }
-  delete[] ppc;
 }
 #endif
 
@@ -305,7 +333,7 @@ void SFXOverlay::present(void) {
     glLoadIdentity();
 
     if (m_bUseShaders)
-      ((DrawLibOpenGL *)m_drawLib)->glUseProgramObjectARB(m_ProgramID);
+      glUseProgram(m_ProgramID);
 
     m_drawLib->setBlendMode(BLEND_MODE_B);
     glEnable(GL_TEXTURE_2D);
@@ -320,7 +348,7 @@ void SFXOverlay::present(void) {
     glDisable(GL_TEXTURE_2D);
 
     if (m_bUseShaders)
-      ((DrawLibOpenGL *)m_drawLib)->glUseProgramObjectARB(0);
+      glUseProgram(0);
 
     glPopMatrix();
     glMatrixMode(GL_PROJECTION);
