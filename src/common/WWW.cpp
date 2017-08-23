@@ -193,7 +193,7 @@ void FSWeb::downloadFile(const std::string &p_local_file,
   std::string v_www_agent = WWW_AGENT;
 
   /* open the file */
-  if ((v_destinationFile = fopen(v_local_file_tmp.c_str(), "wb")) == false) {
+  if ((v_destinationFile = fopen(v_local_file_tmp.c_str(), "wb")) == NULL) {
     throw Exception("error : unable to open output file " + v_local_file_tmp);
   }
 
@@ -309,7 +309,7 @@ void FSWeb::uploadReplay(const std::string &p_replayFilename,
   LogInfo(std::string("Uploading replay " + p_replayFilename).c_str());
 
   /* open the file */
-  if ((v_destinationFile = fopen(v_local_file.c_str(), "wb")) == false) {
+  if ((v_destinationFile = fopen(v_local_file.c_str(), "wb")) == NULL) {
     throw Exception(
       "error : unable to open output file " DEFAULT_WWW_MSGFILE("UR"));
   }
@@ -497,7 +497,7 @@ void FSWeb::sendVote(const std::string &p_id_level,
   LogInfo("Sending vote");
 
   /* open the file */
-  if ((v_destinationFile = fopen(v_local_file.c_str(), "wb")) == false) {
+  if ((v_destinationFile = fopen(v_local_file.c_str(), "wb")) == NULL) {
     throw Exception(
       "error : unable to open output file " DEFAULT_WWW_MSGFILE("SV"));
   }
@@ -614,7 +614,7 @@ void FSWeb::sendReport(const std::string &p_reportauthor,
   LogInfo("Sending report");
 
   /* open the file */
-  if ((v_destinationFile = fopen(v_local_file.c_str(), "wb")) == false) {
+  if ((v_destinationFile = fopen(v_local_file.c_str(), "wb")) == NULL) {
     throw Exception(
       "error : unable to open output file " DEFAULT_WWW_MSGFILE("SR"));
   }
@@ -750,7 +750,7 @@ void FSWeb::uploadDbSync(const std::string &p_dbSyncFilename,
             .c_str());
 
   /* open the file */
-  if ((v_destinationFile = fopen(p_answerFile.c_str(), "wb")) == false) {
+  if ((v_destinationFile = fopen(p_answerFile.c_str(), "wb")) == NULL) {
     throw Exception("error : unable to open output file " + p_answerFile);
   }
 
