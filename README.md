@@ -1,18 +1,9 @@
 X-Moto 0.5.12
-Copyright (C) 2005-2014
+Copyright (C) 2005-2019
 
-Main activ developpers:
-2006-2014 Nicolas Adenis-Lamarre (nicolas !at! adenis-lamarre !dot! fr)
-2007-2011 Emmanuel Gorse (e !dot! gorse !at! free !dot! fr)
-2009-2010 Jens Erler (mothbox !at! gmx !dot! net)
-2005-2006 Rasmus Neckelmann (neckelmann !at! gmail !dot! com)
+# Introduction
 
-(Change !at! by @ and !dot! by . to reconstruct the email addresses.)
-
-http://xmoto.tuxfamily.org
-
-Introduction
-============
+[X-Moto Website](http://xmoto.tuxfamily.org)
 
 X-Moto is a challenging 2D motocross platform game, where physics play 
 an all important role in the gameplay. You need to control your bike to 
@@ -22,10 +13,9 @@ the challenges.
 First you'll try just to complete the levels, while later you'll compete 
 with yourself and others, racing against the clock.  
 
-System Requirements
-===================
+# System Requirements
 
-General hardware requirements:
+### General hardware requirements:
 
  - CPU: 300 MHz (a wild guess)
  - RAM: 64 MB (at least 40 MB of free memory prefered)
@@ -34,12 +24,12 @@ General hardware requirements:
  - Software: Windows, Linux, Mac OS X or FreeBSD (other UNIX-like 
    OS's might be supported as well)
 
-Recommended:
+### Recommended:
 
  - CPU: 1 GHz
  - Graphics: nVidia GeForce FX/ATI RADEON 9600-class GPU
 
-Software dependencies for compiling on non-Windows platforms:
+### Software dependencies for compiling on non-Windows platforms:
 
  - libjpeg
  - libpng
@@ -56,16 +46,14 @@ Software dependencies for compiling on non-Windows platforms:
  - libcurl
  - SDL_ttf 
 
-Installation
-============
+# Installation
 
 The file INSTALL offers information on how to get X-Moto up and 
 running on your non-Windows computer. If you're reading this file on
 you're Windows computer, you've probably already installed X-Moto
 successfully :)
 
-Basic Gameplay
-==============
+# Basic Gameplay
 
 A number of strawberries are spread around each level, which generally 
 consists of a complicated landscape seen from the side - i.e. much like 
@@ -79,8 +67,7 @@ and you control its throttle, braking, and simple changes to the
 attitude by jerking the bike back and forth. Additionally you can change 
 the direction of your driving, by rotating on the spot. 
 
-Controls
-========
+# Controls
 
 You control your bike using the keyboard:
 
@@ -97,14 +84,12 @@ Additionally, some other keys can be pressed while playing:
 Escape - Pauses the game, and opens the in-game menu
 F12 - Takes a screenshot (saved in the ~/.local/share/xmoto directory)
 
-Command-line Options
-====================
+# Command-line Options
 
 X-Moto supports a range of options you can specify on the command
 line when starting the program. Run xmoto --help to get details on these options.
 
-Letting X-Moto Access The Web
-=============================
+# Letting X-Moto Access The Web
 
 Alpha version 0.1.14 of X-Moto comes with a new feature that allows
 the game to connect to the web and download high-scores (world 
@@ -117,8 +102,7 @@ SOCKS5 proxies. If you're behind a firewall, you most likely need to
 specify a proxy; ask your network administrator for guidance if 
 you're in doubt.
 
-Replays
-=======
+# Replays
 
 As of alpha version 0.1.8, X-Moto supports recording and playback of
 replays. These are always stored in the Replays/ directory, which is
@@ -135,8 +119,7 @@ Other things to be aware of regarding X-Moto replays:
    than the actual game.
  - No fancy dirt particles from rear wheel spinning.
 
-Advanced Configuration Options
-==============================
+# Advanced Configuration Options
 
 Options are saved in a file called config.dat. The file is saved
 in ~/.config/xmoto. 
@@ -176,16 +159,14 @@ get included in the menus:
                     The default value of 25 seems to be a good 
                     compromise between smoothness and file size.   
  
-Bugs
-====
+# Bugs
 
 If you experiences any bugs, please submit them using the "Bugs" 
 interface found on the X-Moto page:
    
    http://todo.xmoto.tuxfamily.org.
 
-License
-=======
+# License
 
 The game and its source code is released under the terms of the GNU 
 General Public License. See COPYING for details.
@@ -197,7 +178,12 @@ source code in any way you like, even to modify the source and release
 your own version of the game, as long as you comply with the 
 above mentioned licenses.
 
-Authors
-=======
+# Authors
 
 See the in-game credits under "Help".
+
+## Main active developpers
+2006-2014 Nicolas Adenis-Lamarre (nicolas@adenis-lamarre.fr)
+2007-2011 Emmanuel Gorse (e.gorse@free.fr)
+2009-2010 Jens Erler (mothbox@gmx.net)
+2005-2006 Rasmus Neckelmann (neckelmann@gmail.com)
