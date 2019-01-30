@@ -48,8 +48,8 @@ Note that the above keys can be configured to something else to suit
 your needs.
 Additionally, some other keys can be pressed while playing:
 
-Escape - Pauses the game, and opens the in-game menu
-F12 - Takes a screenshot (saved in the ~/.local/share/xmoto directory)
+- Escape - Pauses the game, and opens the in-game menu
+- F12 - Takes a screenshot (saved in the ~/.local/share/xmoto directory)
 
 # Command-line Options
 
