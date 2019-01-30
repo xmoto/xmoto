@@ -38,11 +38,11 @@ the direction of your driving, by rotating on the spot.
 
 You control your bike using the keyboard:
 
-Up arrow - Accelerates
-Down arrow - Brakes
-Left arrow - Rotates it counter-clockwise
-Right arrow - Rotates it clockwise
-Space - Turns around and drives in the other direction
+- Up arrow - Accelerates
+- Down arrow - Brakes
+- Left arrow - Rotates it counter-clockwise
+- Right arrow - Rotates it clockwise
+- Space - Turns around and drives in the other direction
 
 Note that the above keys can be configured to something else to suit
 your needs.
@@ -61,6 +61,7 @@ line when starting the program. Run xmoto --help to get details on these options
 Alpha version 0.1.14 of X-Moto comes with a new feature that allows
 the game to connect to the web and download high-scores (world 
 records) and extra levels. 
+
 The first time you run X-Moto you'll be asked about whether you want
 to allow the game to access your Internet connection; if you don't
 have one, simply click "No". Then you'll be asked to specify your
