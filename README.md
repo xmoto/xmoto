@@ -13,39 +13,6 @@ the challenges.
 First you'll try just to complete the levels, while later you'll compete 
 with yourself and others, racing against the clock.  
 
-# System Requirements
-
-### General hardware requirements:
-
- - CPU: 300 MHz (a wild guess)
- - RAM: 64 MB (at least 40 MB of free memory prefered)
- - Graphics: nVidia GeForce-class card with 128 MB of video memory
- - HDD: 50 MB of free space on your hard drive.
- - Software: Windows, Linux, Mac OS X or FreeBSD (other UNIX-like 
-   OS's might be supported as well)
-
-### Recommended:
-
- - CPU: 1 GHz
- - Graphics: nVidia GeForce FX/ATI RADEON 9600-class GPU
-
-### Software dependencies for compiling on non-Windows platforms:
-
- - libjpeg
- - libpng
- - zlib
- - libbz2
- - SDL
- - GL
- - libcurl (3.x)
- - lua (5.x)
- - ode (0.x)
- - SDL_mixer (1.2.7)
- - SDL_net (1.2)
- - libsqlite
- - libcurl
- - SDL_ttf 
-
 # Installation
 
 The file INSTALL offers information on how to get X-Moto up and 
@@ -128,43 +95,27 @@ in any text editor. In addition to the options accessible from inside
 the game, there's a couple more, which is not interesting enough to 
 get included in the menus:
 
- WebHighscoresURL   The URL from which public high-scores should be
-                    downloaded. Please consult the high-scores website
-                    for information about how this is used to make 
-                    your own "private" high-score lists.
+- WebHighscoresURL
+> The URL from which public high-scores should be downloaded. Please consult the high-scores website for information about how this is used to make your own "private" high-score lists.
                     
- WebLevelsURL       Place on the web to look for extra levels.
+- WebLevelsURL
+> Place on the web to look for extra levels.
 
- DefaultProfile     Specifies which player profile should be active 
-                    when the game starts.
+- DefaultProfile
+> Specifies which player profile should be active when the game starts.
                     
- ScreenshotFormat   The format in which screenshots should be saved 
-                    in. Can be either jpg or png.                  
+- ScreenshotFormat
+> The format in which screenshots should be saved in. Can be either jpg or png.                  
 
- StoreReplays       If true, replays will be automatically recorded
-                    during the game. When the player dies or 
-                    finishes the level, he can then choose to save
-                    the replay. If set to false, no replay saving
-                    will be possible.
-                    Recording replays have a theoretical impact on
-                    the framerate of the game, but practically you
-                    shouldn't be able to notice anything.
+- StoreReplays
+> If true, replays will be automatically recorded during the game. When the player dies or finishes the level, he can then choose to save the replay.  If set to false, no replay saving will be possible. Recording replays have a theoretical impact on the framerate of the game, but practically you shouldn't be able to notice anything.
                     
- ReplayFrameRate    Specifies the framerate at which replays will
-                    be recorded at. The higher it is, the smoother
-                    the replay will seem to be, but it will also
-                    cause the replay file to be much larger. Never
-                    set this option to higher values than 50, as it
-                    could cause unforeseen consequenses.
-                    The default value of 25 seems to be a good 
-                    compromise between smoothness and file size.   
+- ReplayFrameRate
+> Specifies the framerate at which replays will be recorded at. The higher it is, the smoother the replay will seem to be, but it will also cause the replay file to be much larger. Never set this option to higher values than 50, as it could cause unforeseen consequenses. The default value of 25 seems to be a good compromise between smoothness and file size.   
  
 # Bugs
 
-If you experiences any bugs, please submit them using the "Bugs" 
-interface found on the X-Moto page:
-   
-   http://todo.xmoto.tuxfamily.org.
+If you experiences any bugs, please submit them in github issues.
 
 # License
 
@@ -178,7 +129,9 @@ source code in any way you like, even to modify the source and release
 your own version of the game, as long as you comply with the 
 above mentioned licenses.
 
-# Authors
+# Contributing
+
+### Authors
 
 See the in-game credits under "Help".
 
@@ -187,3 +140,20 @@ See the in-game credits under "Help".
 2007-2011 Emmanuel Gorse (e.gorse@free.fr)
 2009-2010 Jens Erler (mothbox@gmx.net)
 2005-2006 Rasmus Neckelmann (neckelmann@gmail.com)
+
+### Software dependencies for compiling on non-Windows platforms:
+
+ - libjpeg
+ - libpng
+ - zlib
+ - libbz2
+ - SDL
+ - GL
+ - libcurl (3.x)
+ - lua (5.x)
+ - ode (0.x)
+ - SDL_mixer (1.2.7)
+ - SDL_net (1.2)
+ - libsqlite
+ - libcurl
+ - SDL_ttf 
