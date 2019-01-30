@@ -136,10 +136,10 @@ above mentioned licenses.
 See the in-game credits under "Help".
 
 ## Main active developpers
-2006-2014 Nicolas Adenis-Lamarre (nicolas@adenis-lamarre.fr)
-2007-2011 Emmanuel Gorse (e.gorse@free.fr)
-2009-2010 Jens Erler (mothbox@gmx.net)
-2005-2006 Rasmus Neckelmann (neckelmann@gmail.com)
+- 2006-2014 Nicolas Adenis-Lamarre (nicolas@adenis-lamarre.fr)
+- 2007-2011 Emmanuel Gorse (e.gorse@free.fr)
+- 2009-2010 Jens Erler (mothbox@gmx.net)
+- 2005-2006 Rasmus Neckelmann (neckelmann@gmail.com)
 
 ### Software dependencies for compiling on non-Windows platforms:
 
