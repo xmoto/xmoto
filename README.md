@@ -158,3 +158,15 @@ See the in-game credits under "Help".
  - libsqlite
  - libcurl
  - SDL_ttf 
+
+### build package
+```
+git clone git@github.com:xmoto/xmoto.git
+mkdir xmoto-build
+mkdir xmoto-pkg
+cd xmoto-build
+cmake ../xmoto -GNinja -DCMAKE_INSTALL_PREFIX=/usr -DCMAKE_SYSTEM_NAME=Linux
+ninja xmoto_pack
+DESTDIR="../xmoto-pkg" ninja install
+```
+
