@@ -133,6 +133,7 @@ StateManager::~StateManager() {
     if (m_drt->waitForThreadEnd()) {
       LogError("replays downloader thread failed");
     }
+    delete m_drt;
   }
 
   deleteToDeleteState();
