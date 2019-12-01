@@ -5,6 +5,7 @@ Name=Xmoto
 GenericName=Motocross game
 GenericName[de]=Motocross-Spiel
 GenericName[fr_FR]=Jeu de moto
+GenericName[ru]=Симулятор мотокросса
 Icon=xmoto.xpm
 Exec=xmoto
 Categories=Game;SportsGame;ArcadeGame;
