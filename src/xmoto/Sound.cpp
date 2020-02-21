@@ -182,6 +182,7 @@ SoundSample *Sound::loadSample(const std::string &File) {
 
   /* Close file */
   XMFS::closeFile(pf);
+  SDL_FreeRW(pOps);
 
   m_Samples.push_back(pSample);
   return pSample;
