@@ -109,6 +109,7 @@ FileGhost::~FileGhost() {
   for (unsigned int i = 0; i < m_ghostBikeStates.size(); i++) {
     delete m_ghostBikeStates[i];
   }
+  delete m_replay;
 }
 
 void FileGhost::execReplayEvents(int i_time, Scene *i_motogame) {
