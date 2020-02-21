@@ -190,6 +190,9 @@ DrawLibOpenGL::~DrawLibOpenGL() {
   if (m_fontMonospace != NULL) {
     delete m_fontMonospace;
   }
+  if (m_menuCamera != NULL) {
+    delete m_menuCamera;
+  }
 }
 
 DrawLibOpenGL::DrawLibOpenGL()
