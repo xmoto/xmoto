@@ -75,7 +75,10 @@ Camera::Camera(Vector2i downleft, Vector2i upright) {
   prepareForNewLevel();
 }
 
-Camera::~Camera() {}
+Camera::~Camera() {
+  DrawLib *drawLib = GameApp::instance()->getDrawLib();
+  drawLib->setRenderSurface(new RenderSurface(m_renderSurf.downleft(), m_renderSurf.upright()), true);
+}
 
 void Camera::prepareForNewLevel() {
   m_fCurrentHorizontalScrollShift = 0.0f;
@@ -655,7 +658,7 @@ Biker *Camera::getPlayerToFollow() {
 
 void Camera::activate() {
   DrawLib *drawLib = GameApp::instance()->getDrawLib();
-  drawLib->setRenderSurface(&m_renderSurf);
+  drawLib->setRenderSurface(&m_renderSurf, false);
 }
 
 void Camera::setCamera2d() {
