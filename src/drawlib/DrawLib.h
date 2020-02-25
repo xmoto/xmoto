@@ -145,7 +145,7 @@ public:
   void setNoGraphics(bool disable_graphics);
   bool isNoGraphics();
 
-  void setRenderSurface(RenderSurface *renderSurf);
+  void setRenderSurface(RenderSurface *renderSurf, bool i_own);
   RenderSurface *getRenderSurface();
 
   /* Methods - low-level */
@@ -321,6 +321,7 @@ protected:
   SDL_Surface *m_screen;
   Camera *m_menuCamera;
   RenderSurface *m_renderSurf;
+  bool m_ownsRenderSurface;
 
 private:
   static backendtype m_backend;

@@ -112,6 +112,7 @@ DrawLib::DrawLib() {
   m_bFBOSupported = false;
   m_texture = NULL;
   m_blendMode = BLEND_MODE_NONE;
+  m_ownsRenderSurface = false;
 
   m_fontSmall = NULL;
   m_fontMedium = NULL;
@@ -119,7 +120,10 @@ DrawLib::DrawLib() {
   m_fontMonospace = NULL;
 };
 
-DrawLib::~DrawLib() {}
+DrawLib::~DrawLib() {
+  if (m_ownsRenderSurface)
+    delete m_renderSurf;
+}
 
 FontManager *DrawLib::getFontManager(const std::string &i_fontFile,
                                      unsigned int i_fontSize,
@@ -373,8 +377,11 @@ void DrawLib::drawCircle(const Vector2f &Center,
     setBlendMode(BLEND_MODE_NONE);
 }
 
-void DrawLib::setRenderSurface(RenderSurface *renderSurf) {
+void DrawLib::setRenderSurface(RenderSurface *renderSurf, bool i_own) {
+  if (m_renderSurf != renderSurf && m_ownsRenderSurface)
+    delete m_renderSurf;
   m_renderSurf = renderSurf;
+  m_ownsRenderSurface = i_own;
 }
 
 RenderSurface *DrawLib::getRenderSurface() {
