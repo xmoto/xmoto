@@ -547,6 +547,7 @@ void GameApp::addReplay(const std::string &i_file,
     delete rplInfos;
     throw e2;
   }
+  delete rplInfos;
 }
 
 void GameApp::setSpecificReplay(const std::string &i_replay) {
