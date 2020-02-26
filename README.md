@@ -1,5 +1,5 @@
 X-Moto 0.5.12
-Copyright (C) 2005-2019
+Copyright (C) 2005-2020
 
 # Introduction
 
