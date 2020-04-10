@@ -489,43 +489,37 @@ void LevelsManager::makePacks(const std::string &i_playerName,
 
   v_pack = new LevelsPack(
     std::string(VPACKAGENAME_MEDAL_NONE),
-    "SELECT id_level, name, sort_field FROM ("
-    "SELECT a.id_level AS id_level, MAX(a.name) AS name, "
-    "UPPER(MAX(a.name)) AS sort_field, "
-    "MIN(c.finishTime+0) AS webFinishTime, MIN(b.finishTime+0) AS "
-    "userFinishTime "
-    "FROM levels AS a LEFT OUTER JOIN profile_completedLevels AS b "
-    "ON (a.id_level = b.id_level "
-    "AND b.id_profile=\"" +
+    "SELECT a.id_level AS id_level, a.name AS name, "
+    "UPPER(a.name) AS sort_field "
+    "FROM levels AS a " 
+    "LEFT OUTER JOIN (SELECT id_level, MIN(finishTime+0) AS userFinishTime "
+    "FROM profile_completedLevels WHERE id_profile=\"" +
+      xmDatabase::protectString(i_playerName) +
+    "\" GROUP BY id_level) b ON a.id_level = b.id_level "
+      "LEFT OUTER JOIN (SELECT id_level, MIN(finishTime+0) AS webFinishTime "
+      "FROM webhighscores WHERE id_room=" + 
+      i_id_room + " GROUP BY id_level) c ON a.id_level = c.id_level "
+      "WHERE "
+      "(a.id_level IN (SELECT id_level FROM weblevels WHERE "
+      "(crappy IS NULL OR xm_userCrappy(crappy)=0) "
+      "AND (children_compliant IS NULL OR "
+      "xm_userChildrenCompliant(children_compliant)=1)) OR "
+      "a.id_level NOT IN (SELECT id_level FROM weblevels)) " // is local level only
+      "AND a.id_level NOT IN (SELECT id_level FROM levels_blacklist WHERE id_profile=\"" +
       xmDatabase::protectString(i_playerName) +
       "\") "
-      "LEFT OUTER JOIN webhighscores AS c "
-      "ON (c.id_level = a.id_level AND c.id_room=" +
-      i_id_room + ") "
-                  "LEFT OUTER JOIN weblevels AS d ON a.id_level=d.id_level "
-                  "LEFT OUTER JOIN levels_blacklist AS e ON (a.id_level = "
-                  "e.id_level AND e.id_profile=\"" +
-      xmDatabase::protectString(i_playerName) +
-      "\") "
-      "WHERE (d.crappy IS NULL OR xm_userCrappy(d.crappy)=0) "
-      "AND (d.children_compliant IS NULL OR "
-      "xm_userChildrenCompliant(d.children_compliant)=1) "
-      "AND e.id_level IS NULL "
-      "GROUP BY a.id_level "
-      ") "
-      "WHERE (webFinishTime IS NOT NULL "
+      "AND ((webFinishTime IS NOT NULL "
       "AND webFinishTime+0 < userFinishTime*0.80) "
-      "OR userFinishTime IS NULL "
-      "EXCEPT " /* remove the webhighscores where the player's name is the
+      "OR userFinishTime IS NULL) "
+      "AND a.id_level NOT IN ( " /* remove the webhighscores where the player's name is the
                    same */
-      "SELECT b.id_level AS id_level, b.name AS name, UPPER(b.name) AS "
-      "sort_field "
+      "SELECT b.id_level "
       "FROM webhighscores AS a INNER JOIN levels AS b "
       "ON (a.id_level = b.id_level "
       "AND a.id_room=" +
       i_id_room + ") "
                   "WHERE a.id_profile = \"" +
-      xmDatabase::protectString(i_playerName) + "\"");
+      xmDatabase::protectString(i_playerName) + "\")");
   v_pack->setGroup(GAMETEXT_PACK_MEDALS);
   v_pack->setDescription(VPACKAGENAME_DESC_MEDAL_NONE);
   m_levelsPacks.push_back(v_pack);
