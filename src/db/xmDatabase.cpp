@@ -1230,7 +1230,7 @@ void xmDatabase::user_xm_profile(sqlite3_context *i_context,
   sqlite3_result_text(i_context,
                       XMSession::instance()->profile().c_str(),
                       XMSession::instance()->profile().size(),
-                      NULL);
+                      SQLITE_TRANSIENT);
 }
 
 void xmDatabase::user_xm_idRoom(sqlite3_context *i_context,
