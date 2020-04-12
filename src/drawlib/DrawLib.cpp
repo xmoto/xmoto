@@ -26,6 +26,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "common/VFileIO_types.h"
 #include "include/xm_SDL.h"
 #include "xmoto/GameText.h"
+#include <vector>
 
 #define DRAW_FONT_FILE_GENERAL "Textures/Fonts/DejaVuSans.ttf"
 #define DRAW_FONT_FILE_MONOSPACE "Textures/Fonts/DejaVuSansMono.ttf"
@@ -231,6 +232,37 @@ void DrawLib::drawBox(const Vector2f &A,
     glVertexSP(A.x, B.y);
     glVertexSP(B.x, B.y);
     glVertexSP(B.x, B.y - fBorder);
+    endDraw();
+  }
+
+  if (bAlpha)
+    setBlendMode(BLEND_MODE_NONE);
+}
+
+/*===========================================================================
+Primitive: polygon 
+===========================================================================*/
+void DrawLib::drawPolygon(const std::vector<Vector2f> &Points,
+                          Color PolyColor) {
+  // remove current texture if any
+  setTexture(NULL, BLEND_MODE_NONE);
+
+  /* Alpha? */
+  bool bAlpha = false;
+  if (GET_ALPHA(PolyColor) != 255 )
+    bAlpha = true;
+
+  if (bAlpha) {
+    setBlendMode(BLEND_MODE_A);
+  }
+
+  /* Draw rectangle background */
+  if (GET_ALPHA(PolyColor) > 0) {
+    startDraw(DRAW_MODE_POLYGON);
+    setColor(PolyColor);
+    for( const Vector2f &vertex : Points) {
+        glVertexSP(vertex.x, vertex.y);
+    }
     endDraw();
   }
 

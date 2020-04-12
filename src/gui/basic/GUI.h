@@ -31,6 +31,7 @@ class GameApp;
 class RenderSurface;
 
 #include "common/Theme.h"
+#include "helpers/VMath.h"
 #include "include/xm_SDL.h"
 
 #define GUI_JOYSTICK_MINIMUM_DETECTION 3000
@@ -219,6 +220,8 @@ public:
                bool bDisabled,
                bool bActive = false);
   void putRect(int x, int y, int nWidth, int nHeight, Color c);
+  void putPolygon(const std::vector<Vector2f> &points, Color c);
+  void putPolygon(const std::vector<Vector2f> &points, Vector2f shift, Color c);
   void setScissor(int x, int y, int nWidth, int nHeight);
   void getScissor(int *px, int *py, int *pnWidth, int *pnHeight);
 

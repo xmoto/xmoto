@@ -27,6 +27,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "helpers/Log.h"
 #include "helpers/RenderSurface.h"
 #include "helpers/utf8.h"
+#include "helpers/VMath.h"
 #include "xmoto/Game.h"
 #include "xmoto/GameText.h"
 
@@ -817,6 +818,28 @@ void UIWindow::putRect(int x, int y, int nWidth, int nHeight, Color c) {
                GET_BLUE(c),
                (int)(GET_ALPHA(c) * getOpacity() / 100)),
     0);
+}
+
+void UIWindow::putPolygon(const std::vector<Vector2f> &points, Color c) {
+  putPolygon(
+    points,
+    Vector2f(0,0),
+    c);
+}
+
+void UIWindow::putPolygon(const std::vector<Vector2f> &points, Vector2f shift, Color c) {
+  std::vector<Vector2f> shifted_points;
+
+  for(const Vector2f &point : points) {
+    shifted_points.push_back(Vector2f(point.x + shift.x + getAbsPosX(), point.y + shift.y + getAbsPosY()));
+  }
+
+  m_drawLib->drawPolygon(
+    shifted_points,
+    MAKE_COLOR(GET_RED(c),
+               GET_GREEN(c),
+               GET_BLUE(c),
+               (int)(GET_ALPHA(c) * getOpacity() / 100)));
 }
 
 void UIWindow::putElem(int x,

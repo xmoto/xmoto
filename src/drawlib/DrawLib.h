@@ -25,6 +25,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "helpers/RenderSurface.h"
 #include "helpers/VMath.h"
 #include "include/xm_SDL_ttf.h"
+#include <vector>
 
 class Img;
 class Camera;
@@ -248,6 +249,8 @@ public:
                        float fBorder = 1.0f,
                        Color Back = 0,
                        Color Front = 0xFFFFFFFF);
+  virtual void drawPolygon(const std::vector<Vector2f> &Points,
+                           Color PolyColor = 0xFFFFFFFF);
   virtual void drawImage(const Vector2f &a,
                          const Vector2f &b,
                          Texture *pTexture,
