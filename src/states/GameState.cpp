@@ -182,6 +182,8 @@ void GameState::sendFromMessageBox(const std::string &i_id,
           SysMessage::instance()->displayError(v_msg);
         }
       }
+    } else if (i_button == UI_MSGBOX_CANCEL) {
+      SysMessage::instance()->showConsole();
     }
   }
 }
