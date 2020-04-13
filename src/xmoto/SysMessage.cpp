@@ -230,17 +230,18 @@ void SysMessage::render_console() {
   if ((m_consoleLastShowTime + SYSMSG_CONSOLEDISPLAY_TIME +
            SYSMSG_CONSOLEDISPLAY_ANIMATIONTIME >
          v_time ||
-       XMSession::instance()->permanentConsole()) &&
+       XMSession::instance()->permanentConsole() ||
+       StateManager::instance()->isThereASuchState("StateMessageBox")) &&
       NetClient::instance()->isConnected()) {
     if ((m_consoleLastShowTime + SYSMSG_CONSOLEDISPLAY_TIME > v_time ||
-         XMSession::instance()->permanentConsole()) &&
+         XMSession::instance()->permanentConsole() ||
+       StateManager::instance()->isThereASuchState("StateMessageBox")) &&
         NetClient::instance()->isConnected()) {
       v_shadow = 255;
     } else {
       v_shadow = ((m_consoleLastShowTime + SYSMSG_CONSOLEDISPLAY_TIME +
                    SYSMSG_CONSOLEDISPLAY_ANIMATIONTIME - v_time) *
-                  255) /
-                 SYSMSG_CONSOLEDISPLAY_ANIMATIONTIME;
+                  255) / SYSMSG_CONSOLEDISPLAY_ANIMATIONTIME;
     }
 
     // compute text with for box rendering
@@ -253,7 +254,7 @@ void SysMessage::render_console() {
       Vector2f(v_consoleXOffset + m_consoleTextWidth + v_bboxborder,
                v_consoleYOffset + m_consoleTextHeight + v_bboxborder),
       0.0,
-      MAKE_COLOR(0, 0, 0, 110));
+      MAKE_COLOR(0, 0, 0, v_shadow/2));
     //
     consoleText_computeAndDraw(
       v_shadow, v_consoleXOffset, v_consoleYOffset, true);
