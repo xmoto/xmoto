@@ -19,7 +19,7 @@ endif()
 
 # find dependencies
 find_package(BZip2)
-set(USE_SYSTEM_BZip2 $<AND:$<BOOL:${PREFER_SYSTEM_BZip2}>,$<BOOL:${BZIP2_FOUND}>>)
+set(USE_SYSTEM_BZip2 $<AND:$<BOOL:${PREFER_SYSTEM_BZip2}>,$<BOOL:${BZIP2_FOUND}>,$<NOT:$<BOOL:${WIN32}>>>)
 
 find_package(CURL REQUIRED)
 if(USE_GETTEXT)
