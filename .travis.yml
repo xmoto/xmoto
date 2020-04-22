@@ -16,7 +16,8 @@ script:
   - ninja
   - ninja xmoto_pack
   - sudo ninja install
-  - ls -al /tmp/xminstall
+  - ls -al /tmp/xminstall/bin
+  - ls -al /tmp/xminstall/share
  
  #deploy:
   #provider: releases
