@@ -6,7 +6,7 @@ before_install:
   
 script:
   - mkdir build && cd $_
-  - cmake -DCMAKE_INSTALL_PREFIX=/usr -G Ninja
+  - cmake -DCMAKE_INSTALL_PREFIX=/usr -G Ninja ..
   - ninja
   - ninja xmoto_pack
   - ninja install
