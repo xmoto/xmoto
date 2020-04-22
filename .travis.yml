@@ -1,0 +1,18 @@
+language: cpp
+dist: bionic
+
+before_install:
+  - sudo apt-get install -y ninja-build
+  
+script:
+  - mkdir build && cd $_
+  - cmake -DCMAKE_INSTALL_PREFIX=/usr -G Ninja
+  - ninja
+  - ninja xmoto_pack
+  - ninja install
+ 
+addons:
+apt:
+  update: true
+  packages:
+  - cmake
