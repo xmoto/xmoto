@@ -3,13 +3,13 @@ project(xmoto C CXX)
 
 list(APPEND CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/CMake")
 
-include(CPack)
 include(CheckCXXCompilerFlag)
 include(CheckPrototypeDefinition)
 include(CheckSymbolExists)
 
 # packaging
 include(cpack/cpack.cmake)
+include(CPack)
 
 add_subdirectory(src)
 
