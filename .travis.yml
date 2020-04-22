@@ -3,6 +3,8 @@ dist: bionic
 
 before_install:
   - sudo apt-get install -y ninja-build
+  - sudo apt-get install -y curl libpng jpeg zlib libxml2 sqlite3 sdl sdl_mixer sdl_ttf sdl_net
+  - sudo apt-get install -y libgl1-mesa-dev
   
 script:
   - mkdir build && cd $_
