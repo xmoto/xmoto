@@ -11,11 +11,12 @@ before_install:
   
 script:
   - mkdir build && cd $_
-  - cmake -DCMAKE_INSTALL_PREFIX=/usr -G Ninja ..
+  - mkdir -p /tmp/xminstall
+  - cmake -DCMAKE_INSTALL_PREFIX=/tmp/xminstall -G Ninja ..
   - ninja
   - ninja xmoto_pack
   - sudo ninja install
-  - ls -al /usr/bin/xmoto
+  - ls -al /tmp/xminstall
  
  #deploy:
   #provider: releases
