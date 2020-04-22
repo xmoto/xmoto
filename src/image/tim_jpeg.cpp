@@ -632,6 +632,10 @@ int tim_jpeg_load(tim_session_t *pSession,
       ci.scale_num = 1;
       ci.scale_denom = 8;
       break;
+    default: /* Scale by 1/1 */
+      ci.scale_num = 1;
+      ci.scale_denom = 1;
+      break;
   }
 
   if (tim_is_hint(pSession, ".jpg", "jpeg_no_fancy_upsampling")) {
