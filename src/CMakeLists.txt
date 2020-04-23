@@ -488,9 +488,37 @@ endif()
 # chipmunk on Windows
 target_compile_options(xmoto PRIVATE $<$<COMPILE_LANGUAGE:CXX>:-fpermissive>)
 
-install(TARGETS xmoto
-  RUNTIME DESTINATION bin
-)
+if (NOT MXE_TARGET)
+  set(MXE_TARGET "i686-w64-mingw32.shared")
+endif()
+
+if(WIN32)
+  install(
+    FILES
+      "${PROJECT_SOURCE_DIR}/README.md"
+      "${PROJECT_SOURCE_DIR}/COPYING"
+      "${PROJECT_SOURCE_DIR}/ChangeLog"
+    DESTINATION "./"
+  )
+  string(CONCAT MXE_COPY_DLLS_CMD
+    "${CMAKE_SOURCE_DIR}/tools/mxe_copy_dlls.sh"
+    " -t \"${MXE_TARGET}\""
+    " -o \"${CMAKE_CURRENT_BINARY_DIR}\""
+    " -e ${CMAKE_CURRENT_BINARY_DIR}/xmoto.exe"
+    " -r"
+  )
+  install(CODE "execute_process(COMMAND ${MXE_COPY_DLLS_CMD})")
+  install(TARGETS xmoto RUNTIME DESTINATION "./")
+
+  file(GLOB MXE_DLL_FILES ${CMAKE_CURRENT_BINARY_DIR}/*.dll)
+  install(FILES ${MXE_DLL_FILES} DESTINATION "./")
+
+  #install(CODE "execute_process(COMMAND ${MXE_TARGET}-strip ${CMAKE_INSTALL_PREFIX}/xmoto.exe)")
+else()
+  install(TARGETS xmoto
+    RUNTIME DESTINATION bin
+  )
+endif()
 
 message("BZip2     libraries: ${BZIP2_LIBRARIES}")
 message("Curl      libraries: ${CURL_LIBRARIES}")
