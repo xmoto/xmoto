@@ -2,8 +2,8 @@ cmake_minimum_required(VERSION 3.7 FATAL_ERROR)
 project(xdgbasedir C)
 
 add_library(xdgbasedir STATIC
-  include/xdgbasedir/basedir.h
-  include/xdgbasedir/basedir_fs.h
+  include/basedir.h
+  include/basedir_fs.h
 
   src/basedir.c
 )
