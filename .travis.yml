@@ -17,7 +17,6 @@ script:
   - ninja xmoto_pack
   - ninja install
   - cpack -G "DEB"
-  - ls -al ~
  
  deploy:
   provider: releases
