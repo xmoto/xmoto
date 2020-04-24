@@ -27,7 +27,7 @@ deploy:
   overwrite: true
   prerelease: true
   on:
-    branch: travis
+    all_branches: true
  
 addons:
 apt:
