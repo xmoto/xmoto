@@ -25,6 +25,7 @@ deploy:
   file: 'xmoto-0.5.12.deb'
   skip_cleanup: true
   overwrite: true
+  prerelease: true
   on:
     branch:
       only:
