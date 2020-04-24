@@ -7,11 +7,11 @@ include(CheckCXXCompilerFlag)
 include(CheckPrototypeDefinition)
 include(CheckSymbolExists)
 
-# packaging
+add_subdirectory(src)
+
+# we set some cpack variables in src/CMakeLists.txt so include this after src/
 include(cpack/cpack.cmake)
 include(CPack)
-
-add_subdirectory(src)
 
 add_subdirectory(bin)
 add_subdirectory(extra)

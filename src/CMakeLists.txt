@@ -10,7 +10,7 @@ option(ALLOW_DEV "Enable some development/debug features" OFF)
 if(CMAKE_GENERATOR MATCHES "Ninja")
   message("-- Using Ninja, try to colorize")
   check_cxx_compiler_flag(-fdiagnostics-color FLAG_CXX_DIAGNOSTICS_COLOR)
-  if (FLAG_CXX_DIAGNOSTICS_COLOR)
+  if(FLAG_CXX_DIAGNOSTICS_COLOR)
     add_compile_options("-fdiagnostics-color")
   endif()
 else()
@@ -450,6 +450,12 @@ else()
     DEFAULT_ASIAN_TTF_FILE=\"/usr/share/fonts/truetype/arphic/bkai00mp.ttf\")
 endif()
 
+set(CPACK_RPM_EXCLUDE_FROM_AUTO_FILELIST_ADDITION
+  "/usr/share/applications"
+  "/usr/share/pixmaps"
+  "/usr/share/locale"
+)
+
 # Handle localization
 # Based on Dolphin Emulator's Source/Core/DolphinWX/CMakeLists.txt (831ae6a)
 if(USE_GETTEXT AND GETTEXT_MSGMERGE_EXECUTABLE AND GETTEXT_MSGFMT_EXECUTABLE)
@@ -472,6 +478,15 @@ if(USE_GETTEXT AND GETTEXT_MSGMERGE_EXECUTABLE AND GETTEXT_MSGFMT_EXECUTABLE)
       set_source_files_properties("${mo}" PROPERTIES MACOSX_PACKAGE_LOCATION "Resources/${lang}.lproj")
     else()
       install(FILES "${mo}" DESTINATION share/locale/${lang}/LC_MESSAGES)
+
+      # work around a problem where cpack thinks it's a good
+      # idea to throw in the parent directories of files in
+      # the rpm that will be installed in the filesystem...
+      set(CPACK_RPM_EXCLUDE_FROM_AUTO_FILELIST_ADDITION
+        ${CPACK_RPM_EXCLUDE_FROM_AUTO_FILELIST_ADDITION}
+        "/usr/share/locale/${lang}"
+        "/usr/share/locale/${lang}/LC_MESSAGES"
+      )
     endif()
 
     add_custom_command(OUTPUT "${mo}"
@@ -483,12 +498,18 @@ if(USE_GETTEXT AND GETTEXT_MSGMERGE_EXECUTABLE AND GETTEXT_MSGFMT_EXECUTABLE)
   endforeach()
 endif()
 
+# make this visible to its parent (and therefore to cpack/)
+set(CPACK_RPM_EXCLUDE_FROM_AUTO_FILELIST_ADDITION
+  ${CPACK_RPM_EXCLUDE_FROM_AUTO_FILELIST_ADDITION}
+  PARENT_SCOPE
+)
+
 #target_compile_options(xmoto PRIVATE -Wall)
 #target_compile_options(xmoto PRIVATE -Werror)
 # chipmunk on Windows
 target_compile_options(xmoto PRIVATE $<$<COMPILE_LANGUAGE:CXX>:-fpermissive>)
 
-if (NOT MXE_TARGET)
+if(NOT MXE_TARGET)
   set(MXE_TARGET "i686-w64-mingw32.shared")
 endif()
 
