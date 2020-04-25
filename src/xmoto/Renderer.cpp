@@ -1409,7 +1409,7 @@ void GameRenderer::render(Scene *i_scene) {
           v_color = MAKE_COLOR(255, 0, 0, 255);
           break;
         case ET_CHECKPOINT:
-          v_color = MAKE_COLOR(0, 255, 0, 255);
+          v_color = MAKE_COLOR(26, 188, 26, 255);
           break;
         default:
           v_color = MAKE_COLOR(50, 50, 50, 255); /* Fix: hard-to-see color
@@ -1997,6 +1997,13 @@ void GameRenderer::_RenderSprite(Scene *i_scene,
           0,
           0,
           0); /* we dont wanna have start position displayed in ugly mode */
+        break;
+      case ET_CHECKPOINT:
+        v_color = MAKE_COLOR(
+          26,
+          188,
+          26,
+          255);
         break;
       default:
         v_color = MAKE_COLOR(
