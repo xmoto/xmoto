@@ -18,7 +18,7 @@ script:
   - ninja install
   - cpack -G "DEB"
   - cpack -G "RPM"
-  - cpack -G "WINDOWS"
+  - cpack -G "EXE"
  
 deploy:
   provider: releases
