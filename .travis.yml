@@ -18,6 +18,7 @@ script:
   - ninja install
   - cpack -G "DEB"
   - cpack -G "RPM"
+  - cpack -G "WINDOWS"
  
 deploy:
   provider: releases
@@ -26,6 +27,7 @@ deploy:
   file: 
     - 'xmoto-0.5.12.deb'
     - 'xmoto-0.5.12.rpm'
+    - 'xmoto-0.5.12.exe'
   skip_cleanup: true
   overwrite: true
   prerelease: true
