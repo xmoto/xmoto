@@ -66,6 +66,7 @@ add_subdirectory("${PROJECT_SOURCE_DIR}/vendor/lua" lua)
 add_subdirectory("${PROJECT_SOURCE_DIR}/vendor/md5sum" md5sum)
 add_subdirectory("${PROJECT_SOURCE_DIR}/vendor/ode" ode)
 add_subdirectory("${PROJECT_SOURCE_DIR}/vendor/xdgbasedir" xdgbasedir)
+add_subdirectory("${PROJECT_SOURCE_DIR}/vendor/glad" glad)
 
 set(common_src
   common/BuildConfig.h
@@ -310,7 +311,6 @@ set(xmoto_src
   xmoto/VirtualLevelsList.cpp xmoto/VirtualLevelsList.h
   xmoto/XMDemo.cpp xmoto/XMDemo.h
   xmoto/XMKey.cpp xmoto/XMKey.h
-  xmoto/glext.h
   xmoto/sqlqueries.h
 )
 
@@ -411,6 +411,8 @@ target_link_libraries(xmoto PUBLIC
   md5sum
   $<${USE_SYSTEM_ODE}:${ODE_LIBRARY}>
   $<$<NOT:${USE_SYSTEM_ODE}>:ode>
+  glad
+  ${CMAKE_DL_LIBS}
   ${OPENGL_LIBRARIES}
   ${PNG_LIBRARY}
   ${SDL_LIBRARY}

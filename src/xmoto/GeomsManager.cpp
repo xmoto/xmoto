@@ -175,25 +175,19 @@ Geom *LevelGeoms::loadBlockGeom(Block *pBlock,
     /* Use VBO optimization? */
     if (GameApp::instance()->getDrawLib()->useVBOs()) {
       /* Copy static coordinates unto video memory */
-      ((DrawLibOpenGL *)GameApp::instance()->getDrawLib())
-        ->glGenBuffersARB(1, (GLuint *)&pPoly->nVertexBufferID);
-      ((DrawLibOpenGL *)GameApp::instance()->getDrawLib())
-        ->glBindBufferARB(GL_ARRAY_BUFFER_ARB, pPoly->nVertexBufferID);
-      ((DrawLibOpenGL *)GameApp::instance()->getDrawLib())
-        ->glBufferDataARB(GL_ARRAY_BUFFER_ARB,
-                          pPoly->nNumVertices * 2 * sizeof(float),
-                          (void *)pPoly->pVertices,
-                          GL_STATIC_DRAW_ARB);
+      glGenBuffersARB(1, (GLuint *)&pPoly->nVertexBufferID);
+      glBindBufferARB(GL_ARRAY_BUFFER_ARB, pPoly->nVertexBufferID);
+      glBufferDataARB(GL_ARRAY_BUFFER_ARB,
+                      pPoly->nNumVertices * 2 * sizeof(float),
+                      (void *)pPoly->pVertices,
+                      GL_STATIC_DRAW_ARB);
 
-      ((DrawLibOpenGL *)GameApp::instance()->getDrawLib())
-        ->glGenBuffersARB(1, (GLuint *)&pPoly->nTexCoordBufferID);
-      ((DrawLibOpenGL *)GameApp::instance()->getDrawLib())
-        ->glBindBufferARB(GL_ARRAY_BUFFER_ARB, pPoly->nTexCoordBufferID);
-      ((DrawLibOpenGL *)GameApp::instance()->getDrawLib())
-        ->glBufferDataARB(GL_ARRAY_BUFFER_ARB,
-                          pPoly->nNumVertices * 2 * sizeof(float),
-                          (void *)pPoly->pTexCoords,
-                          GL_STATIC_DRAW_ARB);
+      glGenBuffersARB(1, (GLuint *)&pPoly->nTexCoordBufferID);
+      glBindBufferARB(GL_ARRAY_BUFFER_ARB, pPoly->nTexCoordBufferID);
+      glBufferDataARB(GL_ARRAY_BUFFER_ARB,
+                      pPoly->nNumVertices * 2 * sizeof(float),
+                      (void *)pPoly->pTexCoords,
+                      GL_STATIC_DRAW_ARB);
     }
 #endif
   }
@@ -668,25 +662,19 @@ std::vector<Geom *> LevelGeoms::loadBlockEdgeGeom(Block *pBlock,
       for (unsigned int l = 0; l < v_geoms[k]->Polys.size(); l++) {
         GeomPoly *pPoly = v_geoms[k]->Polys[l];
 
-        ((DrawLibOpenGL *)GameApp::instance()->getDrawLib())
-          ->glGenBuffersARB(1, (GLuint *)&pPoly->nVertexBufferID);
-        ((DrawLibOpenGL *)GameApp::instance()->getDrawLib())
-          ->glBindBufferARB(GL_ARRAY_BUFFER_ARB, pPoly->nVertexBufferID);
-        ((DrawLibOpenGL *)GameApp::instance()->getDrawLib())
-          ->glBufferDataARB(GL_ARRAY_BUFFER_ARB,
-                            pPoly->nNumVertices * 2 * sizeof(float),
-                            (void *)pPoly->pVertices,
-                            GL_STATIC_DRAW_ARB);
+        glGenBuffersARB(1, (GLuint *)&pPoly->nVertexBufferID);
+        glBindBufferARB(GL_ARRAY_BUFFER_ARB, pPoly->nVertexBufferID);
+        glBufferDataARB(GL_ARRAY_BUFFER_ARB,
+                        pPoly->nNumVertices * 2 * sizeof(float),
+                        (void *)pPoly->pVertices,
+                        GL_STATIC_DRAW_ARB);
 
-        ((DrawLibOpenGL *)GameApp::instance()->getDrawLib())
-          ->glGenBuffersARB(1, (GLuint *)&pPoly->nTexCoordBufferID);
-        ((DrawLibOpenGL *)GameApp::instance()->getDrawLib())
-          ->glBindBufferARB(GL_ARRAY_BUFFER_ARB, pPoly->nTexCoordBufferID);
-        ((DrawLibOpenGL *)GameApp::instance()->getDrawLib())
-          ->glBufferDataARB(GL_ARRAY_BUFFER_ARB,
-                            pPoly->nNumVertices * 2 * sizeof(float),
-                            (void *)pPoly->pTexCoords,
-                            GL_STATIC_DRAW_ARB);
+        glGenBuffersARB(1, (GLuint *)&pPoly->nTexCoordBufferID);
+        glBindBufferARB(GL_ARRAY_BUFFER_ARB, pPoly->nTexCoordBufferID);
+        glBufferDataARB(GL_ARRAY_BUFFER_ARB,
+                        pPoly->nNumVertices * 2 * sizeof(float),
+                        (void *)pPoly->pTexCoords,
+                        GL_STATIC_DRAW_ARB);
       }
     }
   }
@@ -726,12 +714,8 @@ void LevelGeoms::deleteGeoms(std::vector<Geom *> &geom, bool useFree) {
     for (unsigned int j = 0; j < geom[i]->Polys.size(); j++) {
 #ifdef ENABLE_OPENGL
       if (geom[i]->Polys[j]->nVertexBufferID) {
-        ((DrawLibOpenGL *)GameApp::instance()->getDrawLib())
-          ->glDeleteBuffersARB(1,
-                               (GLuint *)&geom[i]->Polys[j]->nVertexBufferID);
-        ((DrawLibOpenGL *)GameApp::instance()->getDrawLib())
-          ->glDeleteBuffersARB(1,
-                               (GLuint *)&geom[i]->Polys[j]->nTexCoordBufferID);
+        glDeleteBuffersARB(1, (GLuint *)&geom[i]->Polys[j]->nVertexBufferID);
+        glDeleteBuffersARB(1, (GLuint *)&geom[i]->Polys[j]->nTexCoordBufferID);
       }
 #endif
 
