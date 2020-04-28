@@ -23,8 +23,8 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
 #include "Bike.h"
 #include "BikeGhost.h"
-#include "../SomersaultCounter.h"
-#include "../include/xm_ode.h"
+#include "xmoto/SomersaultCounter.h"
+#include <ode/ode.h>
 
 class BikeController;
 class BikeControllerNet;
@@ -44,26 +44,40 @@ private:
 };
 
 class PlayerLocalBiker : public Biker {
- public:
-  PlayerLocalBiker(PhysicsSettings* i_physicsSettings, Vector2f i_position, DriveDir i_direction, Vector2f i_gravity,
-		   bool i_engineSound,
-		   Theme *i_theme, BikerTheme* i_bikerTheme, const TColor& i_filterColor, const TColor& i_filterUglyColor);
+public:
+  PlayerLocalBiker(PhysicsSettings *i_physicsSettings,
+                   Vector2f i_position,
+                   DriveDir i_direction,
+                   Vector2f i_gravity,
+                   bool i_engineSound,
+                   Theme *i_theme,
+                   BikerTheme *i_bikerTheme,
+                   const TColor &i_filterColor,
+                   const TColor &i_filterUglyColor);
   virtual ~PlayerLocalBiker();
 
-  void updateToTime(int i_time, int i_timeStep,
-		    CollisionSystem *i_collisionSystem, Vector2f i_gravity, Scene *i_motogame);
-  void initToPosition(Vector2f i_position, DriveDir i_direction, Vector2f i_gravity);
+  void updateToTime(int i_time,
+                    int i_timeStep,
+                    CollisionSystem *i_collisionSystem,
+                    Vector2f i_gravity,
+                    Scene *i_motogame);
+  void initToPosition(Vector2f i_position,
+                      DriveDir i_direction,
+                      Vector2f i_gravity);
 
   std::string getVeryQuickDescription() const;
   std::string getQuickDescription() const;
   std::string getDescription() const;
   void setBodyDetach(bool state);
 
-  virtual void addBodyForce(int i_time, const Vector2f& i_force, int i_startTime, int i_endTime);
+  virtual void addBodyForce(int i_time,
+                            const Vector2f &i_force,
+                            int i_startTime,
+                            int i_endTime);
 
   float getBikeEngineSpeed();
   float getBikeLinearVel();
- 
+
   bool getRenderBikeFront();
   void resetAutoDisabler();
   bool isSqueeking();
@@ -72,15 +86,15 @@ class PlayerLocalBiker : public Biker {
   virtual float getRearWheelVelocity();
   virtual float getFrontWheelVelocity();
   virtual float getTorsoVelocity();
- 
+
   virtual double getAngle();
 
-  virtual BikeController* getControler();
+  virtual BikeController *getControler();
 
- private:
+private:
   PlayerLocalBiker();
 
-  BikeControllerPlayer* m_BikeC;
+  BikeControllerPlayer *m_BikeC;
 
   SomersaultCounter m_somersaultCounter;
   bool m_bFirstPhysicsUpdate;
@@ -94,22 +108,22 @@ class PlayerLocalBiker : public Biker {
   bool m_bSqueeking;
   float m_fHowMuchSqueek;
 
-  std::vector<ExternalForce*> m_externalForces;
+  std::vector<ExternalForce *> m_externalForces;
   Vector2f determineForceToAdd(int i_time);
 
   /* */
-  Vector2f m_PrevRearWheelP;          /* Prev. rear wheel position */
-  Vector2f m_PrevFrontWheelP;         /* Prev. front wheel position */
+  Vector2f m_PrevRearWheelP; /* Prev. rear wheel position */
+  Vector2f m_PrevFrontWheelP; /* Prev. front wheel position */
   Vector2f m_PrevHeadP;
   Vector2f m_PrevHead2P;
   Vector2f m_PrevActiveHead;
 
   /* Data - bike bodies, joints and masses */
-  dBodyID m_FrameBodyID;              /* Frame of bike */
+  dBodyID m_FrameBodyID; /* Frame of bike */
   dMass m_FrameMass;
-  dBodyID m_RearWheelBodyID;          /* Rear wheel of bike */
+  dBodyID m_RearWheelBodyID; /* Rear wheel of bike */
   dMass m_RearWheelMass;
-  dBodyID m_FrontWheelBodyID;         /* Front wheel of bike */
+  dBodyID m_FrontWheelBodyID; /* Front wheel of bike */
   dMass m_FrontWheelMass;
 
   dBodyID m_PlayerTorsoBodyID;
@@ -149,11 +163,11 @@ class PlayerLocalBiker : public Biker {
   dJointID m_ElbowHingeID2;
   dJointID m_HandHingeID2;
 
-  dJointGroupID m_ContactGroup;       /* Contact joint group */
+  dJointGroupID m_ContactGroup; /* Contact joint group */
 
   bool bFrontWheelTouching;
   bool bRearWheelTouching;
-  dWorldID m_WorldID;                 /* World ID */
+  dWorldID m_WorldID; /* World ID */
 
   bool m_clearDynamicTouched;
 
@@ -161,57 +175,81 @@ class PlayerLocalBiker : public Biker {
 
   void initPhysics(Vector2f i_gravity);
   void uninitPhysics();
-  void updatePhysics(int i_time, int i_timeStep, CollisionSystem *v_collisionSystem, Vector2f i_gravity);
+  void updatePhysics(int i_time,
+                     int i_timeStep,
+                     CollisionSystem *v_collisionSystem,
+                     Vector2f i_gravity);
   void updateGameState();
   void prepareBikePhysics(Vector2f StartPos);
   void prepareRider(Vector2f StartPos);
 
-  bool intersectHeadLevel(Vector2f Cp,float Cr,const Vector2f &LastCp, CollisionSystem *v_collisionSystem);
-  int  intersectWheelLevel(Vector2f Cp,float Cr,dContact *pContacts, CollisionSystem *v_collisionSystem);
-  int  intersectBodyLevel(Vector2f Cp,float Cr,dContact *pContacts, CollisionSystem *v_collisionSystem);
-  int  intersectWheelLine(Vector2f Cp,float Cr,int nNumContacts,dContact *pContacts,Vector2f A0,Vector2f A1);
-  bool intersectHeadLine(Vector2f Cp,float Cr,Vector2f A0,Vector2f A1);
+  bool intersectHeadLevel(Vector2f Cp,
+                          float Cr,
+                          const Vector2f &LastCp,
+                          CollisionSystem *v_collisionSystem);
+  int intersectWheelLevel(Vector2f Cp,
+                          float Cr,
+                          dContact *pContacts,
+                          CollisionSystem *v_collisionSystem);
+  int intersectBodyLevel(Vector2f Cp,
+                         float Cr,
+                         dContact *pContacts,
+                         CollisionSystem *v_collisionSystem);
+  int intersectWheelLine(Vector2f Cp,
+                         float Cr,
+                         int nNumContacts,
+                         dContact *pContacts,
+                         Vector2f A0,
+                         Vector2f A1);
+  bool intersectHeadLine(Vector2f Cp, float Cr, Vector2f A0, Vector2f A1);
 };
 
 class PlayerNetClient : public Biker {
- public:
-  PlayerNetClient(PhysicsSettings* i_physicsSettings,
-		  Vector2f i_position, DriveDir i_direction, Vector2f i_gravity,
-		  bool i_engineSound,
-		  Theme *i_theme, BikerTheme* i_bikerTheme,
-		  const TColor& i_colorFilter,
-		  const TColor& i_uglyColorFilter);
+public:
+  PlayerNetClient(PhysicsSettings *i_physicsSettings,
+                  Vector2f i_position,
+                  DriveDir i_direction,
+                  Vector2f i_gravity,
+                  bool i_engineSound,
+                  Theme *i_theme,
+                  BikerTheme *i_bikerTheme,
+                  const TColor &i_colorFilter,
+                  const TColor &i_uglyColorFilter);
   ~PlayerNetClient();
 
-  virtual bool   getRenderBikeFront();
-  virtual float  getBikeEngineSpeed();
-  virtual float  getBikeLinearVel();
+  virtual bool getRenderBikeFront();
+  virtual float getBikeEngineSpeed();
+  virtual float getBikeLinearVel();
   virtual float getTorsoVelocity();
- 
+
   virtual double getAngle();
   virtual std::string getVeryQuickDescription() const;
   virtual std::string getQuickDescription() const;
   virtual std::string getDescription() const;
 
-  virtual void  updateToTime(int i_time, int i_timeStep,
-			     CollisionSystem *i_collisionSystem, Vector2f i_gravity,
-			     Scene *i_motogame);
-  virtual BikeState* getStateForUpdate();
+  virtual void updateToTime(int i_time,
+                            int i_timeStep,
+                            CollisionSystem *i_collisionSystem,
+                            Vector2f i_gravity,
+                            Scene *i_motogame);
+  virtual BikeState *getStateForUpdate();
   virtual bool isStateInitialized() const;
 
   virtual void setLocalNetId(int i_value);
-  virtual BikeController* getControler();
-  void initToPosition(Vector2f i_position, DriveDir i_direction, Vector2f i_gravity);
+  virtual BikeController *getControler();
+  void initToPosition(Vector2f i_position,
+                      DriveDir i_direction,
+                      Vector2f i_gravity);
 
- private:
-  BikeControllerNet* m_BikeC;
+private:
+  BikeControllerNet *m_BikeC;
 
   /* previous states */
-  BikeState* m_bikeStateForUpdate;
+  BikeState *m_bikeStateForUpdate;
   bool m_stateExternallyUpdated;
   bool m_previousBikeStatesInitialized;
-  std::vector<BikeState*> m_previousBikeStates;
-  BikeState* m_lastExtrapolateBikeState;
+  std::vector<BikeState *> m_previousBikeStates;
+  BikeState *m_lastExtrapolateBikeState;
   int m_lastFrameTimeUpdate;
 
   bool m_isStateInitialized;

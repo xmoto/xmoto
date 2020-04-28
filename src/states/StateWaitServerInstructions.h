@@ -28,13 +28,13 @@ public:
   StateWaitServerInstructions();
   virtual ~StateWaitServerInstructions();
 
-  virtual bool updateWhenUnvisible() {return true;}
+  virtual bool updateWhenUnvisible() { return true; }
 
   virtual bool render();
   virtual void executeOneCommand(std::string cmd, std::string args);
 
   /* input */
-  virtual void xmKey(InputEventType i_type, const XMKey& i_xmkey);
+  virtual void xmKey(InputEventType i_type, const XMKey &i_xmkey);
 };
 
 #endif

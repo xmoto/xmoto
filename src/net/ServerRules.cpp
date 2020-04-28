@@ -19,28 +19,29 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 =============================================================================*/
 
 #include "ServerRules.h"
-#include "../helpers/Log.h"
-#include "../Universe.h"
+#include "helpers/Log.h"
 #include "thread/ServerThread.h"
+#include "xmoto/Universe.h"
 
 luaL_Reg ServerRules::m_rulesFuncs[] = {
-    {"Log",              	     ServerRules::L_Rules_Log},
-    {"Player_setPoints", 	     ServerRules::L_Rules_player_setPoints},
-    {"Player_addPoints", 	     ServerRules::L_Rules_player_addPoints},
-    {"SendPointsToPlayers",          ServerRules::L_Rules_sendPointsToPlayers},
-    {"GetTime",          	     ServerRules::L_Rules_Round_getTime},
-    {"GetNbRemainingEntitiesToTake", ServerRules::L_Rules_Round_getNbRemainingEntitiesToTake},
-    {NULL, NULL}
+  { "Log", ServerRules::L_Rules_Log },
+  { "Player_setPoints", ServerRules::L_Rules_player_setPoints },
+  { "Player_addPoints", ServerRules::L_Rules_player_addPoints },
+  { "SendPointsToPlayers", ServerRules::L_Rules_sendPointsToPlayers },
+  { "GetTime", ServerRules::L_Rules_Round_getTime },
+  { "GetNbRemainingEntitiesToTake",
+    ServerRules::L_Rules_Round_getNbRemainingEntitiesToTake },
+  { NULL, NULL }
 };
 
-ServerThread* ServerRules::m_exec_server = NULL;
+ServerThread *ServerRules::m_exec_server = NULL;
 
-ServerRules::ServerRules(ServerThread* i_st) : LuaLibBase("Rules", m_rulesFuncs) {
+ServerRules::ServerRules(ServerThread *i_st)
+  : LuaLibBase("Rules", m_rulesFuncs) {
   m_server = i_st;
 }
 
-ServerRules::~ServerRules() {
-}
+ServerRules::~ServerRules() {}
 
 void ServerRules::setInstance() {
   m_exec_server = m_server;
@@ -51,11 +52,11 @@ void ServerRules::setInstance() {
 int ServerRules::L_Rules_Log(lua_State *pL) {
   std::string Out = "Server rules: ";
 
-  for(int i=0; i<args_numberOfArguments(pL); i++)
-    Out.append(luaL_checkstring(pL, i+1));
+  for (int i = 0; i < args_numberOfArguments(pL); i++)
+    Out.append(luaL_checkstring(pL, i + 1));
   LogInfo((char *)Out.c_str());
 
-  return 0;    
+  return 0;
 }
 
 int ServerRules::L_Rules_player_setPoints(lua_State *pL) {
@@ -63,8 +64,8 @@ int ServerRules::L_Rules_player_setPoints(lua_State *pL) {
   int v_points;
 
   args_CheckNumberOfArguments(pL, 2);
-  v_playerId = (int) luaL_checknumber(pL,1);
-  v_points   = (int) luaL_checknumber(pL,2);
+  v_playerId = (int)luaL_checknumber(pL, 1);
+  v_points = (int)luaL_checknumber(pL, 2);
   m_exec_server->getNetSClientById(v_playerId)->setPoints(v_points);
   return 0;
 }
@@ -74,8 +75,8 @@ int ServerRules::L_Rules_player_addPoints(lua_State *pL) {
   int v_points;
 
   args_CheckNumberOfArguments(pL, 2);
-  v_playerId = (int) luaL_checknumber(pL,1);
-  v_points   = (int) luaL_checknumber(pL,2);
+  v_playerId = (int)luaL_checknumber(pL, 1);
+  v_points = (int)luaL_checknumber(pL, 2);
   m_exec_server->getNetSClientById(v_playerId)->addPoints(v_points);
   return 0;
 }
@@ -88,14 +89,14 @@ int ServerRules::L_Rules_sendPointsToPlayers(lua_State *pL) {
 int ServerRules::L_Rules_Round_getTime(lua_State *pL) {
   args_CheckNumberOfArguments(pL, 0);
 
-  Universe* v_universe;
+  Universe *v_universe;
   v_universe = m_exec_server->getUniverse();
-  if(v_universe == NULL) {
+  if (v_universe == NULL) {
     lua_pushnumber(pL, 0);
     return 1;
   }
 
-  if(v_universe->getScenes().size() != 1) {
+  if (v_universe->getScenes().size() != 1) {
     throw Exception("Server universe have only 1 scene");
   }
 
@@ -106,14 +107,14 @@ int ServerRules::L_Rules_Round_getTime(lua_State *pL) {
 int ServerRules::L_Rules_Round_getNbRemainingEntitiesToTake(lua_State *pL) {
   args_CheckNumberOfArguments(pL, 0);
 
-  Universe* v_universe;
+  Universe *v_universe;
   v_universe = m_exec_server->getUniverse();
-  if(v_universe == NULL) {
+  if (v_universe == NULL) {
     lua_pushnumber(pL, 0);
     return 1;
   }
 
-  if(v_universe->getScenes().size() != 1) {
+  if (v_universe->getScenes().size() != 1) {
     throw Exception("Server universe have only 1 scene");
   }
 

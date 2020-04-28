@@ -27,24 +27,29 @@ class LuaLibGame;
 /*===========================================================================
   Script Timer Class
 ===========================================================================*/
-class ScriptTimer{
+class ScriptTimer {
 public:
-	ScriptTimer(const std::string& i_name, int i_delay,int i_loops, LuaLibGame *i_Script, int i_GameTime);
-	void UpdateTimer(int i_GameTime);
-	void PauseTimer();
-	void StartTimer();
- 	void SetTimerDelay(int i_delay);
-	std::string GetName();
-	bool isFinished();
-	void ResetTimer(int i_delay, int i_loops, int i_GameTime);
+  ScriptTimer(const std::string &i_name,
+              int i_delay,
+              int i_loops,
+              LuaLibGame *i_Script,
+              int i_GameTime);
+  void UpdateTimer(int i_GameTime);
+  void PauseTimer();
+  void StartTimer();
+  void SetTimerDelay(int i_delay);
+  std::string GetName();
+  bool isFinished();
+  void ResetTimer(int i_delay, int i_loops, int i_GameTime);
+
 private:
-	int m_TimeBetweenCalls;
-	int m_TimeOfLastCall;
-	LuaLibGame* m_Script;
-	std::string m_TimerName; 
-	bool m_isRunning;
-	int m_Numbr_Of_Loops;
-	int m_Numbr_Of_Calls;
+  int m_TimeBetweenCalls;
+  int m_TimeOfLastCall;
+  LuaLibGame *m_Script;
+  std::string m_TimerName;
+  bool m_isRunning;
+  int m_Numbr_Of_Loops;
+  int m_Numbr_Of_Calls;
 };
 
 #endif

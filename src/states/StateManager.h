@@ -21,14 +21,14 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #ifndef __STATEMANAGER_H__
 #define __STATEMANAGER_H__
 
-#include "../helpers/Singleton.h"
-#include "../VCommon.h"
-#include "../XMKey.h"
-#include "../helpers/RenderSurface.h"
-#include "../include/xm_SDL.h"
+#include "common/VCommon.h"
+#include "helpers/RenderSurface.h"
+#include "helpers/Singleton.h"
+#include "include/xm_SDL.h"
+#include "xmoto/XMKey.h"
+#include <map>
 #include <string>
 #include <vector>
-#include <map>
 
 class VideoRecorder;
 class GameState;
@@ -39,17 +39,17 @@ class DownloadReplaysThread;
 
 class StateManager : public Singleton<StateManager> {
   friend class Singleton<StateManager>;
+
 private:
   StateManager();
   ~StateManager();
 
 public:
-
   std::string getUniqueId();
 
-  void pushState(GameState* pNewState);
+  void pushState(GameState *pNewState);
   /* replace only the last state with id = i_parentId */
-  void replaceState(GameState* pNewState, const std::string& i_parentId);
+  void replaceState(GameState *pNewState, const std::string &i_parentId);
 
   // after some events, a state can requestForEnd
   // -> return NULL or the state which requested to be ended
@@ -58,7 +58,7 @@ public:
   void update();
   void render();
   // input
-  void xmKey(InputEventType i_type, const XMKey& i_xmkey);
+  void xmKey(InputEventType i_type, const XMKey &i_xmkey);
 
   void changeFocus(bool i_hasFocus);
   void changeVisibility(bool i_visible);
@@ -71,39 +71,41 @@ public:
 
   // in order to receive a message, you have to first register
   // yourself as an observer of this message
-  void registerAsObserver(const std::string& message,   GameState* self);
-  void unregisterAsObserver(const std::string& message, GameState* self);
+  void registerAsObserver(const std::string &message, GameState *self);
+  void unregisterAsObserver(const std::string &message, GameState *self);
   // register as emitter only for debug informations
-  void registerAsEmitter(const std::string& message);
+  void registerAsEmitter(const std::string &message);
 
   // send the message to registered states
-  void sendSynchronousMessage(const std::string& message, const std::string& args="", const std::string& i_parentId = "");
-  void sendAsynchronousMessage(const std::string& message, const std::string& args="", const std::string& i_parentId = "");
+  void sendSynchronousMessage(const std::string &message,
+                              const std::string &args = "",
+                              const std::string &i_parentId = "");
+  void sendAsynchronousMessage(const std::string &message,
+                               const std::string &args = "",
+                               const std::string &i_parentId = "");
 
-  bool isTopOfTheStates(GameState* i_state);
+  bool isTopOfTheStates(GameState *i_state);
   int numberOfStates();
 
-  int getMaxFps(){
-    return m_maxFps;
-  }
+  int getMaxFps() { return m_maxFps; }
 
   // video recorder
-  VideoRecorder* getVideoRecorder();
+  VideoRecorder *getVideoRecorder();
 
   // ask to states to clean themself
   static void cleanStates();
   static void refreshStaticCaptions();
 
-  bool isThereASuchState(const std::string& i_name);
-  bool isThereASuchStateType(const std::string& i_type);
+  bool isThereASuchState(const std::string &i_name);
+  bool isThereASuchStateType(const std::string &i_type);
 
   // thread to externalize db update in other thread to reduce freezes
-  XMThreadStats* getDbStatsThread();
+  XMThreadStats *getDbStatsThread();
 
-  DownloadReplaysThread* getReplayDownloaderThread();
+  DownloadReplaysThread *getReplayDownloaderThread();
 
 private:
-  GameState* popState();
+  GameState *popState();
 
   void calculateWhichStateIsRendered();
   void calculateFps();
@@ -118,13 +120,13 @@ private:
 
   void deleteToDeleteState();
 
-  void setNewStateScreen(GameState* pNewState);
+  void setNewStateScreen(GameState *pNewState);
 
   bool m_isVisible;
   bool m_hasFocus;
 
-  std::vector<GameState*> m_statesStack;
-  std::vector<GameState*> m_toDeleteStates;
+  std::vector<GameState *> m_statesStack;
+  std::vector<GameState *> m_toDeleteStates;
 
   // last time the m_current*Fps have been filled
   int m_lastFpsTime;
@@ -151,7 +153,7 @@ private:
   float m_renderPeriod;
 
   // cursor
-  Texture* m_cursor;
+  Texture *m_cursor;
   bool m_isCursorVisible;
   int m_lastMouseMoveTime;
   int m_lastMouseMoveTimeInZone;
@@ -160,22 +162,21 @@ private:
   int m_previousMouseY;
 
   // video
-  VideoRecorder* m_videoRecorder;
+  VideoRecorder *m_videoRecorder;
 
   // messages and associate observer states
-  std::map<std::string, std::vector<GameState*> > m_registeredStates;
+  std::map<std::string, std::vector<GameState *>> m_registeredStates;
 
   // db stats thread
   XMThreadStats *m_xmtstas;
 
   // replays downloader
-  DownloadReplaysThread* m_drt;
+  DownloadReplaysThread *m_drt;
 
   //
   int m_currentUniqueId;
 
   RenderSurface m_screen;
-
 };
 
 #endif

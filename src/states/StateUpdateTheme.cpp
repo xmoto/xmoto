@@ -19,55 +19,55 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 =============================================================================*/
 
 #include "StateUpdateTheme.h"
-#include "../Game.h"
-#include "../GameText.h"
 #include "StateMessageBox.h"
-#include "../thread/UpdateThemeThread.h"
-#include "../helpers/Log.h"
+#include "helpers/Log.h"
+#include "thread/UpdateThemeThread.h"
+#include "xmoto/Game.h"
+#include "xmoto/GameText.h"
 
-StateUpdateTheme::StateUpdateTheme(const std::string& i_id_theme,
-				   bool drawStateBehind,
-				   bool updateStatesBehind)
-  : StateUpdate(drawStateBehind, updateStatesBehind)
-{
-  m_pThread          = new UpdateThemeThread(i_id_theme);
-  m_name             = "StateUpdateTheme";
-  m_id_theme         = i_id_theme;
-  m_msg              = GAMETEXT_FAILEDGETSELECTEDTHEME + std::string("\n") + GAMETEXT_CHECK_YOUR_WWW;
+StateUpdateTheme::StateUpdateTheme(const std::string &i_id_theme,
+                                   bool drawStateBehind,
+                                   bool updateStatesBehind)
+  : StateUpdate(drawStateBehind, updateStatesBehind) {
+  m_pThread = new UpdateThemeThread(i_id_theme);
+  m_name = "StateUpdateTheme";
+  m_id_theme = i_id_theme;
+  m_msg = GAMETEXT_FAILEDGETSELECTEDTHEME + std::string("\n") +
+          GAMETEXT_CHECK_YOUR_WWW;
 }
 
-StateUpdateTheme::~StateUpdateTheme()
-{
+StateUpdateTheme::~StateUpdateTheme() {
   delete m_pThread;
 }
 
-void StateUpdateTheme::callAfterThreadFinished(int threadResult)
-{
-  if(threadResult == 0){
+void StateUpdateTheme::callAfterThreadFinished(int threadResult) {
+  if (threadResult == 0) {
     GameApp::instance()->reloadTheme();
   }
 }
 
-bool StateUpdateTheme::callBeforeLaunchingThread()
-{
+bool StateUpdateTheme::callBeforeLaunchingThread() {
   char **v_result;
   unsigned int nrow;
-  bool v_onWeb  = true;
+  bool v_onWeb = true;
 
-  v_result = xmDatabase::instance("main")->readDB("SELECT a.id_theme, a.checkSum, b.checkSum "
-						  "FROM themes AS a LEFT OUTER JOIN webthemes AS b "
-						  "ON a.id_theme=b.id_theme "
-						  "WHERE a.id_theme=\"" + xmDatabase::protectString(m_id_theme) + "\";",
-						  nrow);
-  if(nrow == 1) {
-    if(xmDatabase::instance("main")->getResult(v_result, 3, 0, 2) == NULL) {
+  v_result = xmDatabase::instance("main")->readDB(
+    "SELECT a.id_theme, a.checkSum, b.checkSum "
+    "FROM themes AS a LEFT OUTER JOIN webthemes AS b "
+    "ON a.id_theme=b.id_theme "
+    "WHERE a.id_theme=\"" +
+      xmDatabase::protectString(m_id_theme) + "\";",
+    nrow);
+  if (nrow == 1) {
+    if (xmDatabase::instance("main")->getResult(v_result, 3, 0, 2) == NULL) {
       v_onWeb = false;
     }
   }
   xmDatabase::instance("main")->read_DB_free(v_result);
 
-  if(v_onWeb == false) { /* available on the disk, not on the web */
-    StateMessageBox* v_msgboxState = new StateMessageBox(this, GAMETEXT_UNUPDATABLETHEMEONWEB, UI_MSGBOX_OK);
+  if (v_onWeb == false) { /* available on the disk, not on the web */
+    StateMessageBox *v_msgboxState =
+      new StateMessageBox(this, GAMETEXT_UNUPDATABLETHEMEONWEB, UI_MSGBOX_OK);
     v_msgboxState->setMsgBxId("ERROR");
     StateManager::instance()->pushState(v_msgboxState);
     return false;
@@ -76,13 +76,15 @@ bool StateUpdateTheme::callBeforeLaunchingThread()
   return true;
 }
 
-void StateUpdateTheme::xmKey(InputEventType i_type, const XMKey& i_xmkey) {
-  if(i_type == INPUT_DOWN && i_xmkey == XMKey(SDLK_ESCAPE, KMOD_NONE)) {
+void StateUpdateTheme::xmKey(InputEventType i_type, const XMKey &i_xmkey) {
+  if (i_type == INPUT_DOWN && i_xmkey == XMKey(SDLK_ESCAPE, KMOD_NONE)) {
     m_pThread->askThreadToEnd();
   }
 
-  else if(i_type == INPUT_DOWN && i_xmkey == (*InputHandler::instance()->getGlobalKey(INPUT_KILLPROCESS))) {
-    if(m_threadStarted == true) {
+  else if (i_type == INPUT_DOWN &&
+           i_xmkey ==
+             (*InputHandler::instance()->getGlobalKey(INPUT_KILLPROCESS))) {
+    if (m_threadStarted == true) {
       m_messageOnFailure = false;
       m_pThread->safeKill();
     }

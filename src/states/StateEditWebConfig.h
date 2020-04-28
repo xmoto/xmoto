@@ -28,24 +28,24 @@ class UIRoot;
 
 class StateEditWebConfig : public StateMenu {
 public:
-  StateEditWebConfig(bool drawStateBehind    = true,
-		     bool updateStatesBehind = false);
+  StateEditWebConfig(bool drawStateBehind = true,
+                     bool updateStatesBehind = false);
   virtual ~StateEditWebConfig();
 
   virtual void enter();
 
-  static  void clean();
-  virtual void sendFromMessageBox(const std::string& i_id,
-				  UIMsgBoxButton i_button,
-				  const std::string& i_input);
+  static void clean();
+  virtual void sendFromMessageBox(const std::string &i_id,
+                                  UIMsgBoxButton i_button,
+                                  const std::string &i_input);
 
 protected:
   virtual void checkEvents();
 
 private:
   /* GUI */
-  static UIRoot* m_sGUI;
-  static void createGUIIfNeeded(RenderSurface* i_screen);
+  static UIRoot *m_sGUI;
+  static void createGUIIfNeeded(RenderSurface *i_screen);
   void updateGUI();
   void updateGUIRights();
 };

@@ -22,11 +22,11 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #define __UPDATETHEMETHREAD_H__
 
 #include "XMThread.h"
-#include "../WWWAppInterface.h"
+#include "common/WWWAppInterface.h"
 
 class UpdateThemeThread : public XMThread, public WWWAppInterface {
 public:
-  UpdateThemeThread(const std::string& i_id_theme);
+  UpdateThemeThread(const std::string &i_id_theme);
   virtual ~UpdateThemeThread();
 
   virtual void setTaskProgress(float p_percent);

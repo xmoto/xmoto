@@ -24,20 +24,20 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "StatePlaying.h"
 
 class StatePlayingNet : public StatePlaying {
-  public:
-  StatePlayingNet(Universe* i_universe, GameRenderer* i_renderer);
+public:
+  StatePlayingNet(Universe *i_universe, GameRenderer *i_renderer);
   virtual ~StatePlayingNet();
 
-  virtual bool updateWhenUnvisible() {return true;}
-  
+  virtual bool updateWhenUnvisible() { return true; }
+
   virtual void enter();
   virtual void abortPlaying();
   virtual void executeOneCommand(std::string cmd, std::string args);
-  
-  /* input */
-  virtual void xmKey(InputEventType i_type, const XMKey& i_xmkey);
 
-  private:
+  /* input */
+  virtual void xmKey(InputEventType i_type, const XMKey &i_xmkey);
+
+private:
 };
 
 #endif

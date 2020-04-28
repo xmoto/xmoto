@@ -19,26 +19,22 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 =============================================================================*/
 
 #include "BikeController.h"
+#include "../helpers/VMath.h"
 #include "../net/NetActions.h"
 #include "../net/NetClient.h"
-#include "../helpers/VMath.h"
 
 #define XM_MIN_DRIVE_DETECTION 0.1
 
-BikeController::BikeController() {
-}
+BikeController::BikeController() {}
 
-BikeController::~BikeController() {
-}
+BikeController::~BikeController() {}
 
-BikeControllerPlayer::BikeControllerPlayer()
-{
+BikeControllerPlayer::BikeControllerPlayer() {
   m_brokenBreaks = false;
   stopControls();
 }
 
-BikeControllerPlayer::~BikeControllerPlayer() {
-}
+BikeControllerPlayer::~BikeControllerPlayer() {}
 
 float BikeControllerPlayer::Drive() const {
   return m_drive;
@@ -57,35 +53,31 @@ bool BikeControllerPlayer::isDriving() {
 }
 
 void BikeControllerPlayer::stopControls() {
-  m_drive      = 0.0;      
-  m_pull       = 0.0;  
-  m_changeDir  = false;
-  m_throttle   = 0.0;
-  m_break      = 0.0;
+  m_drive = 0.0;
+  m_pull = 0.0;
+  m_changeDir = false;
+  m_throttle = 0.0;
+  m_break = 0.0;
 }
 
-void BikeControllerPlayer::setThrottle(float i_throttle)
-{
+void BikeControllerPlayer::setThrottle(float i_throttle) {
   m_throttle = i_throttle;
-  if(m_throttle > 0.0f){
+  if (m_throttle > 0.0f) {
     m_drive = m_throttle;
-  }
-  else if(m_throttle == 0.0f){
+  } else if (m_throttle == 0.0f) {
     m_drive = -m_break;
   }
 }
 
-void BikeControllerPlayer::setBreak(float i_break)
-{
-  if(m_brokenBreaks) {
+void BikeControllerPlayer::setBreak(float i_break) {
+  if (m_brokenBreaks) {
     return;
   }
 
   m_break = i_break;
-  if(m_break > 0.0f){
+  if (m_break > 0.0f) {
     m_drive = -m_break;
-  }
-  else if(m_break == 0.0f){
+  } else if (m_break == 0.0f) {
     m_drive = m_throttle;
   }
 }
@@ -107,32 +99,31 @@ BikeControllerNet::BikeControllerNet(int i_localNetId) {
   m_localNetId = i_localNetId;
 }
 
-BikeControllerNet::~BikeControllerNet() {
-}
+BikeControllerNet::~BikeControllerNet() {}
 
 void BikeControllerNet::setBreak(float i_break) {
-  if(NetClient::instance()->isConnected()) {
+  if (NetClient::instance()->isConnected()) {
     NA_playerControl na(PC_BRAKE, i_break);
     NetClient::instance()->send(&na, m_localNetId);
   }
 }
 
 void BikeControllerNet::setThrottle(float i_throttle) {
-  if(NetClient::instance()->isConnected()) {
+  if (NetClient::instance()->isConnected()) {
     NA_playerControl na(PC_THROTTLE, i_throttle);
     NetClient::instance()->send(&na, m_localNetId);
   }
 }
 
 void BikeControllerNet::setPull(float i_pull) {
-  if(NetClient::instance()->isConnected()) {
+  if (NetClient::instance()->isConnected()) {
     NA_playerControl na(PC_PULL, i_pull);
     NetClient::instance()->send(&na, m_localNetId);
   }
 }
 
 void BikeControllerNet::setChangeDir(bool i_changeDir) {
-  if(NetClient::instance()->isConnected()) {
+  if (NetClient::instance()->isConnected()) {
     NA_playerControl na(PC_CHANGEDIR, i_changeDir);
     NetClient::instance()->send(&na, m_localNetId);
   }

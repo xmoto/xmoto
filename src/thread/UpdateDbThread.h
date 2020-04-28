@@ -22,12 +22,12 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #define __UPDATEDBTHREAD_H__
 
 #include "XMThread.h"
-#include "../XMotoLoadLevelsInterface.h"
-#include "../XMotoLoadReplaysInterface.h"
+#include "common/XMotoLoadLevelsInterface.h"
+#include "common/XMotoLoadReplaysInterface.h"
 
-class UpdateDbThread : public XMThread ,
-		       public XMotoLoadLevelsInterface,
-		       public XMotoLoadReplaysInterface {
+class UpdateDbThread : public XMThread,
+                       public XMotoLoadLevelsInterface,
+                       public XMotoLoadReplaysInterface {
 public:
   UpdateDbThread(bool i_loadMainLayerOnly);
   virtual ~UpdateDbThread();

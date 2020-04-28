@@ -19,42 +19,44 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 =============================================================================*/
 
 #include "StateSendVote.h"
-#include "../thread/SendVoteThread.h"
-#include "../XMSession.h"
-#include "../Input.h"
+#include "common/XMSession.h"
+#include "thread/SendVoteThread.h"
+#include "xmoto/Input.h"
 
-StateSendVote::StateSendVote(const std::string& i_idlevel,
-			     const std::string& i_difficulty_value, const std::string& i_quality_value,
-			     bool drawStateBehind,
-			     bool updateStatesBehind)
-  : StateUpdate(drawStateBehind, updateStatesBehind)
-{
-  m_pThread = new SendVoteThread(i_idlevel, i_difficulty_value, i_quality_value,
-				 XMSession::instance()->adminMode(),
-				 XMSession::instance()->adminMode() ? XMSession::instance()->profile() : "",
-				 XMSession::instance()->adminMode() ? XMSession::instance()->wwwPassword() : ""
-				 );
-  m_name    = "StateSendVote";
-  
-  m_messageOnSuccess      = true;
+StateSendVote::StateSendVote(const std::string &i_idlevel,
+                             const std::string &i_difficulty_value,
+                             const std::string &i_quality_value,
+                             bool drawStateBehind,
+                             bool updateStatesBehind)
+  : StateUpdate(drawStateBehind, updateStatesBehind) {
+  m_pThread = new SendVoteThread(
+    i_idlevel,
+    i_difficulty_value,
+    i_quality_value,
+    XMSession::instance()->adminMode(),
+    XMSession::instance()->adminMode() ? XMSession::instance()->profile() : "",
+    XMSession::instance()->adminMode() ? XMSession::instance()->wwwPassword()
+                                       : "");
+  m_name = "StateSendVote";
+
+  m_messageOnSuccess = true;
   m_messageOnSuccessModal = false;
-  m_messageOnFailure      = true;
+  m_messageOnFailure = true;
   m_messageOnFailureModal = false;
 }
 
-StateSendVote::~StateSendVote()
-{
+StateSendVote::~StateSendVote() {
   delete m_pThread;
 }
 
-void StateSendVote::callAfterThreadFinished(int threadResult)
-{
-  m_msg = ((SendVoteThread*)m_pThread)->getMsg();
+void StateSendVote::callAfterThreadFinished(int threadResult) {
+  m_msg = ((SendVoteThread *)m_pThread)->getMsg();
 }
 
-void StateSendVote::xmKey(InputEventType i_type, const XMKey& i_xmkey) {
-  if(i_type == INPUT_DOWN && i_xmkey == (*InputHandler::instance()->getGlobalKey(INPUT_KILLPROCESS))) {
-    if(m_threadStarted == true) {
+void StateSendVote::xmKey(InputEventType i_type, const XMKey &i_xmkey) {
+  if (i_type == INPUT_DOWN &&
+      i_xmkey == (*InputHandler::instance()->getGlobalKey(INPUT_KILLPROCESS))) {
+    if (m_threadStarted == true) {
       m_pThread->safeKill();
     }
   }

@@ -25,8 +25,8 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include <vector>
 
 class System {
-  public:
-  static std::vector<std::string>* getDisplayModes(int windowed);
+public:
+  static std::vector<std::string> *getDisplayModes(int windowed);
   static std::string getMemoryInfo();
 };
 

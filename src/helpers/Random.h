@@ -25,20 +25,17 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
 // not so random
 #define NB_RANDOM 1024
-class NotSoRandom
-{
+class NotSoRandom {
 public:
-  static void init()
-  {
-    for(unsigned int i=0; i<NB_RANDOM; i++){
+  static void init() {
+    for (unsigned int i = 0; i < NB_RANDOM; i++) {
       // from quake 3
       m_random[i] = ((rand() & 0x7fff) / ((float)0x7fff));
     }
   }
 
-  static inline float randomNum(float min, float max)
-  {
-    m_current = (m_current+1) & (NB_RANDOM-1);
+  static inline float randomNum(float min, float max) {
+    m_current = (m_current + 1) & (NB_RANDOM - 1);
     return min + (max - min) * m_random[m_current];
   }
 

@@ -28,10 +28,9 @@ class UIRoot;
 
 class StateLevelInfoViewer : public StateMenu {
 public:
-  StateLevelInfoViewer(const std::string& level,
-		       bool drawStateBehind    = true,
-		       bool updateStatesBehind = true
-		       );			 
+  StateLevelInfoViewer(const std::string &level,
+                       bool drawStateBehind = true,
+                       bool updateStatesBehind = true);
   virtual ~StateLevelInfoViewer();
 
   virtual void enter();
@@ -40,20 +39,22 @@ public:
   virtual void enterAfterPop();
 
   /* input */
-  virtual void xmKey(InputEventType i_type, const XMKey& i_xmkey);
+  virtual void xmKey(InputEventType i_type, const XMKey &i_xmkey);
 
-  static  void clean();
+  static void clean();
 
 protected:
   virtual void checkEvents();
 
-  virtual void sendFromMessageBox(const std::string& i_id, UIMsgBoxButton i_button, const std::string& i_input);
+  virtual void sendFromMessageBox(const std::string &i_id,
+                                  UIMsgBoxButton i_button,
+                                  const std::string &i_input);
   virtual void executeOneCommand(std::string cmd, std::string args);
 
 private:
   /* GUI */
-  static UIRoot* m_sGUI;
-  static void createGUIIfNeeded(RenderSurface* i_screen);
+  static UIRoot *m_sGUI;
+  static void createGUIIfNeeded(RenderSurface *i_screen);
   void updateGUI();
 
   void updateLevelInfoViewerBestTimes();

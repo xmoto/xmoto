@@ -24,23 +24,23 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "StateScene.h"
 
 class StateDeadJust : public StateScene {
-  public:
-  StateDeadJust(Universe* i_universe, GameRenderer* i_renderer);
+public:
+  StateDeadJust(Universe *i_universe, GameRenderer *i_renderer);
   virtual ~StateDeadJust();
-  
+
   virtual void enter();
   virtual bool update();
-  
+
   /* input */
-  virtual void xmKey(InputEventType i_type, const XMKey& i_xmkey);
+  virtual void xmKey(InputEventType i_type, const XMKey &i_xmkey);
 
   virtual void restartLevel(bool i_reloadLevel = false);
   virtual void nextLevel(bool i_positifOrder = true);
 
-  protected:
+protected:
   virtual void executeOneCommand(std::string cmd, std::string args);
 
-  private:
+private:
   int m_enterTime;
 
   void toCheckpointBeeingDead();

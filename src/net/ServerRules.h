@@ -21,23 +21,23 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #ifndef __SERVERRULES_H__
 #define __SERVERRULES_H__
 
-#include "../LuaLibBase.h"
+#include "xmoto/LuaLibBase.h"
 
 class ServerThread;
 
 class ServerRules : public LuaLibBase {
 public:
-  ServerRules(ServerThread* i_st);
+  ServerRules(ServerThread *i_st);
   ~ServerRules();
 
 protected:
   void setInstance();
 
 private:
-  ServerThread* m_server;
+  ServerThread *m_server;
 
   static luaL_Reg m_rulesFuncs[];
-  static ServerThread* m_exec_server;
+  static ServerThread *m_exec_server;
 
   /* Lua library prototypes */
   // system

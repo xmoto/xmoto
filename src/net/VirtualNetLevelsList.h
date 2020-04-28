@@ -21,24 +21,24 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #ifndef __VIRTUALNETLEVELSLIST_H__
 #define __VIRTUALNETLEVELSLIST_H__
 
+#include "xmoto/VirtualLevelsList.h"
 #include <string>
-#include "../VirtualLevelsList.h"
 
 class NetClient;
 class xmDatabase;
 
 class VirtualNetLevelsList : public VirtualLevelsList {
-  public:
-  VirtualNetLevelsList(NetClient* i_client);
+public:
+  VirtualNetLevelsList(NetClient *i_client);
   virtual ~VirtualNetLevelsList();
 
-  void setDb(xmDatabase* pDb); // must be set before used !!
-  virtual std::string determinePreviousLevel(const std::string& i_id_level);
-  virtual std::string determineNextLevel(const std::string& i_id_level);
+  void setDb(xmDatabase *pDb); // must be set before used !!
+  virtual std::string determinePreviousLevel(const std::string &i_id_level);
+  virtual std::string determineNextLevel(const std::string &i_id_level);
 
-  private:
-  NetClient* m_client;
-  xmDatabase* m_db;
+private:
+  NetClient *m_client;
+  xmDatabase *m_db;
 };
 
 #endif

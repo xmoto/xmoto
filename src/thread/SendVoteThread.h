@@ -22,14 +22,18 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #define __SENDVOTETHREAD_H__
 
 #include "XMThread.h"
-#include "../WWWAppInterface.h"
+#include "common/WWWAppInterface.h"
 
 class xmDatabase;
 
 class SendVoteThread : public XMThread, public WWWAppInterface {
-  public:
-  SendVoteThread(const std::string& i_idlevel, const std::string& i_difficulty_value, const std::string& i_quality_value,
-		 bool i_adminMode, const std::string& i_id_profile, const std::string& i_password);
+public:
+  SendVoteThread(const std::string &i_idlevel,
+                 const std::string &i_difficulty_value,
+                 const std::string &i_quality_value,
+                 bool i_adminMode,
+                 const std::string &i_id_profile,
+                 const std::string &i_password);
   virtual ~SendVoteThread();
   std::string getMsg() const;
 
@@ -37,7 +41,10 @@ class SendVoteThread : public XMThread, public WWWAppInterface {
 
   virtual int realThreadFunction();
 
-  static bool isToPropose(xmDatabase* pDb, const std::string& i_id_level); // return false if it's not necessary to run it
+  static bool isToPropose(xmDatabase *pDb,
+                          const std::string &i_id_level); // return false if
+  // it's not necessary
+  // to run it
 
 private:
   std::string m_msg;
@@ -46,7 +53,7 @@ private:
   std::string m_id_profile;
   std::string m_password;
 
-  static bool hasPlayedEnough(xmDatabase* pDb, const std::string& i_id_level);
+  static bool hasPlayedEnough(xmDatabase *pDb, const std::string &i_id_level);
 };
 
 #endif

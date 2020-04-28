@@ -21,13 +21,15 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #ifndef __STATEMESSAGEBOXRECEIVER_H__
 #define __STATEMESSAGEBOXRECEIVER_H__
 
+#include "gui/basic/GUI.h"
 #include <string>
-#include "../gui/basic/GUI.h"
 
 class StateMessageBoxReceiver {
-  public:
-  virtual ~StateMessageBoxReceiver() {};
-  virtual void sendFromMessageBox(const std::string& i_id, UIMsgBoxButton i_button, const std::string& i_input) = 0;
+public:
+  virtual ~StateMessageBoxReceiver(){};
+  virtual void sendFromMessageBox(const std::string &i_id,
+                                  UIMsgBoxButton i_button,
+                                  const std::string &i_input) = 0;
 };
 
 #endif

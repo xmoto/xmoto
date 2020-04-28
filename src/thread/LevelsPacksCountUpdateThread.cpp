@@ -19,38 +19,43 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 =============================================================================*/
 
 #include "LevelsPacksCountUpdateThread.h"
-#include "../XMSession.h"
-#include "../states/StateManager.h"
-#include "../LevelsManager.h"
+#include "common/XMSession.h"
+#include "states/StateManager.h"
+#include "xmoto/LevelsManager.h"
 
-LevelsPacksCountUpdateThread::LevelsPacksCountUpdateThread() : XMThread("LPCU", true) {
-  if(XMSession::instance()->debug() == true) {
-    StateManager::instance()->registerAsEmitter(std::string("LEVELSPACKS_COUNT_UPDATED"));
+LevelsPacksCountUpdateThread::LevelsPacksCountUpdateThread()
+  : XMThread("LPCU", true) {
+  if (XMSession::instance()->debug() == true) {
+    StateManager::instance()->registerAsEmitter(
+      std::string("LEVELSPACKS_COUNT_UPDATED"));
   }
 }
 
-LevelsPacksCountUpdateThread::~LevelsPacksCountUpdateThread() {
-}
+LevelsPacksCountUpdateThread::~LevelsPacksCountUpdateThread() {}
 
 int LevelsPacksCountUpdateThread::realThreadFunction() {
-  LevelsManager* v_lm = LevelsManager::instance();
+  LevelsManager *v_lm = LevelsManager::instance();
 
   v_lm->lockLevelsPacks();
   try {
-    for(unsigned int i=0; i<v_lm->LevelsPacks().size(); i++) {
+    for (unsigned int i = 0; i < v_lm->LevelsPacks().size(); i++) {
       /* the unpackaged pack exists only in debug mode */
-      if(v_lm->LevelsPacks()[i]->Name() != "" || XMSession::instance()->debug()) {
-	v_lm->LevelsPacks()[i]->updateCount(m_pDb, XMSession::instance()->profile());
+      if (v_lm->LevelsPacks()[i]->Name() != "" ||
+          XMSession::instance()->debug()) {
+        v_lm->LevelsPacks()[i]->updateCount(m_pDb,
+                                            XMSession::instance()->profile());
       }
     }
-  } catch(Exception &e) {
+  } catch (Exception &e) {
     /* some packs could have been updated */
     v_lm->unlockLevelsPacks();
-    StateManager::instance()->sendAsynchronousMessage(std::string("LEVELSPACKS_COUNT_UPDATED"));
+    StateManager::instance()->sendAsynchronousMessage(
+      std::string("LEVELSPACKS_COUNT_UPDATED"));
     return 1;
   }
   v_lm->unlockLevelsPacks();
 
-  StateManager::instance()->sendAsynchronousMessage(std::string("LEVELSPACKS_COUNT_UPDATED"));  
+  StateManager::instance()->sendAsynchronousMessage(
+    std::string("LEVELSPACKS_COUNT_UPDATED"));
   return 0;
 }

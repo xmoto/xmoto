@@ -19,26 +19,22 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 =============================================================================*/
 
 #include "UpdateThemeThread.h"
-#include "../helpers/Log.h"
-#include "../GameText.h"
-#include "../Game.h"
-#include "../WWW.h"
-#include "../XMSession.h"
-#include "../states/StateManager.h"
-#include "../VFileIO.h"
+#include "common/VFileIO.h"
+#include "common/WWW.h"
+#include "common/XMSession.h"
+#include "helpers/Log.h"
+#include "states/StateManager.h"
+#include "xmoto/Game.h"
+#include "xmoto/GameText.h"
 
-UpdateThemeThread::UpdateThemeThread(const std::string& i_id_theme)
-  : XMThread("UTT")
-{
+UpdateThemeThread::UpdateThemeThread(const std::string &i_id_theme)
+  : XMThread("UTT") {
   m_id_theme = i_id_theme;
 }
 
-UpdateThemeThread::~UpdateThemeThread()
-{
-}
+UpdateThemeThread::~UpdateThemeThread() {}
 
-int UpdateThemeThread::realThreadFunction()
-{
+int UpdateThemeThread::realThreadFunction() {
   setThreadCurrentOperation(GAMETEXT_DLTHEME);
   setThreadProgress(0);
 
@@ -48,8 +44,9 @@ int UpdateThemeThread::realThreadFunction()
     WebThemes::updateThemeList(m_pDb, this);
     WebThemes::updateTheme(m_pDb, m_id_theme, this);
     setSafeKill(false);
-    StateManager::instance()->sendAsynchronousMessage(std::string("THEMES_UPDATED"));
-  } catch(Exception &e) {
+    StateManager::instance()->sendAsynchronousMessage(
+      std::string("THEMES_UPDATED"));
+  } catch (Exception &e) {
     LogError(e.getMsg().c_str());
     return 1;
   }

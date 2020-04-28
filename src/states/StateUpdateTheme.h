@@ -25,12 +25,12 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
 class StateUpdateTheme : public StateUpdate {
 public:
-  StateUpdateTheme(const std::string& i_id_theme,
-		   bool drawStateBehind    = true,
-		   bool updateStatesBehind = false);
+  StateUpdateTheme(const std::string &i_id_theme,
+                   bool drawStateBehind = true,
+                   bool updateStatesBehind = false);
   virtual ~StateUpdateTheme();
 
-  virtual void xmKey(InputEventType i_type, const XMKey& i_xmkey);
+  virtual void xmKey(InputEventType i_type, const XMKey &i_xmkey);
 
 protected:
   virtual void callAfterThreadFinished(int threadResult);

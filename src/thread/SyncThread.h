@@ -22,10 +22,10 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #define __SYNCTHREAD_H__
 
 #include "XMThread.h"
-#include "../WWWAppInterface.h"
+#include "common/WWWAppInterface.h"
 
 class SyncThread : public XMThread, public WWWAppInterface {
-  public:
+public:
   SyncThread();
   virtual ~SyncThread();
   std::string getMsg() const;
@@ -34,7 +34,7 @@ class SyncThread : public XMThread, public WWWAppInterface {
 
   virtual int realThreadFunction();
 
-  private:
+private:
   std::string m_msg;
 };
 

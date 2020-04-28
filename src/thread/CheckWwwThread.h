@@ -22,13 +22,13 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #define __CHECKWWWTHREAD_H__
 
 #include "XMThread.h"
-#include "../WWWAppInterface.h"
+#include "common/WWWAppInterface.h"
 
 class WebRoom;
 class WebLevels;
 
 class CheckWwwThread : public XMThread, public WWWAppInterface {
-  public:
+public:
   // when forceUpdate is false, use the values in xmsession
   // to know which part has to be updated
   CheckWwwThread(bool forceUpdate = false);
@@ -42,14 +42,14 @@ class CheckWwwThread : public XMThread, public WWWAppInterface {
   static bool isNeeded(); // return false if it's not necessary to run it
 
 private:
-  void updateWebHighscores(const std::string& i_id_room);
-  void upgradeWebHighscores(const std::string& i_id_room);
+  void updateWebHighscores(const std::string &i_id_room);
+  void upgradeWebHighscores(const std::string &i_id_room);
   void updateWebLevels();
 
   std::string m_msg;
-  bool        m_forceUpdate;
-  WebRoom*    m_pWebRoom;
-  WebLevels*  m_pWebLevels;
+  bool m_forceUpdate;
+  WebRoom *m_pWebRoom;
+  WebLevels *m_pWebLevels;
   bool m_realHighscoresUpdate;
 };
 

@@ -1,14 +1,18 @@
-CMAKE_MINIMUM_REQUIRED(VERSION 2.6 FATAL_ERROR)
-PROJECT(xmoto)
+cmake_minimum_required(VERSION 3.7 FATAL_ERROR)
+project(xmoto C CXX)
 
-INCLUDE(CPack)
-ADD_SUBDIRECTORY(src)
+list(APPEND CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/CMake")
 
-# packaging
-SET(CPACK_PACKAGE_NAME     "xmoto")
-SET(CPACK_GENERATOR        TGZ)
-SET(CPACK_SOURCE_GENERATOR STGZ)
-SET(CPACK_PACKAGE_VERSION_MAJOR 0)
-SET(CPACK_PACKAGE_VERSION_MINOR 5)
-SET(CPACK_PACKAGE_VERSION_PATCH 3)
-SET(CPACK_PACKAGE_FILE_NAME "xmoto-"${CPACK_PACKAGE_VERSION_MAJOR}"."${CPACK_PACKAGE_VERSION_MINOR}"."${CPACK_PACKAGE_VERSION_PATCH})
+include(CheckCXXCompilerFlag)
+include(CheckPrototypeDefinition)
+include(CheckSymbolExists)
+
+add_subdirectory(src)
+
+# we set some cpack variables in src/CMakeLists.txt so include this after src/
+include(cpack/cpack.cmake)
+include(CPack)
+
+add_subdirectory(bin)
+add_subdirectory(extra)
+#add_subdirectory(po)

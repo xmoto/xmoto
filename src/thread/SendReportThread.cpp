@@ -19,38 +19,39 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 =============================================================================*/
 
 #include "SendReportThread.h"
-#include "../GameText.h"
-#include "../XMSession.h"
-#include "../WWW.h"
-#include "../helpers/Log.h"
-#include "../db/xmDatabase.h"
+#include "common/WWW.h"
+#include "common/XMSession.h"
+#include "db/xmDatabase.h"
+#include "helpers/Log.h"
+#include "xmoto/GameText.h"
 
-SendReportThread::SendReportThread(const std::string& i_author, const std::string& i_msg)
-  : XMThread("SRT")
-{
+SendReportThread::SendReportThread(const std::string &i_author,
+                                   const std::string &i_msg)
+  : XMThread("SRT") {
   m_author = i_author;
-  m_msg    = i_msg;
+  m_msg = i_msg;
 }
 
-SendReportThread::~SendReportThread()
-{
-}
+SendReportThread::~SendReportThread() {}
 
-int SendReportThread::realThreadFunction()
-{
+int SendReportThread::realThreadFunction() {
   bool v_msg_status_ok;
 
   setThreadCurrentOperation(GAMETEXT_SENDING_REPORT);
   setThreadProgress(0);
 
   try {
-    FSWeb::sendReport(m_author, m_msg,
-		      DEFAULT_SENDREPORT_URL,
-		      this, XMSession::instance()->proxySettings(), v_msg_status_ok, m_msg);
-    if(v_msg_status_ok == false) {
+    FSWeb::sendReport(m_author,
+                      m_msg,
+                      DEFAULT_SENDREPORT_URL,
+                      this,
+                      XMSession::instance()->proxySettings(),
+                      v_msg_status_ok,
+                      m_msg);
+    if (v_msg_status_ok == false) {
       return 1;
     }
-  } catch(Exception &e) {
+  } catch (Exception &e) {
     m_msg = GAMETEXT_UPLOAD_ERROR + std::string("\n") + e.getMsg();
     LogWarning("%s", e.getMsg().c_str());
     return 1;
@@ -60,12 +61,10 @@ int SendReportThread::realThreadFunction()
   return 0;
 }
 
-std::string SendReportThread::getMsg() const
-{
+std::string SendReportThread::getMsg() const {
   return m_msg;
 }
 
-void SendReportThread::setTaskProgress(float p_percent)
-{
+void SendReportThread::setTaskProgress(float p_percent) {
   setThreadProgress((int)p_percent);
 }

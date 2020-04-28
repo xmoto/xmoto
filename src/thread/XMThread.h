@@ -31,17 +31,18 @@ class GameApp;
 class xmDatabase;
 
 /**
- * thread mother class for X-Moto. This encapsulates the SDL threads functions and add more stuff for XM.
+ * thread mother class for X-Moto. This encapsulates the SDL threads functions
+ * and add more stuff for XM.
  */
 class XMThread {
 public:
-  XMThread(const std::string& i_dbKey = "thread", bool i_dbReadOnly = false);
+  XMThread(const std::string &i_dbKey = "thread", bool i_dbReadOnly = false);
   virtual ~XMThread();
 
   void startThread();
   int runInMain();
 
-  int  waitForThreadEnd();
+  int waitForThreadEnd();
   bool isThreadRunning();
   virtual void askThreadToEnd();
   // use with care
@@ -58,7 +59,7 @@ public:
   std::string getThreadCurrentMicroOperation();
 
   // don't use it
-  static  int run(void* pThreadInstance);
+  static int run(void *pThreadInstance);
   virtual int realThreadFunction() = 0;
 
   /**
@@ -67,7 +68,6 @@ public:
   void safeKill();
 
 protected:
-
   void sleepThread();
 
   void setThreadProgress(int progress);
@@ -76,13 +76,13 @@ protected:
 
   void setSafeKill(bool i_value);
 
-  SDL_Thread* m_pThread;
-  bool        m_isRunning;
-  bool        m_isSleeping;
-  bool        m_askThreadToEnd;
-  bool        m_askThreadToSleep;
+  SDL_Thread *m_pThread;
+  bool m_isRunning;
+  bool m_isSleeping;
+  bool m_askThreadToEnd;
+  bool m_askThreadToSleep;
 
-  int         m_progress;
+  int m_progress;
   std::string m_currentOperation;
   // for example, the name of the level beeing downloaded
   std::string m_currentMicroOperation;
@@ -90,18 +90,18 @@ protected:
   std::string m_wakeUpInfos;
 
   // different thread, different database connection
-  xmDatabase* m_pDb;
+  xmDatabase *m_pDb;
 
 private:
   int threadFunctionEncapsulate();
-  SDL_mutex* m_curOpMutex;
-  SDL_mutex* m_curMicOpMutex;
-  SDL_mutex* m_sleepMutex;
-  SDL_cond*  m_sleepCond;
+  SDL_mutex *m_curOpMutex;
+  SDL_mutex *m_curMicOpMutex;
+  SDL_mutex *m_sleepMutex;
+  SDL_cond *m_sleepCond;
   bool m_safeKill;
   bool m_askSafeKill;
   std::string m_dbKey;
   bool m_dbReadOnly;
 };
-  
+
 #endif

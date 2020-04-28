@@ -25,12 +25,11 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "StateMenu.h"
 
 class StateHelp : public StateMenu {
-  public:
-  StateHelp(bool drawStateBehind    = true,
-	    bool updateStatesBehind = false,
-	    bool i_gameHelp         = false,
-	    bool i_allowSceneOver = true
-	    );
+public:
+  StateHelp(bool drawStateBehind = true,
+            bool updateStatesBehind = false,
+            bool i_gameHelp = false,
+            bool i_allowSceneOver = true);
   virtual ~StateHelp();
 
   virtual void enter();
@@ -38,12 +37,12 @@ class StateHelp : public StateMenu {
   virtual void enterAfterPop();
 
   /* input */
-  virtual void xmKey(InputEventType i_type, const XMKey& i_xmkey);
+  virtual void xmKey(InputEventType i_type, const XMKey &i_xmkey);
 
- protected:
+protected:
   virtual void checkEvents();
 
- private:
+private:
   /* GUI */
   void createGUI();
 

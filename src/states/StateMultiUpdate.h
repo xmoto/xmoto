@@ -22,15 +22,14 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #define __STATEUPDATE_H__
 
 #include "StateMenu.h"
-#include "../thread/XMThreads.h"
+#include "thread/XMThreads.h"
 #include <map>
 
 class UIRoot;
 
 class StateMultiUpdate : public StateMenu {
 public:
-  StateMultiUpdate(bool drawStateBehind,
-		   bool updateStatesBehind);
+  StateMultiUpdate(bool drawStateBehind, bool updateStatesBehind);
   virtual ~StateMultiUpdate();
 
   virtual void enter();
@@ -39,7 +38,7 @@ public:
   virtual bool update();
 
   /* input */
-  virtual void xmKey(InputEventType i_type, const XMKey& i_xmkey);
+  virtual void xmKey(InputEventType i_type, const XMKey &i_xmkey);
 
   static void clean();
 
@@ -48,7 +47,9 @@ protected:
   virtual void updateGUI();
 
   // for the message box when a thread badly finished
-  void sendFromMessageBox(const std::string& i_id, UIMsgBoxButton i_button, const std::string& i_input);
+  void sendFromMessageBox(const std::string &i_id,
+                          UIMsgBoxButton i_button,
+                          const std::string &i_input);
 
   class ThreadInfos {
   public:
@@ -56,7 +57,7 @@ protected:
     bool m_threadFinished;
 
     // updated by the child class
-    int         m_progress;
+    int m_progress;
     std::string m_currentOperation;
     std::string m_currentMicroOperation;
 
@@ -64,17 +65,17 @@ protected:
     std::string m_errorMessage;
   };
 
-  void initThreadInfos(ThreadInfos* pInfos);
+  void initThreadInfos(ThreadInfos *pInfos);
 
   XMThreads m_threads;
-  std::map<std::string, ThreadInfos*> m_threadsInfos;
+  std::map<std::string, ThreadInfos *> m_threadsInfos;
   int m_numberThreadDisplayed;
   int m_numberThreadRunning;
 
 private:
   /* GUI */
-  static UIRoot* m_sGUI;
-  static void createGUIIfNeeded(RenderSurface* i_screen);
+  static UIRoot *m_sGUI;
+  static void createGUIIfNeeded(RenderSurface *i_screen);
 
   void init();
 };

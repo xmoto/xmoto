@@ -19,24 +19,21 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 =============================================================================*/
 
 #include "StateUploadHighscore.h"
-#include "../thread/UploadHighscoreThread.h"
+#include "thread/UploadHighscoreThread.h"
 
-StateUploadHighscore::StateUploadHighscore(const std::string& i_replayPath,
-					   bool drawStateBehind,
-					   bool updateStatesBehind)
-  : StateUpdate(drawStateBehind, updateStatesBehind)
-{
-  m_pThread          = new UploadHighscoreThread(i_replayPath);
-  m_name             = "StateUploadHighscore";
+StateUploadHighscore::StateUploadHighscore(const std::string &i_replayPath,
+                                           bool drawStateBehind,
+                                           bool updateStatesBehind)
+  : StateUpdate(drawStateBehind, updateStatesBehind) {
+  m_pThread = new UploadHighscoreThread(i_replayPath);
+  m_name = "StateUploadHighscore";
   m_messageOnSuccess = true;
 }
 
-StateUploadHighscore::~StateUploadHighscore()
-{
+StateUploadHighscore::~StateUploadHighscore() {
   delete m_pThread;
 }
 
-void StateUploadHighscore::callAfterThreadFinished(int threadResult)
-{
-  m_msg = ((UploadHighscoreThread*) m_pThread)->getMsg();
+void StateUploadHighscore::callAfterThreadFinished(int threadResult) {
+  m_msg = ((UploadHighscoreThread *)m_pThread)->getMsg();
 }

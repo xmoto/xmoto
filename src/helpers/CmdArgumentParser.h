@@ -26,6 +26,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
 class CmdArgumentParser : public Singleton<CmdArgumentParser> {
   friend class Singleton<CmdArgumentParser>;
+
 private:
   CmdArgumentParser() {}
   ~CmdArgumentParser() {}
@@ -33,18 +34,18 @@ private:
 public:
   // update args to remove the argument requested
   // raise an exception if it can't parse the args to get the requested type
-  float       getFloat(std::string& args);
-  int         getInt(std::string& args);
-  std::string getString(std::string& args);
+  float getFloat(std::string &args);
+  int getInt(std::string &args);
+  std::string getString(std::string &args);
 
   // add the arg to args
-  void addFloat(float value, std::string& args);
-  void addInt(int value, std::string& args);
-  void addString(std::string value, std::string& args);
+  void addFloat(float value, std::string &args);
+  void addInt(int value, std::string &args);
+  void addString(std::string value, std::string &args);
 
 private:
   // update args
-  std::string nextToken(std::string& args);
+  std::string nextToken(std::string &args);
 };
 
 #endif

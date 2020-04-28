@@ -19,24 +19,21 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 =============================================================================*/
 
 #include "StateUploadAllHighscores.h"
-#include "../thread/UploadAllHighscoresThread.h"
+#include "thread/UploadAllHighscoresThread.h"
 
 StateUploadAllHighscores::StateUploadAllHighscores(unsigned int i_number,
-						   bool drawStateBehind,
-						   bool updateStatesBehind)
-  : StateUpdate(drawStateBehind, updateStatesBehind)
-{
-  m_pThread          = new UploadAllHighscoresThread(i_number);
-  m_name             = "StateUploadAllHighscores";
+                                                   bool drawStateBehind,
+                                                   bool updateStatesBehind)
+  : StateUpdate(drawStateBehind, updateStatesBehind) {
+  m_pThread = new UploadAllHighscoresThread(i_number);
+  m_name = "StateUploadAllHighscores";
   m_messageOnSuccess = true;
 }
 
-StateUploadAllHighscores::~StateUploadAllHighscores()
-{
+StateUploadAllHighscores::~StateUploadAllHighscores() {
   delete m_pThread;
 }
 
-void StateUploadAllHighscores::callAfterThreadFinished(int threadResult)
-{
-  m_msg = ((UploadAllHighscoresThread*) m_pThread)->getMsg();
+void StateUploadAllHighscores::callAfterThreadFinished(int threadResult) {
+  m_msg = ((UploadAllHighscoresThread *)m_pThread)->getMsg();
 }

@@ -25,16 +25,16 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
 class StateViewHighscore : public StateWaiting {
 public:
-  StateViewHighscore(const std::string& i_id_level,
-		     bool drawStateBehind    = true,
-		     bool updateStatesBehind = false);
+  StateViewHighscore(const std::string &i_id_level,
+                     bool drawStateBehind = true,
+                     bool updateStatesBehind = false);
   virtual ~StateViewHighscore();
 
   virtual void enter();
   virtual void executeOneCommand(std::string cmd, std::string args);
 
-  virtual void xmKey(InputEventType i_type, const XMKey& i_xmkey);
-  
+  virtual void xmKey(InputEventType i_type, const XMKey &i_xmkey);
+
 protected:
   virtual void checkEvents() {}
 

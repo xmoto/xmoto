@@ -19,36 +19,34 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 =============================================================================*/
 
 #include "XMThread.h"
-#include "../VCommon.h"
-#include "../Game.h"
-#include "../helpers/Log.h"
-#include "../VFileIO.h"
+#include "common/VCommon.h"
+#include "common/VFileIO.h"
+#include "helpers/Log.h"
+#include "xmoto/Game.h"
 
-XMThread::XMThread(const std::string& i_dbKey, bool i_dbReadOnly)
-{
-  m_isRunning        = false;
-  m_isSleeping       = false;
-  m_askThreadToEnd   = false;
+XMThread::XMThread(const std::string &i_dbKey, bool i_dbReadOnly) {
+  m_isRunning = false;
+  m_isSleeping = false;
+  m_askThreadToEnd = false;
   m_askThreadToSleep = false;
-  m_pThread          = NULL;
-  m_progress         = 0;
+  m_pThread = NULL;
+  m_progress = 0;
   m_currentOperation = "";
   m_currentMicroOperation = "";
-  m_pDb              = NULL;
-  m_curOpMutex       = SDL_CreateMutex();
-  m_curMicOpMutex    = SDL_CreateMutex();
-  m_sleepMutex       = SDL_CreateMutex();
-  m_sleepCond        = SDL_CreateCond();
-  m_wakeUpInfos      = "";
-  m_safeKill         = false;
-  m_askSafeKill      = false;
-  m_dbKey            = i_dbKey;
-  m_dbReadOnly       = i_dbReadOnly;
+  m_pDb = NULL;
+  m_curOpMutex = SDL_CreateMutex();
+  m_curMicOpMutex = SDL_CreateMutex();
+  m_sleepMutex = SDL_CreateMutex();
+  m_sleepCond = SDL_CreateCond();
+  m_wakeUpInfos = "";
+  m_safeKill = false;
+  m_askSafeKill = false;
+  m_dbKey = i_dbKey;
+  m_dbReadOnly = i_dbReadOnly;
 }
 
-XMThread::~XMThread()
-{
-  if(isThreadRunning() == true){
+XMThread::~XMThread() {
+  if (isThreadRunning() == true) {
     killThread();
   }
   SDL_DestroyMutex(m_curOpMutex);
@@ -58,67 +56,59 @@ XMThread::~XMThread()
   xmDatabase::destroy(m_dbKey);
 }
 
-int XMThread::run(void* pThreadInstance)
-{
-  XMThread* thisThread = reinterpret_cast<XMThread*>(pThreadInstance);
+int XMThread::run(void *pThreadInstance) {
+  XMThread *thisThread = reinterpret_cast<XMThread *>(pThreadInstance);
 
   return thisThread->threadFunctionEncapsulate();
 }
 
-void XMThread::startThread()
-{
-    m_progress         = -1;
-    m_currentOperation = "";
-    m_askThreadToEnd   = false;
-    m_isRunning        = true; // set before running the thread
-    m_pThread          = SDL_CreateThread(&XMThread::run, this);
+void XMThread::startThread() {
+  m_progress = -1;
+  m_currentOperation = "";
+  m_askThreadToEnd = false;
+  m_isRunning = true; // set before running the thread
+  m_pThread = SDL_CreateThread(&XMThread::run, this);
 }
 
 int XMThread::runInMain() {
-  m_progress         = -1;
+  m_progress = -1;
   m_currentOperation = "";
-  m_askThreadToEnd   = false;
-  m_isRunning        = true; // set before running the thread
+  m_askThreadToEnd = false;
+  m_isRunning = true; // set before running the thread
 
   return run(this);
 }
 
-int XMThread::waitForThreadEnd()
-{
+int XMThread::waitForThreadEnd() {
   int returnValue;
   SDL_WaitThread(m_pThread, &returnValue);
-  m_pThread   = NULL;
+  m_pThread = NULL;
   m_isRunning = false;
   return returnValue;
 }
 
-bool XMThread::isThreadRunning()
-{
+bool XMThread::isThreadRunning() {
   return m_isRunning;
 }
 
-void XMThread::askThreadToEnd()
-{
+void XMThread::askThreadToEnd() {
   m_askThreadToEnd = true;
 }
 
-void XMThread::askThreadToSleep()
-{
-  if(m_isSleeping == false){
+void XMThread::askThreadToSleep() {
+  if (m_isSleeping == false) {
     m_askThreadToSleep = true;
   }
 }
 
-void XMThread::killThread()
-{
+void XMThread::killThread() {
   LogWarning("Kill violently the thread");
   SDL_KillThread(m_pThread);
-  m_pThread   = NULL;
+  m_pThread = NULL;
   m_isRunning = false;
 }
 
-void XMThread::sleepThread()
-{
+void XMThread::sleepThread() {
   SDL_LockMutex(m_sleepMutex);
 
   m_isSleeping = true;
@@ -128,9 +118,8 @@ void XMThread::sleepThread()
   SDL_UnlockMutex(m_sleepMutex);
 }
 
-void XMThread::unsleepThread(std::string infos)
-{
-  if(m_isSleeping == true){
+void XMThread::unsleepThread(std::string infos) {
+  if (m_isSleeping == true) {
     SDL_LockMutex(m_sleepMutex);
     SDL_CondSignal(m_sleepCond);
 
@@ -145,7 +134,7 @@ void XMThread::setSafeKill(bool i_value) {
   m_safeKill = i_value;
 
   // kill if it was asked
-  if(m_safeKill && m_isRunning && m_askSafeKill) {
+  if (m_safeKill && m_isRunning && m_askSafeKill) {
     killThread();
   }
 }
@@ -154,18 +143,16 @@ void XMThread::safeKill() {
   m_askSafeKill = true;
 
   // kill if thread is in a safe state
-  if(m_safeKill && m_isRunning) {
+  if (m_safeKill && m_isRunning) {
     killThread();
   }
 }
 
-int XMThread::getThreadProgress()
-{
+int XMThread::getThreadProgress() {
   return m_progress;
 }
 
-std::string XMThread::getThreadCurrentOperation()
-{
+std::string XMThread::getThreadCurrentOperation() {
   std::string curOp;
 
   SDL_LockMutex(m_curOpMutex);
@@ -175,8 +162,7 @@ std::string XMThread::getThreadCurrentOperation()
   return curOp;
 }
 
-std::string XMThread::getThreadCurrentMicroOperation()
-{
+std::string XMThread::getThreadCurrentMicroOperation() {
   std::string curMicOp;
 
   SDL_LockMutex(m_curMicOpMutex);
@@ -186,34 +172,30 @@ std::string XMThread::getThreadCurrentMicroOperation()
   return curMicOp;
 }
 
-void XMThread::setThreadProgress(int progress)
-{
+void XMThread::setThreadProgress(int progress) {
   m_progress = progress;
 }
 
-void XMThread::setThreadCurrentOperation(std::string curOp)
-{
+void XMThread::setThreadCurrentOperation(std::string curOp) {
   SDL_LockMutex(m_curOpMutex);
   m_currentOperation = curOp;
   SDL_UnlockMutex(m_curOpMutex);
 }
 
-void XMThread::setThreadCurrentMicroOperation(std::string curMicOp)
-{
+void XMThread::setThreadCurrentMicroOperation(std::string curMicOp) {
   SDL_LockMutex(m_curMicOpMutex);
   m_currentMicroOperation = curMicOp;
   SDL_UnlockMutex(m_curMicOpMutex);
 }
 
-int XMThread::threadFunctionEncapsulate()
-{
+int XMThread::threadFunctionEncapsulate() {
   // we can only have one thread at once.
   LogDebug("Open db for thread with key '%s'", m_dbKey.c_str());
   m_pDb = xmDatabase::instance(m_dbKey);
   m_pDb->init(DATABASE_FILE, m_dbReadOnly);
 
   int returnValue = realThreadFunction();
-  m_isRunning     = false;
+  m_isRunning = false;
 
   return returnValue;
 }

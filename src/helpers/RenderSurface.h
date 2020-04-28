@@ -49,16 +49,15 @@
 
 class RenderSurface {
 public:
-
   RenderSurface();
   RenderSurface(Vector2i downleft, Vector2i upright);
 
   void update(Vector2i downleft, Vector2i upright);
-  Vector2i& size();
+  Vector2i &size();
   int getDispWidth() const;
   int getDispHeight() const;
-  Vector2i& downleft();
-  Vector2i& upright();
+  Vector2i &downleft();
+  Vector2i &upright();
 
 private:
   Vector2i m_downleft;

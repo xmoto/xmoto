@@ -1,0 +1,20 @@
+#!/bin/bash
+# Based on Dolphin Emulator's gettextize (31a27a0)
+
+cd ${0/gettextize/}/..
+SRCDIR=src
+SRC_FILES=($SRCDIR/xmoto/GameText.h $SRCDIR/xmoto/LevelsText.h)
+xgettext --default-domain xmoto --sort-output \
+  --keyword=_ --keyword=ngettext \
+  --add-comments=i18n -p ./i18n/po -o xmoto.pot \
+  --package-name="X-Moto" \
+  "${SRC_FILES[@]}"
+
+sed -i "s/SOME DESCRIPTIVE TITLE\./Translation of xmoto.pot to LANGUAGE/" i18n/po/xmoto.pot
+sed -i "s/YEAR THE PACKAGE'S COPYRIGHT HOLDER/2005-2017/" i18n/po/xmoto.pot
+sed -i "s/license as the PACKAGE package/license as the xmoto package/" i18n/po/xmoto.pot
+
+# XXX: Disabled now that we use Transifex (the tool will handle this automatically).
+for PO in ./i18n/po/*.po; do
+  msgmerge --quiet --update --backup=none -s $PO ./i18n/po/xmoto.pot
+done

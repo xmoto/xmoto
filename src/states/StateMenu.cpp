@@ -19,54 +19,43 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 =============================================================================*/
 
 #include "StateMenu.h"
-#include "../gui/basic/GUI.h"
-#include "../Game.h"
-#include "../XMSession.h"
-#include "../drawlib/DrawLib.h"
 #include "StateUpdateDb.h"
-#include "../helpers/Log.h"
-#include "../xmscene/Camera.h"
+#include "common/XMSession.h"
+#include "drawlib/DrawLib.h"
+#include "gui/basic/GUI.h"
+#include "helpers/Log.h"
+#include "xmoto/Game.h"
+#include "xmscene/Camera.h"
 
-StateMenu::StateMenu(bool drawStateBehind,
-		     bool updateStatesBehind):
-GameState(drawStateBehind,
-	    updateStatesBehind)
-{
-  m_GUI        = NULL;
+StateMenu::StateMenu(bool drawStateBehind, bool updateStatesBehind)
+  : GameState(drawStateBehind, updateStatesBehind) {
+  m_GUI = NULL;
   m_showCursor = true;
 
   m_renderFps = 30; // is enouh for menus
   m_updateFps = 30;
 }
 
-StateMenu::~StateMenu()
-{
-}
+StateMenu::~StateMenu() {}
 
-void StateMenu::enter()
-{
+void StateMenu::enter() {
   GameState::enter();
   m_GUI->enableContextMenuDrawing(XMSession::instance()->enableContextHelp());
 }
 
-void StateMenu::leave()
-{
-}
+void StateMenu::leave() {}
 
-void StateMenu::enterAfterPop()
-{
+void StateMenu::enterAfterPop() {
   GameState::enterAfterPop();
   m_GUI->enableWindow(true);
 }
 
-void StateMenu::leaveAfterPush()
-{
+void StateMenu::leaveAfterPush() {
   m_GUI->enableWindow(false);
 }
 
-bool StateMenu::update()
-{
-  if(doUpdate() == false){
+bool StateMenu::update() {
+  if (doUpdate() == false) {
     return false;
   }
 
@@ -74,17 +63,16 @@ bool StateMenu::update()
   return true;
 }
 
-bool StateMenu::render()
-{
+bool StateMenu::render() {
   GameState::render();
-  DrawLib* pDrawlib = GameApp::instance()->getDrawLib();
+  DrawLib *pDrawlib = GameApp::instance()->getDrawLib();
   pDrawlib->getMenuCamera()->setCamera2d();
   m_GUI->paint();
   return true;
 }
 
-void StateMenu::xmKey(InputEventType i_type, const XMKey& i_xmkey) {
-  int nX,nY;
+void StateMenu::xmKey(InputEventType i_type, const XMKey &i_xmkey) {
+  int nX, nY;
   Uint8 nButton;
   Uint8 v_joyNum;
   Uint8 v_joyAxis;
@@ -94,62 +82,65 @@ void StateMenu::xmKey(InputEventType i_type, const XMKey& i_xmkey) {
   SDLMod v_mod;
   std::string v_utf8Char;
 
-  if(i_type == INPUT_DOWN && i_xmkey == (*InputHandler::instance()->getGlobalKey(INPUT_RELOADFILESTODB))) {
+  if (i_type == INPUT_DOWN &&
+      i_xmkey ==
+        (*InputHandler::instance()->getGlobalKey(INPUT_RELOADFILESTODB))) {
     StateManager::instance()->pushState(new StateUpdateDb());
   }
 
-  else if(i_xmkey.toKeyboard(v_nKey, v_mod, v_utf8Char)) {
-    switch(i_type) {
-    case INPUT_DOWN:
-      m_GUI->keyDown(v_nKey, v_mod, v_utf8Char);
-      break;
-    case INPUT_UP:
-      m_GUI->keyUp(v_nKey, v_mod, v_utf8Char);
-      break;
+  else if (i_xmkey.toKeyboard(v_nKey, v_mod, v_utf8Char)) {
+    switch (i_type) {
+      case INPUT_DOWN:
+        m_GUI->keyDown(v_nKey, v_mod, v_utf8Char);
+        break;
+      case INPUT_UP:
+        m_GUI->keyUp(v_nKey, v_mod, v_utf8Char);
+        break;
     }
     checkEvents();
   }
-  
-  else if(i_xmkey.toMouse(nX, nY, nButton)) {
-    if(i_xmkey.getRepetition() == 1) {
-      if(i_type == INPUT_DOWN) {
-	if(nButton == SDL_BUTTON_LEFT) {
-	  m_GUI->mouseLDown(nX, nY);
-	  checkEvents();
-	} else if(nButton == SDL_BUTTON_RIGHT) {
-	  m_GUI->mouseRDown(nX, nY);
-	  checkEvents();
-	} else if(nButton == SDL_BUTTON_WHEELUP) {
-	  m_GUI->mouseWheelUp(nX, nY);
-	  checkEvents();
-	} else if(nButton == SDL_BUTTON_WHEELDOWN) {
-	  m_GUI->mouseWheelDown(nX, nY);
-	  checkEvents();
-	}
-	
-      } else if(i_type == INPUT_UP) {
-	if(nButton == SDL_BUTTON_LEFT) {
-	  m_GUI->mouseLUp(nX, nY);
-	  checkEvents();
-	} else if(nButton == SDL_BUTTON_RIGHT) {
-	  m_GUI->mouseRUp(nX, nY);
-	  checkEvents();
-	}
+
+  else if (i_xmkey.toMouse(nX, nY, nButton)) {
+    if (i_xmkey.getRepetition() == 1) {
+      if (i_type == INPUT_DOWN) {
+        if (nButton == SDL_BUTTON_LEFT) {
+          m_GUI->mouseLDown(nX, nY);
+          checkEvents();
+        } else if (nButton == SDL_BUTTON_RIGHT) {
+          m_GUI->mouseRDown(nX, nY);
+          checkEvents();
+        } else if (nButton == SDL_BUTTON_WHEELUP) {
+          m_GUI->mouseWheelUp(nX, nY);
+          checkEvents();
+        } else if (nButton == SDL_BUTTON_WHEELDOWN) {
+          m_GUI->mouseWheelDown(nX, nY);
+          checkEvents();
+        }
+
+      } else if (i_type == INPUT_UP) {
+        if (nButton == SDL_BUTTON_LEFT) {
+          m_GUI->mouseLUp(nX, nY);
+          checkEvents();
+        } else if (nButton == SDL_BUTTON_RIGHT) {
+          m_GUI->mouseRUp(nX, nY);
+          checkEvents();
+        }
       }
-    } else if(i_xmkey.getRepetition() == 2) {
-      if(nButton == SDL_BUTTON_LEFT) {
-	m_GUI->mouseLDoubleClick(nX, nY);
-	checkEvents();
+    } else if (i_xmkey.getRepetition() == 2) {
+      if (nButton == SDL_BUTTON_LEFT) {
+        m_GUI->mouseLDoubleClick(nX, nY);
+        checkEvents();
       }
     }
   }
-	
-  else if(i_type == INPUT_DOWN && i_xmkey.toJoystickButton(v_joyNum, v_joyButton)) {
+
+  else if (i_type == INPUT_DOWN &&
+           i_xmkey.toJoystickButton(v_joyNum, v_joyButton)) {
     m_GUI->joystickButtonDown(v_joyNum, v_joyButton);
     checkEvents();
   }
-	
-  else if(i_xmkey.toJoystickAxisMotion(v_joyNum, v_joyAxis, v_joyAxisValue)) {
+
+  else if (i_xmkey.toJoystickAxisMotion(v_joyNum, v_joyAxis, v_joyAxisValue)) {
     m_GUI->joystickAxisMotion(v_joyNum, v_joyAxis, v_joyAxisValue);
   }
 
