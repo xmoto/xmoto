@@ -72,11 +72,12 @@ fi
 echo "executable: $executable"
 
 # check if we're using MXE
+# (should probably use the opposite boolean convention)
 if [ "$is_mxe" -ne 0 ]; then
     if ! command -v -- "${target}${mxe_compiler_suffix}" >/dev/null; then
         >&2 echo "fatal: invalid target '$target'"
         exit 1
-    elif ! echo "$target" | grep -q "shared"; then
+    elif ! echo "$target" | grep -q -- "shared"; then
         echo "not a shared target, exiting"
         exit 0
     fi
