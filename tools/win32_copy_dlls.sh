@@ -1,17 +1,18 @@
 #!/usr/bin/sh
 
-compiler_suffix="-gcc"
+is_mxe=0
+mxe_compiler_suffix="-gcc"
 
 usage() {
     cat <<EOF
 Usage:
-    $(basename "$0") -t <target> -o <output_dir> [-e <executable>]
+    $(basename "$0") -t <target> -o <output_dir> [-e <executable>] [-r]
 EOF
 }
 
 # expects <compiler> to be set
 guess_mxe_path() {
-    compiler="$1${compiler_suffix}"
+    compiler="$1${mxe_compiler_suffix}"
     if MXE_PATH="$(command -v -- "$compiler")"; then
         MXE_PATH="$(dirname "$MXE_PATH" | sed -e 's|\(.\)\{0,1\}usr/bin||g')"
     fi
@@ -22,6 +23,9 @@ guess_mxe_path() {
 }
 
 if [ $# -eq 0 ]; then >&2 usage; exit 1; fi
+
+[ -n "$MSYSTEM_PREFIX" ]
+is_mxe=$?
 
 target=""
 output_dir=""
@@ -53,8 +57,9 @@ if case "$output_dir" in /*) false;; esac; then
         exit 1
     fi
     output_dir="$_output_dir"
-    mkdir -p "$output_dir" || echo 'warning: mkdir -p failed'
 fi
+mkdir -p "$output_dir" || echo 'warning: mkdir -p failed'
+
 if [ ! -d "$output_dir" ]; then
     >&2 echo "fatal: directory '$output_dir' does not exist!"
 fi
@@ -66,19 +71,25 @@ if [ -z "$executable" ]; then
 fi
 echo "executable: $executable"
 
-if ! command -v -- "${target}${compiler_suffix}" >/dev/null; then
-    >&2 echo "fatal: invalid target '$target'"
-    exit 1
-elif ! echo "$target" | grep -q "shared"; then
-    echo "not a shared target, exiting"
-    exit 0
-fi
+# check if we're using MXE
+if [ "$is_mxe" -ne 0 ]; then
+    if ! command -v -- "${target}${mxe_compiler_suffix}" >/dev/null; then
+        >&2 echo "fatal: invalid target '$target'"
+        exit 1
+    elif ! echo "$target" | grep -q "shared"; then
+        echo "not a shared target, exiting"
+        exit 0
+    fi
 
-if [ -z "$MXE_PATH" ]; then
-    guess_mxe_path "$target"
+    if [ -z "$MXE_PATH" ]; then
+        guess_mxe_path "$target"
+    fi
+    echo "MXE_PATH: $MXE_PATH"
+else
+    # assume MSYS2
+    MSYS2_PATH="$target"
+    echo "MSYS2_PATH: $MSYS2_PATH"
 fi
-
-echo "MXE_PATH: $MXE_PATH"
 
 printf "\ncopying required DLLs...\n"
 
@@ -99,7 +110,11 @@ dll_check_deps() {
     strings "$path" | grep -i '\.dll$' \
         | while IFS="" read -r dll || [ -n "$dll" ]; do
 
-        dll_path="$MXE_PATH/usr/$target/bin/$dll"
+        if [ "$is_mxe" -ne 0 ]; then
+            dll_path="$MXE_PATH/usr/$target/bin/$dll"
+        else
+            dll_path="$MSYS2_PATH/bin/$dll"
+        fi
         echo "dll_path: $dll_path"
 
         # check if the file has already been copied to $output_dir
