@@ -29,8 +29,8 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 File I/O system - stdio
 ==============================================================================*/
 
-void *tim_stdio_open(char *pcWhere, tim_io_mode_t IOMode) {
-  char *pcIOMode = NULL;
+void *tim_stdio_open(const char *pcWhere, tim_io_mode_t IOMode) {
+  const char *pcIOMode = NULL;
 
   /* Determine mode of I/O */
   switch (IOMode) {
