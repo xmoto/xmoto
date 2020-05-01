@@ -306,7 +306,6 @@ set(xmoto_src
   xmoto/VirtualLevelsList.cpp xmoto/VirtualLevelsList.h
   xmoto/XMDemo.cpp xmoto/XMDemo.h
   xmoto/XMKey.cpp xmoto/XMKey.h
-  xmoto/glext.h
   xmoto/sqlqueries.h
 )
 
