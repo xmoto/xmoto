@@ -509,11 +509,40 @@ set(CPACK_RPM_EXCLUDE_FROM_AUTO_FILELIST_ADDITION
 # chipmunk on Windows
 target_compile_options(xmoto PRIVATE $<$<COMPILE_LANGUAGE:CXX>:-fpermissive>)
 
-if(NOT MXE_TARGET)
-  set(MXE_TARGET "i686-w64-mingw32.shared")
-endif()
+function(set_win32_compat_path COMPAT REAL)
+  # stupid win32 paths..
+  string(REGEX REPLACE "^C:(/|\\\\)?" "/c/" _COMPAT "${REAL}")
+  set(${COMPAT} "${_COMPAT}" PARENT_SCOPE)
+endfunction()
 
 if(WIN32)
+  # MXE exports MSYS=1 so we can't use that to
+  # differentiate between it and MSYS2
+  if(DEFINED ENV{MSYSTEM_PREFIX})
+    set(IS_MSYS2 TRUE)
+  else()
+    set(IS_MSYS2 FALSE)
+  endif()
+  message("IS_MSYS2: ${IS_MSYS2}")
+
+  if(IS_MSYS2)
+    # use msys prefix path as the target
+    set_win32_compat_path(DLLCOPY_TARGET $ENV{MSYSTEM_PREFIX})
+  else()
+    set(DLLCOPY_TARGET "i686-w64-mingw32.shared")
+  endif()
+  message("DLLCOPY_TARGET: ${DLLCOPY_TARGET}")
+
+  if(IS_MSYS2)
+    set_win32_compat_path(WIN32_COMPAT_SOURCE_DIR "${CMAKE_SOURCE_DIR}")
+    set_win32_compat_path(WIN32_COMPAT_CURRENT_BINARY_DIR "${CMAKE_CURRENT_BINARY_DIR}")
+    set_win32_compat_path(WIN32_COMPAT_INSTALL_PREFIX "${CMAKE_INSTALL_PREFIX}")
+  else()
+    set(WIN32_COMPAT_SOURCE_DIR "${CMAKE_SOURCE_DIR}")
+    set(WIN32_COMPAT_CURRENT_BINARY_DIR "${CMAKE_CURRENT_BINARY_DIR}")
+    set(WIN32_COMPAT_INSTALL_PREFIX "${CMAKE_INSTALL_PREFIX}")
+  endif()
+
   install(
     FILES
       "${PROJECT_SOURCE_DIR}/README.md"
@@ -521,18 +550,38 @@ if(WIN32)
       "${PROJECT_SOURCE_DIR}/ChangeLog"
     DESTINATION "./"
   )
-  string(CONCAT MXE_COPY_DLLS_CMD
-    "${CMAKE_SOURCE_DIR}/tools/mxe_copy_dlls.sh"
-    " -t \"${MXE_TARGET}\""
-    " -o \"${CMAKE_CURRENT_BINARY_DIR}\""
-    " -e ${CMAKE_CURRENT_BINARY_DIR}/xmoto.exe"
+  set(WIN32_DLL_DEST_DIR "${CMAKE_CURRENT_BINARY_DIR}/dll")
+  set_win32_compat_path(WIN32_COMPAT_DLL_DEST_DIR "${WIN32_DLL_DEST_DIR}")
+  set(COPY_DLLS_CMD "${WIN32_COMPAT_SOURCE_DIR}/tools/win32_copy_dlls.sh")
+  string(CONCAT COPY_DLLS_ARGS
+    " -t \"${DLLCOPY_TARGET}\""
+    " -o \"${WIN32_COMPAT_DLL_DEST_DIR}\""
+    " -e \"${WIN32_COMPAT_CURRENT_BINARY_DIR}/xmoto.exe\""
     " -r"
   )
-  install(CODE "execute_process(COMMAND ${MXE_COPY_DLLS_CMD})")
+  if (IS_MSYS2)
+    # msys2's cmake is a native win32 program, and it can't run bash scripts directly
+    install(CODE "execute_process(COMMAND bash -l -c '${COPY_DLLS_CMD} ${COPY_DLLS_ARGS}' \n\
+      RESULT_VARIABLE ret ERROR_VARIABLE err)")
+  else()
+    install(CODE "execute_process(COMMAND ${COPY_DLLS_CMD} ${COPY_DLLS_ARGS} \n\
+      RESULT_VARIABLE ret ERROR_VARIABLE err)")
+  endif()
+  # this should be a macro
+  install(CODE "\
+    if(NOT \"\${ret}\" STREQUAL \"0\") \n\
+      message(FATAL_ERROR \"win32_copy_dlls.sh failed:\n\${err}\") \n\
+    endif() \n\
+  ")
+
   install(TARGETS xmoto RUNTIME DESTINATION "./")
 
-  file(GLOB MXE_DLL_FILES ${CMAKE_CURRENT_BINARY_DIR}/*.dll)
-  install(FILES ${MXE_DLL_FILES} DESTINATION "./")
+  install(
+    # NOTE: don't use WIN32_COMPAT_DLL_DEST_DIR here!
+    DIRECTORY "${WIN32_DLL_DEST_DIR}/"
+    DESTINATION "./"
+    FILES_MATCHING PATTERN "*.dll"
+  )
 
   #install(CODE "execute_process(COMMAND ${MXE_TARGET}-strip ${CMAKE_INSTALL_PREFIX}/xmoto.exe)")
 else()
