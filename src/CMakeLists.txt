@@ -374,6 +374,7 @@ add_executable(xmoto
   ${xmincludes_src}
   ${xmoto_src}
   ${xmscene_src}
+  $<$<PLATFORM_ID:Windows>:${PROJECT_SOURCE_DIR}/extra/xmoto.rc>
 )
 
 target_include_directories(xmoto
@@ -423,6 +424,8 @@ target_link_libraries(xmoto PUBLIC
 )
 
 set_property(TARGET xmoto PROPERTY CXX_STANDARD 11)
+# strip release builds
+set_target_properties(xmoto PROPERTIES LINK_FLAGS_RELEASE -s)
 
 check_symbol_exists(putenv stdlib.h HAVE_PUTENV)
 check_symbol_exists(setenv stdlib.h HAVE_SETENV)
@@ -522,6 +525,24 @@ function(set_win32_compat_path COMPAT REAL)
   set(${COMPAT} "${_COMPAT}" PARENT_SCOPE)
 endfunction()
 
+function(win32_run_script _CMD _ARGS _IS_MSYS2)
+  if (IS_MSYS2)
+    # msys2's cmake is a native win32 program, and it can't run bash scripts directly
+    install(CODE "execute_process(COMMAND bash -l -c '${_CMD} ${_ARGS}' \n\
+      RESULT_VARIABLE ret ERROR_VARIABLE err)")
+  else()
+    install(CODE "execute_process(COMMAND ${_CMD} ${_ARGS} \n\
+      RESULT_VARIABLE ret ERROR_VARIABLE err)")
+  endif()
+
+  get_filename_component(_SCRIPT_NAME "${_CMD}" NAME)
+  install(CODE "\
+    if(NOT \"\${ret}\" STREQUAL \"0\") \n\
+      message(FATAL_ERROR \"${_SCRIPT_NAME} failed:\n\${err}\") \n\
+    endif() \n\
+  ")
+endfunction()
+
 if(WIN32)
   # MXE exports MSYS=1 so we can't use that to
   # differentiate between it and MSYS2
@@ -539,6 +560,11 @@ if(WIN32)
     set(DLLCOPY_TARGET "i686-w64-mingw32.shared")
   endif()
   message("DLLCOPY_TARGET: ${DLLCOPY_TARGET}")
+
+  if(NOT IS_MSYS2)
+    # this is required to get rid of the console window
+    set(CMAKE_EXE_LINKER_FLAGS "-mwindows")
+  endif()
 
   if(IS_MSYS2)
     set_win32_compat_path(WIN32_COMPAT_SOURCE_DIR "${CMAKE_SOURCE_DIR}")
@@ -566,20 +592,7 @@ if(WIN32)
     " -e \"${WIN32_COMPAT_CURRENT_BINARY_DIR}/xmoto.exe\""
     " -r"
   )
-  if (IS_MSYS2)
-    # msys2's cmake is a native win32 program, and it can't run bash scripts directly
-    install(CODE "execute_process(COMMAND bash -l -c '${COPY_DLLS_CMD} ${COPY_DLLS_ARGS}' \n\
-      RESULT_VARIABLE ret ERROR_VARIABLE err)")
-  else()
-    install(CODE "execute_process(COMMAND ${COPY_DLLS_CMD} ${COPY_DLLS_ARGS} \n\
-      RESULT_VARIABLE ret ERROR_VARIABLE err)")
-  endif()
-  # this should be a macro
-  install(CODE "\
-    if(NOT \"\${ret}\" STREQUAL \"0\") \n\
-      message(FATAL_ERROR \"win32_copy_dlls.sh failed:\n\${err}\") \n\
-    endif() \n\
-  ")
+  win32_run_script("${COPY_DLLS_CMD}" "${COPY_DLLS_ARGS}" IS_MSYS2)
 
   install(TARGETS xmoto RUNTIME DESTINATION "./")
 
@@ -590,7 +603,16 @@ if(WIN32)
     FILES_MATCHING PATTERN "*.dll"
   )
 
-  #install(CODE "execute_process(COMMAND ${MXE_TARGET}-strip ${CMAKE_INSTALL_PREFIX}/xmoto.exe)")
+  if (CMAKE_BUILD_TYPE STREQUAL "Release")
+    # strip the dlls
+    set(STRIP_DLLS_CMD "${WIN32_COMPAT_SOURCE_DIR}/tools/win32_strip_dlls.sh")
+    string(CONCAT
+      STRIP_DLLS_ARGS
+      " \"${CMAKE_STRIP}\"" # (path to) strip program
+      " \"${WIN32_COMPAT_INSTALL_PREFIX}\"" # DLL folder
+    )
+    win32_run_script("${STRIP_DLLS_CMD}" "${STRIP_DLLS_ARGS}" IS_MSYS2)
+  endif()
 else()
   install(TARGETS xmoto
     RUNTIME DESTINATION bin
