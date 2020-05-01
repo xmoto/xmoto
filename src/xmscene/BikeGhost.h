@@ -92,7 +92,7 @@ private:
   std::vector<float> m_lastToTakeEntities;
   bool m_isActiv;
   double m_linearVelocity;
-  bool m_teleportationOccured; // true if the teleportation occured since the
+  bool m_teleportationOccurred; // true if the teleportation occurred since the
   // last update
 
   /* because we have not the real one, but the one before and the one after */

@@ -75,7 +75,7 @@ void StateReplaying::enter() {
 
   try {
     if (XMSession::instance()->hidePlayingInformation() == false) {
-      // display replay informations
+      // display replay information
       char c_tmp[1024];
       snprintf(
         c_tmp, 1024, GAMETEXT_BY_PLAYER, m_replayBiker->playerName().c_str());

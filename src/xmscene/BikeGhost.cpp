@@ -102,7 +102,7 @@ FileGhost::FileGhost(std::string i_replayFile,
 
   m_isActiv = i_isActiv;
   m_linearVelocity = 0.0;
-  m_teleportationOccured = false;
+  m_teleportationOccurred = false;
 }
 
 FileGhost::~FileGhost() {
@@ -274,7 +274,7 @@ void FileGhost::updateDiffToPlayer(std::vector<float> &i_lastToTakeEntities) {
 void FileGhost::initToPosition(Vector2f i_position,
                                DriveDir i_direction,
                                Vector2f i_gravity) {
-  m_teleportationOccured = true;
+  m_teleportationOccurred = true;
   m_linearVelocity = 0.0;
 }
 
@@ -394,9 +394,9 @@ void FileGhost::updateToTime(int i_time,
           INTERPOLATION_MAXIMUM_TIME &&
         // interpolate only if the state are near in the space
         v_distance < INTERPOLATION_MAXIMUM_SPACE;
-      if (m_teleportationOccured) {
+      if (m_teleportationOccurred) {
         v_can_interpolate = false; // in this case, we sure that interpolation
-        // occured; (but in case of a ghost, we don't
+        // occurred; (but in case of a ghost, we don't
         // read the events)
       }
 
@@ -427,7 +427,7 @@ void FileGhost::updateToTime(int i_time,
   }
 
   if (m_isActiv) {
-    m_teleportationOccured = false;
+    m_teleportationOccurred = false;
     execReplayEvents(i_time, i_motogame);
   }
 }

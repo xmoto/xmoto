@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: X-Moto\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2017-04-29 16:38-0700\n"
-"PO-Revision-Date: 2006-09-04 19:52+0100\n"
+"PO-Revision-Date: 2020-05-01 20:28+0200\n"
 "Last-Translator: KuanYen\n"
 "Language-Team: X-Moto\n"
 "Language: zh_TW\n"
@@ -2110,7 +2110,7 @@ msgid "Port on which the server must listen to"
 msgstr "Port on which the server must listen to"
 
 #: src/xmoto/GameText.h:174
-msgid "Portugese"
+msgid "Portuguese"
 msgstr ""
 
 #: src/xmoto/GameText.h:779
@@ -3688,13 +3688,3 @@ msgstr "滾輪上"
 
 #~ msgid "X-Moto levels with a background music"
 #~ msgstr "有背景音樂的X-Moto關卡"
-
-#~ msgid ""
-#~ "X-Moto uses a database on your computer to save all your scores and "
-#~ "statistics. You can send these data using your web account on the X-Moto "
-#~ "server. It is usefull to save your data or if you play X-Moto from "
-#~ "different places."
-#~ msgstr ""
-#~ "X-Moto在您的電腦裡增設了一個資料庫來儲存你 所有的紀錄與統計。你可以用你的"
-#~ "帳號來傳送這玩意到X-moto的伺服器。這對想要備份紀錄或是想要 在不同地方玩X-"
-#~ "moto的人很有用。"

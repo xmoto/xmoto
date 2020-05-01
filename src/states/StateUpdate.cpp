@@ -109,7 +109,7 @@ bool StateUpdate::update() {
   }
 
   if (m_threadStarted == true) {
-    // update the frame with the thread informations only when progress change
+    // update the frame with the thread information only when progress change
     // to avoid spending tooo much time waiting for mutexes.
     int progress = m_pThread->getThreadProgress();
     if (progress != m_progress) {

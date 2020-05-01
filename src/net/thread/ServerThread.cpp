@@ -320,7 +320,7 @@ int ServerThread::realThreadFunction() {
   LogInfo("server: starting");
 
   // this is not really required here, but it will not start the server if an
-  // error occured
+  // error occurred
   // init rules
   try {
     reloadRules(XM_SERVER_DEFAULT_RULES);
@@ -412,7 +412,7 @@ void ServerThread::close() {
   SP2_setPhase(SP2_PHASE_NONE);
 
   // disconnection
-  LogInfo("server: %i client(s) still connnected", m_clients.size());
+  LogInfo("server: %i client(s) still connected", m_clients.size());
 
   // disconnect all clients
   i = 0;
@@ -2121,7 +2121,7 @@ void ServerThread::manageSrvCmd(unsigned int i_client,
   } catch (Exception &e) {
     /* ok, no pb retry with the error */
     try {
-      NA_srvCmdAsw na("An error occured: " + e.getMsg());
+      NA_srvCmdAsw na("An error occurred: " + e.getMsg());
       sendToClient(&na, i_client, -1, 0);
     } catch (Exception &e2) {
       /* ok, no pb */

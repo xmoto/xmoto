@@ -75,7 +75,7 @@ public:
     m_updatePeriod = (float)m_maxFps / (float)m_updateFps;
   }
 
-  // usefull to be sure to replace one state by another (and not always replace
+  // useful to be sure to replace one state by another (and not always replace
   // the upper state)
   void setStateId(const std::string &i_id);
   std::string getStateId() const;

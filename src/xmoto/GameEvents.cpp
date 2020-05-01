@@ -133,8 +133,8 @@ SceneEvent *SceneEvent::getUnserialized(DBuffer &Buffer,
     v_event = new MGE_CameraSetPos(v_eventTime);
   } else if (MGE_CameraZoom::SgetType() == v_eventType) {
     v_event = new MGE_CameraZoom(v_eventTime);
-  } else if (MGE_PenalityTime::SgetType() == v_eventType) {
-    v_event = new MGE_PenalityTime(v_eventTime);
+  } else if (MGE_PenaltyTime::SgetType() == v_eventType) {
+    v_event = new MGE_PenaltyTime(v_eventTime);
   } else if (MGE_SetPlayerPosition::SgetType() == v_eventType) {
     v_event = new MGE_SetPlayerPosition(v_eventTime);
   } else if (MGE_PlayerDies::SgetType() == v_eventType) {
@@ -1710,43 +1710,43 @@ std::string MGE_CameraZoom::toString() {
 
 //////////////////////////////
 
-MGE_PenalityTime::MGE_PenalityTime(int p_eventTime)
+MGE_PenaltyTime::MGE_PenaltyTime(int p_eventTime)
   : SceneEvent(p_eventTime) {
-  m_penalityTime = 0;
+  m_penaltyTime = 0;
 }
 
-MGE_PenalityTime::MGE_PenalityTime(int p_eventTime, int p_penatityTime)
+MGE_PenaltyTime::MGE_PenaltyTime(int p_eventTime, int p_penaltyTime)
   : SceneEvent(p_eventTime) {
-  m_penalityTime = p_penatityTime;
+  m_penaltyTime = p_penaltyTime;
 }
 
-MGE_PenalityTime::~MGE_PenalityTime() {}
+MGE_PenaltyTime::~MGE_PenaltyTime() {}
 
-void MGE_PenalityTime::doAction(Scene *p_pScene) {
-  p_pScene->addPenalityTime(m_penalityTime);
+void MGE_PenaltyTime::doAction(Scene *p_pScene) {
+  p_pScene->addPenaltyTime(m_penaltyTime);
 }
 
-void MGE_PenalityTime::serialize(DBuffer &Buffer) {
+void MGE_PenaltyTime::serialize(DBuffer &Buffer) {
   SceneEvent::serialize(Buffer);
-  Buffer << GameApp::timeToFloat(m_penalityTime);
+  Buffer << GameApp::timeToFloat(m_penaltyTime);
 }
 
-void MGE_PenalityTime::unserialize(DBuffer &Buffer) {
-  float v_fpenalityTime;
-  Buffer >> v_fpenalityTime;
-  m_penalityTime = GameApp::floatToTime(v_fpenalityTime);
+void MGE_PenaltyTime::unserialize(DBuffer &Buffer) {
+  float v_fpenaltyTime;
+  Buffer >> v_fpenaltyTime;
+  m_penaltyTime = GameApp::floatToTime(v_fpenaltyTime);
 }
 
-GameEventType MGE_PenalityTime::SgetType() {
-  return GAME_EVENT_PENALITY_TIME;
+GameEventType MGE_PenaltyTime::SgetType() {
+  return GAME_EVENT_PENALTY_TIME;
 }
 
-GameEventType MGE_PenalityTime::getType() {
+GameEventType MGE_PenaltyTime::getType() {
   return SgetType();
 }
 
-std::string MGE_PenalityTime::toString() {
-  return "Time penality";
+std::string MGE_PenaltyTime::toString() {
+  return "Time penalty";
 }
 
 //////////////////////////////

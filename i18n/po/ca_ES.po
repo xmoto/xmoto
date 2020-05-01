@@ -2122,7 +2122,7 @@ msgid "Port on which the server must listen to"
 msgstr "Port on el servidor ha de escoltar per"
 
 #: src/xmoto/GameText.h:174
-msgid "Portugese"
+msgid "Portuguese"
 msgstr ""
 
 #: src/xmoto/GameText.h:779

@@ -220,7 +220,7 @@ void NetClient::connect(const std::string &i_server, int i_port) {
     throw Exception("Already connected");
   }
 
-  // reset udp server informations
+  // reset udp server information
   m_serverReceivesUdp = false;
   m_serverSendsUdp = false;
 

@@ -2152,7 +2152,7 @@ msgid "Port on which the server must listen to"
 msgstr "Порт, который должен слушать сервер"
 
 #: src/xmoto/GameText.h:174
-msgid "Portugese"
+msgid "Portuguese"
 msgstr "Португальский"
 
 #: src/xmoto/GameText.h:779

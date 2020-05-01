@@ -1549,7 +1549,7 @@ void Scene::makePlayerWin(int i_player) {
   }
 }
 
-void Scene::addPenalityTime(int i_time) {
+void Scene::addPenaltyTime(int i_time) {
   if (i_time > 0) {
     m_time += i_time;
   }

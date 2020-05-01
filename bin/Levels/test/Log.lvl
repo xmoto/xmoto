@@ -9,7 +9,7 @@
 </info>
 <script>
 function OnLoad()
-  Game.Log("An error occured")
+  Game.Log("An error occurred")
   return true
 end
 </script>
