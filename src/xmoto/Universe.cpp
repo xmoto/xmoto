@@ -262,7 +262,7 @@ void Universe::TeleportationCheatTo(int i_player, Vector2f i_position) {
   if (m_scenes.size() > 0) {
     m_scenes[0]->setPlayerPosition(i_player, i_position.x, i_position.y, true);
     m_scenes[0]->getCamera()->initCamera();
-    // m_scenes[0]->addPenalityTime(90000); /* 15 min of penality for that ! */
+    // m_scenes[0]->addPenaltyTime(90000); /* 15 min of penalty for that ! */
     /* ... and no replay of course ! */
     deleteCurrentReplay();
   }

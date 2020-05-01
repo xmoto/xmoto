@@ -74,7 +74,7 @@ void GhostTrail::initialize() {
       v_vecTmp = Vector2f(dx, dy);
 
       // this is very ugly code, to clean, to clean
-      // check if teleportation occured, lets assume that 7 is a size big enough
+      // check if teleportation occurred, lets assume that 7 is a size big enough
       // for beeing usable as marker
       Vector2f v_checkTeleport =
         Vector2f(m_trailData[i].x - v_P_old.x, m_trailData[i].y - v_P_old.y);

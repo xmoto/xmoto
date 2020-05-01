@@ -63,7 +63,7 @@ enum GameEventType {
   GAME_EVENT_SETDYNAMICBLOCKROTATION = 22,
   GAME_EVENT_SETDYNAMICBLOCKTRANSLATION = 23,
   GAME_EVENT_SETDYNAMICBLOCKNONE = 24,
-  GAME_EVENT_PENALITY_TIME = 25,
+  GAME_EVENT_PENALTY_TIME = 25,
   GAME_EVENT_PLAYER_DIES = 26,
   GAME_EVENT_PLAYER_ENTERS_ZONE = 27,
   GAME_EVENT_PLAYER_LEAVES_ZONE = 28,
@@ -905,11 +905,11 @@ private:
   float m_zoom;
 };
 
-class MGE_PenalityTime : public SceneEvent {
+class MGE_PenaltyTime : public SceneEvent {
 public:
-  MGE_PenalityTime(int p_eventTime);
-  MGE_PenalityTime(int p_eventTime, int p_penatityTime);
-  ~MGE_PenalityTime();
+  MGE_PenaltyTime(int p_eventTime);
+  MGE_PenaltyTime(int p_eventTime, int p_penaltyTime);
+  ~MGE_PenaltyTime();
 
   void doAction(Scene *p_pScene);
   void serialize(DBuffer &Buffer);
@@ -920,7 +920,7 @@ public:
   std::string toString();
 
 private:
-  int m_penalityTime;
+  int m_penaltyTime;
 };
 
 class MGE_CameraRotate : public SceneEvent {

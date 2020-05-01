@@ -952,7 +952,7 @@ void GameRenderer::_RenderGhostTrail(Scene *i_scene,
     lines_drawn++;
     v_last_size = fSize;
   }
-  // print amount of lines drawn and the camera's zoom value, usefull for
+  // print amount of lines drawn and the camera's zoom value, useful for
   // testing.
   if (XMSession::instance()->debug()) {
     std::stringstream out;

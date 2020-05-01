@@ -35,7 +35,7 @@ typedef enum _tim_retval_t {
   TIM_RV_ERR_INTERNAL_LIMIT = -3, /* Internal limit (array bound) reached */
   TIM_RV_ERR_MEMORY = -4, /* Some memoryrelated problem */
   TIM_RV_ERR_NOT_FOUND = -5, /* Something wasn't found */
-  TIM_RV_ERR_LIBRARY = -6, /* Error occured in some external library */
+  TIM_RV_ERR_LIBRARY = -6, /* Error occurred in some external library */
   TIM_RV_ERR_INVALID_FORMAT = -7 /* Invalid parameter format */
 } tim_retval_t;
 

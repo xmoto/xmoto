@@ -195,7 +195,7 @@ Central place to keep many in-game text strings
                                 ":Zoltán Balogh (" +                          \
     std::string(_("Hungarian")) + ");"                                        \
                                   ":Luís Garcia, Sérgio Marques (" +          \
-    std::string(_("Portugese")) + ");"                                        \
+    std::string(_("Portuguese")) + ");"                                        \
                                   ":Andre Parhan (" +                         \
     std::string(_("Dutch")) + ");"                                            \
                               ":KuanYen (" +                                  \
@@ -534,7 +534,7 @@ Central place to keep many in-game text strings
 #define GAMETEXT_MOUSE _("Mouse")
 #define GAMETEXT_THEME _("Theme")
 #define GAMETEXT_TTF_MISSING \
-  "You must install the font file for your langage:" // not translated because
+  "You must install the font file for your language:" // not translated because
 // always displayed in
 // english
 #define GAMETEXT_MEDAL_BRONZE _("Bronze")

@@ -67,7 +67,7 @@ XMKey::XMKey(SDL_Event &i_event) {
       break;
 
     default:
-      throw Exception("Unknow key");
+      throw Exception("Unknown key");
   }
 }
 

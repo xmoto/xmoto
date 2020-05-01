@@ -1003,7 +1003,7 @@ void StateManager::unregisterAsObserver(const std::string &message,
 }
 
 void StateManager::registerAsEmitter(const std::string &message) {
-  // TODO::show debug informations
+  // TODO::show debug information
   return registerAsObserver(message, NULL);
 }
 

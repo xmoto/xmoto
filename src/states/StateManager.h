@@ -73,7 +73,7 @@ public:
   // yourself as an observer of this message
   void registerAsObserver(const std::string &message, GameState *self);
   void unregisterAsObserver(const std::string &message, GameState *self);
-  // register as emitter only for debug informations
+  // register as emitter only for debug information
   void registerAsEmitter(const std::string &message);
 
   // send the message to registered states

@@ -47,9 +47,9 @@ public:
 // and nID is not a openGL specific structure
 // it's
 
-enum RegistrationStageMode { RSM_PERSISTANT, RSM_NORMAL };
+enum RegistrationStageMode { RSM_PERSISTENT, RSM_NORMAL };
 
-#define PERSISTANT 0
+#define PERSISTENT 0
 class Texture {
 public:
   Texture() {
@@ -59,7 +59,7 @@ public:
     surface = NULL;
     nSize = 0;
     isAlpha = false;
-    curRegistrationStageMode = RSM_PERSISTANT;
+    curRegistrationStageMode = RSM_PERSISTENT;
   }
 
   std::string Name;

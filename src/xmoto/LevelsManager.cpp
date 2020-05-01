@@ -1869,7 +1869,7 @@ std::string LevelsManager::queryLevelsAsVirtualPack(
     v_tables += "         AND g.id_profile = h.id_profile)";
   }
 
-  // highscore informations ? -- i = webhighscores of levels
+  // highscore information ? -- i = webhighscores of levels
   // highscore driver 1/2
   if (i_setHighscoreDriver != lprv_dontcare || i_limitToLastHighscores != 0) {
     if (v_mustBeInWebHighscores) {

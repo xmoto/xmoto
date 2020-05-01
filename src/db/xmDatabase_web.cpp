@@ -70,7 +70,7 @@ std::string xmDatabase::webhighscores_updateDB(
       throw Exception("unable to analyze xml highscore file");
     }
 
-    /* get Room informations */
+    /* get Room information */
     v_roomName = XMLDocument::getOption(v_xmlElt, "roomname");
     v_roomId = XMLDocument::getOption(v_xmlElt, "roomid");
 
@@ -240,7 +240,7 @@ void xmDatabase::weblevels_updateDB(FileDataType i_fdt,
       if (v_MD5sum_web == "")
         continue;
 
-      /* web informations */
+      /* web information */
       v_difficulty = XMLDocument::getOption(pSubElem, "web_difficulty");
       if (v_difficulty == "")
         continue;

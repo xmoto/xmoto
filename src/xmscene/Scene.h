@@ -265,7 +265,7 @@ public:
     int i_takenByPlayer /* -1 if taken by an external event */);
   void addDynamicObject(SDynamicObject *p_obj);
   void removeSDynamicOfObject(std::string pObject);
-  void addPenalityTime(int i_time);
+  void addPenaltyTime(int i_time);
 
   void createExternalKillEntityEvent(std::string p_entityID);
 

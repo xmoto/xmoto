@@ -2157,7 +2157,7 @@ msgid "Port on which the server must listen to"
 msgstr "Prievadas, į kurį serveris turi kreiptis"
 
 #: src/xmoto/GameText.h:174
-msgid "Portugese"
+msgid "Portuguese"
 msgstr ""
 
 #: src/xmoto/GameText.h:779
@@ -3737,13 +3737,3 @@ msgstr "pakelti ratą"
 #~ msgid "X-Moto levels with a background music"
 #~ msgstr "X-Moto lygiai su fonine muzika"
 
-#~ msgid ""
-#~ "X-Moto uses a database on your computer to save all your scores and "
-#~ "statistics. You can send these data using your web account on the X-Moto "
-#~ "server. It is usefull to save your data or if you play X-Moto from "
-#~ "different places."
-#~ msgstr ""
-#~ "X-Moto naudoja jūsų kompiuteryje duomenų bazę, kad išsaugotų visus jūsų "
-#~ "balus ir statistiką. Jūs galite siųsti duomenis naudodami savo tinklo "
-#~ "paskyrą X-Moto serveryje. Naudinga išsaugoti jūsų duomenis, jei žaidžiate "
-#~ "X-Moto iš skirtingų vietų."
