@@ -3,6 +3,7 @@ option(USE_OPENGL "Build with OpenGL for graphics" ON)
 option(USE_SDLGFX "Build with SDL for graphics" OFF)
 option(USE_GETTEXT "Build with Gettext for internationalization" ON)
 option(PREFER_SYSTEM_BZip2 "Prefer system BZip2" ON)
+option(PREFER_SYSTEM_Lua "Prefer system Lua" ON)
 option(PREFER_SYSTEM_ODE "Prefer system ODE" ON)
 option(PREFER_SYSTEM_XDG "Prefer system XDG" ON)
 option(ALLOW_DEV "Enable some development/debug features" OFF)
@@ -37,6 +38,9 @@ if(USE_OPENGL)
   find_package(OpenGL REQUIRED)
 endif()
 find_package(PNG REQUIRED)
+
+find_package(Lua51)
+set(USE_SYSTEM_Lua $<AND:$<BOOL:${PREFER_SYSTEM_Lua}>,$<BOOL:${LUA51_FOUND}>,$<NOT:$<BOOL:${WIN32}>>>)
 
 # Can't disable yet
 if(ON OR USE_SDLGFX)
@@ -377,6 +381,8 @@ target_include_directories(xmoto
 
   "${PROJECT_SOURCE_DIR}/src"
   "${LIBXML2_INCLUDE_DIR}"
+  "$<${USE_SYSTEM_Lua}:${LUA_INCLUDE_DIR}>"
+  "$<$<NOT:${USE_SYSTEM_Lua}>:${PROJECT_SOURCE_DIR}/vendor/lua/lua>"
 )
 
 target_link_libraries(xmoto PUBLIC
@@ -399,7 +405,8 @@ target_link_libraries(xmoto PUBLIC
   ${JPEG_LIBRARIES}
   ${LIBXML2_LIBRARIES}
     "$<$<BOOL:${STATIC_BUILD}>:${LIBLZMA_LIBRARIES}>"
-  lua
+  "$<${USE_SYSTEM_Lua}:${LUA_LIBRARIES}>"
+  $<$<NOT:${USE_SYSTEM_Lua}>:lua>
   md5sum
   $<${USE_SYSTEM_ODE}:${ODE_LIBRARY}>
   $<$<NOT:${USE_SYSTEM_ODE}>:ode>
@@ -547,6 +554,7 @@ message("Intl      libraries: ${Intl_LIBRARIES}")
 message("Jpeg      libraries: ${JPEG_LIBRARIES}")
 message("LibXml2   libraries: ${LIBXML2_LIBRARIES}")
 message("LibLZMA   libraries: ${LIBLZMA_LIBRARIES}")
+message("Lua       librarues: ${LUA_LIBRARIES}")
 message("Ode       libraries: ${ODE_LIBRARY}")
 message("OpenGL    libraries: ${OPENGL_LIBRARIES}")
 message("Png       libraries: ${PNG_LIBRARY}")
