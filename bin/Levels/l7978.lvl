@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <level id="curseoftwelwestonemen" rversion="0.5.2">
 	<info>
-		<name>the Curse Of the Twelwe Stonemen</name>
+		<name>the Curse Of the Twelve Stonemen</name>
 		<description>An archeologist is lost, you must locate her and fix her car</description>
 		<author>Manti and tuhoojabotti</author>
 		<date>2009-09-06</date>
@@ -47,6 +47,10 @@ function information()
 	Game.Message("Graphics and design by Manti, awesum script by tuhoojabotti.\n~~~~~~~~~~~~~~\n*** Press 'Z' to try the new deodorant ***\nCaution: might cause side effects like unbeatability and affection of fireflies")
 end
 
+function rand_float(lower, upper)
+    return math.random() * (upper-lower) + lower
+end
+
 --FIREFLIES
 tfirefly={};min_distance=4
 function ziit() 
@@ -62,7 +66,7 @@ end
 function FireFlyInit()
 	for i=0,19,1 do
 		local d=math.random()*2
-		Game.SetDynamicEntityTranslation("ff"..i, math.cos(math.random(math.pi*2))*d, math.sin(math.random(math.pi*2))*d, math.random(300,700), 0, 1000)
+		Game.SetDynamicEntityTranslation("ff"..i, math.cos(rand_float(0, math.pi*2))*d, math.sin(rand_float(0, math.pi*2))*d, math.random(300,700), 0, 1000)
 	end
 	Game.StartTimer("tfirefly",200,0)
 end
@@ -76,10 +80,10 @@ function tfirefly.Tick()
 		if d&lt;min_distance then
 			dur=380
 			Game.SetDynamicEntityNone("ff"..i)
-			Game.SetDynamicEntityTranslation("ff"..i, px-ffx+math.random(-1.0,1.0), py-ffy+math.random(0.4,2.2), dur, 0, dur/2)
+			Game.SetDynamicEntityTranslation("ff"..i, px-ffx+rand_float(-1.0,1.0), py-ffy+rand_float(0.4,2.2), dur, 0, dur/2)
 		else
 			local d=math.random()*2
-			Game.SetDynamicEntityTranslation("ff"..i, math.cos(math.random(math.pi*2))*d, math.sin(math.random(math.pi*2))*d, math.random(300,700), 0, 300)	
+			Game.SetDynamicEntityTranslation("ff"..i, math.cos(rand_float(0, math.pi*2))*d, math.sin(rand_float(0, math.pi*2))*d, math.random(300,700), 0, 300)	
 		end
 	end
 end
@@ -125,7 +129,7 @@ end
 function FishInit()
 	for i=0,3,1 do		
 		dur=math.random(1000,3000)
-		Game.SetDynamicBlockTranslation("fish"..i,math.random(-1.5,1.5),math.random(-0.6,-0.1),dur,0,0)
+		Game.SetDynamicBlockTranslation("fish"..i,rand_float(-1.5,1.5),rand_float(-0.6,-0.1),dur,0,0)
 	end
 end
 zfish={};afish=0
@@ -134,7 +138,7 @@ function zfish.OnEnter()
 		afish=1
 		for i=0,3,1 do		
 			dur=math.random(50,100)
-			Game.SetDynamicBlockTranslation("fish"..i,-(2-i)*math.random(0.9,1.4),math.random(-1.2,-0.8),dur,0,dur/2)
+			Game.SetDynamicBlockTranslation("fish"..i,-(2-i)*rand_float(0.9,1.4),rand_float(-1.2,-0.8),dur,0,dur/2)
 		end
 	end
 end 

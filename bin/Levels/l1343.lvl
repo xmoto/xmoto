@@ -18,6 +18,10 @@
     y0 = 0
     animate = true
     part = 0
+
+        function rand_float(lower, upper)
+            return math.random() * (upper-lower) + lower
+        end
           
 	  function StopAnim.OnEnter()
 	     animate = false
@@ -49,7 +53,7 @@
 	  		x0, y0 = Game.GetBlockPos("drop0")
         for i=0,19 do
   				block="drop"..i
-	  			s = math.random((y0-5.8)*1000, y0*1000)/1000
+	  			s = rand_float(0, (y0-5.8)*1000, y0*1000)/1000
 		  		Yt0[block] = -math.sqrt(2*(y0-s)/9.81) 
 			  	XSpeed[block] = (math.random(-50,50)+250)/100
   				Game.SetBlockPos(block, x0+(-Yt0[block])*XSpeed[block], s)
