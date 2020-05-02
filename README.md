@@ -16,9 +16,7 @@ with yourself and others, racing against the clock.
 # Installation
 
 The file INSTALL offers information on how to get X-Moto up and 
-running on your non-Windows computer. If you're reading this file on
-you're Windows computer, you've probably already installed X-Moto
-successfully :)
+running on your non-Windows computer.
 
 # Basic Gameplay
 
@@ -58,7 +56,7 @@ line when starting the program. Run xmoto --help to get details on these options
 
 # Letting X-Moto Access The Web
 
-Alpha version 0.1.14 of X-Moto comes with a new feature that allows
+X-Moto comes with a feature that allows
 the game to connect to the web and download high-scores (world 
 records) and extra levels. 
 
@@ -72,7 +70,7 @@ you're in doubt.
 
 # Replays
 
-As of alpha version 0.1.8, X-Moto supports recording and playback of
+X-Moto supports recording and playback of
 replays. These are always stored in the Replays/ directory, which is
 located in the .local/share/xmoto in the user directory.
 One should be aware that replays can take up quite a large amount of
@@ -122,7 +120,7 @@ If you experiences any bugs, please submit them in github issues.
 
 The game and its source code is released under the terms of the GNU 
 General Public License. See COPYING for details.
-Some of the source code origining from various third parties is not 
+Some of the source code originating from various third parties is not 
 released under the same license. Please consult the appropriate 
 license material for more information.
 Generally you're free to copy and reproduce both X-Moto and the 
@@ -130,13 +128,15 @@ source code in any way you like, even to modify the source and release
 your own version of the game, as long as you comply with the 
 above mentioned licenses.
 
-# Contributing
-
 ### Authors
 
 See the in-game credits under "Help".
 
-## Main active developpers
+## Developers
+- 2014-2020 Maxwell S. (maxwells@xmoto.tuxfamily.org)
+- 2014-2020 Nikekson
+- 2014-2020 Unnheuleu 
+- 2014-2020 bb010g
 - 2006-2014 Nicolas Adenis-Lamarre (nicolas@adenis-lamarre.fr)
 - 2007-2011 Emmanuel Gorse (e.gorse@free.fr)
 - 2009-2010 Jens Erler (mothbox@gmx.net)
