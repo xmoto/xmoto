@@ -15,8 +15,13 @@ with yourself and others, racing against the clock.
 
 # Installation
 
-The file INSTALL offers information on how to get X-Moto up and 
-running on your non-Windows computer.
+Download and install the game from https://xmoto.tuxfamily.org
+
+# Building
+See the wiki:
+- [Windows](https://github.com/xmoto/xmoto/wiki/Building-on-Windows)
+- [Linux](https://github.com/xmoto/xmoto/wiki/Building-on-Linux)
+- macOS and FreeBSD are *temporarily* not supported.
 
 # Basic Gameplay
 
@@ -114,7 +119,7 @@ get included in the menus:
  
 # Bugs
 
-If you experiences any bugs, please submit them in github issues.
+If you experiences any bugs, please open [a new issue](https://github.com/xmoto/xmoto/issues)
 
 # License
 
@@ -134,27 +139,11 @@ See the in-game credits under "Help".
 
 ## Developers
 - 2014-2020 Maxwell S. (maxwells@xmoto.tuxfamily.org)
-- 2014-2020 Nikekson
-- 2014-2020 Unnheuleu 
+- 2014-2020 Nikekson (nikekson@xmoto.tuxfamily.org)
+- 2014-2020 Unnheulu
 - 2014-2020 bb010g
 - 2006-2014 Nicolas Adenis-Lamarre (nicolas@adenis-lamarre.fr)
 - 2007-2011 Emmanuel Gorse (e.gorse@free.fr)
 - 2009-2010 Jens Erler (mothbox@gmx.net)
 - 2005-2006 Rasmus Neckelmann (neckelmann@gmail.com)
 
-### Software dependencies for compiling on non-Windows platforms:
-
- - libjpeg
- - libpng
- - zlib
- - libbz2
- - SDL
- - GL
- - libcurl (3.x)
- - lua (5.x)
- - ode (0.x)
- - SDL_mixer (1.2.7)
- - SDL_net (1.2)
- - libsqlite
- - libcurl
- - SDL_ttf 
