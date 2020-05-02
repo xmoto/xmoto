@@ -13,12 +13,12 @@ the challenges.
 First you'll try just to complete the levels, while later you'll compete 
 with yourself and others, racing against the clock.  
 
-# Installation
+# Building
+See the wiki:
+- [Windows](https://github.com/xmoto/xmoto/wiki/Building-on-Windows)
+- [Linux](https://github.com/xmoto/xmoto/wiki/Building-on-Linux)
 
-The file INSTALL offers information on how to get X-Moto up and 
-running on your non-Windows computer. If you're reading this file on
-you're Windows computer, you've probably already installed X-Moto
-successfully :)
+Building on macOS and FreeBSD is temporarily not supported due to build issues.
 
 # Basic Gameplay
 
