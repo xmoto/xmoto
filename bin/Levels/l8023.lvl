@@ -101,8 +101,8 @@ function win.Tick(n) --we won! wait a second! penalty!!
 end
 --used to shuffle tables (2D only)
 function table.shuffle(t) 
-	local n = table.getn(t)
-	local n2 = table.getn(t[1]) 
+	local n = #t
+	local n2 = #t[1]
 	while n &gt; 2 do
 		local k = math.random(n)
 		while n2 &gt; 2 do
