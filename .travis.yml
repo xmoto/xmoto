@@ -27,9 +27,6 @@ deploy:
     - 'xmoto-0.6.0.deb'
     - 'xmoto-0.6.0.rpm'
   skip_cleanup: true
-  overwrite: true
-  prerelease: true
-  draft: true
   on:
     branch: "release"
     tags: true
