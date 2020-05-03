@@ -31,7 +31,7 @@ deploy:
   prerelease: true
   draft: true
   on:
-    branches: "release"
+    branch: "release"
     tags: true
  
 addons:
