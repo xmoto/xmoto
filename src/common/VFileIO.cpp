@@ -1234,8 +1234,19 @@ void XMFS::init(const std::string &AppDir,
 
     m_SystemDataDir = cModulePath;
     m_bGotSystemDataDir = true;
-  } else
+
+    if (m_bGotSystemDataDir) {
+      m_SystemLocaleDir = m_SystemDataDir + "/share/locale";
+      if (!isDir(m_SystemLocaleDir)) {
+        LogWarning("System locale directory doesn't exist!");
+      }
+    } else {
+      LogWarning("No system data directory, can't load locales");
+    }
+
+  } else {
     throw Exception("invalid process directory");
+  }
 #elif defined(__MORPHOS__) || defined(__amigaos4__)
   if (v_mod_userCustomDirPath != "") {
     m_UserDataDir = v_mod_userCustomDirPath;
