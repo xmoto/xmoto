@@ -1,3 +1,19 @@
+X-Moto 0.6.0 2020-05-03
+--------------------------------
+ * Build system:
+ * Build system changed from autotools to CMake
+ * Support for both cross-compilation and native builds for Win32
+ * Easy packaging for each supported platform
+ * FreeBSD and macOS support temporarily dropped
+ * Minor changes:
+ * Chat history is now shown when the chat box is opened
+ * Checkpoint color in ugly mode matches minimap
+ * Some code fixes
+ * glext.h dropped in favor of a proper GL loader
+ * Bug fixes:
+ * Favorite levels can be viewed again
+ * Safe mode now stays on after restarting a level
+
 X-Moto 0.5.12 201
 --------------------------------
  * remove several warnings (including replacing hash_map by unordered_map)
