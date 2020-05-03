@@ -596,7 +596,7 @@ int LuaLibGame::L_Game_WinPlayer(lua_State *pL) {
 
 int LuaLibGame::L_Game_PenaltyTime(lua_State *pL) {
   /* event for this */
-  m_exec_world->createGameEvent(new MGE_PenalityTime(
+  m_exec_world->createGameEvent(new MGE_PenaltyTime(
     m_exec_world->getTime(), (int)(X_luaL_check_number(pL, 1) * 100)));
   return 0;
 }
@@ -851,7 +851,7 @@ int LuaLibGame::L_Game_SetTimerDelay(lua_State *pL) {
   if (v_timer != NULL) {
     v_timer->SetTimerDelay(v_delay);
   } else {
-    luaL_error(pL, "An error occured, timer doesn't exist!");
+    luaL_error(pL, "An error occurred, timer doesn't exist!");
   }
   return 0; // return no values to the script
 }
@@ -863,7 +863,7 @@ int LuaLibGame::L_Game_StopTimer(lua_State *pL) {
   if (v_timer != NULL) { // timer is found
     v_timer->PauseTimer(); // pause it
   } else {
-    luaL_error(pL, "An error occured, timer doesn't exist!");
+    luaL_error(pL, "An error occurred, timer doesn't exist!");
   }
   return 0; // return no values to the script
 }

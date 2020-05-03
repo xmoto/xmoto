@@ -35,7 +35,7 @@ typedef enum _tim_retval_t {
   TIM_RV_ERR_INTERNAL_LIMIT = -3, /* Internal limit (array bound) reached */
   TIM_RV_ERR_MEMORY = -4, /* Some memoryrelated problem */
   TIM_RV_ERR_NOT_FOUND = -5, /* Something wasn't found */
-  TIM_RV_ERR_LIBRARY = -6, /* Error occured in some external library */
+  TIM_RV_ERR_LIBRARY = -6, /* Error occurred in some external library */
   TIM_RV_ERR_INVALID_FORMAT = -7 /* Invalid parameter format */
 } tim_retval_t;
 
@@ -71,7 +71,7 @@ typedef enum _tim_seek_mode_t {
 } tim_seek_mode_t;
 
 /* Function callback types */
-typedef void *(*tim_callback_open_t)(char *pcWhere, tim_io_mode_t IOMode);
+typedef void *(*tim_callback_open_t)(const char *pcWhere, tim_io_mode_t IOMode);
 typedef void (*tim_callback_close_t)(void *pvHandle);
 typedef int (*tim_callback_seek_t)(void *pvHandle,
                                    int nOffset,
@@ -171,8 +171,8 @@ typedef struct _tim_file_format_hint_t {
 typedef int (*tim_callback_load_t)(struct _tim_session_t *pSession,
                                    tim_image_t **ppImage,
                                    tim_image_info_t *pInfo,
-                                   char *pcSource);
-typedef int (*tim_callback_save_t)(tim_image_t *pImage, char *pcTarget);
+                                   const char *pcSource);
+typedef int (*tim_callback_save_t)(tim_image_t *pImage, const char *pcTarget);
 
 /* File format struct */
 typedef struct _tim_file_format_t {
@@ -227,10 +227,10 @@ Function prototypes
 void *tim_alloc(tim_session_t *pSession, int nSize);
 void *tim_realloc(tim_session_t *pSession, void *pvBlock, int nSize);
 void tim_free(tim_session_t *pSession, void *pvBlock);
-char *tim_strdup(tim_session_t *pSession, char *pcString);
+char *tim_strdup(tim_session_t *pSession, const char *pcString);
 
 /* File I/O */
-void *tim_open(tim_session_t *pSession, char *pcWhere, tim_io_mode_t IOMode);
+void *tim_open(tim_session_t *pSession, const char *pcWhere, tim_io_mode_t IOMode);
 void tim_close(tim_session_t *pSession, void *pvHandle);
 int tim_seek(tim_session_t *pSession,
              void *pvHandle,
@@ -241,40 +241,40 @@ int tim_write(tim_session_t *pSession, void *pvHandle, void *pvBuf, int nSize);
 int tim_eof(tim_session_t *pSession, void *pvHandle);
 
 /* File format management */
-int tim_remove_hint(tim_session_t *pSession, char *pcExt, char *pcTag);
-int tim_is_hint(tim_session_t *pSession, char *pcExt, char *pcTag);
-char *tim_get_hint(tim_session_t *pSession,
-                   char *pcExt,
-                   char *pcTag,
-                   char *pcDefaultValue);
+int tim_remove_hint(tim_session_t *pSession, const char *pcExt, const char *pcTag);
+int tim_is_hint(tim_session_t *pSession, const char *pcExt, const char *pcTag);
+const char *tim_get_hint(tim_session_t *pSession,
+                         const char *pcExt,
+                         const char *pcTag,
+                         const char *pcDefaultValue);
 int tim_set_hint(tim_session_t *pSession,
-                 char *pcExt,
-                 char *pcTag,
-                 char *pcValue);
+                 const char *pcExt,
+                 const char *pcTag,
+                 const char *pcValue);
 float tim_get_hint_float(tim_session_t *pSession,
-                         char *pcExt,
-                         char *pcTag,
+                         const char *pcExt,
+                         const char *pcTag,
                          float fDefaultValue);
 int tim_get_hint_int(tim_session_t *pSession,
-                     char *pcExt,
-                     char *pcTag,
+                     const char *pcExt,
+                     const char *pcTag,
                      int nDefaultValue);
 int tim_set_hint_float(tim_session_t *pSession,
-                       char *pcExt,
-                       char *pcTag,
+                       const char *pcExt,
+                       const char *pcTag,
                        float fValue);
 int tim_set_hint_int(tim_session_t *pSession,
-                     char *pcExt,
-                     char *pcTag,
+                     const char *pcExt,
+                     const char *pcTag,
                      int nValue);
 
-int tim_add_extension_to_file_format(tim_file_format_t *p, char *pcExtension);
+int tim_add_extension_to_file_format(tim_file_format_t *p, const char *pcExtension);
 tim_file_format_t *tim_create_file_format(tim_session_t *pSession,
-                                          char *pcExtension,
+                                          const char *pcExtension,
                                           tim_callback_save_t SaveCallback,
                                           tim_callback_load_t LoadCallback);
 tim_file_format_t *tim_find_file_format(tim_session_t *pSession,
-                                        char *pcExtension);
+                                        const char *pcExtension);
 
 /* Image management */
 tim_image_t *tim_create_image(tim_session_t *pSession,
@@ -282,15 +282,15 @@ tim_image_t *tim_create_image(tim_session_t *pSession,
                               int nHeight,
                               tim_pixel_type_t PixelType);
 void tim_destroy_image(tim_image_t *p);
-int tim_is_image_readable(tim_session_t *pSession, char *pcFileName);
-int tim_is_image_writable(tim_session_t *pSession, char *pcFileName);
+int tim_is_image_readable(tim_session_t *pSession, const char *pcFileName);
+int tim_is_image_writable(tim_session_t *pSession, const char *pcFileName);
 int tim_get_image_info(tim_session_t *pSession,
-                       char *pcFileName,
+                       const char *pcFileName,
                        tim_image_info_t *pInfo);
 int tim_read_image(tim_session_t *pSession,
-                   char *pcFileName,
+                   const char *pcFileName,
                    tim_image_t **ppImage);
-int tim_write_image(tim_image_t *pImage, char *pcFileName);
+int tim_write_image(tim_image_t *pImage, const char *pcFileName);
 
 /* Session */
 int tim_init_session(tim_session_t *pSession,
@@ -299,7 +299,7 @@ int tim_init_session(tim_session_t *pSession,
 void tim_free_session(tim_session_t *pSession);
 
 /* stdio driver */
-void *tim_stdio_open(char *pcWhere, tim_io_mode_t IOMode);
+void *tim_stdio_open(const char *pcWhere, tim_io_mode_t IOMode);
 void tim_stdio_close(void *pvHandle);
 int tim_stdio_seek(void *pvHandle, int nOffset, tim_seek_mode_t SeekMode);
 int tim_stdio_read(void *pvHandle, void *pvBuf, int nSize);

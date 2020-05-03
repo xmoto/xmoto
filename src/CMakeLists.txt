@@ -3,6 +3,7 @@ option(USE_OPENGL "Build with OpenGL for graphics" ON)
 option(USE_SDLGFX "Build with SDL for graphics" OFF)
 option(USE_GETTEXT "Build with Gettext for internationalization" ON)
 option(PREFER_SYSTEM_BZip2 "Prefer system BZip2" ON)
+option(PREFER_SYSTEM_Lua "Prefer system Lua" ON)
 option(PREFER_SYSTEM_ODE "Prefer system ODE" ON)
 option(PREFER_SYSTEM_XDG "Prefer system XDG" ON)
 option(ALLOW_DEV "Enable some development/debug features" OFF)
@@ -38,6 +39,9 @@ if(USE_OPENGL)
 endif()
 find_package(PNG REQUIRED)
 
+find_package(Lua51)
+set(USE_SYSTEM_Lua $<AND:$<BOOL:${PREFER_SYSTEM_Lua}>,$<BOOL:${LUA51_FOUND}>,$<NOT:$<BOOL:${WIN32}>>>)
+
 # Can't disable yet
 if(ON OR USE_SDLGFX)
   find_package(SDL REQUIRED)
@@ -62,6 +66,7 @@ add_subdirectory("${PROJECT_SOURCE_DIR}/vendor/lua" lua)
 add_subdirectory("${PROJECT_SOURCE_DIR}/vendor/md5sum" md5sum)
 add_subdirectory("${PROJECT_SOURCE_DIR}/vendor/ode" ode)
 add_subdirectory("${PROJECT_SOURCE_DIR}/vendor/xdgbasedir" xdgbasedir)
+add_subdirectory("${PROJECT_SOURCE_DIR}/vendor/glad" glad)
 
 set(common_src
   common/BuildConfig.h
@@ -306,7 +311,6 @@ set(xmoto_src
   xmoto/VirtualLevelsList.cpp xmoto/VirtualLevelsList.h
   xmoto/XMDemo.cpp xmoto/XMDemo.h
   xmoto/XMKey.cpp xmoto/XMKey.h
-  xmoto/glext.h
   xmoto/sqlqueries.h
 )
 
@@ -370,6 +374,7 @@ add_executable(xmoto
   ${xmincludes_src}
   ${xmoto_src}
   ${xmscene_src}
+  $<$<PLATFORM_ID:Windows>:${PROJECT_SOURCE_DIR}/extra/xmoto.rc>
 )
 
 target_include_directories(xmoto
@@ -377,6 +382,8 @@ target_include_directories(xmoto
 
   "${PROJECT_SOURCE_DIR}/src"
   "${LIBXML2_INCLUDE_DIR}"
+  "$<${USE_SYSTEM_Lua}:${LUA_INCLUDE_DIR}>"
+  "$<$<NOT:${USE_SYSTEM_Lua}>:${PROJECT_SOURCE_DIR}/vendor/lua/lua>"
 )
 
 target_link_libraries(xmoto PUBLIC
@@ -399,10 +406,13 @@ target_link_libraries(xmoto PUBLIC
   ${JPEG_LIBRARIES}
   ${LIBXML2_LIBRARIES}
     "$<$<BOOL:${STATIC_BUILD}>:${LIBLZMA_LIBRARIES}>"
-  lua
+  "$<${USE_SYSTEM_Lua}:${LUA_LIBRARIES}>"
+  $<$<NOT:${USE_SYSTEM_Lua}>:lua>
   md5sum
   $<${USE_SYSTEM_ODE}:${ODE_LIBRARY}>
   $<$<NOT:${USE_SYSTEM_ODE}>:ode>
+  glad
+  ${CMAKE_DL_LIBS}
   ${OPENGL_LIBRARIES}
   ${PNG_LIBRARY}
   ${SDL_LIBRARY}
@@ -416,6 +426,8 @@ target_link_libraries(xmoto PUBLIC
 )
 
 set_property(TARGET xmoto PROPERTY CXX_STANDARD 11)
+# strip release builds
+set_target_properties(xmoto PROPERTIES LINK_FLAGS_RELEASE -s)
 
 check_symbol_exists(putenv stdlib.h HAVE_PUTENV)
 check_symbol_exists(setenv stdlib.h HAVE_SETENV)
@@ -509,11 +521,63 @@ set(CPACK_RPM_EXCLUDE_FROM_AUTO_FILELIST_ADDITION
 # chipmunk on Windows
 target_compile_options(xmoto PRIVATE $<$<COMPILE_LANGUAGE:CXX>:-fpermissive>)
 
-if(NOT MXE_TARGET)
-  set(MXE_TARGET "i686-w64-mingw32.shared")
-endif()
+function(set_win32_compat_path COMPAT REAL)
+  # stupid win32 paths..
+  string(REGEX REPLACE "^C:(/|\\\\)?" "/c/" _COMPAT "${REAL}")
+  set(${COMPAT} "${_COMPAT}" PARENT_SCOPE)
+endfunction()
+
+function(win32_run_script _CMD _ARGS _IS_MSYS2)
+  if (IS_MSYS2)
+    # msys2's cmake is a native win32 program, and it can't run bash scripts directly
+    install(CODE "execute_process(COMMAND bash -l -c '${_CMD} ${_ARGS}' \n\
+      RESULT_VARIABLE ret ERROR_VARIABLE err)")
+  else()
+    install(CODE "execute_process(COMMAND ${_CMD} ${_ARGS} \n\
+      RESULT_VARIABLE ret ERROR_VARIABLE err)")
+  endif()
+
+  get_filename_component(_SCRIPT_NAME "${_CMD}" NAME)
+  install(CODE "\
+    if(NOT \"\${ret}\" STREQUAL \"0\") \n\
+      message(FATAL_ERROR \"${_SCRIPT_NAME} failed:\n\${err}\") \n\
+    endif() \n\
+  ")
+endfunction()
 
 if(WIN32)
+  # MXE exports MSYS=1 so we can't use that to
+  # differentiate between it and MSYS2
+  if(DEFINED ENV{MSYSTEM_PREFIX})
+    set(IS_MSYS2 TRUE)
+  else()
+    set(IS_MSYS2 FALSE)
+  endif()
+  message("IS_MSYS2: ${IS_MSYS2}")
+
+  if(IS_MSYS2)
+    # use msys prefix path as the target
+    set_win32_compat_path(DLLCOPY_TARGET $ENV{MSYSTEM_PREFIX})
+  else()
+    set(DLLCOPY_TARGET "i686-w64-mingw32.shared")
+  endif()
+  message("DLLCOPY_TARGET: ${DLLCOPY_TARGET}")
+
+  if(NOT IS_MSYS2)
+    # this is required to get rid of the console window
+    set(CMAKE_EXE_LINKER_FLAGS "-mwindows")
+  endif()
+
+  if(IS_MSYS2)
+    set_win32_compat_path(WIN32_COMPAT_SOURCE_DIR "${CMAKE_SOURCE_DIR}")
+    set_win32_compat_path(WIN32_COMPAT_CURRENT_BINARY_DIR "${CMAKE_CURRENT_BINARY_DIR}")
+    set_win32_compat_path(WIN32_COMPAT_INSTALL_PREFIX "${CMAKE_INSTALL_PREFIX}")
+  else()
+    set(WIN32_COMPAT_SOURCE_DIR "${CMAKE_SOURCE_DIR}")
+    set(WIN32_COMPAT_CURRENT_BINARY_DIR "${CMAKE_CURRENT_BINARY_DIR}")
+    set(WIN32_COMPAT_INSTALL_PREFIX "${CMAKE_INSTALL_PREFIX}")
+  endif()
+
   install(
     FILES
       "${PROJECT_SOURCE_DIR}/README.md"
@@ -521,20 +585,36 @@ if(WIN32)
       "${PROJECT_SOURCE_DIR}/ChangeLog"
     DESTINATION "./"
   )
-  string(CONCAT MXE_COPY_DLLS_CMD
-    "${CMAKE_SOURCE_DIR}/tools/mxe_copy_dlls.sh"
-    " -t \"${MXE_TARGET}\""
-    " -o \"${CMAKE_CURRENT_BINARY_DIR}\""
-    " -e ${CMAKE_CURRENT_BINARY_DIR}/xmoto.exe"
+  set(WIN32_DLL_DEST_DIR "${CMAKE_CURRENT_BINARY_DIR}/dll")
+  set_win32_compat_path(WIN32_COMPAT_DLL_DEST_DIR "${WIN32_DLL_DEST_DIR}")
+  set(COPY_DLLS_CMD "${WIN32_COMPAT_SOURCE_DIR}/tools/win32_copy_dlls.sh")
+  string(CONCAT COPY_DLLS_ARGS
+    " -t \"${DLLCOPY_TARGET}\""
+    " -o \"${WIN32_COMPAT_DLL_DEST_DIR}\""
+    " -e \"${WIN32_COMPAT_CURRENT_BINARY_DIR}/xmoto.exe\""
     " -r"
   )
-  install(CODE "execute_process(COMMAND ${MXE_COPY_DLLS_CMD})")
+  win32_run_script("${COPY_DLLS_CMD}" "${COPY_DLLS_ARGS}" IS_MSYS2)
+
   install(TARGETS xmoto RUNTIME DESTINATION "./")
 
-  file(GLOB MXE_DLL_FILES ${CMAKE_CURRENT_BINARY_DIR}/*.dll)
-  install(FILES ${MXE_DLL_FILES} DESTINATION "./")
+  install(
+    # NOTE: don't use WIN32_COMPAT_DLL_DEST_DIR here!
+    DIRECTORY "${WIN32_DLL_DEST_DIR}/"
+    DESTINATION "./"
+    FILES_MATCHING PATTERN "*.dll"
+  )
 
-  #install(CODE "execute_process(COMMAND ${MXE_TARGET}-strip ${CMAKE_INSTALL_PREFIX}/xmoto.exe)")
+  if (CMAKE_BUILD_TYPE STREQUAL "Release")
+    # strip the dlls
+    set(STRIP_DLLS_CMD "${WIN32_COMPAT_SOURCE_DIR}/tools/win32_strip_dlls.sh")
+    string(CONCAT
+      STRIP_DLLS_ARGS
+      " \"${CMAKE_STRIP}\"" # (path to) strip program
+      " \"${WIN32_COMPAT_INSTALL_PREFIX}\"" # DLL folder
+    )
+    win32_run_script("${STRIP_DLLS_CMD}" "${STRIP_DLLS_ARGS}" IS_MSYS2)
+  endif()
 else()
   install(TARGETS xmoto
     RUNTIME DESTINATION bin
@@ -547,6 +627,7 @@ message("Intl      libraries: ${Intl_LIBRARIES}")
 message("Jpeg      libraries: ${JPEG_LIBRARIES}")
 message("LibXml2   libraries: ${LIBXML2_LIBRARIES}")
 message("LibLZMA   libraries: ${LIBLZMA_LIBRARIES}")
+message("Lua       librarues: ${LUA_LIBRARIES}")
 message("Ode       libraries: ${ODE_LIBRARY}")
 message("OpenGL    libraries: ${OPENGL_LIBRARIES}")
 message("Png       libraries: ${PNG_LIBRARY}")

@@ -65,7 +65,7 @@ void xmDatabase::sync_buildServerFile(const std::string &i_outFile,
                     nrow);
   if (nrow != 1) {
     read_DB_free(v_result);
-    throw Exception("Unable to retrieve informations");
+    throw Exception("Unable to retrieve information");
   }
 
   snprintf(v_line,

@@ -1372,7 +1372,7 @@ void XMFS::init(const std::string &AppDir,
         v_extension = v_packFile.Name.substr(v_extension_place + 1);
       }
 
-      // don't add unusefull graphics files
+      // don't add unuseful graphics files
       if (i_graphics || (v_extension != "png" && // picture
                          v_extension != "jpg" && // picture
                          v_extension != "frag" && // graphical card files

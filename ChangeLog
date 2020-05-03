@@ -139,7 +139,7 @@ X-Moto 0.5.0 2008-11-28
  * synchronisation of the database with the webserver to share it among the places you play X-Moto
  * chipmunk integration. Blocks reacts to physics, joints and scripts calls (require special levels) - replay saving still unsupported
  * save config separatly for each profile
- * --noDBDirsCheck command line options added. It disables the files find when X-Moto detects that you changed your configuration directory (usefull if you use X-Moto on a USB key)
+ * --noDBDirsCheck command line options added. It disables the files find when X-Moto detects that you changed your configuration directory (useful if you use X-Moto on a USB key)
  * --defaultTheme option to change the default theme for new profiles (and --with-default-theme= at compilation time) ; so that packager can change it.
  * optimisations for particles handling
  * joystick support improved

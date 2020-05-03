@@ -2126,7 +2126,7 @@ msgid "Port on which the server must listen to"
 msgstr "Poort waar de server naar moet luisteren"
 
 #: src/xmoto/GameText.h:174
-msgid "Portugese"
+msgid "Portuguese"
 msgstr ""
 
 #: src/xmoto/GameText.h:779
@@ -3665,12 +3665,3 @@ msgstr "wiel omhoog"
 #~ msgid "X-Moto levels with a background music"
 #~ msgstr "X-Moto levels met achtergrondmuziek"
 
-#~ msgid ""
-#~ "X-Moto uses a database on your computer to save all your scores and "
-#~ "statistics. You can send these data using your web account on the X-Moto "
-#~ "server. It is usefull to save your data or if you play X-Moto from "
-#~ "different places."
-#~ msgstr ""
-#~ "X-Moto gebruikt een lokale database om je scores in op te slaan. Deze "
-#~ "data kunnen naar een X-Moto webaccount gestuurd worden, zodat jouw data "
-#~ "nooit verloren gaat en overal ter wereld X-Moto kan spelen."

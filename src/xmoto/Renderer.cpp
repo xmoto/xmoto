@@ -952,7 +952,7 @@ void GameRenderer::_RenderGhostTrail(Scene *i_scene,
     lines_drawn++;
     v_last_size = fSize;
   }
-  // print amount of lines drawn and the camera's zoom value, usefull for
+  // print amount of lines drawn and the camera's zoom value, useful for
   // testing.
   if (XMSession::instance()->debug()) {
     std::stringstream out;
@@ -2090,12 +2090,10 @@ void GameRenderer::_RenderDynamicBlocks(Scene *i_scene, bool bBackground) {
           for (unsigned int j = 0; j < geom->Polys.size(); j++) {
             GeomPoly *pPoly = geom->Polys[j];
 
-            ((DrawLibOpenGL *)pDrawlib)
-              ->glBindBufferARB(GL_ARRAY_BUFFER_ARB, pPoly->nVertexBufferID);
+            glBindBufferARB(GL_ARRAY_BUFFER_ARB, pPoly->nVertexBufferID);
             glVertexPointer(2, GL_FLOAT, 0, (char *)NULL);
 
-            ((DrawLibOpenGL *)pDrawlib)
-              ->glBindBufferARB(GL_ARRAY_BUFFER_ARB, pPoly->nTexCoordBufferID);
+            glBindBufferARB(GL_ARRAY_BUFFER_ARB, pPoly->nTexCoordBufferID);
             glTexCoordPointer(2, GL_FLOAT, 0, (char *)NULL);
 
             glDrawArrays(GL_POLYGON, 0, pPoly->nNumVertices);
@@ -2265,12 +2263,10 @@ void GameRenderer::_RenderStaticBlock(Block *block) {
       for (unsigned int j = 0; j < geom->Polys.size(); j++) {
         GeomPoly *pPoly = geom->Polys[j];
 
-        ((DrawLibOpenGL *)pDrawlib)
-          ->glBindBufferARB(GL_ARRAY_BUFFER_ARB, pPoly->nVertexBufferID);
+        glBindBufferARB(GL_ARRAY_BUFFER_ARB, pPoly->nVertexBufferID);
         glVertexPointer(2, GL_FLOAT, 0, (char *)NULL);
 
-        ((DrawLibOpenGL *)pDrawlib)
-          ->glBindBufferARB(GL_ARRAY_BUFFER_ARB, pPoly->nTexCoordBufferID);
+        glBindBufferARB(GL_ARRAY_BUFFER_ARB, pPoly->nTexCoordBufferID);
         glTexCoordPointer(2, GL_FLOAT, 0, (char *)NULL);
 
         glDrawArrays(GL_POLYGON, 0, pPoly->nNumVertices);
@@ -2357,12 +2353,10 @@ void GameRenderer::_RenderBlockEdges(Block *pBlock) {
              j++) {
           GeomPoly *pPoly = pBlock->getEdgeGeoms()[i]->Polys[j];
 
-          ((DrawLibOpenGL *)pDrawlib)
-            ->glBindBufferARB(GL_ARRAY_BUFFER_ARB, pPoly->nVertexBufferID);
+          glBindBufferARB(GL_ARRAY_BUFFER_ARB, pPoly->nVertexBufferID);
           glVertexPointer(2, GL_FLOAT, 0, (char *)NULL);
 
-          ((DrawLibOpenGL *)pDrawlib)
-            ->glBindBufferARB(GL_ARRAY_BUFFER_ARB, pPoly->nTexCoordBufferID);
+          glBindBufferARB(GL_ARRAY_BUFFER_ARB, pPoly->nTexCoordBufferID);
           glTexCoordPointer(2, GL_FLOAT, 0, (char *)NULL);
 
           glDrawArrays(GL_QUADS, 0, pPoly->nNumVertices);

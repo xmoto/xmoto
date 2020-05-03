@@ -82,7 +82,7 @@ Load function
 int tim_png_load(tim_session_t *pSession,
                  tim_image_t **ppImage,
                  tim_image_info_t *pInfo,
-                 char *pcSource) {
+                 const char *pcSource) {
   png_structp PngPtr;
   png_infop InfoPtr;
   png_infop EndInfo;
@@ -229,7 +229,7 @@ int tim_png_load(tim_session_t *pSession,
 Save function
 ==============================================================================*/
 
-int tim_png_save(tim_image_t *pImage, char *pcTarget) {
+int tim_png_save(tim_image_t *pImage, const char *pcTarget) {
   png_env_t Env;
   png_structp PngPtr;
   tim_session_t *pSession;

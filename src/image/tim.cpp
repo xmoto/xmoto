@@ -33,7 +33,7 @@
   BAD BAD BAD
   ==============================================================================*/
 #if !defined(WIN32)
-static int stricmp(char *pc1, char *pc2) {
+static int stricmp(const char *pc1, const char *pc2) {
   int s1 = strlen(pc1);
   int s2 = strlen(pc2);
   if (s1 != s2)
@@ -64,7 +64,7 @@ void tim_free(tim_session_t *pSession, void *pvBlock) {
   pSession->Memory.tim_callback_free(pvBlock);
 }
 
-char *tim_strdup(tim_session_t *pSession, char *pcString) {
+char *tim_strdup(tim_session_t *pSession, const char *pcString) {
   char *pcNewString;
   int nLen;
   nLen = (int)strlen(pcString) + 1;
@@ -79,7 +79,7 @@ char *tim_strdup(tim_session_t *pSession, char *pcString) {
   File I/O system
   ==============================================================================*/
 
-void *tim_open(tim_session_t *pSession, char *pcWhere, tim_io_mode_t IOMode) {
+void *tim_open(tim_session_t *pSession, const char *pcWhere, tim_io_mode_t IOMode) {
   /* Open file */
   return pSession->IO.tim_callback_open(pcWhere, IOMode);
 }
@@ -116,7 +116,7 @@ int tim_eof(tim_session_t *pSession, void *pvHandle) {
   File format management
   ==============================================================================*/
 
-int tim_add_extension_to_file_format(tim_file_format_t *p, char *pcExtension) {
+int tim_add_extension_to_file_format(tim_file_format_t *p, const char *pcExtension) {
   /* Room for more extensions? */
   if (p->nNumExtensions >= TIM_MAX_EXTENSIONS_PER_FILE_FORMAT)
     return TIM_RV_ERR_INTERNAL_LIMIT;
@@ -133,7 +133,7 @@ int tim_add_extension_to_file_format(tim_file_format_t *p, char *pcExtension) {
 }
 
 tim_file_format_t *tim_create_file_format(tim_session_t *pSession,
-                                          char *pcExtension,
+                                          const char *pcExtension,
                                           tim_callback_save_t SaveCallback,
                                           tim_callback_load_t LoadCallback) {
   tim_file_format_t *p;
@@ -161,7 +161,7 @@ tim_file_format_t *tim_create_file_format(tim_session_t *pSession,
 }
 
 tim_file_format_t *tim_find_file_format(tim_session_t *pSession,
-                                        char *pcExtension) {
+                                        const char *pcExtension) {
   int i, j;
 
   /* Do we have a file format with this extension? */
@@ -180,7 +180,7 @@ tim_file_format_t *tim_find_file_format(tim_session_t *pSession,
 }
 
 tim_file_format_t *tim_determine_file_format(tim_session_t *pSession,
-                                             char *pcFileName) {
+                                             const char *pcFileName) {
   int i;
 
   /* Extract extension */
@@ -194,7 +194,7 @@ tim_file_format_t *tim_determine_file_format(tim_session_t *pSession,
 }
 
 tim_file_format_hint_t *tim_find_file_format_hint(tim_file_format_t *pFormat,
-                                                  char *pcTag) {
+                                                  const char *pcTag) {
   tim_file_format_hint_t *p;
 
   /* Is this hint found? */
@@ -207,9 +207,9 @@ tim_file_format_hint_t *tim_find_file_format_hint(tim_file_format_t *pFormat,
 }
 
 tim_file_format_hint_t *tim_add_file_format_hint(tim_session_t *pSession,
-                                                 char *pcExt,
-                                                 char *pcTag,
-                                                 char *pcValue) {
+                                                 const char *pcExt,
+                                                 const char *pcTag,
+                                                 const char *pcValue) {
   tim_file_format_t *pFormat;
   tim_file_format_hint_t *p;
 
@@ -246,7 +246,7 @@ tim_file_format_hint_t *tim_add_file_format_hint(tim_session_t *pSession,
   return p;
 }
 
-int tim_remove_hint(tim_session_t *pSession, char *pcExt, char *pcTag) {
+int tim_remove_hint(tim_session_t *pSession, const char *pcExt, const char *pcTag) {
   tim_file_format_t *pFormat;
   tim_file_format_hint_t *p;
 
@@ -276,7 +276,7 @@ int tim_remove_hint(tim_session_t *pSession, char *pcExt, char *pcTag) {
   return TIM_RV_OK;
 }
 
-int tim_is_hint(tim_session_t *pSession, char *pcExt, char *pcTag) {
+int tim_is_hint(tim_session_t *pSession, const char *pcExt, const char *pcTag) {
   tim_file_format_t *pFormat;
 
   /* Find format */
@@ -292,10 +292,10 @@ int tim_is_hint(tim_session_t *pSession, char *pcExt, char *pcTag) {
   return false;
 }
 
-char *tim_get_hint(tim_session_t *pSession,
-                   char *pcExt,
-                   char *pcTag,
-                   char *pcDefaultValue) {
+const char *tim_get_hint(tim_session_t *pSession,
+                         const char *pcExt,
+                         const char *pcTag,
+                         const char *pcDefaultValue) {
   tim_file_format_t *pFormat;
   tim_file_format_hint_t *p;
 
@@ -314,9 +314,9 @@ char *tim_get_hint(tim_session_t *pSession,
 }
 
 int tim_set_hint(tim_session_t *pSession,
-                 char *pcExt,
-                 char *pcTag,
-                 char *pcValue) {
+                 const char *pcExt,
+                 const char *pcTag,
+                 const char *pcValue) {
   /* Set hint */
   if (!tim_add_file_format_hint(pSession, pcExt, pcTag, pcValue))
     return TIM_RV_ERR_COULD_NOT_PERFORM;
@@ -326,8 +326,8 @@ int tim_set_hint(tim_session_t *pSession,
 }
 
 float tim_get_hint_float(tim_session_t *pSession,
-                         char *pcExt,
-                         char *pcTag,
+                         const char *pcExt,
+                         const char *pcTag,
                          float fDefaultValue) {
   char cTemp[256];
 
@@ -339,8 +339,8 @@ float tim_get_hint_float(tim_session_t *pSession,
 }
 
 int tim_get_hint_int(tim_session_t *pSession,
-                     char *pcExt,
-                     char *pcTag,
+                     const char *pcExt,
+                     const char *pcTag,
                      int nDefaultValue) {
   char cTemp[256];
 
@@ -352,8 +352,8 @@ int tim_get_hint_int(tim_session_t *pSession,
 }
 
 int tim_set_hint_float(tim_session_t *pSession,
-                       char *pcExt,
-                       char *pcTag,
+                       const char *pcExt,
+                       const char *pcTag,
                        float fValue) {
   char cTemp[256];
   sprintf(cTemp, "%f", fValue);
@@ -361,8 +361,8 @@ int tim_set_hint_float(tim_session_t *pSession,
 }
 
 int tim_set_hint_int(tim_session_t *pSession,
-                     char *pcExt,
-                     char *pcTag,
+                     const char *pcExt,
+                     const char *pcTag,
                      int nValue) {
   char cTemp[256];
   sprintf(cTemp, "%d", nValue);
@@ -454,7 +454,7 @@ void tim_destroy_image(tim_image_t *p) {
   tim_free(p->pSession, p);
 }
 
-int tim_is_image_readable(tim_session_t *pSession, char *pcFileName) {
+int tim_is_image_readable(tim_session_t *pSession, const char *pcFileName) {
   tim_file_format_t *pFileFormat;
 
   /* Find file format */
@@ -464,7 +464,7 @@ int tim_is_image_readable(tim_session_t *pSession, char *pcFileName) {
   return false;
 }
 
-int tim_is_image_writable(tim_session_t *pSession, char *pcFileName) {
+int tim_is_image_writable(tim_session_t *pSession, const char *pcFileName) {
   tim_file_format_t *pFileFormat;
 
   /* Find file format */
@@ -475,7 +475,7 @@ int tim_is_image_writable(tim_session_t *pSession, char *pcFileName) {
 }
 
 int tim_get_image_info(tim_session_t *pSession,
-                       char *pcFileName,
+                       const char *pcFileName,
                        tim_image_info_t *pInfo) {
   tim_file_format_t *pFileFormat;
 
@@ -489,7 +489,7 @@ int tim_get_image_info(tim_session_t *pSession,
 }
 
 int tim_read_image(tim_session_t *pSession,
-                   char *pcFileName,
+                   const char *pcFileName,
                    tim_image_t **ppImage) {
   tim_file_format_t *pFileFormat;
 
@@ -502,7 +502,7 @@ int tim_read_image(tim_session_t *pSession,
   return TIM_RV_ERR_COULD_NOT_PERFORM;
 }
 
-int tim_write_image(tim_image_t *pImage, char *pcFileName) {
+int tim_write_image(tim_image_t *pImage, const char *pcFileName) {
   tim_file_format_t *pFileFormat;
 
   /* Find file format */

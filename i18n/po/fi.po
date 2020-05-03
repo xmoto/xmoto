@@ -2131,7 +2131,7 @@ msgid "Port on which the server must listen to"
 msgstr "Portti, jota serverin tulee kuunnella"
 
 #: src/xmoto/GameText.h:174
-msgid "Portugese"
+msgid "Portuguese"
 msgstr ""
 
 #: src/xmoto/GameText.h:779

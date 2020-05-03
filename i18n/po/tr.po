@@ -2138,7 +2138,7 @@ msgid "Port on which the server must listen to"
 msgstr "Sunucunun kontrol etmesi gereken bağlantı noktası"
 
 #: src/xmoto/GameText.h:174
-msgid "Portugese"
+msgid "Portuguese"
 msgstr "Portekizce"
 
 #: src/xmoto/GameText.h:779

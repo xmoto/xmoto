@@ -435,7 +435,7 @@ void TextureManager::unloadTextures(void) {
                  i,
                  (*it)->Name.c_str(),
                  (*it)->curRegistrationStageMode == RSM_NORMAL ? "NORMAL"
-                                                               : "PERSISTANT");
+                                                               : "PERSISTENT");
         i++;
       }
       ++it;
@@ -462,7 +462,7 @@ unsigned int TextureManager::beginTexturesRegistration() {
     std::vector<Texture *> textures = getTextures();
     std::vector<Texture *>::iterator it = textures.begin();
     while (it != textures.end()) {
-      if ((*it)->curRegistrationStageMode != RSM_PERSISTANT) {
+      if ((*it)->curRegistrationStageMode != RSM_PERSISTENT) {
         for (unsigned int i = 0; i < (*it)->curRegistrationStage.size(); i++) {
           LogDebug("  begin %s %d [%x]",
                    (*it)->Name.c_str(),
@@ -493,7 +493,7 @@ void TextureManager::endTexturesRegistration() {
 
     LogDebug("---End texture registration---");
     while (it != textures.end()) {
-      if ((*it)->curRegistrationStageMode != RSM_PERSISTANT) {
+      if ((*it)->curRegistrationStageMode != RSM_PERSISTENT) {
         for (unsigned int i = 0; i < (*it)->curRegistrationStage.size(); i++) {
           LogDebug("  end %s %d [%x]",
                    (*it)->Name.c_str(),

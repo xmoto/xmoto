@@ -105,7 +105,7 @@ function Sign4.Touch()
     Game.ClearMessages()
 	Game.Message("Rule4: use sprites. (hotkey 's')")
 	Game.Message("(i don't like sprites so i don't use much")
-	Game.Message("(but for beginners they are realy usefull.)")
+	Game.Message("(but for beginners they are really useful.)")
 	Game.StartTimer("sign4Timer", 350,1)
   end
 end

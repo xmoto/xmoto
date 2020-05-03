@@ -76,7 +76,7 @@ void Packager::goUnpack(const std::string &BinFile,
       md5sumLen = fgetc(fp);
       fread(md5sum, md5sumLen, 1, fp);
       md5sum[md5sumLen] = '\0';
-      /* this is not usefull for unpack */
+      /* this is not useful for unpack */
 
       int nNameLen;
       while ((nNameLen = fgetc(fp)) >= 0) {

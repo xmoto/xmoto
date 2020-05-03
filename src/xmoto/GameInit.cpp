@@ -128,9 +128,9 @@ int main(int nNumArgs, char **ppcArgs) {
     char cBuf[1024];
     snprintf(cBuf,
              1024,
-             "Fatal exception occured: %s\n"
+             "Fatal exception occurred: %s\n"
              "Consult the file xmoto.log for more information about what\n"
-             "might has occured.\n",
+             "might has occurred.\n",
              e.getMsg().c_str());
     MessageBox(NULL, cBuf, "X-Moto Error", MB_OK | MB_ICONERROR);
 #endif
@@ -333,7 +333,7 @@ void GameApp::run_load(int nNumArgs, char **ppcArgs) {
           XMFS::getSystemLocaleDir().c_str());
   LogInfo("LANGUAGE=%s", Environment::get_variable("LANGUAGE").c_str());
 
-  // some asian langages require ttf files ; change to us in case of problem
+  // some asian languages require ttf files ; change to us in case of problem
   try {
     DrawLib::checkFontPrerequites();
   } catch (Exception &e) {
@@ -413,7 +413,7 @@ void GameApp::run_load(int nNumArgs, char **ppcArgs) {
     v_useGraphics && (v_xmArgs.isOptLevelID() || v_xmArgs.isOptLevelFile() ||
                       v_xmArgs.isOptReplay() || v_xmArgs.isOptDemo());
 
-  // network requires the input informations (to display the chat command)
+  // network requires the input information (to display the chat command)
   if (v_useGraphics) {
     InputHandler::instance()->init(m_userConfig,
                                    pDb,

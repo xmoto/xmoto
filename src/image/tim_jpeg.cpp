@@ -37,7 +37,7 @@ extern "C" {
 Hmm, stricmp() is microsoftish
 ==============================================================================*/
 #if !defined(WIN32) && !defined(__amigaos4__)
-static int stricmp(char *pc1, char *pc2) {
+static int stricmp(const char *pc1, const char *pc2) {
   int s1 = strlen(pc1);
   int s2 = strlen(pc2);
   if (s1 != s2)
@@ -559,13 +559,13 @@ Load function
 int tim_jpeg_load(tim_session_t *pSession,
                   tim_image_t **ppImage,
                   tim_image_info_t *pInfo,
-                  char *pcSource) {
+                  const char *pcSource) {
   void *pvHandle;
   struct jpeg_decompress_struct ci;
   tim_error_mgr_t Err;
   tim_image_t *pImage;
   unsigned int nRowStride, nOffset;
-  char *pc;
+  const char *pc;
   JSAMPARRAY Buffer;
   tim_jpeg_pixel_t *pScan;
   int nRet;
@@ -712,7 +712,7 @@ int tim_jpeg_load(tim_session_t *pSession,
 Save function
 ==============================================================================*/
 
-int tim_jpeg_save(tim_image_t *pImage, char *pcTarget) {
+int tim_jpeg_save(tim_image_t *pImage, const char *pcTarget) {
   void *pvHandle;
   struct jpeg_compress_struct ci;
   tim_error_mgr_t Err;

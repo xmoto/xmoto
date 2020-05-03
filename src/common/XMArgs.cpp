@@ -706,7 +706,7 @@ void XMArguments::help(const std::string &i_cmd) {
   printf("\t--videoRecordingEndTime NBCENTSOFSECONDS\n\t\tStop recording video "
          "after this game time.\n");
   printf("\t--hidePlayingInformation\n\t\tDon't show some information while "
-         "playing/replaying ; usefull to make nicer video.\n");
+         "playing/replaying ; useful to make nicer video.\n");
   printf("\t--drawlib DRAWLIB\n\t\tChoose the render to use (default one is "
          "OPENGL if available).\n");
   printf(
