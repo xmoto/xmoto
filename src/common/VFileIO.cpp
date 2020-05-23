@@ -190,7 +190,7 @@ bool str_match_wildcard(char *pcMWildcard,
   return false;
 }
 
-void XMFS::_ThrowFileError(FileHandle *pfh, std::string Description) {
+void XMFS::_ThrowFileError(FileHandle *pfh, const std::string &Description) {
   char cBuf[512];
   snprintf(cBuf,
            512,
@@ -471,7 +471,7 @@ std::vector<std::string> XMFS::findPhysFiles(FileDataType i_fdt,
   return Result;
 }
 
-FileHandle *XMFS::openOFile(FileDataType i_fdt, std::string Path) {
+FileHandle *XMFS::openOFile(FileDataType i_fdt, const std::string &Path) {
   FileHandle *pfh = new FileHandle;
 
   /* Is it an absolute path? */
@@ -818,13 +818,13 @@ void XMFS::writeDouble(FileHandle *pfh, double v) {
     _ThrowFileError(pfh, "writeDouble -> failed");
 }
 
-void XMFS::writeString(FileHandle *pfh, std::string v) {
+void XMFS::writeString(FileHandle *pfh, const std::string &v) {
   writeByte(pfh, v.length());
   if (!writeBuf(pfh, (char *)v.c_str(), v.length()))
     _ThrowFileError(pfh, "writeString -> failed");
 }
 
-void XMFS::writeLongString(FileHandle *pfh, std::string v) {
+void XMFS::writeLongString(FileHandle *pfh, const std::string &v) {
   writeShort_LE(pfh, v.length());
   if (!writeBuf(pfh, (char *)v.c_str(), v.length()))
     _ThrowFileError(pfh, "writeLongString -> failed");
@@ -834,7 +834,7 @@ void XMFS::writeBool(FileHandle *pfh, bool v) {
   writeByte(pfh, static_cast<unsigned char>(v));
 }
 
-void XMFS::writeLine(FileHandle *pfh, std::string Line) {
+void XMFS::writeLine(FileHandle *pfh, const std::string &Line) {
   char cBuf[2048];
   snprintf(cBuf, 2048, "%s\n", Line.c_str());
   if (!writeBuf(pfh, cBuf, strlen(cBuf)))
@@ -905,7 +905,7 @@ int XMFS::fillBuffer(FileHandle *pfh) {
 /*===========================================================================
   Extract directory name from path
   ===========================================================================*/
-std::string XMFS::getFileDir(std::string Path) {
+std::string XMFS::getFileDir(const std::string &Path) {
   int n = Path.find_last_of("/");
   if (n < 0)
     n = Path.find_last_of("\\");
@@ -923,7 +923,7 @@ std::string XMFS::getFileDir(std::string Path) {
 /*===========================================================================
   Extract file name (with no extension) from path
   ===========================================================================*/
-std::string XMFS::getFileBaseName(std::string Path) {
+std::string XMFS::getFileBaseName(const std::string &Path) {
   int n = Path.find_last_of("/");
   if (n < 0)
     n = Path.find_last_of("\\");
@@ -939,7 +939,7 @@ std::string XMFS::getFileBaseName(std::string Path) {
   return FName.substr(0, n);
 }
 
-std::string XMFS::getFileExtension(std::string Path) {
+std::string XMFS::getFileExtension(const std::string &Path) {
   int n;
   n = Path.find_last_of(".");
   if (n < 0)
@@ -963,7 +963,7 @@ int XMFS::getFileTimeStamp(const std::string &Path) {
 /*===========================================================================
   Is that a dir or what? - and similar stuffin'
   ===========================================================================*/
-bool XMFS::isDir(std::string Path) {
+bool XMFS::isDir(const std::string &Path) {
   struct stat S;
 
   if (stat(Path.c_str(), &S)) {
@@ -976,7 +976,7 @@ bool XMFS::isDir(std::string Path) {
   return false; /* not a directory */
 }
 
-bool XMFS::isPathAbsolute(std::string Path) {
+bool XMFS::isPathAbsolute(const std::string &Path) {
 /* Windows? */
 #ifdef WIN32
   /* Check for drive letter */
@@ -1296,15 +1296,26 @@ void XMFS::init(const std::string &AppDir,
       break;
     }
   }
+  /* Try some default fallbacks */
   if (!m_bGotSystemDataDir) {
-    m_SystemDataDir = std::string("/usr/share/");
-    if (isDir(m_SystemDataDir)) {
-      m_bGotSystemDataDir = true;
+    const std::vector<std::string> dataDirs = {
+      "/usr/share", "/usr/local/share",
+    };
+    for (auto &dir : dataDirs) {
+      if (isDir(dir + "/xmoto")) {
+        m_SystemDataDir = dir;
+        m_bGotSystemDataDir = true;
+        break;
+      }
     }
   }
-  m_SystemLocaleDir = std::string(m_SystemDataDir);
-  m_SystemDataDir.append("xmoto");
-  m_SystemLocaleDir.append("locale");
+  /* Default to /usr/share */
+  if (!m_bGotSystemDataDir) {
+    m_SystemDataDir = "/usr/share";
+  }
+
+  m_SystemLocaleDir = m_SystemDataDir + "/locale";
+  m_SystemDataDir = m_SystemDataDir + "/xmoto";
 #endif
 
   bool v_requireMigration = false;
@@ -1501,7 +1512,7 @@ float XMFS::readFloat_MaybeLE(FileHandle *pfh, bool big) {
   return big ? SwapEndian::BigFloat(v) : SwapEndian::LittleFloat(v);
 }
 
-bool XMFS::isFileInDir(std::string p_dirpath, std::string p_filepath) {
+bool XMFS::isFileInDir(const std::string &p_dirpath, const std::string &p_filepath) {
   std::string v_fileDir;
 
   v_fileDir = getFileDir(p_filepath);
@@ -1513,16 +1524,16 @@ bool XMFS::isFileInDir(std::string p_dirpath, std::string p_filepath) {
   return v_fileDir.substr(0, p_dirpath.length()) == p_dirpath;
 }
 
-bool XMFS::isInUserDir(FileDataType i_fdt, std::string p_filepath) {
+bool XMFS::isInUserDir(FileDataType i_fdt, const std::string &p_filepath) {
   return isFileInDir(getUserDir(i_fdt), p_filepath);
 }
 
-bool XMFS::doesRealFileOrDirectoryExists(std::string p_path) {
+bool XMFS::doesRealFileOrDirectoryExists(const std::string &p_path) {
   struct stat S;
   return stat(p_path.c_str(), &S) == 0;
 }
 
-bool XMFS::isFileReadable(FileDataType i_fdt, std::string p_filename) {
+bool XMFS::isFileReadable(FileDataType i_fdt, const std::string &p_filename) {
   FileHandle *fh = openIFile(i_fdt, p_filename);
   if (fh == NULL) {
     return false;
@@ -1531,11 +1542,11 @@ bool XMFS::isFileReadable(FileDataType i_fdt, std::string p_filename) {
   return true;
 }
 
-bool XMFS::fileExists(FileDataType i_fdt, std::string p_filename) {
+bool XMFS::fileExists(FileDataType i_fdt, const std::string &p_filename) {
   return isFileReadable(i_fdt, p_filename);
 }
 
-void XMFS::mkArborescence(std::string v_filepath) {
+void XMFS::mkArborescence(const std::string &v_filepath) {
   std::string v_parentDir = getFileDir(v_filepath);
 
   if (doesRealFileOrDirectoryExists(v_parentDir)) {
@@ -1548,7 +1559,7 @@ void XMFS::mkArborescence(std::string v_filepath) {
   }
 }
 
-void XMFS::mkArborescenceDir(std::string v_dirpath) {
+void XMFS::mkArborescenceDir(const std::string &v_dirpath) {
   mkArborescence(v_dirpath + "/file.tmp");
 }
 
@@ -1576,7 +1587,7 @@ std::string XMFS::md5sum(FileDataType i_fdt, std::string i_filePath) {
   return "";
 }
 
-bool XMFS::isFileReal(std::string i_filePath) {
+bool XMFS::isFileReal(const std::string &i_filePath) {
   FILE *fp;
 
   fp = fopen(i_filePath.c_str(), "rb");
