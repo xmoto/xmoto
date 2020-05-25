@@ -23,6 +23,8 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 #include "BSP.h"
 #include "helpers/Log.h"
+#include <chrono>
+#include <cstring>
 
 #define PLANE_LIMIT_VALUE 0.0001
 #define T_LIMIT_VALUE 0.0001
@@ -51,26 +53,50 @@ void BSPLine::computeNormal() {
   Normal.normalize();
 }
 
-BSPPoly::BSPPoly() {}
-
-BSPPoly::BSPPoly(const BSPPoly &i_poly) {
-  addVerticesOf(&i_poly);
+BSPPoly::BSPPoly(int maxVertices) {
+  m_maxVertices = maxVertices;
+  m_vertices2 = (Vector2f*)malloc(m_maxVertices*sizeof(Vector2f));
+  m_vertexCount = 0;
 }
 
-void BSPPoly::addVerticesOf(const BSPPoly *i_poly) {
-  for (unsigned int i = 0; i < i_poly->m_vertices.size(); i++) {
-    m_vertices.push_back(i_poly->m_vertices[i]);
+BSPPoly::BSPPoly(BSPPoly *i_poly) {
+  m_maxVertices = i_poly->getMaxVertices();
+  m_vertexCount = i_poly->getVertexCount();
+  m_vertices2 = (Vector2f*)malloc(m_maxVertices*sizeof(Vector2f));
+  addVerticesOf(i_poly);
+}
+
+Vector2f* BSPPoly::Vertices() {
+  return m_vertices2;
+}
+
+int BSPPoly::getMaxVertices() {
+  return m_maxVertices;
+}
+
+int BSPPoly::getVertexCount() {
+  return m_vertexCount;
+}
+
+void BSPPoly::addVerticesOf(BSPPoly *i_poly) {
+  memcpy(m_vertices2, i_poly->Vertices(), i_poly->getMaxVertices()*sizeof(Vector2f));
+}
+
+BSPPoly::~BSPPoly() {
+  if(m_vertices2) {
+    free(m_vertices2);
+    m_vertices2 = NULL;
   }
 }
 
-BSPPoly::~BSPPoly() {}
-
-std::vector<Vector2f> &BSPPoly::Vertices() {
+/*std::vector<Vector2f> &BSPPoly::Vertices() {
   return m_vertices;
-}
+}*/
 
 void BSPPoly::addVertice(const Vector2f &i_vertice) {
-  m_vertices.push_back(i_vertice);
+  //m_vertices.push_back(i_vertice);
+  m_vertices2[m_vertexCount] = i_vertice;
+  m_vertexCount++;
 }
 
 BSP::BSP() {
@@ -110,7 +136,7 @@ std::vector<BSPPoly *> *BSP::compute() {
     GlobalBox.addPointToAABB2f(m_lines[i]->P1);
   }
 
-  BSPPoly RootPoly;
+  BSPPoly RootPoly(m_lines.size());
 
   // try this root polygon to see if it fixes the graphic problem due to the
   // AABB one
@@ -119,7 +145,12 @@ std::vector<BSPPoly *> *BSP::compute() {
   }
 
   /* Start the recursion */
-  recurse(&RootPoly, m_lines);
+  int count = 0;
+  auto timerStart = std::chrono::system_clock::now();
+  recurse(&RootPoly, m_lines, &count);
+  auto timerEnd = std::chrono::system_clock::now();
+  double time = std::chrono::duration_cast<std::chrono::nanoseconds>(timerEnd - timerStart).count();
+  printf("%f\n", time);
 
   return &m_polys;
 }
@@ -127,7 +158,7 @@ std::vector<BSPPoly *> *BSP::compute() {
 /*===========================================================================
   Recursive generation
   ===========================================================================*/
-void BSP::recurse(BSPPoly *pSubSpace, std::vector<BSPLine *> &Lines) {
+void BSP::recurse(BSPPoly *pSubSpace, std::vector<BSPLine *> &Lines, int *count) {
   BSPLine *pBestSplitter = findBestSplitter(Lines);
 
   if (pBestSplitter == NULL) {
@@ -141,9 +172,12 @@ void BSP::recurse(BSPPoly *pSubSpace, std::vector<BSPLine *> &Lines) {
       BSPLine Splitter = *(Lines[i]);
 
       /* Cut */
-      BSPPoly *pTempPoly = new BSPPoly();
+      //auto timerStart = std::chrono::system_clock::now();
+      BSPPoly *pTempPoly = new BSPPoly(pPoly->getMaxVertices());
+      //auto timerEnd = std::chrono::system_clock::now();
+      //(*count) += std::chrono::duration_cast<std::chrono::nanoseconds>(timerEnd - timerStart).count();
 
-      if (pPoly->Vertices().empty()) {
+      if (pPoly->getVertexCount() == 0) {
         LogWarning("recurse(), try to split an empty poly (no BestSplitter)");
         LogWarning("Line causing the trouble is (%.5f %.5f ; %.5f %.5f)",
                    Lines[i]->P0.x,
@@ -151,13 +185,13 @@ void BSP::recurse(BSPPoly *pSubSpace, std::vector<BSPLine *> &Lines) {
                    Lines[i]->P1.x,
                    Lines[i]->P1.y);
       } else {
-        splitPoly(pPoly, NULL, pTempPoly, &Splitter);
+        splitPoly(pPoly, NULL, pTempPoly, &Splitter, count);
       }
       delete pPoly;
       pPoly = pTempPoly;
     }
 
-    if (pPoly->Vertices().size() > 0) {
+    if (pPoly->getVertexCount() > 0) {
       m_polys.push_back(pPoly);
     } else {
       LogWarning("Lines causing the trouble are :");
@@ -181,18 +215,18 @@ void BSP::recurse(BSPPoly *pSubSpace, std::vector<BSPLine *> &Lines) {
     splitLines(Lines, Front, Back, pBestSplitter);
 
     /* Also split the convex subspace */
-    BSPPoly FrontSpace, BackSpace;
-    if (pSubSpace->Vertices().empty()) {
+    BSPPoly FrontSpace(pSubSpace->getMaxVertices()), BackSpace(pSubSpace->getMaxVertices());
+    if (pSubSpace->getVertexCount() == 0) {
       LogWarning("recurse(), try to split an empty poly (BestSplitter is set)");
     }
-    splitPoly(pSubSpace, &FrontSpace, &BackSpace, pBestSplitter);
+    splitPoly(pSubSpace, &FrontSpace, &BackSpace, pBestSplitter, count);
 
     /* Continue recursion */
-    if (FrontSpace.Vertices().empty() == false) {
-      recurse(&FrontSpace, Front);
+    if (FrontSpace.getVertexCount() > 0) {
+      recurse(&FrontSpace, Front, count);
     }
-    if (BackSpace.Vertices().empty() == false) {
-      recurse(&BackSpace, Back);
+    if (BackSpace.getVertexCount() > 0) {
+      recurse(&BackSpace, Back, count);
     }
 
     /* Clean up */
@@ -243,12 +277,12 @@ BSPLine *BSP::findBestSplitter(std::vector<BSPLine *> &i_lines) {
 void BSP::splitPoly(BSPPoly *pPoly,
                     BSPPoly *pFront,
                     BSPPoly *pBack,
-                    BSPLine *pLine) {
+                    BSPLine *pLine, int *count) {
   /* Split the given convex polygon to produce two new convex polygons */
   enum SplitPolyRel { SPR_ON_PLANE, SPR_IN_FRONT, SPR_IN_BACK };
 
   /* Empty? */
-  if (pPoly->Vertices().empty()) {
+  if (pPoly->getVertexCount()) {
     LogError("BSP::splitPoly() - empty polygon encountered");
     m_nNumErrors++;
     return;
@@ -256,20 +290,25 @@ void BSP::splitPoly(BSPPoly *pPoly,
 
   /* Look at each corner of the polygon -- how does each of them relate to the
    * plane? */
-  std::vector<int> Rels;
+  //std::vector<int> Rels;
+  int relations[pPoly->getVertexCount()];
   int nNumInFront = 0, nNumInBack = 0, nNumOnPlane = 0;
 
-  for (unsigned int i = 0; i < pPoly->Vertices().size(); i++) {
+  for (unsigned int i = 0; i < pPoly->getVertexCount(); i++) {
+    (*count)++;
     double d = pLine->Normal.dot(pLine->P0 - pPoly->Vertices()[i]);
 
     if (fabs(d) < PLANE_LIMIT_VALUE) {
-      Rels.push_back(SPR_ON_PLANE);
+      //Rels.push_back(SPR_ON_PLANE);
+      relations[i] = SPR_ON_PLANE;
       nNumOnPlane++;
     } else if (d < 0.0f) {
-      Rels.push_back(SPR_IN_BACK);
+      //Rels.push_back(SPR_IN_BACK);
+      relations[i] = SPR_IN_BACK;
       nNumInBack++;
     } else {
-      Rels.push_back(SPR_IN_FRONT);
+      //Rels.push_back(SPR_IN_FRONT);
+      relations[i] = SPR_IN_FRONT;
       nNumInFront++;
     }
   }
@@ -291,16 +330,17 @@ void BSP::splitPoly(BSPPoly *pPoly,
     }
   } else {
     /* We need to divide the polygon */
-    for (unsigned int i = 0; i < pPoly->Vertices().size(); i++) {
+    for (unsigned int i = 0; i < pPoly->getVertexCount(); i++) {
+      (*count)++;
       bool bSplit = false;
 
       /* Next vertex? */
       unsigned int j = i + 1;
-      if (j == pPoly->Vertices().size())
+      if (j == pPoly->getVertexCount())
         j = 0;
 
       /* Which sides should we add this corner to? */
-      if (Rels[i] == SPR_ON_PLANE) {
+      if (relations[i] == SPR_ON_PLANE) {
         /* Both */
         if (pFront) {
           pFront->addVertice(pPoly->Vertices()[i]);
@@ -308,21 +348,21 @@ void BSP::splitPoly(BSPPoly *pPoly,
         if (pBack) {
           pBack->addVertice(pPoly->Vertices()[i]);
         }
-      } else if (Rels[i] == SPR_IN_FRONT) {
+      } else if (relations[i] == SPR_IN_FRONT) {
         /* In front */
         if (pFront) {
           pFront->addVertice(pPoly->Vertices()[i]);
         }
 
-        if (Rels[j] == SPR_IN_BACK)
+        if (relations[j] == SPR_IN_BACK)
           bSplit = true;
-      } else if (Rels[i] == SPR_IN_BACK) {
+      } else if (relations[i] == SPR_IN_BACK) {
         /* In back */
         if (pBack) {
           pBack->addVertice(pPoly->Vertices()[i]);
         }
 
-        if (Rels[j] == SPR_IN_FRONT)
+        if (relations[j] == SPR_IN_FRONT)
           bSplit = true;
       }
 

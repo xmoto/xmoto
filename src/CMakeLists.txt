@@ -4,7 +4,7 @@ option(USE_SDLGFX "Build with SDL for graphics" OFF)
 option(USE_GETTEXT "Build with Gettext for internationalization" ON)
 option(PREFER_SYSTEM_BZip2 "Prefer system BZip2" ON)
 option(PREFER_SYSTEM_Lua "Prefer system Lua" ON)
-option(PREFER_SYSTEM_ODE "Prefer system ODE" ON)
+option(PREFER_SYSTEM_ODE "Prefer system ODE" OFF)
 option(PREFER_SYSTEM_XDG "Prefer system XDG" ON)
 option(ALLOW_DEV "Enable some development/debug features" OFF)
 

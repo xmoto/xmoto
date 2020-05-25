@@ -535,11 +535,11 @@ int Block::loadToPlay(CollisionSystem *io_collisionSystem,
         if (i_loadBSP) {
           for (unsigned int i = 0; i < v_BSPPolys->size(); i++) {
             unsigned int size =
-              2 * sizeof(cpVect) * (*v_BSPPolys)[i]->Vertices().size();
+              2 * sizeof(cpVect) * (*v_BSPPolys)[i]->getVertexCount();
             myVerts = (cpVect *)malloc(size);
 
             // translate for chipmunk
-            for (unsigned int j = 0; j < (*v_BSPPolys)[i]->Vertices().size();
+            for (unsigned int j = 0; j < (*v_BSPPolys)[i]->getVertexCount();
                  j++) {
               cpVect ma =
                 cpv((*v_BSPPolys)[i]->Vertices()[j].x * CHIP_SCALE_RATIO,
@@ -549,7 +549,7 @@ int Block::loadToPlay(CollisionSystem *io_collisionSystem,
 
             // collision shape
             m_shape = cpPolyShapeNew(
-              myBody, (*v_BSPPolys)[i]->Vertices().size(), myVerts, cpvzero);
+              myBody, (*v_BSPPolys)[i]->getVertexCount(), myVerts, cpvzero);
             m_shape->u = m_friction;
             m_shape->e = m_elasticity;
             if (isBackground()) {
@@ -582,7 +582,7 @@ void Block::addPoly(BSPPoly *i_poly,
                     CollisionSystem *io_collisionSystem,
                     float scale) {
   ConvexBlock *v_block = new ConvexBlock(this);
-  for (unsigned int i = 0; i < i_poly->Vertices().size(); i++) {
+  for (unsigned int i = 0; i < i_poly->getVertexCount(); i++) {
     v_block->addVertex(
       i_poly->Vertices()[i],
       Vector2f((InitialPosition().x + i_poly->Vertices()[i].x) * scale,

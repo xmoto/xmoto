@@ -40,16 +40,22 @@ private:
 
 class BSPPoly {
 public:
-  BSPPoly();
-  BSPPoly(const BSPPoly &i_poly);
+  BSPPoly(int maxVertices);
+  BSPPoly(BSPPoly *i_poly);
   ~BSPPoly();
 
-  std::vector<Vector2f> &Vertices();
+  //std::vector<Vector2f> &Vertices();
+  Vector2f* Vertices();
+  int getMaxVertices();
+  int getVertexCount();
   void addVertice(const Vector2f &i_vertice);
-  void addVerticesOf(const BSPPoly *i_poly);
+  void addVerticesOf(BSPPoly *i_poly);
 
 private:
-  std::vector<Vector2f> m_vertices;
+  //std::vector<Vector2f> m_vertices;
+  Vector2f *m_vertices2 = NULL;
+  int m_maxVertices;
+  int m_vertexCount;
 };
 
 class BSP {
@@ -69,7 +75,7 @@ private:
   std::vector<BSPLine *> m_lines; /* Input data set */
   std::vector<BSPPoly *> m_polys; /* Output data set */
 
-  void recurse(BSPPoly *pSubSpace, std::vector<BSPLine *> &Lines);
+  void recurse(BSPPoly *pSubSpace, std::vector<BSPLine *> &Lines, int *count);
 
   BSPLine *findBestSplitter(std::vector<BSPLine *> &i_lines);
   /* if bProbe is true, pnNumFront, pnNumBack and pnNumSplits must not be NULL
@@ -85,7 +91,7 @@ private:
   void splitPoly(BSPPoly *pPoly,
                  BSPPoly *pFront,
                  BSPPoly *pBack,
-                 BSPLine *pLine);
+                 BSPLine *pLine, int *count);
 };
 
 #endif
