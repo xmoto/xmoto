@@ -57,6 +57,8 @@ BSPPoly::BSPPoly(int maxVertices) {
   m_maxVertices = maxVertices;
   m_vertices2 = (Vector2f*)malloc(m_maxVertices*sizeof(Vector2f));
   m_vertexCount = 0;
+  auto timer = std::chrono::system_clock::now();
+  m_time = std::chrono::duration_cast<std::chrono::nanoseconds>(timer.time_since_epoch()).count();
 }
 
 BSPPoly::BSPPoly(BSPPoly *i_poly) {
@@ -64,6 +66,8 @@ BSPPoly::BSPPoly(BSPPoly *i_poly) {
   m_vertexCount = i_poly->getVertexCount();
   m_vertices2 = (Vector2f*)malloc(m_maxVertices*sizeof(Vector2f));
   addVerticesOf(i_poly);
+  auto timer = std::chrono::system_clock::now();
+  m_time = std::chrono::duration_cast<std::chrono::nanoseconds>(timer.time_since_epoch()).count();
 }
 
 Vector2f* BSPPoly::Vertices() {
@@ -80,6 +84,7 @@ int BSPPoly::getVertexCount() {
 
 void BSPPoly::addVerticesOf(BSPPoly *i_poly) {
   memcpy(m_vertices2, i_poly->Vertices(), i_poly->getMaxVertices()*sizeof(Vector2f));
+  m_vertexCount = i_poly->getVertexCount();
 }
 
 BSPPoly::~BSPPoly() {
@@ -95,6 +100,7 @@ BSPPoly::~BSPPoly() {
 
 void BSPPoly::addVertice(const Vector2f &i_vertice) {
   //m_vertices.push_back(i_vertice);
+  if(m_vertexCount == m_maxVertices) printf("This shouldn't happen");
   m_vertices2[m_vertexCount] = i_vertice;
   m_vertexCount++;
 }
@@ -164,7 +170,7 @@ void BSP::recurse(BSPPoly *pSubSpace, std::vector<BSPLine *> &Lines, int *count)
   if (pBestSplitter == NULL) {
     /* We've found a final convex hull! :D  stop here -- add it to output (after
      * cutting it of course) */
-    BSPPoly *pPoly = new BSPPoly(*pSubSpace);
+    BSPPoly *pPoly = new BSPPoly(pSubSpace);
 
     /* Cut the polygon by each lines */
     for (unsigned int i = 0; i < Lines.size(); i++) {
@@ -215,7 +221,8 @@ void BSP::recurse(BSPPoly *pSubSpace, std::vector<BSPLine *> &Lines, int *count)
     splitLines(Lines, Front, Back, pBestSplitter);
 
     /* Also split the convex subspace */
-    BSPPoly FrontSpace(pSubSpace->getMaxVertices()), BackSpace(pSubSpace->getMaxVertices());
+    BSPPoly FrontSpace(pSubSpace->getMaxVertices());
+    BSPPoly BackSpace(pSubSpace->getMaxVertices());
     if (pSubSpace->getVertexCount() == 0) {
       LogWarning("recurse(), try to split an empty poly (BestSplitter is set)");
     }

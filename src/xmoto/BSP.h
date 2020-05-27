@@ -56,6 +56,7 @@ private:
   Vector2f *m_vertices2 = NULL;
   int m_maxVertices;
   int m_vertexCount;
+  double m_time;
 };
 
 class BSP {
