@@ -40,7 +40,7 @@ private:
 
 class BSPPoly {
 public:
-  BSPPoly();
+  BSPPoly(int size);
   BSPPoly(const BSPPoly &i_poly);
   ~BSPPoly();
 

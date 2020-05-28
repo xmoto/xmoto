@@ -51,9 +51,12 @@ void BSPLine::computeNormal() {
   Normal.normalize();
 }
 
-BSPPoly::BSPPoly() {}
+BSPPoly::BSPPoly(int size) {
+    m_vertices.reserve(size);
+}
 
 BSPPoly::BSPPoly(const BSPPoly &i_poly) {
+  m_vertices.reserve(i_poly.Vertices().size());
   addVerticesOf(&i_poly);
 }
 
@@ -110,7 +113,7 @@ std::vector<BSPPoly *> *BSP::compute() {
     GlobalBox.addPointToAABB2f(m_lines[i]->P1);
   }
 
-  BSPPoly RootPoly;
+  BSPPoly RootPoly(m_lines.size());
 
   // try this root polygon to see if it fixes the graphic problem due to the
   // AABB one
@@ -141,7 +144,7 @@ void BSP::recurse(BSPPoly *pSubSpace, std::vector<BSPLine *> &Lines) {
       BSPLine Splitter = *(Lines[i]);
 
       /* Cut */
-      BSPPoly *pTempPoly = new BSPPoly();
+      BSPPoly *pTempPoly = new BSPPoly(pPoly->Vertices().size());
 
       if (pPoly->Vertices().empty()) {
         LogWarning("recurse(), try to split an empty poly (no BestSplitter)");
@@ -178,10 +181,13 @@ void BSP::recurse(BSPPoly *pSubSpace, std::vector<BSPLine *> &Lines) {
     /* Split the mess */
 
     std::vector<BSPLine *> Front, Back;
+    Front.reserve(Lines.size());
+    Back.reserve(Lines.size());
     splitLines(Lines, Front, Back, pBestSplitter);
 
     /* Also split the convex subspace */
-    BSPPoly FrontSpace, BackSpace;
+    BSPPoly FrontSpace(pSubSpace->Vertices().size());
+    BSPPoly BackSpace(pSubSpace->Vertices().size());
     if (pSubSpace->Vertices().empty()) {
       LogWarning("recurse(), try to split an empty poly (BestSplitter is set)");
     }
@@ -209,6 +215,8 @@ void BSP::recurse(BSPPoly *pSubSpace, std::vector<BSPLine *> &Lines) {
 BSPLine *BSP::findBestSplitter(std::vector<BSPLine *> &i_lines) {
   BSPLine *pBest = NULL;
   std::vector<BSPLine *> Dummy1, Dummy2;
+  Dummy1.reserve(i_lines.size());
+  Dummy2.reserve(i_lines.size());
   int nBestScore = -1;
   int nNumFront, nNumBack, nNumSplits, nScore;
 
@@ -257,6 +265,7 @@ void BSP::splitPoly(BSPPoly *pPoly,
   /* Look at each corner of the polygon -- how does each of them relate to the
    * plane? */
   std::vector<int> Rels;
+  Rels.reserve(pPoly->Vertices().size());
   int nNumInFront = 0, nNumInBack = 0, nNumOnPlane = 0;
 
   for (unsigned int i = 0; i < pPoly->Vertices().size(); i++) {
