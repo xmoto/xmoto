@@ -68,7 +68,7 @@ void BSPPoly::addVerticesOf(const BSPPoly *i_poly) {
 
 BSPPoly::~BSPPoly() {}
 
-std::vector<Vector2f> &BSPPoly::Vertices() {
+const std::vector<Vector2f> &BSPPoly::Vertices() const {
   return m_vertices;
 }
 

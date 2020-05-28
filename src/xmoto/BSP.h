@@ -44,7 +44,7 @@ public:
   BSPPoly(const BSPPoly &i_poly);
   ~BSPPoly();
 
-  std::vector<Vector2f> &Vertices();
+  const std::vector<Vector2f> &Vertices() const;
   void addVertice(const Vector2f &i_vertice);
   void addVerticesOf(const BSPPoly *i_poly);
 
