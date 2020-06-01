@@ -165,6 +165,7 @@ set(helpers_src
   helpers/Environment.cpp helpers/Environment.h
   helpers/FileCompression.cpp helpers/FileCompression.h
   helpers/HighPrecisionTimer.h
+  helpers/ScopedTimer.h
   helpers/Log.cpp helpers/Log.h
   helpers/MultiSingleton.h
   helpers/Random.cpp helpers/Random.h
