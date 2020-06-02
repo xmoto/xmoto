@@ -58,7 +58,7 @@ std::string xmDatabase::webhighscores_updateDB(
   std::string v_strtime;
   std::string v_date;
   int v_time;
-  unsigned int pos_1, pos_2;
+  size_t pos_1, pos_2;
 
   try {
     simpleSql("BEGIN TRANSACTION;");
