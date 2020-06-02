@@ -39,7 +39,7 @@ if(USE_OPENGL)
 endif()
 find_package(PNG REQUIRED)
 
-find_package(Lua51)
+find_package(Lua "5.1" EXACT)
 set(USE_SYSTEM_Lua $<AND:$<BOOL:${PREFER_SYSTEM_Lua}>,$<BOOL:${LUA51_FOUND}>,$<NOT:$<BOOL:${WIN32}>>>)
 
 # Can't disable yet
