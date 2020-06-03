@@ -4,7 +4,7 @@
 
 /* Pull in OpenGL headers */
 /* following scissored from SDL_opengl.h */
-#ifdef HAVE_APPLE_OPENGL_FRAMEWORK
+#if defined(__APPLE__) || defined(HAVE_APPLE_OPENGL_FRAMEWORK)
 #include <OpenGL/gl.h> /* Header File For The OpenGL Library */
 #include <OpenGL/glu.h> /* Header File For The GLU Library */
 #elif defined(__MACOS__)
