@@ -176,7 +176,7 @@ void UIConsole::addNewLine(const std::string &i_line) {
   m_lines.push_back(i_line);
 }
 
-bool UIConsole::keyDown(int nKey, SDLMod mod, const std::string &i_utf8Char) {
+bool UIConsole::keyDown(int nKey, SDL_Keymod mod, const std::string &i_utf8Char) {
   if (nKey == SDLK_d && (mod & KMOD_LCTRL) == KMOD_LCTRL) {
     execInternal("exit");
     return true;

@@ -42,10 +42,10 @@ XMKey::XMKey(SDL_Event &i_event) {
   switch (i_event.type) {
     case SDL_KEYDOWN:
       m_input = XMK_KEYBOARD;
-      m_keyboard_sym = i_event.key.keysym.sym;
-      m_keyboard_mod = (SDLMod)(i_event.key.keysym.mod &
+      m_keyboard_sym = i_event.key.keysym.sym; // Change this back to scancode if it doesn't work
+      m_keyboard_mod = (SDL_Keymod)(i_event.key.keysym.mod &
                                 (KMOD_CTRL | KMOD_SHIFT | KMOD_ALT |
-                                 KMOD_META)); // only allow these modifiers
+                                 KMOD_GUI)); // only allow these modifiers
       break;
 
     case SDL_MOUSEBUTTONDOWN:
@@ -71,11 +71,11 @@ XMKey::XMKey(SDL_Event &i_event) {
   }
 }
 
-XMKey::XMKey(SDLKey nKey, SDLMod mod, const std::string &i_utf8Char) {
+XMKey::XMKey(SDL_Keycode nKey, SDL_Keymod mod, const std::string &i_utf8Char) {
   m_input = XMK_KEYBOARD;
   m_keyboard_sym = nKey;
-  m_keyboard_mod = (SDLMod)(mod & (KMOD_CTRL | KMOD_SHIFT | KMOD_ALT |
-                                   KMOD_META)); // only allow these modifiers
+  m_keyboard_mod = (SDL_Keymod)(mod & (KMOD_CTRL | KMOD_SHIFT | KMOD_ALT |
+                                       KMOD_GUI)); // only allow these modifiers
   m_keyboard_utf8Char = i_utf8Char;
   m_repetition = 1;
 }
@@ -107,7 +107,7 @@ XMKey::XMKey(const std::string &i_key, bool i_basicMode) {
     if (i_key.length() != 1) {
       throw InvalidSystemKeyException();
     }
-    m_keyboard_sym = (SDLKey)(
+    m_keyboard_sym = (SDL_Keymod)(
       (int)(tolower(i_key[0]))); // give ascii key while sdl does the same
     m_keyboard_mod = KMOD_NONE;
     return;
@@ -137,10 +137,10 @@ XMKey::XMKey(const std::string &i_key, bool i_basicMode) {
     v_current = v_rest.substr(0, pos);
     v_rest = v_rest.substr(pos + 1, v_rest.length() - pos - 1);
 
-    m_keyboard_sym = (SDLKey)atoi(v_current.c_str());
-    m_keyboard_mod = (SDLMod)(((SDLMod)atoi(v_rest.c_str())) &
+    m_keyboard_sym = (SDL_Keycode)atoi(v_current.c_str());
+    m_keyboard_mod = (SDL_Keymod)(((SDL_Keymod)atoi(v_rest.c_str())) &
                               (KMOD_CTRL | KMOD_SHIFT | KMOD_ALT |
-                               KMOD_META)); // only allow these modifiers
+                               KMOD_GUI)); // only allow these modifiers
 
   } else if (v_current == "M") { // mouse button
     m_input = XMK_MOUSEBUTTON;
@@ -244,10 +244,10 @@ bool XMKey::operator==(const XMKey &i_other) const {
   if (m_input == XMK_KEYBOARD) {
     return m_keyboard_sym == i_other.m_keyboard_sym &&
            ((m_keyboard_mod &
-             (KMOD_CTRL | KMOD_SHIFT | KMOD_ALT | KMOD_META)) ==
+             (KMOD_CTRL | KMOD_SHIFT | KMOD_ALT | KMOD_GUI)) ==
             (i_other.m_keyboard_mod &
              (KMOD_CTRL | KMOD_SHIFT | KMOD_ALT |
-              KMOD_META))); // only allow these modifiers
+              KMOD_GUI))); // only allow these modifiers
   }
 
   if (m_input == XMK_MOUSEBUTTON) {
@@ -337,12 +337,12 @@ std::string XMKey::toFancyString() const {
       v_modifiers += " ";
     }
 
-    if ((m_keyboard_mod & KMOD_LMETA) == KMOD_LMETA) {
+    if ((m_keyboard_mod & KMOD_LGUI) == KMOD_LGUI) {
       v_modifiers += GAMETEXT_KEY_LEFTMETA;
       v_modifiers += " ";
     }
 
-    if ((m_keyboard_mod & KMOD_RMETA) == KMOD_RMETA) {
+    if ((m_keyboard_mod & KMOD_RGUI) == KMOD_RGUI) {
       v_modifiers += GAMETEXT_KEY_RIGHTMETA;
       v_modifiers += " ";
     }
@@ -375,12 +375,10 @@ std::string XMKey::toFancyString() const {
         v_button = GAMETEXT_MOUSE_RIGHTBUTTON;
         break;
 
-      case SDL_BUTTON_WHEELUP:
-        v_button = GAMETEXT_MOUSE_WHEELUPBUTTON;
-        break;
-
-      case SDL_BUTTON_WHEELDOWN:
-        v_button = GAMETEXT_MOUSE_WHEELDOWNBUTTON;
+      case SDL_MOUSEWHEEL:
+        /* TODO: */
+        //v_button = GAMETEXT_MOUSE_WHEELUPBUTTON;
+        //v_button = GAMETEXT_MOUSE_WHEELDOWNBUTTON;
         break;
 
       default:
@@ -431,9 +429,11 @@ std::string XMKey::toFancyString() const {
   return v_res.str();
 }
 
-bool XMKey::isPressed(Uint8 *i_keystate, Uint8 i_mousestate) const {
+bool XMKey::isPressed(const Uint8 *i_keystate, Uint8 i_mousestate) const {
   if (m_input == XMK_KEYBOARD) {
-    return i_keystate[m_keyboard_sym] == 1;
+    /* It'd probably be a good idea to perform a range-check here,
+     * just to be safe.. */
+    return i_keystate[SDL_GetScancodeFromKey(m_keyboard_sym)] == 1;
   }
 
   if (m_input == XMK_MOUSEBUTTON) {
@@ -458,8 +458,8 @@ bool XMKey::isPressed(Uint8 *i_keystate, Uint8 i_mousestate) const {
   return false;
 }
 
-bool XMKey::toKeyboard(SDLKey &nKey,
-                       SDLMod &o_mod,
+bool XMKey::toKeyboard(SDL_Keycode &nKey,
+                       SDL_Keymod &o_mod,
                        std::string &o_utf8Char) const {
   if (m_input != XMK_KEYBOARD) {
     return false;
@@ -512,3 +512,4 @@ bool XMKey::toJoystickAxisMotion(Uint8 &o_joyNum,
 
   return true;
 }
+

@@ -23,6 +23,7 @@
  */
 #include "DrawLibOpenGL.h"
 #include "common/Image.h"
+#include "common/XMBuild.h"
 #include "common/VFileIO.h"
 #include "common/VFileIO_types.h"
 #include "common/VTexture.h"
@@ -205,6 +206,8 @@ DrawLibOpenGL::DrawLibOpenGL()
     XMFS::FullPath(FDT_DATA, FontManager::getDrawFontFile()), 60);
   m_fontMonospace = getFontManager(
     XMFS::FullPath(FDT_DATA, FontManager::getMonospaceFontFile()), 12, 7);
+
+  m_glContext = NULL;
 };
 
 /*===========================================================================
@@ -266,6 +269,7 @@ void DrawLibOpenGL::setLineWidth(float width) {
   glLineWidth(width);
 }
 
+#include <cassert>
 void DrawLibOpenGL::init(unsigned int nDispWidth,
                          unsigned int nDispHeight,
                          unsigned int nDispBPP,
@@ -279,14 +283,43 @@ void DrawLibOpenGL::init(unsigned int nDispWidth,
   m_bWindowed = bWindowed;
 
   /* Get some video info */
-  const SDL_VideoInfo *pVidInfo = SDL_GetVideoInfo();
+  const SDL_RendererInfo *pVidInfo = NULL;
+  /* Need to create the `renderer` object first!
+  SDL_Renderer* renderer;
+  // Could use SDL_GetRenderDriverInfo *in addition* to this
+  SDL_GetRendererInfo(renderer, pVidInfo);
+
   if (pVidInfo == NULL)
     throw Exception("(1) SDL_GetVideoInfo : " + std::string(SDL_GetError()));
+  */
+
+  const int displayIndex = 0;
+  int displayModeCount = 0;
+  if ((displayModeCount = SDL_GetNumDisplayModes(displayIndex)) < 1) {
+    throw Exception("getDisplayModes: No display modes found.");
+  }
+  std::vector<SDL_DisplayMode> modes(displayModeCount);
+
+  for (int modeIndex = 0; modeIndex < displayModeCount; ++modeIndex) {
+    SDL_DisplayMode mode;
+    if (SDL_GetDisplayMode(displayIndex, modeIndex, &mode) != 0) {
+      throw Exception("getDisplayModes: SDL_GetDisplayMode failed: "
+          + std::string(SDL_GetError()));
+    }
+    modes[modeIndex] = mode;
+  }
+
+  printf("[DEBUG]: display modes:\n");
+  for (auto& mode : modes) {
+    printf("w: %d, h: %d, refresh_rate: %d\n", mode.w, mode.h, mode.refresh_rate);
+  }
+  printf("\n");
 
   /* Determine target bit depth */
-  if (m_bWindowed == true)
+  if (m_bWindowed == true) {
     /* In windowed mode we can't tinker with the bit-depth */
-    m_nDispBPP = pVidInfo->vfmt->BitsPerPixel;
+    //m_nDispBPP = pVidInfo->vfmt->BitsPerPixel;
+  }
 
   /* Setup GL stuff */
   /* 2005-10-05 ... note that we no longer ask for explicit settings... it's
@@ -294,13 +327,15 @@ void DrawLibOpenGL::init(unsigned int nDispWidth,
   SDL_GL_SetAttribute(SDL_GL_DOUBLEBUFFER, 1);
 
   /* Create video flags */
-  int nFlags = SDL_OPENGL;
+  int nFlags = SDL_WINDOW_SHOWN | SDL_WINDOW_OPENGL;
   if (m_bWindowed == false)
-    nFlags |= SDL_FULLSCREEN;
+    nFlags |= SDL_WINDOW_FULLSCREEN;
+  printf("dispWidth: %u, dispHeight: %u\n", m_nDispWidth, m_nDispHeight);
 
   /* At last, try to "set the video mode" */
-  if ((m_screen = SDL_SetVideoMode(
-         m_nDispWidth, m_nDispHeight, m_nDispBPP, nFlags)) == NULL) {
+  if ((m_window = SDL_CreateWindow("xmoto 0.6.0",
+          SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED,
+          m_nDispWidth, m_nDispHeight, nFlags)) == NULL) {
     LogWarning(
       "Tried to set video mode %ix%i @ %i-bit, but SDL failed (%s)\n"
       "                Now SDL will try determining a proper mode itself.",
@@ -311,32 +346,60 @@ void DrawLibOpenGL::init(unsigned int nDispWidth,
     m_nDispBPP = 0;
 
     /* Hmm, try letting it decide the BPP automatically */
-    if ((m_screen = SDL_SetVideoMode(m_nDispWidth, m_nDispHeight, 0, nFlags)) ==
-        NULL) {
+    // TODO: This call should be removed as it's exactly the same as the previous one.
+    // Not sure if SDL2 lets you screw around with the BPP anyway
+    if ((m_window = SDL_CreateWindow("xmoto 0.6.0",
+            SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, m_nDispWidth, m_nDispHeight, nFlags))) {
       /* Still no luck */
       LogWarning("Still no luck, now we'll try 800x600 in a window.");
       m_nDispWidth = 800;
       m_nDispHeight = 600;
       m_nDispBPP = 0;
       m_bWindowed = true;
-      m_screen = SDL_SetVideoMode(m_nDispWidth, m_nDispHeight, 0, SDL_OPENGL);
-      if (m_screen == NULL) {
+      /* TODO: Add this back in!
+      m_window = SDL_SetVideoMode(m_nDispWidth, m_nDispHeight, 0, SDL_WINDOW_OPENGL);
+      if (m_window == NULL) {
         throw Exception("SDL_SetVideoMode : " + std::string(SDL_GetError()));
       }
+      */
     }
   }
 
+  /* TODO: Maybe this shouldn't be done here.. */
+  SDL_SetWindowTitle(m_window,
+      (std::string("xmoto ") + XMBuild::getVersionString(true)).c_str());
+
+#if !defined(WIN32) && !defined(__APPLE__) && !defined(__amigaos4__)
+  /* This probably doesn't work */
+  SDL_Surface *v_icon = SDL_LoadBMP(
+    (XMFS::getSystemDataDir() + std::string("/xmoto_icone_x.ico")).c_str());
+  if (v_icon != NULL) {
+    SDL_SetSurfaceBlendMode(v_icon, SDL_BLENDMODE_BLEND);
+    SDL_SetColorKey(
+      v_icon, SDL_TRUE, SDL_MapRGB(v_icon->format, 236, 45, 211));
+    SDL_SetWindowIcon(m_window, v_icon);
+  }
+#endif
+
+  /* Create an OpenGL context */
+  SDL_GLContext m_glContext = SDL_GL_CreateContext(m_window);
+
   /* Retrieve actual configuration */
+  /* TODO
   pVidInfo = SDL_GetVideoInfo();
   if (pVidInfo == NULL)
     throw Exception("(2) SDL_GetVideoInfo : " + std::string(SDL_GetError()));
 
   m_nDispBPP = pVidInfo->vfmt->BitsPerPixel;
+  */
 
-  if (!gladLoadGL()) {
-    const char* err = "Failed to load OpenGL functions!";
-    LogError("%s", err);
-    throw Exception(err);
+  if (!gladLoadGLLoader((GLADloadproc)SDL_GL_GetProcAddress)) {
+    /* Try without SDL's loader */
+    if (!gladLoadGL()) {
+      const char* err = "Failed to load OpenGL functions!";
+      LogError("%s", err);
+      throw Exception(err);
+    }
   }
 
   /* OpenGL fully initialized */
@@ -408,10 +471,15 @@ void DrawLibOpenGL::init(unsigned int nDispWidth,
   /* Set background color to black */
   glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
   glClear(GL_COLOR_BUFFER_BIT);
-  SDL_GL_SwapBuffers();
+  SDL_GL_SwapWindow(m_window);
 }
 
-void DrawLibOpenGL::unInit() {}
+void DrawLibOpenGL::unInit() {
+  if (m_glContext) {
+    SDL_GL_DeleteContext(m_glContext);
+    m_glContext = NULL;
+  }
+}
 
 /*===========================================================================
   Check for OpenGL extension
@@ -561,7 +629,7 @@ void DrawLibOpenGL::clearGraphics() {
  **/
 void DrawLibOpenGL::flushGraphics() {
   /* Swap buffers */
-  SDL_GL_SwapBuffers();
+  SDL_GL_SwapWindow(m_window);
 }
 
 // little helper to avoid code duplication
@@ -741,7 +809,10 @@ GLFontGlyphLetter::GLFontGlyphLetter(const std::string &i_value,
       throw Exception("GLFontGlyphLetter: " + std::string(TTF_GetError()));
     }
   }
-  SDL_SetAlpha(v_surf, 0, 0);
+  SDL_SetSurfaceAlphaMod(v_surf, 255);
+
+  // This gets rid of aliasing, don't know why
+  SDL_SetSurfaceBlendMode(v_surf, SDL_BLENDMODE_NONE);
 
   int v_realWidth, v_realHeight;
   TTF_SizeUTF8(i_ttf, i_value.c_str(), &v_realWidth, &v_realHeight);

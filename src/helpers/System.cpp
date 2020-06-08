@@ -25,58 +25,58 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "include/xm_SDL.h"
 #include <sstream>
 
-#if defined(WIN32) || defined(__APPLE__)
-#else
+#if !(defined(WIN32) || defined(__APPLE__))
 #include <sys/types.h>
 #include <unistd.h>
 #endif
 
 std::vector<std::string> *System::getDisplayModes(int windowed) {
   std::vector<std::string> *modes = new std::vector<std::string>;
-  SDL_Rect **sdl_modes;
-  int i, nFlags;
 
   /* Always use the fullscreen flags to be sure to
      always get a result (no any modes available like in windowed) */
-  nFlags = SDL_OPENGL | SDL_FULLSCREEN;
+  //nFlags = SDL_WINDOW_OPENGL | SDL_WINDOW_FULLSCREEN;
 
   /* Get available fullscreen/hardware modes */
-  sdl_modes = SDL_ListModes(NULL, nFlags);
+  //sdlModes = SDL_ListModes(NULL, nFlags);
 
   /* Check is there are any modes available */
-  if (sdl_modes == (SDL_Rect **)0) {
+  /*
+  if (sdlModes == (SDL_Rect **)0) {
     LogWarning("No display modes available.");
     throw Exception("getDisplayModes : No modes available.");
   }
+  */
 
+#if 0
   /* Always include these to modes */
-  modes->push_back("800 X 600");
-  modes->push_back("1024 X 768");
-  modes->push_back("1280 X 1024");
-  modes->push_back("1600 X 1200");
+  const std::vector<std::string> defaultModes = {
+    "800 X 600", "1024 X 768", "1280 X 1024", "1600 X 1200",
+  };
 
-  for (i = 0; sdl_modes[i]; i++) {
+  for (auto &mode : sdlModes) {
     char tmp[128];
 
     /* Menus don't fit under 800x600 */
-    if (sdl_modes[i]->w < 800 || sdl_modes[i]->h < 600)
+    if (mode.w < 800 || mode.h < 600)
       continue;
 
-    snprintf(tmp, 126, "%d X %d", sdl_modes[i]->w, sdl_modes[i]->h);
+    snprintf(tmp, 126, "%d X %d", mode.w, mode.h);
     tmp[127] = '\0';
 
-    /* Only single */
-    bool findDouble = false;
-    for (unsigned int j = 0; j < modes->size(); j++)
+    /* Only add if not a duplicate */
+    bool isDuplicate = false;
+    for (size_t j = 0; j < modes->size(); ++j) {
       if (!strcmp(tmp, (*modes)[j].c_str())) {
-        findDouble = true;
+        isDuplicate = true;
         break;
       }
-
-    if (!findDouble) {
+    }
+    if (!isDuplicate) {
       modes->push_back(tmp);
     }
   }
+#endif
 
   return modes;
 }

@@ -78,6 +78,8 @@ StateManager::StateManager() {
   m_isVisible = true;
   m_hasFocus = true;
 
+  m_isInvalidated = false;
+
   m_videoRecorder = NULL;
   // video
   if (XMSession::instance()->enableVideoRecording()) {
@@ -251,6 +253,11 @@ bool StateManager::needUpdateOrRender() {
 
   if (m_hasFocus) { // m_isVisible is not needed while xmoto is rendered after
     // each event (including expose event)
+    return true;
+  }
+
+  if (m_isInvalidated) {
+    setInvalidated(false);
     return true;
   }
 

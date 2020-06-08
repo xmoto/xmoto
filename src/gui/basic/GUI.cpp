@@ -226,7 +226,7 @@ bool UIWindow::isBranchHidden(void) {
 Special message box for querying keypresses
 ===========================================================================*/
 bool UIQueryKeyBox::keyDown(int nKey,
-                            SDLMod mod,
+                            SDL_Keymod mod,
                             const std::string &i_utf8Char) {
   //    MessageBox(NULL,"HELLO",NULL,MB_OK);
   return false;
@@ -405,7 +405,7 @@ void UIMsgBox::paint(void) {
   }
 }
 
-bool UIMsgBox::keyDown(int nKey, SDLMod mod, const std::string &i_utf8Char) {
+bool UIMsgBox::keyDown(int nKey, SDL_Keymod mod, const std::string &i_utf8Char) {
   switch (nKey) {
     case SDLK_ESCAPE:
       if (!setClicked(GAMETEXT_CANCEL))
@@ -1167,7 +1167,7 @@ void UIRoot::mouseWheelDown(int x, int y) {
   _RootMouseEvent(this, UI_ROOT_MOUSE_WHEEL_DOWN, x, y);
 }
 
-bool UIRoot::keyDown(int nKey, SDLMod mod, const std::string &i_utf8Char) {
+bool UIRoot::keyDown(int nKey, SDL_Keymod mod, const std::string &i_utf8Char) {
   if (!_RootKeyEvent(this, UI_ROOT_KEY_DOWN, nKey, mod, i_utf8Char)) {
     switch (nKey) {
       case SDLK_UP:
@@ -1194,14 +1194,14 @@ bool UIRoot::keyDown(int nKey, SDLMod mod, const std::string &i_utf8Char) {
   return true;
 }
 
-bool UIRoot::keyUp(int nKey, SDLMod mod, const std::string &i_utf8Char) {
+bool UIRoot::keyUp(int nKey, SDL_Keymod mod, const std::string &i_utf8Char) {
   return _RootKeyEvent(this, UI_ROOT_KEY_UP, nKey, mod, i_utf8Char);
 }
 
 bool UIRoot::_RootKeyEvent(UIWindow *pWindow,
                            UIRootKeyEvent Event,
                            int nKey,
-                           SDLMod mod,
+                           SDL_Keymod mod,
                            const std::string &i_utf8Char) {
   /* Hidden or disabled? */
   if (pWindow->isHidden() || pWindow->isDisabled())

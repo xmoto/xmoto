@@ -62,6 +62,10 @@ public:
 
   void changeFocus(bool i_hasFocus);
   void changeVisibility(bool i_visible);
+  void setInvalidated(bool i_isInvalidated) { m_isInvalidated = i_isInvalidated; }
+
+  bool hasFocus() const { return m_hasFocus; }
+  bool isInvalidated() const { return m_isInvalidated; }
 
   bool needUpdateOrRender();
 
@@ -124,6 +128,7 @@ private:
 
   bool m_isVisible;
   bool m_hasFocus;
+  bool m_isInvalidated;
 
   std::vector<GameState *> m_statesStack;
   std::vector<GameState *> m_toDeleteStates;

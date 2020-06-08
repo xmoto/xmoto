@@ -70,6 +70,8 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include <signal.h>
 #endif
 
+#include <cassert>
+
 #define MOUSE_DBCLICK_TIME 0.250f
 
 #define XM_MAX_NB_LOOPS_WITH_NONETWORK 3
@@ -345,8 +347,8 @@ void GameApp::run_load(int nNumArgs, char **ppcArgs) {
   }
 #endif
 
-  _InitWin(
-    v_useGraphics); // initwin inits sdl (and only sdl if initwin is false)
+  // _InitWin initializes SDL (and only SDL if the argument is false)
+  _InitWin(v_useGraphics);
 
   /* drawlib */
   if (v_useGraphics) {
@@ -719,6 +721,18 @@ void GameApp::run_load(int nNumArgs, char **ppcArgs) {
   LogInfo("UserInit ended at %.3f", GameApp::getXMTime());
 }
 
+const char* sdlEventEnumTable(uint32_t event) {
+  switch (event) {
+    case SDL_WINDOWEVENT_ENTER:        return "SDL_WINDOWEVENT_ENTER";
+    case SDL_WINDOWEVENT_LEAVE:        return "SDL_WINDOWEVENT_LEAVE";
+    case SDL_WINDOWEVENT_FOCUS_GAINED: return "SDL_WINDOWEVENT_FOCUS_GAINED";
+    case SDL_WINDOWEVENT_FOCUS_LOST:   return "SDL_WINDOWEVENT_FOCUS_LOST";
+    case SDL_KEYDOWN:                  return "SDL_KEYDOWN";
+    case SDL_KEYUP:                    return "SDL_KEYUP";
+    default:                           return "UNKNOWN";
+  }
+}
+
 void GameApp::manageEvent(SDL_Event *Event) {
   static int nLastMouseClickX = -100, nLastMouseClickY = -100;
   static int nLastMouseClickButton = -100;
@@ -734,8 +748,8 @@ void GameApp::manageEvent(SDL_Event *Event) {
         Event->key.keysym.sym == SDLK_LCTRL ||
         Event->key.keysym.sym == SDLK_RALT ||
         Event->key.keysym.sym == SDLK_LALT ||
-        Event->key.keysym.sym == SDLK_RMETA ||
-        Event->key.keysym.sym == SDLK_LMETA) {
+        Event->key.keysym.sym == SDLK_RGUI ||
+        Event->key.keysym.sym == SDLK_LGUI) {
       return;
     }
   }
@@ -743,17 +757,28 @@ void GameApp::manageEvent(SDL_Event *Event) {
   /* What event? */
   switch (Event->type) {
     case SDL_KEYDOWN:
-      utf8Char = unicode2utf8(Event->key.keysym.unicode);
+      // TODO
+      //utf8Char = unicode2utf8(Event->key.keysym.unicode);
+
+      // NOTE:
+      // Doing this breaks text input (e.g. when entering the player's name)
+      // It can be reproduced by hitting an arrow key in a text box
+      utf8Char = unicode2utf8(Event->key.keysym.sym);
+
       // printf("%i - %i\n", Event->key.keysym.sym, utf8Char.c_str()[0]);
       StateManager::instance()->xmKey(
         INPUT_DOWN,
         XMKey(Event->key.keysym.sym, Event->key.keysym.mod, utf8Char));
       break;
     case SDL_KEYUP:
-      utf8Char = unicode2utf8(Event->key.keysym.unicode);
+      // TODO:
+      utf8Char = unicode2utf8(Event->key.keysym.sym); // this is a hack and DOES NOT SUPPORT UNICODE!!
       StateManager::instance()->xmKey(
         INPUT_UP,
         XMKey(Event->key.keysym.sym, Event->key.keysym.mod, utf8Char));
+
+      printf("%s [%s]\n", sdlEventEnumTable(Event->type), SDL_GetKeyName(Event->key.keysym.sym));
+      printf("kbd focus?: %s\n", m_hasKeyboardFocus ? "yes" : "no");
       break;
     case SDL_QUIT:
       /* Force quit */
@@ -805,26 +830,82 @@ void GameApp::manageEvent(SDL_Event *Event) {
               Event->jbutton.button));
       break;
 
-    case SDL_ACTIVEEVENT:
-
-      if ((Event->active.state & SDL_APPMOUSEFOCUS) != 0) { // mouse focus
-        if (m_hasKeyboardFocus == false) {
-          StateManager::instance()->changeFocus(Event->active.gain == 1);
+    case SDL_WINDOWEVENT: {
+      switch (Event->window.event) {
+        case SDL_WINDOWEVENT_ENTER: /* fall through */
+        case SDL_WINDOWEVENT_LEAVE: {
+          bool hasFocus = false;
+          switch (Event->window.event) {
+            case SDL_WINDOWEVENT_ENTER: hasFocus = true;  break;
+            case SDL_WINDOWEVENT_LEAVE: hasFocus = false; break;
+            /* never hit */
+            default: hasFocus = StateManager::instance()->hasFocus(); break;
+          }
+          if (!m_hasKeyboardFocus) {
+            StateManager::instance()->changeFocus(hasFocus);
+          }
+          m_hasMouseFocus = hasFocus;
+          break;
         }
-        m_hasMouseFocus = (Event->active.gain == 1);
-      }
+        case SDL_WINDOWEVENT_FOCUS_GAINED: /* fall through */
+        case SDL_WINDOWEVENT_FOCUS_LOST: {
+          bool hasFocus;
+          switch (Event->window.event) {
+            case SDL_WINDOWEVENT_FOCUS_GAINED: hasFocus = true;  break;
+            case SDL_WINDOWEVENT_FOCUS_LOST:   hasFocus = false; break;
+            /* never hit */
+            default: assert(false); hasFocus = StateManager::instance()->hasFocus(); break;
+          }
+          if (!m_hasMouseFocus) {
+            StateManager::instance()->changeFocus(hasFocus);
+          }
+          m_hasKeyboardFocus = hasFocus;
+          printf("%s\n", sdlEventEnumTable(Event->window.event));
 
-      if ((Event->active.state & SDL_APPINPUTFOCUS) != 0) { // keyboard focus
-        if (m_hasMouseFocus == false) {
-          StateManager::instance()->changeFocus(Event->active.gain == 1);
+          if (!hasFocus) {
+            const uint8_t* keys = SDL_GetKeyboardState(NULL);
+            bool b = InputHandler::instance()->getPlayerKey(INPUT_DRIVE, 0)->isPressed(keys, 0);
+
+            auto timerStart = std::chrono::system_clock::now();
+#if 0
+            // invalidate all pressed keys
+            {
+              for (unsigned int player = 0; player < INPUT_NB_PLAYERS; ++player) {
+                for (unsigned int i = 0; i < INPUT_NB_PLAYERKEYS; ++i) {
+                  StateManager::instance()->xmKey(INPUT_UP, *InputHandler::instance()->getPlayerKey(i, player));
+                }
+              }
+              for (unsigned int i = 0; i < INPUT_NB_GLOBALKEYS; ++i) {
+                StateManager::instance()->xmKey(INPUT_UP, *InputHandler::instance()->getGlobalKey(i));
+              }
+            }
+#endif
+            auto timerEnd = std::chrono::system_clock::now();
+            double elapsed = std::chrono::duration_cast<std::chrono::milliseconds>(timerEnd - timerStart).count();
+            printf("[Timer]: elapsed: %.3fms\n", elapsed);
+          }
+
+          break;
         }
-        m_hasKeyboardFocus = (Event->active.gain == 1);
+        case SDL_WINDOWEVENT_EXPOSED: /* fall through */
+          StateManager::instance()->setInvalidated(true);
+          break;
+        case SDL_WINDOWEVENT_SHOWN:
+          StateManager::instance()->changeVisibility(true);
+          m_isIconified = false;
+          break;
+        case SDL_WINDOWEVENT_HIDDEN:
+          StateManager::instance()->changeVisibility(false);
+          m_isIconified = true;
+          break;
       }
-
-      if ((Event->active.state & SDL_APPACTIVE) != 0) {
-        StateManager::instance()->changeVisibility(Event->active.gain == 1);
-        m_isIconified = (Event->active.gain == 0);
-      }
+      printf("focus: %s | kbd: %s | mouse: %s\n",
+              StateManager::instance()->hasFocus() ? "yes" : "no",
+              m_hasKeyboardFocus ? "yes" : "no",
+              m_hasMouseFocus ? "yes" : "no"
+            );
+      break;
+    }
   }
 }
 

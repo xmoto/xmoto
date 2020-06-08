@@ -365,7 +365,7 @@ bool UIButton::offerActivation(void) {
 /*===========================================================================
 Keyboard event handling
 ===========================================================================*/
-bool UIButton::keyDown(int nKey, SDLMod mod, const std::string &i_utf8Char) {
+bool UIButton::keyDown(int nKey, SDL_Keymod mod, const std::string &i_utf8Char) {
   switch (nKey) {
     case SDLK_UP:
       getRoot()->activateUp();
@@ -381,7 +381,7 @@ bool UIButton::keyDown(int nKey, SDLMod mod, const std::string &i_utf8Char) {
       return true;
     case SDLK_SPACE:
     case SDLK_RETURN:
-      actionnate();
+      toggle();
       return true;
       break;
   }
@@ -390,11 +390,11 @@ bool UIButton::keyDown(int nKey, SDLMod mod, const std::string &i_utf8Char) {
 }
 
 bool UIButton::joystickButtonDown(Uint8 i_joyNum, Uint8 i_joyButton) {
-  actionnate();
+  toggle();
   return true;
 }
 
-void UIButton::actionnate() {
+void UIButton::toggle() {
   if (m_Type == UI_BUTTON_TYPE_CHECK) {
     m_bChecked = !m_bChecked;
     try {

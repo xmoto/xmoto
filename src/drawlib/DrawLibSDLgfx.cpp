@@ -142,7 +142,7 @@ void SDLFontManager::printStringGrad(FontGlyph *i_glyph,
                                      Color c4,
                                      float i_perCentered,
                                      bool i_shadowEffect) {
-  SDL_Color color = { 99, 0, 33 };
+  SDL_Color color = { 99, 0, 33, 0 };
   SDL_Surface *text_surface = TTF_RenderText_Blended(
     m_ttf, ((SDLFontGlyph *)i_glyph)->Value().c_str(), color);
   SDL_FreeSurface(text_surface);
@@ -257,7 +257,7 @@ void DrawLibSDLgfx::setClipRect(int x, int y, unsigned int w, unsigned int h) {
 }
 
 void DrawLibSDLgfx::setClipRect(SDL_Rect *clip_rect) {
-  SDL_SetClipRect(m_screen, clip_rect);
+  SDL_SetClipRect(SDL_GetWindowSurface(m_window), clip_rect);
 }
 
 void DrawLibSDLgfx::getClipRect(int *px, int *py, int *pnWidth, int *pnHeight) {
@@ -310,7 +310,7 @@ void DrawLibSDLgfx::init(unsigned int nDispWidth,
   if (!m_bWindowed)
     nFlags |= SDL_FULLSCREEN;
   /* At last, try to "set the video mode" */
-  if ((m_screen = SDL_SetVideoMode(
+  if ((m_window = SDL_SetVideoMode(
          m_nDispWidth, m_nDispHeight, m_nDispBPP, nFlags)) == NULL) {
     LogWarning(
       "Tried to set video mode %dx%d @ %d-bit, but SDL responded: %s\n"
@@ -320,14 +320,14 @@ void DrawLibSDLgfx::init(unsigned int nDispWidth,
       m_nDispBPP);
 
     /* Hmm, try letting it decide the BPP automatically */
-    if ((m_screen = SDL_SetVideoMode(m_nDispWidth, m_nDispHeight, 0, nFlags)) ==
+    if ((m_window = SDL_SetVideoMode(m_nDispWidth, m_nDispHeight, 0, nFlags)) ==
         NULL) {
       /* Still no luck */
       LogWarning("Still no luck, now we'll try 800x600 in a window.");
       m_nDispWidth = 800;
       m_nDispHeight = 600;
       m_bWindowed = true;
-      if ((m_screen = SDL_SetVideoMode(
+      if ((m_window = SDL_SetVideoMode(
              m_nDispWidth, m_nDispHeight, 0, SDL_SRCALPHA)) == NULL) {
         throw Exception("SDL_SetVideoMode : " + std::string(SDL_GetError()));
       }
@@ -347,11 +347,11 @@ void DrawLibSDLgfx::init(unsigned int nDispWidth,
 
   LogInfo("Using SDL_gfx implementation");
 
-  // screenBuffer.nPixelAlign = m_screen->format->BytesPerPixel;
-  // screenBuffer.nPixelSize = m_screen->format->BytesPerPixel;
+  // screenBuffer.nPixelAlign = m_window->format->BytesPerPixel;
+  // screenBuffer.nPixelSize = m_window->format->BytesPerPixel;
   // screenBuffer.nWidth = m_nDispWidth;
   // screenBuffer.nHeight = m_nDispHeight;
-  m_polyDraw = new PolyDraw(m_screen);
+  m_polyDraw = new PolyDraw(m_window);
 
   // setBackgroundColor(0,0,40,255);
 }
@@ -376,21 +376,22 @@ Img *DrawLibSDLgfx::grabScreen(int i_reduce) {
 
   Uint8 red, green, blue, alpha;
 
-  SDL_LockSurface(m_screen);
+  SDL_Surface *surface = SDL_GetWindowSurface(m_window);
+  SDL_LockSurface(surface);
 
-  for (int y = 0; y < m_screen->h; y++) {
-    for (int x = 0; x < m_screen->w; x++) {
-      void *pixel = (Uint8 *)m_screen->pixels +
-                    (x * m_screen->format->BytesPerPixel) +
-                    ((y) * (m_screen->pitch));
-      SDL_GetRGB(*(Uint32 *)pixel, m_screen->format, &red, &green, &blue);
+  for (int y = 0; y < m_window->h; y++) {
+    for (int x = 0; x < m_window->w; x++) {
+      void *pixel = (Uint8 *)m_window->pixels +
+                    (x * m_window->format->BytesPerPixel) +
+                    ((y) * (m_window->pitch));
+      SDL_GetRGB(*(Uint32 *)pixel, m_window->format, &red, &green, &blue);
 
       *(Uint32 *)pPixels = MAKE_COLOR(red, green, blue, 255);
       pPixels++;
     }
   }
 
-  SDL_UnlockSurface(m_screen);
+  SDL_UnlockSurface(surface);
 
   return pImg;
 }
@@ -410,10 +411,11 @@ void DrawLibSDLgfx::endDraw() {
   int x0, y0, x1, y1;
   SDL_Rect *clip = NULL;
 
+  SDL_Surface *surface = SDL_GetWindowSurface(m_window);
   // get the current clipping on the screen
   // if null we must expect the be drawing
   // on the full screen
-  SDL_GetClipRect(m_screen, clip);
+  SDL_GetClipRect(surface, clip);
   if (clip != NULL) {
     x0 = clip->x;
     y0 = clip->y;
@@ -422,8 +424,8 @@ void DrawLibSDLgfx::endDraw() {
   } else {
     x0 = 0;
     y0 = 0;
-    x1 = m_screen->w;
-    y1 = m_screen->h;
+    x1 = surface->w;
+    y1 = surface->h;
   }
 
   bool draw = true;
@@ -445,13 +447,14 @@ void DrawLibSDLgfx::endDraw() {
       m_int_drawing_points_x[i] = m_drawingPoints.at(i)->x;
       m_int_drawing_points_y[i] = m_drawingPoints.at(i)->y;
     }
+    SDL_Surface *windowSurface = SDL_GetWindowSurface(m_window);
     switch (m_drawMode) {
       case DRAW_MODE_POLYGON:
         if (m_texture != NULL) {
-          SDL_LockSurface(m_screen);
+          SDL_LockSurface(windowSurface);
           // TODO:keesj check if the surface is still valid
-          // screenBuffer.pcData = (char *)m_screen->pixels;
-          // screenBuffer.nPitch = m_screen->pitch;
+          // screenBuffer.pcData = (char *)windowSurface->pixels;
+          // screenBuffer.nPitch = windowSurface->pitch;
           // SDL_Surface * s = SDL_DisplayFormatAlpha(m_texture->surface);
           SDL_Surface *s = NULL;
 
@@ -476,21 +479,21 @@ void DrawLibSDLgfx::endDraw() {
                 zoomSurface(m_texture->surface, zoom, zoom, SMOOTHING_ON);
               if (m_texture->isAlpha) {
                 s = SDL_DisplayFormatAlpha(a);
-                // s = SDL_ConvertSurface(a, m_screen->format, SDL_HWSURFACE);
+                // s = SDL_ConvertSurface(a, windowSurface->format, SDL_HWSURFACE);
               } else {
-                s = SDL_ConvertSurface(a, m_screen->format, SDL_HWSURFACE);
+                s = SDL_ConvertSurface(a, windowSurface->format, SDL_HWSURFACE);
               }
               SDL_FreeSurface(a);
             } else {
               s = SDL_ConvertSurface(
-                m_texture->surface, m_screen->format, SDL_HWSURFACE);
+                m_texture->surface, windowSurface->format, SDL_HWSURFACE);
               if (m_texture->isAlpha) {
                 s = SDL_DisplayFormatAlpha(m_texture->surface);
-                // s = SDL_ConvertSurface(m_texture->surface, m_screen->format,
+                // s = SDL_ConvertSurface(m_texture->surface, windowSurface->format,
                 // SDL_HWSURFACE);
               } else {
                 s = SDL_ConvertSurface(
-                  m_texture->surface, m_screen->format, SDL_HWSURFACE);
+                  m_texture->surface, windowSurface->format, SDL_HWSURFACE);
               }
             }
 
@@ -523,9 +526,9 @@ void DrawLibSDLgfx::endDraw() {
 
           m_polyDraw->render(screenVerticles, nPolyTextureVertices, size, s);
           SDL_UnlockSurface(s);
-          SDL_UnlockSurface(m_screen);
+          SDL_UnlockSurface(windowSurface);
         } else {
-          xx_filledPolygonColor(m_screen,
+          xx_filledPolygonColor(windowSurface,
                                 m_int_drawing_points_x,
                                 m_int_drawing_points_y,
                                 size,
@@ -534,7 +537,7 @@ void DrawLibSDLgfx::endDraw() {
 
         break;
       case DRAW_MODE_LINE_LOOP:
-        polygonRGBA(m_screen,
+        polygonRGBA(windowSurface,
                     m_int_drawing_points_x,
                     m_int_drawing_points_y,
                     size,
@@ -545,7 +548,7 @@ void DrawLibSDLgfx::endDraw() {
         break;
       case DRAW_MODE_LINE_STRIP:
         for (int f = 0; f < size - 1; f++) {
-          lineRGBA(m_screen,
+          lineRGBA(windowSurface,
                    m_int_drawing_points_x[f],
                    m_int_drawing_points_y[f],
                    m_int_drawing_points_x[f + 1],
@@ -591,19 +594,20 @@ void DrawLibSDLgfx::setTexture(Texture *texture, BlendMode blendMode) {
 void DrawLibSDLgfx::setBlendMode(BlendMode blendMode) {}
 
 void DrawLibSDLgfx::clearGraphics() {
-  SDL_LockSurface(m_screen);
+  SDL_Surface *surface = SDL_GetWindowSurface(m_window);
+  SDL_LockSurface(surface);
   if (m_bg_data == NULL) {
     m_bg_data =
-      malloc(m_screen->format->BytesPerPixel * m_screen->w * m_screen->h);
+      malloc(surface->format->BytesPerPixel * surface->w * surface->h);
     memset(m_bg_data,
            0,
-           m_screen->format->BytesPerPixel * m_screen->w * m_screen->h);
+           surface->format->BytesPerPixel * surface->w * surface->h);
   }
-  memcpy(m_screen->pixels,
+  memcpy(surface->pixels,
          m_bg_data,
-         m_screen->format->BytesPerPixel * m_screen->w * m_screen->h);
-  SDL_UnlockSurface(m_screen);
-  // SDL_FillRect(m_screen, NULL, SDL_MapRGB(m_screen->format, 0, 0, 0));
+         surface->format->BytesPerPixel * surface->w * surface->h);
+  SDL_UnlockSurface(surface);
+  // SDL_FillRect(surface, NULL, SDL_MapRGB(surface->format, 0, 0, 0));
 }
 
 void DrawLibSDLgfx::resetGraphics() {
@@ -618,7 +622,7 @@ void DrawLibSDLgfx::resetGraphics() {
  * Flush the graphics. In memory graphics will now be displayed
  **/
 void DrawLibSDLgfx::flushGraphics() {
-  SDL_UpdateRect(m_screen, 0, 0, 0, 0);
+  SDL_UpdateRect(SDL_GetWindowSurface(m_window), 0, 0, 0, 0);
 }
 
 int DrawLibSDLgfx::xx_texturedHLineAlpha(SDL_Surface *dst,

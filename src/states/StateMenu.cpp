@@ -78,8 +78,8 @@ void StateMenu::xmKey(InputEventType i_type, const XMKey &i_xmkey) {
   Uint8 v_joyAxis;
   Sint16 v_joyAxisValue;
   Uint8 v_joyButton;
-  SDLKey v_nKey;
-  SDLMod v_mod;
+  SDL_Keycode v_nKey;
+  SDL_Keymod v_mod;
   std::string v_utf8Char;
 
   if (i_type == INPUT_DOWN &&
@@ -109,11 +109,15 @@ void StateMenu::xmKey(InputEventType i_type, const XMKey &i_xmkey) {
         } else if (nButton == SDL_BUTTON_RIGHT) {
           m_GUI->mouseRDown(nX, nY);
           checkEvents();
-        } else if (nButton == SDL_BUTTON_WHEELUP) {
-          m_GUI->mouseWheelUp(nX, nY);
-          checkEvents();
-        } else if (nButton == SDL_BUTTON_WHEELDOWN) {
-          m_GUI->mouseWheelDown(nX, nY);
+        /* TODO: This is an invalid comparison */
+        } else if (nButton == SDL_MOUSEWHEEL) {
+          /* TODO
+          if (event.wheel.y > 0) {
+            m_GUI->mouseWheelUp(nX, nY);
+          } else if (event.wheel.y < 0) {
+            m_GUI->mouseWheelDown(nX, nY);
+          }
+          */
           checkEvents();
         }
 

@@ -85,6 +85,15 @@ void StatePlaying::handleControllers(InputEventType Type,
     case INPUT_DOWN:
       p = 0; // player number p
       pW = 0; // number of players in the previous worlds
+
+      /*
+      printf("XMKey | keycode: %s/%d (target: %s/%d)\n",
+          SDL_GetKeyName(i_xmkey.getKeyboardSym()),
+          i_xmkey.getKeyboardSym(),
+          SDL_GetKeyName(InputHandler::instance()->getPlayerKey(INPUT_DRIVE, p)->getKeyboardSym()),
+          InputHandler::instance()->getPlayerKey(INPUT_DRIVE, p)->getKeyboardSym()
+        );
+      */
       for (unsigned int j = 0; j < m_universe->getScenes().size(); j++) {
         for (unsigned int i = 0;
              i < m_universe->getScenes()[j]->Players().size();
@@ -232,11 +241,17 @@ void StatePlaying::handleScriptKeys(InputEventType Type, const XMKey &i_xmkey) {
   }
 }
 
+#include <cassert>
+
 void StatePlaying::dealWithActivedKeys() {
-  Uint8 *v_keystate = SDL_GetKeyState(NULL);
+  int numkeys = 0;
+  const Uint8 *v_keystate = SDL_GetKeyboardState(&numkeys);
+  assert(numkeys > 0 && v_keystate);
+
   Uint8 v_mousestate = SDL_GetMouseState(NULL, NULL);
   unsigned int p, pW;
   Biker *v_biker;
+  printf("dealWithActivedKeys()\n");
 
   p = 0; // player number p
   pW = 0; // number of players in the previous worlds

@@ -51,8 +51,8 @@ public:
   XMKey(const std::string &i_key,
         bool i_basicMode =
           false); /* basic mode is to give a simple letter, for scripts key */
-  XMKey(SDLKey nKey,
-        SDLMod mod,
+  XMKey(SDL_Keycode nKey,
+        SDL_Keymod mod,
         const std::string &i_utf8Char = ""); // keyboard
   XMKey(Uint8 nButton, unsigned int i_repetition = 1); // mouse
   XMKey(std::string *i_joyId, Uint8 i_joyButton); // joystick button
@@ -63,7 +63,7 @@ public:
   bool operator==(const XMKey &i_other) const;
   std::string toString() const;
   std::string toFancyString() const;
-  bool isPressed(Uint8 *i_keystate, Uint8 i_mousestate) const;
+  bool isPressed(const Uint8 *i_keystate, Uint8 i_mousestate) const;
 
   bool isDefined() const;
 
@@ -74,17 +74,20 @@ public:
   bool isDirectionnel() const;
   XMKey_direction getDirection() const;
 
-  bool toKeyboard(SDLKey &nKey, SDLMod &o_mod, std::string &o_utf8Char) const;
+  bool toKeyboard(SDL_Keycode &nKey, SDL_Keymod &o_mod, std::string &o_utf8Char) const;
   bool toMouse(int &nX, int &nY, Uint8 &nButton) const;
   bool toJoystickButton(Uint8 &o_joyNum, Uint8 &o_joyButton) const;
   bool toJoystickAxisMotion(Uint8 &o_joyNum,
                             Uint8 &o_joyAxis,
                             Sint16 &o_joyAxisValue) const;
 
+  inline SDL_Keycode getKeyboardSym() const { return m_keyboard_sym; };
+  inline SDL_Keymod  getKeyboardMod() const { return m_keyboard_mod; };
+
 private:
   XMKey_input m_input;
-  SDLKey m_keyboard_sym;
-  SDLMod m_keyboard_mod;
+  SDL_Keycode m_keyboard_sym;
+  SDL_Keymod m_keyboard_mod;
   std::string m_keyboard_utf8Char;
   Uint8 m_mouseButton_button;
   std::string *m_joyId; // a pointer to avoid the copy while joyId are store

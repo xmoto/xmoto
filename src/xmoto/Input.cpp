@@ -56,9 +56,8 @@ void InputHandler::init(UserConfig *pConfig,
 
   enableJoysticks(i_enableJoysticks);
 
-  /* Enable unicode translation and key repeats */
-  SDL_EnableUNICODE(1);
-  SDL_EnableKeyRepeat(SDL_DEFAULT_REPEAT_DELAY, SDL_DEFAULT_REPEAT_INTERVAL);
+  // TODO:
+  //SDL_EnableKeyRepeat(SDL_DEFAULT_REPEAT_DELAY, SDL_DEFAULT_REPEAT_INTERVAL);
 
   /* Open all joysticks */
   recheckJoysticks();
@@ -304,7 +303,7 @@ void InputHandler::setDefaultConfig() {
   m_globalKeys[INPUT_RESTARTLEVEL] = IFullKey(
     "KeyRestartLevel", XMKey(SDLK_RETURN, KMOD_NONE), GAMETEXT_RESTARTLEVEL);
   m_globalKeys[INPUT_SHOWCONSOLE] = IFullKey(
-    "KeyShowConsole", XMKey(SDLK_WORLD_18, KMOD_NONE), GAMETEXT_SHOWCONSOLE);
+    "KeyShowConsole", XMKey(SDL_SCANCODE_GRAVE, KMOD_NONE), GAMETEXT_SHOWCONSOLE);
   m_globalKeys[INPUT_CONSOLEHISTORYPLUS] =
     IFullKey("KeyConsoleHistoryPlus",
              XMKey(SDLK_PLUS, KMOD_LCTRL),
@@ -358,7 +357,7 @@ void InputHandler::setDefaultConfig() {
              GAMETEXT_SWITCHHIGHSCOREINFORMATION);
   m_globalKeys[INPUT_NETWORKADMINCONSOLE] =
     IFullKey("KeyNetworkAdminConsole",
-             XMKey(SDLK_s, (SDLMod)(KMOD_LCTRL | KMOD_LALT)),
+             XMKey(SDLK_s, (SDL_Keymod)(KMOD_LCTRL | KMOD_LALT)),
              GAMETEXT_NETWORKADMINCONSOLE);
   m_globalKeys[INPUT_SWITCHSAFEMODE] =
     IFullKey("KeySafeMode", XMKey(SDLK_F6, KMOD_NONE), GAMETEXT_SWITCHSAFEMODE);
@@ -556,7 +555,8 @@ void InputHandler::recheckJoysticks() {
       if ((v_joystick = SDL_JoystickOpen(i)) != NULL) {
         std::ostringstream v_id;
         n = 0;
-        v_joyName = SDL_JoystickName(i);
+        // TODO:
+        //v_joyName = SDL_JoystickName(i);
 
         // check if there is an other joystick with the same name
         for (unsigned int j = 0; j < m_Joysticks.size(); j++) {

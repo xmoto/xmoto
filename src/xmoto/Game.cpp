@@ -124,23 +124,11 @@ void GameApp::_InitWin(bool bInitGraphics) {
     if (SDL_Init(SDL_INIT_TIMER | SDL_INIT_VIDEO) < 0)
       throw Exception("(2) SDL_Init : " + std::string(SDL_GetError()));
   }
-  /* Set window title */
-  SDL_WM_SetCaption(XMBuild::getVersionString(true).c_str(),
-                    XMBuild::getVersionString(true).c_str());
-
-#if !defined(WIN32) && !defined(__APPLE__) && !defined(__amigaos4__)
-  SDL_Surface *v_icon = SDL_LoadBMP(
-    (XMFS::getSystemDataDir() + std::string("/xmoto_icone_x.ico")).c_str());
-  if (v_icon != NULL) {
-    SDL_SetColorKey(
-      v_icon, SDL_SRCCOLORKEY, SDL_MapRGB(v_icon->format, 236, 45, 211));
-    SDL_WM_SetIcon(v_icon, NULL);
-  }
-#endif
 
   if (TTF_Init() < 0) {
     throw Exception("Initializing TTF failed: " + std::string(TTF_GetError()));
   }
+
   atexit(TTF_Quit);
 }
 

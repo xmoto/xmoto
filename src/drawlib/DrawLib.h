@@ -146,6 +146,8 @@ public:
   void setNoGraphics(bool disable_graphics);
   bool isNoGraphics();
 
+  SDL_Window *getWindow() const { return m_window; }
+
   void setRenderSurface(RenderSurface *renderSurf, bool i_own);
   RenderSurface *getRenderSurface();
 
@@ -321,7 +323,7 @@ protected:
   bool m_bDontUseGLVOBS;
   bool m_bNoGraphics; /* No-graphics mode */
 
-  SDL_Surface *m_screen;
+  SDL_Window *m_window;
   Camera *m_menuCamera;
   RenderSurface *m_renderSurf;
   bool m_ownsRenderSurface;

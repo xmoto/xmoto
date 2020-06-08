@@ -582,10 +582,13 @@ void DrawLib::drawImageTextureSet(const Vector2f &a,
   }
 }
 
+#include <cassert>
 void DrawLib::toogleFullscreen() {
-  if (SDL_WM_ToggleFullScreen(m_screen) != 0) {
+  // Need more code when using SDL2
+  //if (SDL_WM_ToggleFullScreen(m_screen) != 0) {
+    assert(false);
     /* hum */
-  }
+  //}
 }
 
 FontManager::FontManager(DrawLib *i_drawLib,

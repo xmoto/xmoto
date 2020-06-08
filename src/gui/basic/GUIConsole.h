@@ -54,7 +54,7 @@ public:
   void setHook(UIConsoleHook *i_hook);
   virtual void paint();
   virtual bool offerActivation();
-  virtual bool keyDown(int nKey, SDLMod mod, const std::string &i_utf8Char);
+  virtual bool keyDown(int nKey, SDL_Keymod mod, const std::string &i_utf8Char);
   void giveAnswer(const std::string &i_line);
   void reset(const std::string &i_cmd = ""); /* command to run at startup */
   void execCommand(const std::string &i_action);

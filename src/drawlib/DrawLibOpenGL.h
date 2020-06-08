@@ -101,6 +101,9 @@ public:
 
   virtual Img *grabScreen(int i_reduce = 1);
   virtual bool isExtensionSupported(std::string Ext);
+
+private:
+  SDL_GLContext m_glContext;
 };
 
 #endif

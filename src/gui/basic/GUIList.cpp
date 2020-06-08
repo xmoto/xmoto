@@ -908,7 +908,7 @@ void UIList::eventRight() {
 /*===========================================================================
 Up/down keys select elements
 ===========================================================================*/
-bool UIList::keyDown(int nKey, SDLMod mod, const std::string &i_utf8Char) {
+bool UIList::keyDown(int nKey, SDL_Keymod mod, const std::string &i_utf8Char) {
   switch (nKey) {
     case SDLK_RETURN:
       eventGo();

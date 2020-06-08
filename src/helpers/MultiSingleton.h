@@ -21,7 +21,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #ifndef __MULTISINGLETON_H__
 #define __MULTISINGLETON_H__
 
-#include <SDL/SDL_mutex.h>
+#include "include/xm_SDL.h"
 #include <map>
 #include <string>
 

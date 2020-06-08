@@ -1,6 +1,6 @@
 option(STATIC_BUILD "Build a static executable" OFF)
 option(USE_OPENGL "Build with OpenGL for graphics" ON)
-option(USE_SDLGFX "Build with SDL for graphics" OFF)
+option(USE_SDLGFX "Build with SDL2 for graphics" OFF)
 option(USE_GETTEXT "Build with Gettext for internationalization" ON)
 option(PREFER_SYSTEM_BZip2 "Prefer system BZip2" ON)
 option(PREFER_SYSTEM_Lua "Prefer system Lua" ON)
@@ -49,10 +49,13 @@ endif()
 
 # Can't disable yet
 if(ON OR USE_SDLGFX)
-  find_package(SDL REQUIRED)
-  find_package(SDL_mixer REQUIRED)
-  find_package(SDL_net REQUIRED)
-  find_package(SDL_ttf REQUIRED)
+  find_package(SDL2 REQUIRED)
+  find_package(SDL2_mixer REQUIRED)
+  find_package(SDL2_net REQUIRED)
+  find_package(SDL2_ttf REQUIRED)
+  if("${SDL2_LIBRARIES}" STREQUAL "")
+    set(SDL2_LIBRARIES SDL2::SDL2)
+  endif()
 endif()
 
 find_package(SQLITE3 REQUIRED)
@@ -420,10 +423,10 @@ target_link_libraries(xmoto PUBLIC
   ${CMAKE_DL_LIBS}
   ${OPENGL_LIBRARIES}
   ${PNG_LIBRARY}
-  ${SDL_LIBRARY}
-  ${SDLMIXER_LIBRARY}
-  ${SDLNET_LIBRARY}
-  ${SDLTTF_LIBRARY}
+  ${SDL2_LIBRARIES}
+  ${SDL2_MIXER_LIBRARY}
+  ${SDL2_NET_LIBRARY}
+  ${SDL2_TTF_LIBRARY}
   ${SQLITE3_LIBRARIES}
   $<${USE_SYSTEM_XDG}:${XDG_LIBRARY}>
   $<$<NOT:${USE_SYSTEM_XDG}>:xdgbasedir>
@@ -626,23 +629,23 @@ else()
   )
 endif()
 
-message("BZip2     libraries: ${BZIP2_LIBRARIES}")
-message("Curl      libraries: ${CURL_LIBRARIES}")
-message("Intl      libraries: ${Intl_LIBRARIES}")
-message("Jpeg      libraries: ${JPEG_LIBRARIES}")
-message("LibXml2   libraries: ${LIBXML2_LIBRARIES}")
-message("LibLZMA   libraries: ${LIBLZMA_LIBRARIES}")
-message("Lua       librarues: ${LUA_LIBRARIES}")
-message("Ode       libraries: ${ODE_LIBRARY}")
-message("OpenGL    libraries: ${OPENGL_LIBRARIES}")
-message("Png       libraries: ${PNG_LIBRARY}")
-message("SDL       libraries: ${SDL_LIBRARY}")
-message("SDL_mixer libraries: ${SDLMIXER_LIBRARY}")
-message("SDL_net   libraries: ${SDLNET_LIBRARY}")
-message("SDL_ttf   libraries: ${SDLTTF_LIBRARY}")
-message("Sqlite3   libraries: ${SQLITE3_LIBRARIES}")
-message("Xdg       libraries: ${XDG_LIBRARY}")
-message("Zlib      libraries: ${ZLIB_LIBRARIES}")
+message("BZip2      libraries: ${BZIP2_LIBRARIES}")
+message("Curl       libraries: ${CURL_LIBRARIES}")
+message("Intl       libraries: ${Intl_LIBRARIES}")
+message("Jpeg       libraries: ${JPEG_LIBRARIES}")
+message("LibXml2    libraries: ${LIBXML2_LIBRARIES}")
+message("LibLZMA    libraries: ${LIBLZMA_LIBRARIES}")
+message("Lua        librarues: ${LUA_LIBRARIES}")
+message("Ode        libraries: ${ODE_LIBRARY}")
+message("OpenGL     libraries: ${OPENGL_LIBRARIES}")
+message("Png        libraries: ${PNG_LIBRARY}")
+message("SDL2       libraries: ${SDL2_LIBRARIES}")
+message("SDL2_mixer libraries: ${SDL2_MIXER_LIBRARY}")
+message("SDL2_net   libraries: ${SDL2_NET_LIBRARY}")
+message("SDL2_ttf   libraries: ${SDL2_TTF_LIBRARY}")
+message("Sqlite3    libraries: ${SQLITE3_LIBRARIES}")
+message("Xdg        libraries: ${XDG_LIBRARY}")
+message("Zlib       libraries: ${ZLIB_LIBRARIES}")
 message("")
 
 message("Installation path: ${CMAKE_INSTALL_PREFIX}")
