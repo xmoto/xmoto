@@ -866,7 +866,6 @@ void GameApp::manageEvent(SDL_Event *Event) {
             const uint8_t* keys = SDL_GetKeyboardState(NULL);
             bool b = InputHandler::instance()->getPlayerKey(INPUT_DRIVE, 0)->isPressed(keys, 0);
 
-            auto timerStart = std::chrono::system_clock::now();
 #if 0
             // invalidate all pressed keys
             {
@@ -880,9 +879,6 @@ void GameApp::manageEvent(SDL_Event *Event) {
               }
             }
 #endif
-            auto timerEnd = std::chrono::system_clock::now();
-            double elapsed = std::chrono::duration_cast<std::chrono::milliseconds>(timerEnd - timerStart).count();
-            printf("[Timer]: elapsed: %.3fms\n", elapsed);
           }
 
           break;
