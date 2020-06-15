@@ -21,7 +21,8 @@ Download and install the game from https://xmoto.tuxfamily.org
 See the wiki:
 - [Windows](https://github.com/xmoto/xmoto/wiki/Building-on-Windows)
 - [Linux](https://github.com/xmoto/xmoto/wiki/Building-on-Linux)
-- macOS and FreeBSD are *temporarily* not supported.
+- [macOS](https://github.com/xmoto/xmoto/wiki/Building-on-macOS)
+- [FreeBSD](https://github.com/xmoto/xmoto/wiki/Building-on-FreeBSD)
 
 # Basic Gameplay
 
