@@ -3,7 +3,8 @@
 set -ex
 
 mkdir build && cd build
-cmake -DBUILD_MACOS_BUNDLE=ON -G Ninja ..
+cmake -DCMAKE_BUILD_TYPE=Release \
+      -DBUILD_MACOS_BUNDLE=ON -G Ninja ..
 ninja
 
 # Homebrew on Catalina (10.15) sets inconsistent permissions on dylibs
