@@ -32,6 +32,11 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include <stdarg.h>
 #include <sys/stat.h>
 
+#if BUILD_MACOS_BUNDLE
+#include <CoreFoundation/CoreFoundation.h>
+#include <limits.h> /* PATH_MAX */
+#endif
+
 #include "VFileIO.h"
 #include "helpers/Log.h"
 #include "helpers/SwapEndian.h"
@@ -1285,6 +1290,24 @@ void XMFS::init(const std::string &AppDir,
     m_UserDataDirUTF8 = m_UserDataDir;
   }
 
+#if BUILD_MACOS_BUNDLE
+  CFBundleRef bundle = CFBundleGetMainBundle();
+  CFURLRef res = CFBundleCopyResourcesDirectoryURL(bundle);
+  char path[PATH_MAX];
+  if (!CFURLGetFileSystemRepresentation(res, TRUE, (uint8_t*)path, PATH_MAX)) {
+      throw Exception("Failed to get bundle path");
+  }
+  CFRelease(res);
+
+  char real[PATH_MAX];
+  std::string bundleResDir = std::string(realpath(path, real));
+  m_SystemDataDir = bundleResDir;
+  if (isDir(m_SystemDataDir)) {
+    m_bGotSystemDataDir = true;
+  } // otherwise try falling back to the system-wide one
+
+  m_SystemLocaleDir = m_SystemDataDir + "/locale";
+#else
   /* And the data dir? */
   for (char const *const *c_dir = xdgDataDirectories(m_xdgHd); *c_dir != NULL;
        c_dir++) {
@@ -1317,6 +1340,7 @@ void XMFS::init(const std::string &AppDir,
   m_SystemLocaleDir = m_SystemDataDir + "/locale";
   m_SystemDataDir = m_SystemDataDir + "/xmoto";
 #endif
+#endif /* Assume unix-like */
 
   bool v_requireMigration = false;
 

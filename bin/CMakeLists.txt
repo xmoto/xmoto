@@ -18,6 +18,30 @@ if(WIN32)
   install(FILES "${CMAKE_CURRENT_BINARY_DIR}/xmoto.bin" DESTINATION "./")
   install(DIRECTORY Textures/Musics DESTINATION ./Textures)
   install(DIRECTORY Textures/Fonts DESTINATION ./Textures)
+elseif(BUILD_MACOS_BUNDLE)
+  install(CODE "
+  set(RESOURCES_DIR_PATH
+    \"\${CMAKE_INSTALL_PREFIX}/xmoto.app/Contents/Resources\")
+
+  execute_process(COMMAND \"\${CMAKE_COMMAND}\"
+    -E copy
+    \"${CMAKE_CURRENT_BINARY_DIR}/xmoto.bin\"
+    \"\${RESOURCES_DIR_PATH}/xmoto.bin\"
+  )
+
+  # Musics
+  execute_process(COMMAND \"\${CMAKE_COMMAND}\"
+    -E copy_directory
+    \"${CMAKE_CURRENT_SOURCE_DIR}/Textures/Musics\"
+    \"\${RESOURCES_DIR_PATH}/Textures/Musics\"
+  )
+  # Fonts
+  execute_process(COMMAND \"\${CMAKE_COMMAND}\"
+    -E copy_directory
+    \"${CMAKE_CURRENT_SOURCE_DIR}/Textures/Fonts\"
+    \"\${RESOURCES_DIR_PATH}/Textures/Fonts\"
+  )
+  ")
 else()
   install(FILES "${CMAKE_CURRENT_BINARY_DIR}/xmoto.bin" DESTINATION share/xmoto)
   install(DIRECTORY Textures/Musics DESTINATION share/xmoto/Textures)
