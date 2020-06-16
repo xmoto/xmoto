@@ -1,18 +1,26 @@
 set(XMOTO_PACK "always" CACHE STRING "When to build xmoto.bin")
 set_property(CACHE XMOTO_PACK PROPERTY STRINGS "manual" "always")
 
-add_custom_command(
-  OUTPUT xmoto.bin
-  #COMMAND xmoto --pack xmoto.bin "${CMAKE_CURRENT_SOURCE_DIR}"
-  #COMMAND echo "PROJECT_BINARY_DIR: ${PROJECT_BINARY_DIR}\nCMAKE_CURRENT_SOURCE_DIR: ${CMAKE_CURRENT_SOURCE_DIR}"
-  #COMMAND whereis wine
-  #COMMAND bash -c wine
-  COMMAND ${CMAKE_COMMAND} -E env DISPLAY=:0.0 wine "${PROJECT_BINARY_DIR}/src/xmoto.exe" --pack xmoto.bin "${CMAKE_CURRENT_SOURCE_DIR}"
-  MAIN_DEPENDENCY package.lst
-  COMMENT "Packing xmoto.bin"
-)
+if(WIN32 AND CMAKE_CROSSCOMPILING)
+  add_custom_command(
+    OUTPUT xmoto.bin
+    # setting DISPLAY=:0.0 for travis
+    COMMAND ${CMAKE_COMMAND} -E env DISPLAY=:0.0 wine
+            "${PROJECT_BINARY_DIR}/src/xmoto.exe"
+            --pack xmoto.bin "${CMAKE_CURRENT_SOURCE_DIR}"
+    MAIN_DEPENDENCY package.lst
+    COMMENT "Packing xmoto.bin"
+  )
+else()
+  add_custom_command(
+    OUTPUT xmoto.bin
+    COMMAND xmoto --pack xmoto.bin "${CMAKE_CURRENT_SOURCE_DIR}"
+    MAIN_DEPENDENCY package.lst
+    COMMENT "Packing xmoto.bin"
+  )
+endif()
 
-if (XMOTO_PACK STREQUAL "always")
+if(XMOTO_PACK STREQUAL "always")
   add_custom_target(xmoto_pack ALL DEPENDS xmoto.bin)
 else()
   add_custom_target(xmoto_pack DEPENDS xmoto.bin)
