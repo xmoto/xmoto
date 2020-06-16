@@ -8,17 +8,23 @@ matrix:
       sudo: required
       install: ".travis/linux/deps.sh"
       script: ".travis/linux/build.sh"
+
     - os: osx
       sudo: required # see the build script...
       osx_image: xcode10.1 # =10.13/high sierra
       install: ".travis/macos/deps.sh"
       script: ".travis/macos/build.sh"
+      cache:
+        directories:
+          - $HOME/Library/Caches/Homebrew
+      before_cache:
+        - brew cleanup
 
-cache:
-  directories:
-    - $HOME/Library/Caches/Homebrew
-before_cache:
-  - brew cleanup
+    - os: linux
+      dist: bionic
+      name: "Linux MXE"
+      install: ".travis/linux-mxe/deps.sh"
+      script: ".travis/linux-mxe/build.sh"
 
 deploy:
   provider: releases
@@ -28,8 +34,10 @@ deploy:
     - 'xmoto-0.6.0.deb'
     - 'xmoto-0.6.0.rpm'
     - 'xmoto-0.6.0.dmg'
+    - 'xmoto-0.6.0-setup.exe'
+    - 'xmoto-0.6.0-win32.zip'
   skip_cleanup: true
   on:
-    branch: "release"
+    branch: "prep-for-release"
     tags: true
 

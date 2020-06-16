@@ -3,7 +3,11 @@ set_property(CACHE XMOTO_PACK PROPERTY STRINGS "manual" "always")
 
 add_custom_command(
   OUTPUT xmoto.bin
-  COMMAND xmoto --pack xmoto.bin "${CMAKE_CURRENT_SOURCE_DIR}"
+  #COMMAND xmoto --pack xmoto.bin "${CMAKE_CURRENT_SOURCE_DIR}"
+  #COMMAND echo "PROJECT_BINARY_DIR: ${PROJECT_BINARY_DIR}\nCMAKE_CURRENT_SOURCE_DIR: ${CMAKE_CURRENT_SOURCE_DIR}"
+  #COMMAND whereis wine
+  #COMMAND bash -c wine
+  COMMAND ${CMAKE_COMMAND} -E env DISPLAY=:0.0 wine "${PROJECT_BINARY_DIR}/src/xmoto.exe" --pack xmoto.bin "${CMAKE_CURRENT_SOURCE_DIR}"
   MAIN_DEPENDENCY package.lst
   COMMENT "Packing xmoto.bin"
 )
