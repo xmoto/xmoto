@@ -1300,11 +1300,12 @@ void XMFS::init(const std::string &AppDir,
   CFRelease(res);
 
   char real[PATH_MAX];
-  std::string bundleResDir = std::string(realpath(path, real));
-  m_SystemDataDir = bundleResDir;
-  if (isDir(m_SystemDataDir)) {
+  m_SystemDataDir = std::string(realpath(path, real));
+  if (!isDir(m_SystemDataDir)) {
+    throw Exception("Bundle path doesn't exist: " + m_SystemDataDir);
+  } else {
     m_bGotSystemDataDir = true;
-  } // otherwise try falling back to the system-wide one
+  }
 
   m_SystemLocaleDir = m_SystemDataDir + "/locale";
 #else
