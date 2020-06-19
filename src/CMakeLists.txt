@@ -39,8 +39,13 @@ if(USE_OPENGL)
 endif()
 find_package(PNG REQUIRED)
 
-find_package(Lua51)
+find_package(Lua)
 set(USE_SYSTEM_Lua $<AND:$<BOOL:${PREFER_SYSTEM_Lua}>,$<BOOL:${LUA51_FOUND}>,$<NOT:$<BOOL:${WIN32}>>>)
+if (NOT LUA_VERSION_STRING VERSION_LESS 5.2 AND LUA_VERSION_STRING VERSION_LESS 5.3)
+    add_definitions("-DLUA_COMPAT_ALL")
+elseif (LUA_VERSION_STRING VERSION_GREATER_EQUAL "5.3")
+    add_definitions("-DLUA_COMPAT_5_1")
+endif()
 
 # Can't disable yet
 if(ON OR USE_SDLGFX)

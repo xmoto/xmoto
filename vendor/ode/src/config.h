@@ -92,7 +92,9 @@
 #define HAVE_MALLOC 1
 
 /* Define to 1 if you have the <malloc.h> header file. */
+#if !(defined(__APPLE__) || defined(__FreeBSD__))
 #define HAVE_MALLOC_H 1
+#endif
 
 /* Define to 1 if you have the <math.h> header file. */
 #define HAVE_MATH_H 1

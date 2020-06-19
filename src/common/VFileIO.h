@@ -101,7 +101,7 @@ public:
 
   static void deleteFile(FileDataType i_fdt, const std::string &File);
 
-  static FileHandle *openOFile(FileDataType i_fdt, std::string Path);
+  static FileHandle *openOFile(FileDataType i_fdt, const std::string &Path);
   static FileHandle *openIFile(FileDataType i_fdt,
                                std::string Path,
                                bool i_includeCurrentDir = false);
@@ -134,11 +134,11 @@ public:
   static void writeInt(FileHandle *pfh, int v);
   static void writeFloat(FileHandle *pfh, float v);
   static void writeDouble(FileHandle *pfh, double v);
-  static void writeString(FileHandle *pfh, std::string v);
-  static void writeLongString(FileHandle *pfh, std::string v);
+  static void writeString(FileHandle *pfh, const std::string &v);
+  static void writeLongString(FileHandle *pfh, const std::string &v);
   static void writeBool(FileHandle *pfh, bool v);
 
-  static void writeLine(FileHandle *pfh, std::string Line);
+  static void writeLine(FileHandle *pfh, const std::string &Line);
   static void writeLineF(FileHandle *pfh, char *pcFmt, ...);
 
   /* Endian-safe helpers */
@@ -160,15 +160,16 @@ public:
   static int fillBuffer(FileHandle *pfh);
 
   /* File name mangling */
-  static std::string getFileDir(std::string Path);
-  static std::string getFileBaseName(std::string Path);
+  static std::string getFileDir(const std::string &Path);
+  static std::string getFileBaseName(const std::string &Path);
   static std::string getFileExtension(
-    std::string Path); // do not require FS initialization
+    const std::string &Path); // do not require FS initialization
 
   /* Misc */
-  static bool isDir(std::string AppDir);
+  static bool isDir(const std::string &AppDir);
+
   static int getFileTimeStamp(const std::string &Path);
-  static bool isPathAbsolute(std::string Path);
+  static bool isPathAbsolute(const std::string &Path);
 
   static int mkDir(const char *pcPath);
 
@@ -186,18 +187,18 @@ public:
     return m_UserDataDir + std::string("/Levels");
   }
 
-  static bool doesRealFileOrDirectoryExists(std::string p_path);
-  static bool isFileReadable(FileDataType i_fdt, std::string p_filename);
-  static bool fileExists(FileDataType i_fdt, std::string p_filename);
-  static void mkArborescence(std::string v_filepath);
-  static void mkArborescenceDir(std::string v_dirpath);
+  static bool doesRealFileOrDirectoryExists(const std::string &p_path);
+  static bool isFileReadable(FileDataType i_fdt, const std::string &p_filename);
+  static bool fileExists(FileDataType i_fdt, const std::string &p_filename);
+  static void mkArborescence(const std::string &v_filepath);
+  static void mkArborescenceDir(const std::string &v_dirpath);
 
   // return true if p_filepath is a path from user dir
-  static bool isInUserDir(FileDataType i_fdt, std::string p_filepath);
-  static bool isFileInDir(std::string p_dirpath, std::string p_filepath);
+  static bool isInUserDir(FileDataType i_fdt, const std::string &p_filepath);
+  static bool isFileInDir(const std::string &p_dirpath, const std::string &p_filepath);
 
   /* return false if the file is in the package */
-  static bool isFileReal(std::string i_filePath);
+  static bool isFileReal(const std::string &i_filePath);
   static std::string md5sum(FileDataType i_fdt, std::string i_filePath);
 
   /* return user_dir + i_relative_path if exists or data_dir + i_relative_path
@@ -217,7 +218,7 @@ private:
 #endif
 
   /* Helper functions */
-  static void _ThrowFileError(FileHandle *pfh, std::string Description);
+  static void _ThrowFileError(FileHandle *pfh, const std::string &Description);
   static void _FindFilesRecursive(const std::string &Dir,
                                   const std::string &Wildcard,
                                   std::vector<std::string> &List);
