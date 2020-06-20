@@ -11,7 +11,7 @@
 	<key>CFBundleExecutable</key>
 	<string>xmoto</string>
 	<key>CFBundleIconFile</key>
-	<string>xmoto.icns</string>
+	<string>X-Moto.icns</string>
 	<key>CFBundleIdentifier</key>
 	<string>net.sourceforge.xmoto</string>
 	<key>CFBundleInfoDictionaryVersion</key>
@@ -23,7 +23,7 @@
 	<key>CFBundleVersion</key>
 	<string>%VERS%</string>
 	<key>NSHumanReadableCopyright</key>
-	<string>© 2005-2006 Rasmus Neckelmann</string>
+	<string>© 2005-2020</string>
 	<key>NSPrincipalClass</key>
 	<string>NSApplication</string>
 </dict>

@@ -7,6 +7,7 @@ option(PREFER_SYSTEM_Lua "Prefer system Lua" ON)
 option(PREFER_SYSTEM_ODE "Prefer system ODE" ON)
 option(PREFER_SYSTEM_XDG "Prefer system XDG" ON)
 option(ALLOW_DEV "Enable some development/debug features" OFF)
+option(BUILD_MACOS_BUNDLE "Build xmoto as a macOS Bundle" OFF)
 
 if(CMAKE_GENERATOR MATCHES "Ninja")
   message("-- Using Ninja, try to colorize")
@@ -359,6 +360,13 @@ set(xmscene_src
   xmscene/Zone.h
 )
 
+set(XMOTO_MACOS_ICON ${PROJECT_SOURCE_DIR}/extra/X-Moto.icns)
+
+set_source_files_properties(
+  ${XMOTO_MACOS_ICON} PROPERTIES
+  MACOSX_PACKAGE_LOCATION Resources
+)
+
 #if(STATIC_BUILD)
   #set(CMAKE_FIND_LIBRARY_SUFFIXES ".a")
   #set(BUILD_SHARED_LIBRARIES OFF)
@@ -380,7 +388,14 @@ add_executable(xmoto
   ${xmoto_src}
   ${xmscene_src}
   $<$<PLATFORM_ID:Windows>:${PROJECT_SOURCE_DIR}/extra/xmoto.rc>
+  $<$<PLATFORM_ID:Darwin>:${XMOTO_MACOS_ICON}>
 )
+
+if(NOT APPLE AND BUILD_MACOS_BUNDLE)
+  message(FATAL_ERROR "Can't build a macOS bundle for non-macOS platforms")
+elseif(APPLE AND BUILD_MACOS_BUNDLE)
+  set_property(TARGET xmoto PROPERTY MACOSX_BUNDLE TRUE)
+endif()
 
 target_include_directories(xmoto
   PRIVATE
@@ -450,6 +465,7 @@ target_compile_definitions(xmoto PUBLIC USE_OPENGL=$<BOOL:${USE_OPENGL}>)
 target_compile_definitions(xmoto PUBLIC USE_SDLGFX=$<BOOL:${USE_SDLGFX}>)
 target_compile_definitions(xmoto PUBLIC USE_GETTEXT=$<BOOL:${USE_GETTEXT}>)
 target_compile_definitions(xmoto PUBLIC ALLOW_DEV=$<BOOL:${ALLOW_DEV}>)
+target_compile_definitions(xmoto PUBLIC BUILD_MACOS_BUNDLE=$<BOOL:${BUILD_MACOS_BUNDLE}>)
 
 target_compile_definitions(xmoto PUBLIC $<$<BOOL:${STATIC_BUILD}>:CURL_STATICLIB>)
 target_compile_definitions(xmoto PUBLIC $<$<BOOL:${STATIC_BUILD}>:LIBXML_STATIC>)
@@ -491,8 +507,10 @@ if(USE_GETTEXT AND GETTEXT_MSGMERGE_EXECUTABLE AND GETTEXT_MSGFMT_EXECUTABLE)
     target_sources(xmoto PRIVATE "${mo}")
     source_group("i18n\\\\generated" FILES "${mo}")
 
-    if(CMAKE_SYSTEM_NAME STREQUAL "Darwin")
-      set_source_files_properties("${mo}" PROPERTIES MACOSX_PACKAGE_LOCATION "Resources/${lang}.lproj")
+    if(BUILD_MACOS_BUNDLE AND CMAKE_SYSTEM_NAME STREQUAL "Darwin")
+      set_source_files_properties("${mo}" PROPERTIES
+        MACOSX_PACKAGE_LOCATION "Resources/locale/${lang}/LC_MESSAGES"
+      )
     else()
       install(FILES "${mo}" DESTINATION share/locale/${lang}/LC_MESSAGES)
 
@@ -620,10 +638,10 @@ if(WIN32)
     )
     win32_run_script("${STRIP_DLLS_CMD}" "${STRIP_DLLS_ARGS}" IS_MSYS2)
   endif()
-else()
-  install(TARGETS xmoto
-    RUNTIME DESTINATION bin
-  )
+elseif(NOT BUILD_MACOS_BUNDLE)
+  # for macOS bundles, this is set in cpack/macos.cmake
+  # because otherwise fixup_bundle() would complain
+  install(TARGETS xmoto RUNTIME DESTINATION bin)
 endif()
 
 message("BZip2     libraries: ${BZIP2_LIBRARIES}")
@@ -632,7 +650,7 @@ message("Intl      libraries: ${Intl_LIBRARIES}")
 message("Jpeg      libraries: ${JPEG_LIBRARIES}")
 message("LibXml2   libraries: ${LIBXML2_LIBRARIES}")
 message("LibLZMA   libraries: ${LIBLZMA_LIBRARIES}")
-message("Lua       librarues: ${LUA_LIBRARIES}")
+message("Lua       libraries: ${LUA_LIBRARIES}")
 message("Ode       libraries: ${ODE_LIBRARY}")
 message("OpenGL    libraries: ${OPENGL_LIBRARIES}")
 message("Png       libraries: ${PNG_LIBRARY}")

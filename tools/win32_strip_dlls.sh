@@ -1,4 +1,4 @@
-#!/usr/bin/sh
+#!/bin/sh
 
 # A simple script to `strip` all DLL files in the specified folder
 
