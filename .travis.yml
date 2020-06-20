@@ -1,38 +1,41 @@
 language: cpp
 dist: bionic
 
-before_install:
-  - sudo apt-get install -y ninja-build
-  - sudo apt-get install -y curl
-  - sudo apt-get install -y libsqlite3-dev libjpeg-dev libbz2-dev liblua5.1-0-dev zlib1g-dev libpng-dev libglu1-mesa-dev
-  - sudo apt-get install -y libcurl3-openssl-dev libxdg-basedir-dev libxml2-dev
-  - sudo apt-get install -y libsdl1.2-dev libsdl-mixer1.2-dev libsdl-ttf2.0-dev libsdl-net1.2-dev
-  - sudo apt-get install -y libgl1-mesa-dev rpm
-  
-script:
-  - mkdir build && cd $_
-  - mkdir -p /tmp/xminstall
-  - cmake -DCMAKE_INSTALL_PREFIX=/tmp/xminstall -G Ninja ..
-  - ninja
-  - ninja xmoto_pack
-  - ninja install
-  - cpack -G "DEB"
-  - cpack -G "RPM"
- 
+matrix:
+  include:
+    - os: linux
+      dist: bionic
+      install: ".travis/linux/deps.sh"
+      script: ".travis/linux/build.sh"
+
+    - os: osx
+      osx_image: xcode10.1 # =10.13/high sierra
+      install: ".travis/macos/deps.sh"
+      script: ".travis/macos/build.sh"
+      cache:
+        directories:
+          - $HOME/Library/Caches/Homebrew
+      before_cache:
+        - brew cleanup
+
+    - os: linux
+      dist: bionic
+      name: "Linux MXE"
+      install: ".travis/linux-mxe/deps.sh"
+      script: ".travis/linux-mxe/build.sh"
+
 deploy:
   provider: releases
   api_key:
     secure: "XjHXrtaq9VSLL/zA1BKnrFNHrDuz4WUtn9JJs0EnngUt6zjw1q4Z2suVIw4iXWXkblWLIuA+HHXbM0RsiKHvc8FLFuZWpVkV/hz/AXLEZ40Yn+hW3b3z1zaNXFotXiKC+gmJcOgVo3/BQst1dG3gmUv2IM3JhYa4I3jzR9q5AqSqWbH8B1UdpB46St7D27kGdqt6tJAHZtKmyYRP7GfgeIVrCoOrhvgpFgzrj4p2yKy5voQWulXpyRyooaGOfXMzkcFzsiZLbJhLm3BaiFUOyRINufijjeDlyX5Df05a5x6uVxTZfjLFOyfzxTPpI/fMqNoYlRqvheoMVjGAu3s+e3KvllMM4hxD2M0J6WFV6beyzJqIwgR7Z3wgac5E2RJfQYo3S4V2SlKUAxqx4KXdQAiJ3VqdlE8V6p4eyoPIQFrJpsUfUye4d5rKj/U3SOD9OP9PDqNUEzzdwxYh4V0qexHJnegw4BOHIqIS+yr/fv2thJ27/mghG6a4rqxwbhANL7B3ZUVkFh6X+lW9lqsI+HQViJj7KbrFZNsg3rN6vwtfJsEPJctdvC26Dl8+A8vJWTQwPkiMJJSqliakR2P3XPuRRvHc28Q1tqytuVEJAJvF2/yGnGWauFLtI1D1yWlfMCNHnWftFUA3pXwr3DQoc7agKiBQjS+LU+Z58gGYB7o="
-  file: 
+  file:
     - 'xmoto-0.6.0.deb'
     - 'xmoto-0.6.0.rpm'
+    - 'xmoto-0.6.0.dmg'
+    - 'xmoto-0.6.0-setup.exe'
+    - 'xmoto-0.6.0-win32.zip'
   skip_cleanup: true
   on:
     branch: "release"
     tags: true
- 
-addons:
-apt:
-  update: true
-  packages:
-  - cmake
+
