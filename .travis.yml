@@ -38,6 +38,6 @@ deploy:
     - 'xmoto-0.6.0-win32.zip'
   skip_cleanup: true
   on:
-    branch: "prep-for-release"
+    branch: "release"
     tags: true
 
