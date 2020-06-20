@@ -5,12 +5,10 @@ matrix:
   include:
     - os: linux
       dist: bionic
-      sudo: required
       install: ".travis/linux/deps.sh"
       script: ".travis/linux/build.sh"
 
     - os: osx
-      sudo: required # see the build script...
       osx_image: xcode10.1 # =10.13/high sierra
       install: ".travis/macos/deps.sh"
       script: ".travis/macos/build.sh"
