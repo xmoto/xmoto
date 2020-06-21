@@ -32,6 +32,6 @@ deploy:
   file: "build/artifacts/*"
   skip_cleanup: true
   on:
-    branch: "staging"
+    branch: "release"
     tags: true
 
