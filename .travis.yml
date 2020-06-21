@@ -7,9 +7,6 @@ matrix:
       dist: bionic
       install: ".travis/linux/deps.sh"
       script: ".travis/linux/build.sh"
-      before_deploy:
-        - echo $TRAVIS_BUILD_DIR/build
-        - ls $TRAVIS_BUILD_DIR
 
     - os: osx
       osx_image: xcode10.1 # =10.13/high sierra
