@@ -85,4 +85,7 @@ fix_pkg_name() {
 for pkg in xmoto-*.zip; do fix_pkg_name "$pkg" "win32"; done
 for pkg in xmoto-*.exe; do fix_pkg_name "$pkg" "setup"; done
 
+mkdir artifacts
+mv xmoto-*.exe artifacts/
+mv xmoto-*.zip artifacts/
 
