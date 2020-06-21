@@ -1,4 +1,4 @@
-# X-Moto 0.6.0 [![Build Status](https://travis-ci.org/xmoto/xmoto.svg?branch=master)](https://travis-ci.org/xmoto/xmoto)
+# X-Moto 0.6.1 [![Build Status](https://travis-ci.org/xmoto/xmoto.svg?branch=master)](https://travis-ci.org/xmoto/xmoto)
 Copyright (C) 2005-2020
 
 # Introduction

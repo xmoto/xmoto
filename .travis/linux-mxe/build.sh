@@ -81,8 +81,11 @@ fix_pkg_name() {
   mv "$file" "${file%.$ext}-$2${ext:+.${ext}}"
 }
 
-# add -win32 to .zip files, and -setup to .exe files
+# add -win32 to .zip files, and -win32-setup to .exe files
 for pkg in xmoto-*.zip; do fix_pkg_name "$pkg" "win32"; done
-for pkg in xmoto-*.exe; do fix_pkg_name "$pkg" "setup"; done
+for pkg in xmoto-*.exe; do fix_pkg_name "$pkg" "win32-setup"; done
 
+mkdir artifacts
+mv xmoto-*.exe artifacts/
+mv xmoto-*.zip artifacts/
 

@@ -12,3 +12,6 @@ ninja
 sudo \
   cpack -G DragNDrop
 
+mkdir artifacts
+mv xmoto-*.dmg artifacts/
+
