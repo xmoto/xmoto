@@ -14,5 +14,6 @@ include(cpack/cpack.cmake)
 include(CPack)
 
 add_subdirectory(bin)
+add_subdirectory(doc)
 add_subdirectory(extra)
 #add_subdirectory(po)
