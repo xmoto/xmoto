@@ -13,3 +13,7 @@ ninja install
 cpack -G "DEB"
 cpack -G "RPM"
 
+mkdir artifacts
+mv xmoto-*.deb artifacts/
+mv xmoto-*.rpm artifacts/
+
