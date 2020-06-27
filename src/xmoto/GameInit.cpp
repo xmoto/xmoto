@@ -768,14 +768,14 @@ void GameApp::manageEvent(SDL_Event *Event) {
       // printf("%i - %i\n", Event->key.keysym.sym, utf8Char.c_str()[0]);
       StateManager::instance()->xmKey(
         INPUT_DOWN,
-        XMKey(Event->key.keysym.sym, Event->key.keysym.mod, utf8Char));
+        XMKey(Event->key.keysym.sym, (SDL_Keymod)Event->key.keysym.mod, utf8Char));
       break;
     case SDL_KEYUP:
       // TODO:
       utf8Char = unicode2utf8(Event->key.keysym.sym); // this is a hack and DOES NOT SUPPORT UNICODE!!
       StateManager::instance()->xmKey(
         INPUT_UP,
-        XMKey(Event->key.keysym.sym, Event->key.keysym.mod, utf8Char));
+        XMKey(Event->key.keysym.sym, (SDL_Keymod)Event->key.keysym.mod, utf8Char));
 
       printf("%s [%s]\n", sdlEventEnumTable(Event->type), SDL_GetKeyName(Event->key.keysym.sym));
       printf("kbd focus?: %s\n", m_hasKeyboardFocus ? "yes" : "no");
