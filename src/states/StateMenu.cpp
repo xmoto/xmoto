@@ -96,6 +96,9 @@ void StateMenu::xmKey(InputEventType i_type, const XMKey &i_xmkey) {
       case INPUT_UP:
         m_GUI->keyUp(v_nKey, v_mod, v_utf8Char);
         break;
+      case INPUT_TEXT:
+        m_GUI->textInput(v_nKey, v_mod, v_utf8Char);
+        break;
     }
     checkEvents();
   }

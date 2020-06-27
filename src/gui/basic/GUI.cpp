@@ -405,6 +405,19 @@ void UIMsgBox::paint(void) {
   }
 }
 
+bool UIMsgBox::textInput(int nKey, SDL_Keymod mod, const std::string &i_utf8Char) {
+  if (utf8::utf8_length(i_utf8Char) == 1) { // alt/... and special keys must not be kept
+    if (i_utf8Char[0] != '\n') { // you can generate ascii 10 with
+      // ctrl+j or keyboard having new line
+      // key
+      m_TextInput_fake = utf8::utf8_concat(m_TextInput_fake, i_utf8Char);
+      m_TextInput_real = m_TextInput_fake;
+    }
+  }
+
+  return true;
+}
+
 bool UIMsgBox::keyDown(int nKey, SDL_Keymod mod, const std::string &i_utf8Char) {
   switch (nKey) {
     case SDLK_ESCAPE:
@@ -422,8 +435,7 @@ bool UIMsgBox::keyDown(int nKey, SDL_Keymod mod, const std::string &i_utf8Char) 
       if (m_bTextInput) {
         switch (nKey) {
           case SDLK_BACKSPACE:
-            m_TextInput_real =
-              m_TextInput_fake; // valid completion if in competion
+            m_TextInput_real = m_TextInput_fake; // valid completion if in competion
             if (m_TextInput_real != "") {
               m_TextInput_fake = utf8::utf8_delete(
                 m_TextInput_fake, utf8::utf8_length(m_TextInput_fake));
@@ -434,16 +446,6 @@ bool UIMsgBox::keyDown(int nKey, SDL_Keymod mod, const std::string &i_utf8Char) 
             showMatch();
             return true;
           default:
-            if (utf8::utf8_length(i_utf8Char) ==
-                1) { // alt/... and special keys must not be kept
-              if (i_utf8Char[0] != '\n') { // you can generate ascii 10 with
-                // ctrl+j or keyboard having new line
-                // key
-                m_TextInput_fake =
-                  utf8::utf8_concat(m_TextInput_fake, i_utf8Char);
-                m_TextInput_real = m_TextInput_fake;
-              }
-            }
             return true;
         }
       }
@@ -1198,6 +1200,10 @@ bool UIRoot::keyUp(int nKey, SDL_Keymod mod, const std::string &i_utf8Char) {
   return _RootKeyEvent(this, UI_ROOT_KEY_UP, nKey, mod, i_utf8Char);
 }
 
+bool UIRoot::textInput(int nKey, SDL_Keymod mod, const std::string &i_utf8Char) {
+  return _RootKeyEvent(this, UI_ROOT_TEXT_INPUT, 0, (SDL_Keymod)0, i_utf8Char);
+}
+
 bool UIRoot::_RootKeyEvent(UIWindow *pWindow,
                            UIRootKeyEvent Event,
                            int nKey,
@@ -1223,6 +1229,9 @@ bool UIRoot::_RootKeyEvent(UIWindow *pWindow,
         break;
       case UI_ROOT_KEY_UP:
         b = pWindow->keyUp(nKey, mod, i_utf8Char);
+        break;
+      case UI_ROOT_TEXT_INPUT:
+        b = pWindow->textInput(nKey, mod, i_utf8Char);
         break;
     }
 

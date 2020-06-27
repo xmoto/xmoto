@@ -38,7 +38,11 @@ enum XMKey_direction {
   XMKD_DOWN,
   XMKD_NODIRECTION
 };
-enum InputEventType { INPUT_DOWN, INPUT_UP };
+enum InputEventType {
+  INPUT_DOWN,
+  INPUT_UP,
+  INPUT_TEXT,
+};
 
 #include "include/xm_SDL.h"
 #include <string>

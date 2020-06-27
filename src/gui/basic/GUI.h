@@ -184,6 +184,9 @@ public:
   virtual bool keyUp(int nKey, SDL_Keymod mod, const std::string &i_utf8Char) {
     return false;
   }
+  virtual bool textInput(int nKey, SDL_Keymod mod, const std::string &i_utf8Char) {
+    return false;
+  }
   virtual bool joystickAxisMotion(Uint8 i_joyNum,
                                   Uint8 i_joyAxis,
                                   Sint16 i_joyAxisValue) {
@@ -517,6 +520,7 @@ public:
   /* Virtual methods */
   virtual void paint(void);
   virtual bool keyDown(int nKey, SDL_Keymod mod, const std::string &i_utf8Char);
+  virtual bool textInput(int nKey, SDL_Keymod mod, const std::string &i_utf8Char);
   virtual bool offerActivation(void) {
     if (m_bTextInput)
       return true;
@@ -974,7 +978,11 @@ enum UIRootMouseEvent {
   UI_ROOT_MOUSE_DOUBLE_CLICK
 };
 
-enum UIRootKeyEvent { UI_ROOT_KEY_DOWN, UI_ROOT_KEY_UP };
+enum UIRootKeyEvent {
+  UI_ROOT_KEY_DOWN,
+  UI_ROOT_KEY_UP,
+  UI_ROOT_TEXT_INPUT
+};
 
 struct UIRootActCandidate {
   UIWindow *pWindow;
@@ -998,6 +1006,7 @@ public:
   virtual void mouseWheelDown(int x, int y);
   virtual bool keyDown(int nKey, SDL_Keymod mod, const std::string &i_utf8Char);
   virtual bool keyUp(int nKey, SDL_Keymod mod, const std::string &i_utf8Char);
+  virtual bool textInput(int nKey, SDL_Keymod mod, const std::string &i_utf8Char);
   virtual bool joystickAxisMotion(Uint8 i_joyNum,
                                   Uint8 i_joyAxis,
                                   Sint16 i_joyAxisValue);
