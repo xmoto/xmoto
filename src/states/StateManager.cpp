@@ -74,9 +74,10 @@ StateManager::StateManager() {
 
   m_cursor = NULL;
 
-  // assume focus and visibility at startup
-  m_isVisible = true;
-  m_hasFocus = true;
+  // get the current focus and visibility status
+  GameApp* game = GameApp::instance();
+  m_isVisible = !game->isIconified();
+  m_hasFocus = game->hasKeyboardFocus() || game->hasMouseFocus();
 
   m_isInvalidated = false;
 

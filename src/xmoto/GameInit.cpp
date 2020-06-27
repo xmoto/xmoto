@@ -385,8 +385,13 @@ void GameApp::run_load(int nNumArgs, char **ppcArgs) {
             XMSession::instance()->resolutionWidth(),
             XMSession::instance()->resolutionHeight(),
             XMSession::instance()->bpp());
-    /* */
   }
+
+  /* set focus */
+  uint32_t wflags = SDL_GetWindowFlags(GameApp::instance()->getDrawLib()->getWindow());
+  m_hasKeyboardFocus = wflags & SDL_WINDOW_INPUT_FOCUS;
+  m_hasMouseFocus    = wflags & SDL_WINDOW_MOUSE_FOCUS;
+  m_isIconified      = wflags & SDL_WINDOW_HIDDEN;
 
   /* init the database (fully, including upgrades) */
   pDb->init(DATABASE_FILE,

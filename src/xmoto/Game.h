@@ -174,6 +174,10 @@ public:
 
   static void wait(int &io_lastFrameTimeStamp, int &io_frameLate, int i_maxFps);
 
+  bool hasMouseFocus() const { return m_hasMouseFocus; }
+  bool hasKeyboardFocus() const { return m_hasKeyboardFocus; }
+  bool isIconified() const { return m_isIconified; }
+
 protected:
   void createDefaultConfig();
 
