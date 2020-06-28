@@ -2828,6 +2828,9 @@ void StateOptions::cleanRoomsList(UIList *pList) {
 void StateOptions::cleanRoomsList() {
   UIList *v_list;
   std::string v_tabId;
+  // no GUI when run with --pack
+  if (!m_sGUI)
+    return;
   for (unsigned int i = 0; i < ROOMS_NB_MAX; i++) {
     std::ostringstream v_strRoom;
     v_strRoom << i;
