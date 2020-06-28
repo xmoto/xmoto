@@ -82,6 +82,7 @@ void StateOptions::enter() {
 }
 
 void StateOptions::clean() {
+  cleanRoomsList();
   if (StateOptions::m_sGUI != NULL) {
     delete StateOptions::m_sGUI;
     StateOptions::m_sGUI = NULL;
@@ -2814,6 +2815,30 @@ void StateOptions::createThemesList(UIList *pList) {
   }
 }
 
+// Delete the dynamically allocated room IDs that were
+// stored in pvUser as void pointers by createRoomsList.
+void StateOptions::cleanRoomsList(UIList *pList) {
+  for (unsigned int i = 0; i < pList->getEntries().size(); i++) {
+    delete reinterpret_cast<std::string *>(pList->getEntries()[i]->pvUser);
+  }
+  pList->clear();
+}
+
+// Loop through all the rooms and delete their room IDs.
+void StateOptions::cleanRoomsList() {
+  UIList *v_list;
+  std::string v_tabId;
+  for (unsigned int i = 0; i < ROOMS_NB_MAX; i++) {
+    std::ostringstream v_strRoom;
+    v_strRoom << i;
+
+    v_tabId = "MAIN:TABS:WWW_TAB:TABS:ROOMS_TAB_" + v_strRoom.str();
+    v_list =
+      reinterpret_cast<UIList *>(m_sGUI->getChild(v_tabId + ":ROOMS_LIST"));
+    cleanRoomsList(v_list);
+  }
+}
+
 void StateOptions::updateRoomsList() {
   UIList *v_list;
   std::string v_tabId;
@@ -2865,10 +2890,7 @@ void StateOptions::createRoomsList(UIList *pList) {
   }
 
   /* recreate the list */
-  for (unsigned int i = 0; i < pList->getEntries().size(); i++) {
-    delete reinterpret_cast<std::string *>(pList->getEntries()[i]->pvUser);
-  }
-  pList->clear();
+  cleanRoomsList(pList);
 
   // WR room
   v_result = xmDatabase::instance("main")->readDB(
