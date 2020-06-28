@@ -25,6 +25,9 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "drawlib/DrawLib.h"
 #include "helpers/utf8.h"
 #include "xmoto/Game.h"
+#include "common/TextEdit.h"
+
+#include <tuple> // for std::tie
 
 /*===========================================================================
 Painting
@@ -137,16 +140,29 @@ bool UIEdit::keyDown(int nKey, SDL_Keymod mod, const std::string &i_utf8Char) {
       getRoot()->activateNext();
       return true;
     case SDLK_LEFT:
-      if (m_nCursorPos > 0)
-        m_nCursorPos--;
-      else
+      if (m_nCursorPos > 0) {
+        if (mod & KMOD_CTRL) {
+          m_nCursorPos -= TextEdit::jumpWordLeft(getCaption(), m_nCursorPos);
+        } else {
+          --m_nCursorPos;
+        }
+      } else {
         getRoot()->activateLeft();
+      }
       return true;
     case SDLK_RIGHT:
+      if (mod & KMOD_CTRL) {
+        //m_nCursorPos +=;
+      }
       if (m_nCursorPos < utf8::utf8_length(getCaption())) {
-        m_nCursorPos++;
-      } else
+        if (mod & KMOD_CTRL) {
+          m_nCursorPos += TextEdit::jumpWordRight(getCaption(), m_nCursorPos);
+        } else {
+          ++m_nCursorPos;
+        }
+      } else {
         getRoot()->activateRight();
+      }
       return true;
     case SDLK_RETURN:
       return true;
@@ -159,40 +175,68 @@ bool UIEdit::keyDown(int nKey, SDL_Keymod mod, const std::string &i_utf8Char) {
     case SDLK_DELETE: {
       std::string s = getCaption();
 
+      if (mod & KMOD_CTRL) {
+        std::tie(s, m_nCursorPos) = TextEdit::deleteWordRight(s, m_nCursorPos);
+      } else {
+        /* Delete the last character */
+        s = utf8::utf8_delete(s, m_nCursorPos + 1);
+      }
+
+      setCaptionResetCursor(s, false);
+
+      /*
       if (m_nCursorPos < utf8::utf8_length(s)) {
         setCaptionResetCursor(utf8::utf8_delete(s, m_nCursorPos + 1), false);
       }
+      */
     }
       return true;
     case SDLK_BACKSPACE: {
       std::string s = getCaption();
 
       if (m_nCursorPos > 0) {
-        setCaptionResetCursor(utf8::utf8_delete(s, m_nCursorPos--),
-                              false); // m_nCursorPos-- must be done before
-        // setCaption (setCaption alter it if a
-        // bad value is given)
-      }
-    }
-      return true;
-    default:
-      if (utf8::utf8_length(i_utf8Char) ==
-          1) { // alt/... and special keys must not be kept
-        std::string s = getCaption();
-
-        if ((unsigned int)m_nCursorPos == s.length()) {
-          s = utf8::utf8_concat(s, i_utf8Char);
+        if (mod & KMOD_CTRL) {
+          std::tie(s, m_nCursorPos) = TextEdit::deleteWordLeft(s, m_nCursorPos);
         } else {
-          s = utf8::utf8_insert(s, i_utf8Char, m_nCursorPos);
+          /* Delete the last character */
+          s = utf8::utf8_delete(s, m_nCursorPos);
+          --m_nCursorPos;
         }
-        m_nCursorPos++;
         setCaptionResetCursor(s, false);
-        return true;
+      } else {
+        // Just... No.
+        //
+        // m_nCursorPos-- must be done before setCaption
+        // (setCaption alters it if a bad value is given)
+        //setCaptionResetCursor(utf8::utf8_delete(s, m_nCursorPos--), false);
       }
+      return true;
+    }
+    default:
       break;
   }
 
   return false;
+}
+
+bool UIEdit::textInput(int nKey, SDL_Keymod mod, const std::string &i_utf8Char) {
+  /*
+   *
+   * NEXT: Implement the same thing here as you did in GUI.cpp:442
+   * */
+  if (utf8::utf8_length(i_utf8Char) ==
+      1) { // alt/... and special keys must not be kept
+    std::string s = getCaption();
+
+    if ((unsigned int)m_nCursorPos == s.length()) {
+      s = utf8::utf8_concat(s, i_utf8Char);
+    } else {
+      s = utf8::utf8_insert(s, i_utf8Char, m_nCursorPos);
+    }
+    m_nCursorPos++;
+    setCaptionResetCursor(s, false);
+    return true;
+  }
 }
 
 bool UIEdit::joystickAxisMotion(Uint8 i_joyNum,

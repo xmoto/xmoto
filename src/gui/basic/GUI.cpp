@@ -23,6 +23,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 #include "GUI.h"
 #include "common/VXml.h"
+#include "common/TextEdit.h"
 #include "drawlib/DrawLib.h"
 #include "helpers/Log.h"
 #include "helpers/RenderSurface.h"
@@ -34,6 +35,8 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #ifdef ENABLE_OPENGL
 #include "include/xm_OpenGL.h"
 #endif
+
+#include <tuple> // for std::tie
 
 DrawLib *UIWindow::m_drawLib = NULL;
 
@@ -437,15 +440,26 @@ bool UIMsgBox::keyDown(int nKey, SDL_Keymod mod, const std::string &i_utf8Char) 
           case SDLK_BACKSPACE:
             m_TextInput_real = m_TextInput_fake; // valid completion if in competion
             if (m_TextInput_real != "") {
-              m_TextInput_fake = utf8::utf8_delete(
-                m_TextInput_fake, utf8::utf8_length(m_TextInput_fake));
+              if (mod & KMOD_CTRL) {
+                /* Delete the last word */
+
+                m_TextInput_fake = TextEdit::deleteWordLeft(m_TextInput_fake,
+                    /* This is the cursor pos, but as a cursor has not yet
+                     * been implemented, use the length of the string*/
+                    utf8::utf8_length(m_TextInput_fake)).first;
+              } else {
+                /* Delete the last character */
+                m_TextInput_fake = utf8::utf8_delete(m_TextInput_fake, utf8::utf8_length(m_TextInput_fake));
+              }
+
               m_TextInput_real = m_TextInput_fake;
             }
             return true;
+          case SDLK_DELETE:
+            // TODO
+            break;
           case SDLK_TAB:
             showMatch();
-            return true;
-          default:
             return true;
         }
       }

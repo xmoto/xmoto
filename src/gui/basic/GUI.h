@@ -378,6 +378,7 @@ public:
   /* Methods */
   virtual void paint(void);
   virtual bool keyDown(int nKey, SDL_Keymod mod, const std::string &i_utf8Char);
+  virtual bool textInput(int nKey, SDL_Keymod mod, const std::string &i_utf8Char);
   virtual bool joystickAxisMotion(Uint8 i_joyNum,
                                   Uint8 i_joyAxis,
                                   Sint16 i_joyAxisValue);

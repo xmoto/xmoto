@@ -93,6 +93,8 @@ set(common_src
   common/Packager.h
   common/PolyDraw.cpp
   common/PolyDraw.h
+  common/TextEdit.cpp
+  common/TextEdit.h
   common/Theme.cpp
   common/Theme.h
   common/VBezier.cpp
