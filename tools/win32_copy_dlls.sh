@@ -1,4 +1,4 @@
-#!/usr/bin/sh
+#!/bin/sh
 
 is_mxe=0
 mxe_compiler_suffix="-gcc"

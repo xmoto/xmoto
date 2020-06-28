@@ -72,6 +72,8 @@ Camera::Camera(Vector2i downleft, Vector2i upright) {
   m_ghostTrail = NULL;
   m_trailAvailable = false;
   m_useTrailCam = false;
+  m_catchTrail = false;
+  m_trackingShotActivated = false;
   prepareForNewLevel();
 }
 

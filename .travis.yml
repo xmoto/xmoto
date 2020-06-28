@@ -1,23 +1,28 @@
 language: cpp
 dist: bionic
 
-before_install:
-  - sudo apt-get install -y ninja-build
-  - sudo apt-get install -y curl
-  - sudo apt-get install -y libsqlite3-dev libjpeg-dev libbz2-dev liblua5.1-0-dev zlib1g-dev libpng-dev libglu1-mesa-dev
-  - sudo apt-get install -y libcurl3-openssl-dev libxdg-basedir-dev libxml2-dev
-  - sudo apt-get install -y libsdl2-dev libsdl2-mixer-dev libsdl2-ttf-dev libsdl2-net-dev
-  - sudo apt-get install -y libgl1-mesa-dev rpm
+matrix:
+  include:
+    - os: linux
+      dist: bionic
+      install: ".travis/linux/deps.sh"
+      script: ".travis/linux/build.sh"
 
-script:
-  - mkdir build && cd $_
-  - mkdir -p /tmp/xminstall
-  - cmake -DCMAKE_INSTALL_PREFIX=/tmp/xminstall -G Ninja ..
-  - ninja
-  - ninja xmoto_pack
-  - ninja install
-  - cpack -G "DEB"
-  - cpack -G "RPM"
+    - os: osx
+      osx_image: xcode10.1 # =10.13/high sierra
+      install: ".travis/macos/deps.sh"
+      script: ".travis/macos/build.sh"
+      cache:
+        directories:
+          - $HOME/Library/Caches/Homebrew
+      before_cache:
+        - brew cleanup
+
+    - os: linux
+      dist: bionic
+      name: "Linux MXE"
+      install: ".travis/linux-mxe/deps.sh"
+      script: ".travis/linux-mxe/build.sh"
 
 deploy:
   provider: releases
@@ -26,9 +31,13 @@ deploy:
   file:
     - 'xmoto-0.6.0.deb'
     - 'xmoto-0.6.0.rpm'
+  file_glob: true
+  file: "build/artifacts/*"
   skip_cleanup: true
   on:
-    branch: "release"
+    branch:
+      - "release"
+      - "staging"
     tags: true
 
 addons:

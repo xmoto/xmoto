@@ -66,6 +66,8 @@ private:
   void updateResolutionsList();
   void updateControlsList();
   void createRoomsList(UIList *pList);
+  static void cleanRoomsList(UIList *pList);
+  static void cleanRoomsList();
   void updateRoomsList();
   void updateAudioOptions();
   void updateWWWOptions();

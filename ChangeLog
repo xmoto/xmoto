@@ -1,3 +1,17 @@
+X-Moto 0.6.1 2020-06-20
+--------------------------------
+ * macOS and FreeBSD support is back!
+ * Automated release builds for Linux/macOS/Windows
+ * Added support for macOS Bundles
+ * Improved level load times
+ * Improved Russian translation
+ * Bug fixes:
+ * Fixed a locale bug where the game would crash with
+   locales using comma (,) as the decimal separator
+ * No more crashing on non-existent db entries
+   when migrating from an old version
+
+
 X-Moto 0.6.0 2020-05-03
 --------------------------------
  * Build system:

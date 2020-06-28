@@ -1,9 +1,9 @@
-# X-Moto 0.6.0 [![Build Status](https://travis-ci.org/xmoto/xmoto.svg?branch=master)](https://travis-ci.org/xmoto/xmoto)
+# X-Moto 0.6.1 [![Build Status](https://travis-ci.org/xmoto/xmoto.svg?branch=master)](https://travis-ci.org/xmoto/xmoto)
 Copyright (C) 2005-2020
 
 # Introduction
 
-[X-Moto Website](http://xmoto.tuxfamily.org)
+[X-Moto Website](https://xmoto.tuxfamily.org)
 
 X-Moto is a challenging 2D motocross platform game, where physics play 
 an all important role in the gameplay. You need to control your bike to 
@@ -21,7 +21,8 @@ Download and install the game from https://xmoto.tuxfamily.org
 See the wiki:
 - [Windows](https://github.com/xmoto/xmoto/wiki/Building-on-Windows)
 - [Linux](https://github.com/xmoto/xmoto/wiki/Building-on-Linux)
-- macOS and FreeBSD are *temporarily* not supported.
+- [macOS](https://github.com/xmoto/xmoto/wiki/Building-on-macOS)
+- [FreeBSD](https://github.com/xmoto/xmoto/wiki/Building-on-FreeBSD)
 
 # Basic Gameplay
 
@@ -52,12 +53,12 @@ your needs.
 Additionally, some other keys can be pressed while playing:
 
 - Escape - Pauses the game, and opens the in-game menu
-- F12 - Takes a screenshot (saved in the ~/.local/share/xmoto directory)
+- F12 - Takes a screenshot (saved in the ``~/.local/share/xmoto`` directory)
 
 # Command-line Options
 
 X-Moto supports a range of options you can specify on the command
-line when starting the program. Run xmoto --help to get details on these options.
+line when starting the program. Run ``xmoto --help`` to get details on these options.
 
 # Letting X-Moto Access The Web
 
@@ -76,13 +77,13 @@ you're in doubt.
 # Replays
 
 X-Moto supports recording and playback of
-replays. These are always stored in the Replays/ directory, which is
-located in the .local/share/xmoto in the user directory.
+replays. These are always stored in the ``Replays/`` directory, which is
+located in the ``.local/share/xmoto`` in the user directory.
 One should be aware that replays can take up quite a large amount of
 harddisk space - on average you can expect a single minute of replay
 to equal around 50 kilobytes. If you want to disable recording of 
-replays, you can set the 'StoreReplays' variable to 'false' in
-config.dat, which is located in .local/share/xmoto. 
+replays, you can set the ``StoreReplays`` variable to ``false`` in
+``config.dat``, which is located in ``~/.local/share/xmoto``. 
 
 Other things to be aware of regarding X-Moto replays:
 
@@ -92,8 +93,8 @@ Other things to be aware of regarding X-Moto replays:
 
 # Advanced Configuration Options
 
-Options are saved in a file called config.dat. The file is saved
-in ~/.config/xmoto. 
+Options are saved in a file called ``config.dat``. The file is saved
+in ``~/.config/xmoto``. 
 It is a plain XML text file, so it should be straight-forward to modify 
 in any text editor. In addition to the options accessible from inside 
 the game, there's a couple more, which is not interesting enough to 
