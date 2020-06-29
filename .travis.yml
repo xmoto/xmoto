@@ -33,7 +33,7 @@ deploy:
     secure: "XjHXrtaq9VSLL/zA1BKnrFNHrDuz4WUtn9JJs0EnngUt6zjw1q4Z2suVIw4iXWXkblWLIuA+HHXbM0RsiKHvc8FLFuZWpVkV/hz/AXLEZ40Yn+hW3b3z1zaNXFotXiKC+gmJcOgVo3/BQst1dG3gmUv2IM3JhYa4I3jzR9q5AqSqWbH8B1UdpB46St7D27kGdqt6tJAHZtKmyYRP7GfgeIVrCoOrhvgpFgzrj4p2yKy5voQWulXpyRyooaGOfXMzkcFzsiZLbJhLm3BaiFUOyRINufijjeDlyX5Df05a5x6uVxTZfjLFOyfzxTPpI/fMqNoYlRqvheoMVjGAu3s+e3KvllMM4hxD2M0J6WFV6beyzJqIwgR7Z3wgac5E2RJfQYo3S4V2SlKUAxqx4KXdQAiJ3VqdlE8V6p4eyoPIQFrJpsUfUye4d5rKj/U3SOD9OP9PDqNUEzzdwxYh4V0qexHJnegw4BOHIqIS+yr/fv2thJ27/mghG6a4rqxwbhANL7B3ZUVkFh6X+lW9lqsI+HQViJj7KbrFZNsg3rN6vwtfJsEPJctdvC26Dl8+A8vJWTQwPkiMJJSqliakR2P3XPuRRvHc28Q1tqytuVEJAJvF2/yGnGWauFLtI1D1yWlfMCNHnWftFUA3pXwr3DQoc7agKiBQjS+LU+Z58gGYB7o="
   file_glob: true
   file: "build/artifacts/*"
-  skip_cleanup: true
+  cleanup: false
   on:
     branch:
       - "release"
