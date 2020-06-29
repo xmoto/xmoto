@@ -11,5 +11,5 @@ for pkg in cmake ninja jpeg libpng \
 done
 
 # install the rest of the packages
-brew install gettext sdl sdl_mixer sdl_net sdl_ttf
+brew install gettext sdl2 sdl2_mixer sdl2_net sdl2_ttf
 
