@@ -12,6 +12,9 @@ matrix:
       osx_image: xcode10.1 # =10.13/high sierra
       install: ".travis/macos/deps.sh"
       script: ".travis/macos/build.sh"
+      env:
+        - HOMEBREW_NO_AUTO_UPDATE=1
+        - HOMEBREW_NO_ANALYTICS=1
       cache:
         directories:
           - $HOME/Library/Caches/Homebrew
