@@ -31,6 +31,8 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "helpers/VExcept.h"
 #include "image/tim.h"
 
+#include <cassert>
+
 /*============================================================================
   I/O driver: Callbacks
   ============================================================================*/
@@ -142,13 +144,13 @@ tim_io_t g_ImageIODrv = { _image_io_open, _image_io_close, _image_io_seek,
 
 void Img::createEmpty(unsigned int nWidth, unsigned int nHeight) {
   /* Check arguments */
-  _Assert(nWidth > 0 && nHeight > 0);
+  assert(nWidth > 0 && nHeight > 0);
 
   /* For free old image, if any */
   freeMemory();
 
   /* Allocate memory for image */
-  m_pPixels = new color_t[nWidth * nHeight];
+  m_pPixels = new Color[nWidth * nHeight];
 
   /* Set various members */
   m_nWidth = nWidth;
@@ -167,7 +169,7 @@ void Img::freeMemory(void) {
   }
 }
 
-void Img::loadFile(String FileName, bool bThumbnail) {
+void Img::loadFile(const std::string &FileName, bool bThumbnail) {
   /* Free old image */
   freeMemory();
 
@@ -185,7 +187,7 @@ void Img::loadFile(String FileName, bool bThumbnail) {
   /* Initialize image library */
   tim_session_t ts;
   if (tim_init_session(&ts, &g_Memory_CRT, &g_ImageIODrv) < 0)
-    throw CError("Img::loadFile: tim_init_session() failed!");
+    throw Exception("Img::loadFile: tim_init_session() failed!");
   tim_add_jpeg_support(&ts);
   tim_add_png_support(&ts);
 
@@ -196,7 +198,7 @@ void Img::loadFile(String FileName, bool bThumbnail) {
   /* Load image from file */
   tim_image_t *pImage;
   if (tim_read_image(&ts, (char *)FileName.c_str(), &pImage) < 0)
-    throw CError("Img::loadFile: tim_read_image() failed: " + FileName);
+    throw Exception("Img::loadFile: tim_read_image() failed: " + FileName);
   createEmpty(pImage->Info.nWidth, pImage->Info.nHeight);
 
   /* Either RGB or RGBA */
@@ -225,15 +227,15 @@ void Img::loadFile(String FileName, bool bThumbnail) {
   tim_free_session(&ts);
 }
 
-void Img::saveFile(String FileName) {
+void Img::saveFile(const std::string &FileName) {
   /* Anything to save? */
   if (m_pPixels == NULL)
-    throw CError("Img::saveFile: Tried to save NULL image to " + FileName);
+    throw Exception("Img::saveFile: Tried to save NULL image to " + FileName);
 
   /* Initialize image library */
   tim_session_t ts;
   if (tim_init_session(&ts, &g_Memory_CRT, &g_ImageIODrv) < 0)
-    throw CError("Img::saveFile: tim_init_session() failed!");
+    throw Exception("Img::saveFile: tim_init_session() failed!");
   tim_add_jpeg_support(&ts);
   tim_add_png_support(&ts);
 
@@ -245,7 +247,7 @@ void Img::saveFile(String FileName) {
     pImage = tim_create_image(&ts, m_nWidth, m_nHeight, TIM_PT_RGB24);
 
   if (pImage == NULL)
-    throw CError("Img::saveFile: tim_create_image() failed!");
+    throw Exception("Img::saveFile: tim_create_image() failed!");
 
   /* Copy content to new image */
   for (unsigned int i = 0; i < m_nWidth * m_nHeight; i++) {
@@ -263,7 +265,7 @@ void Img::saveFile(String FileName) {
 
   /* Save it */
   if (tim_write_image(pImage, (char *)FileName.c_str()) < 0)
-    throw CError("Img::saveFile: tim_write_image() failed: " + FileName);
+    throw Exception("Img::saveFile: tim_write_image() failed: " + FileName);
 
   /* Free image again */
   tim_destroy_image(pImage);
@@ -272,13 +274,13 @@ void Img::saveFile(String FileName) {
   tim_free_session(&ts);
 }
 
-bool Img::checkFile(String FileName, image_info_t *pInfo) {
+bool Img::checkFile(const std::string &FileName, image_info_t *pInfo) {
   bool bValid = false;
 
   /* Initialize image library */
   tim_session_t ts;
   if (tim_init_session(&ts, &g_Memory_CRT, &g_ImageIODrv) < 0)
-    throw CError("Img::saveFile: tim_init_session() failed!");
+    throw Exception("Img::saveFile: tim_init_session() failed!");
   tim_add_jpeg_support(&ts);
   tim_add_png_support(&ts);
 
@@ -303,14 +305,14 @@ bool Img::checkFile(String FileName, image_info_t *pInfo) {
 
 void Img::resample(unsigned int nWidth, unsigned int nHeight) {
   /* Check arguments */
-  _Assert(nWidth > 0 && nHeight > 0);
+  assert(nWidth > 0 && nHeight > 0);
 
   /* Anything to modify? */
   if (m_pPixels == NULL)
-    throw CError("Img::resample: This image is NULL!");
+    throw Exception("Img::resample: This image is NULL!");
 
   /* Perform the resampling */
-  color_t *pTempPixels = new color_t[nWidth * nHeight];
+  Color *pTempPixels = new Color[nWidth * nHeight];
   _Resample(m_pPixels, m_nWidth, m_nHeight, pTempPixels, nWidth, nHeight);
   delete[] m_pPixels;
 
@@ -328,7 +330,7 @@ void Img::resample(unsigned int nWidth, unsigned int nHeight) {
 void Img::forceAlpha(int nAlpha) {
   /* Anything to modify? */
   if (m_pPixels == NULL)
-    throw CError("Img::forceAlpha: This image is NULL!");
+    throw Exception("Img::forceAlpha: This image is NULL!");
 
   /* Enforce the given alpha level, all over the image */
   for (unsigned int i = 0; i < m_nWidth * m_nHeight; i++) {
@@ -345,10 +347,10 @@ void Img::forceAlpha(int nAlpha) {
     m_bAlpha = false;
 }
 
-void Img::stripAlpha(color_t Background) {
+void Img::stripAlpha(Color Background) {
   /* Anything to modify? */
   if (m_pPixels == NULL)
-    throw CError("Img::stripAlpha: This image is NULL!");
+    throw Exception("Img::stripAlpha: This image is NULL!");
 
   if (m_bAlpha) {
     /* Set background color and remove alpha channel */
@@ -372,7 +374,7 @@ void Img::stripAlpha(color_t Background) {
 void Img::mergeAlpha(char *pcAlphaMap) {
   /* Anything to modify? */
   if (m_pPixels == NULL)
-    throw CError("Img::mergeAlpha: This image is NULL!");
+    throw Exception("Img::mergeAlpha: This image is NULL!");
 
   /* Apply the given alpha map (dimensions MUST match) */
   for (unsigned int i = 0; i < m_nWidth * m_nHeight; i++) {
@@ -393,7 +395,7 @@ void Img::mergeAlpha(char *pcAlphaMap) {
 unsigned char *Img::convertToRGB24(void) {
   /* Anything to modify */
   if (m_pPixels == NULL)
-    throw CError("Img::convertToRGB24: This image is NULL!");
+    throw Exception("Img::convertToRGB24: This image is NULL!");
 
   /* Convert to 24-bit RGB format */
   unsigned char *pc = new unsigned char[m_nWidth * m_nHeight * 3];
@@ -408,7 +410,7 @@ unsigned char *Img::convertToRGB24(void) {
 unsigned char *Img::convertToRGBA32(void) {
   /* Anything to modify */
   if (m_pPixels == NULL)
-    throw CError("Img::convertToRGBA32: This image is NULL!");
+    throw Exception("Img::convertToRGBA32: This image is NULL!");
 
   /* Convert to 32-bit RGBA format */
   unsigned char *pc = new unsigned char[m_nWidth * m_nHeight * 4];
@@ -424,7 +426,7 @@ unsigned char *Img::convertToRGBA32(void) {
 unsigned char *Img::convertToGray(void) {
   /* Anything to modify */
   if (m_pPixels == NULL)
-    throw CError("Img::convertToGray: This image is NULL!");
+    throw Exception("Img::convertToGray: This image is NULL!");
 
   /* Convert to 8-bit grayscale format */
   unsigned char *pc = new unsigned char[m_nWidth * m_nHeight];
@@ -439,7 +441,7 @@ unsigned char *Img::convertToGray(void) {
 unsigned char *Img::convertToAlphaMap(void) {
   /* Anything to modify */
   if (m_pPixels == NULL)
-    throw CError("Img::convertToAlphaMap: This image is NULL!");
+    throw Exception("Img::convertToAlphaMap: This image is NULL!");
 
   /* Convert to 8-bit grayscale format */
   unsigned char *pc = new unsigned char[m_nWidth * m_nHeight];
@@ -457,14 +459,14 @@ void Img::clearRect(unsigned int x1,
                     unsigned int y1,
                     unsigned int x2,
                     unsigned int y2,
-                    color_t Color) {
+                    Color Color) {
   /* Anything to draw at? */
   if (m_pPixels == NULL)
-    throw CError("Img::clearRect: Tried to draw on NULL image!");
+    throw Exception("Img::clearRect: Tried to draw on NULL image!");
 
   /* Check parameters */
-  _Assert(x1 < x2);
-  _Assert(y1 < y2);
+  assert(x1 < x2);
+  assert(y1 < y2);
 
   /* Set color in rect */
   for (unsigned int y = y1; y < y2; y++) {
@@ -478,11 +480,11 @@ void Img::clearRect(unsigned int x1,
 void Img::insertImage(unsigned int x, unsigned int y, Img *pInsert) {
   /* Anything to draw at? */
   if (m_pPixels == NULL)
-    throw CError("Img::insertImage: Tried to draw on NULL image!");
+    throw Exception("Img::insertImage: Tried to draw on NULL image!");
 
   /* Anything to draw from? */
   if (pInsert->getPixels() == NULL)
-    throw CError("Img::insertImage: Tried to read from NULL image!");
+    throw Exception("Img::insertImage: Tried to read from NULL image!");
 
   /* Insert the given image at the given position */
   for (unsigned int i = 0; i < pInsert->getHeight(); i++) {
@@ -506,7 +508,7 @@ void Img::insertImage(unsigned int x, unsigned int y, Img *pInsert) {
 void Img::checkAlpha(void) {
   /* Anything to check? */
   if (m_pPixels == NULL)
-    throw CError(
+    throw Exception(
       "Img::checkAlpha: Tried to check NULL image for alpha component!");
 
   /* Non-255 alpha values in images? */
@@ -521,7 +523,7 @@ void Img::checkAlpha(void) {
   m_bAlpha = false;
 }
 
-color_t Img::_Linterp_scanline(color_t *pScan,
+Color Img::_Linterp_scanline(Color *pScan,
                                unsigned int nSrcLen,
                                unsigned int nDestLen,
                                int s) {
@@ -539,7 +541,7 @@ color_t Img::_Linterp_scanline(color_t *pScan,
                     (a1 * (nDestLen - v)) / nDestLen + (a2 * v) / nDestLen);
 }
 
-color_t Img::_Aa_avg_scanline(color_t *pScan,
+Color Img::_Aa_avg_scanline(Color *pScan,
                               unsigned int x1,
                               unsigned int x2) {
   int r = 0, g = 0, b = 0, a = 0;
@@ -557,7 +559,7 @@ color_t Img::_Aa_avg_scanline(color_t *pScan,
     return MAKE_COLOR(r / d, g / d, b / d, a / d);
 }
 
-color_t Img::_Resample_scanline(color_t *pScan,
+Color Img::_Resample_scanline(Color *pScan,
                                 unsigned int nScanLen,
                                 unsigned int nDestLen,
                                 int nx) {
@@ -573,17 +575,17 @@ color_t Img::_Resample_scanline(color_t *pScan,
   return pScan[nx];
 }
 
-void Img::_Resample(color_t *pSrc,
+void Img::_Resample(Color *pSrc,
                     unsigned int nSrcWidth,
                     unsigned int nSrcHeight,
-                    color_t *pDest,
+                    Color *pDest,
                     unsigned int nDestWidth,
                     unsigned int nDestHeight) {
   unsigned int nx, ny, y, y1, y2;
   int r1, g1, b1, a1;
   int r2, g2, b2, a2;
   int r, g, b, a, d;
-  color_t T1, T2, T;
+  Color T1, T2, T;
 
   for (ny = 0; ny < nDestHeight; ny++) {
     if (nSrcHeight < nDestHeight) {
