@@ -139,6 +139,21 @@ bool UIEdit::keyDown(int nKey, SDL_Keymod mod, const std::string &i_utf8Char) {
     case SDLK_TAB:
       getRoot()->activateNext();
       return true;
+    case SDLK_v:
+      if (mod & KMOD_CTRL) {
+        if (SDL_HasClipboardText() == SDL_TRUE) {
+          char *clipboard = SDL_GetClipboardText();
+          if (!clipboard) {
+            break;
+          }
+
+          std::string s = getCaption();
+          std::tie(s, m_nCursorPos) = TextEdit::insertAt(s, std::string(clipboard), m_nCursorPos);
+          setCaptionResetCursor(s, false);
+          SDL_free(clipboard);
+        }
+      }
+      break;
     case SDLK_LEFT:
       if (m_nCursorPos > 0) {
         if (mod & KMOD_CTRL) {

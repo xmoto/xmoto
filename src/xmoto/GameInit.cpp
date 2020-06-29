@@ -746,7 +746,7 @@ void GameApp::manageEvent(SDL_Event *Event) {
   std::string utf8Char;
 
   if (Event->type == SDL_KEYDOWN || Event->type == SDL_KEYUP) {
-    /* don't allow simple modifier key */
+    /* ignore modifier-only key presses */
     if (Event->key.keysym.sym == SDLK_RSHIFT ||
         Event->key.keysym.sym == SDLK_LSHIFT ||
         Event->key.keysym.sym == SDLK_RCTRL ||
@@ -779,7 +779,7 @@ void GameApp::manageEvent(SDL_Event *Event) {
 
       break;
     case SDL_KEYDOWN: {
-      printf("Event->key.keysym.sym: %lld\n", Event->key.keysym.sym);
+      printf("Event->key.keysym.[sym,mod]: %lld, %lld\n", Event->key.keysym.sym, Event->key.keysym.mod);
       StateManager::instance()->xmKey(
         INPUT_DOWN,
         XMKey(Event->key.keysym.sym, (SDL_Keymod)Event->key.keysym.mod, ""));

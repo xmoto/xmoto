@@ -3,7 +3,7 @@
 
 /* NOTE: This stuff probably does not work with utf8 */
 
-std::pair<std::string, size_t> TextEdit::deleteWordLeft(const std::string &str, size_t cursorPos) {
+TextEditOP TextEdit::deleteWordLeft(const std::string &str, size_t cursorPos) {
   size_t newPos = cursorPos - TextEdit::jumpWordLeft(str, cursorPos);
 
   std::string newStr = utf8::utf8_substring(str, 0, newPos) +
@@ -11,7 +11,7 @@ std::pair<std::string, size_t> TextEdit::deleteWordLeft(const std::string &str, 
   return std::make_pair(newStr, newPos);
 }
 
-std::pair<std::string, size_t> TextEdit::deleteWordRight(const std::string &str, size_t cursorPos) {
+TextEditOP TextEdit::deleteWordRight(const std::string &str, size_t cursorPos) {
   size_t deleteTo = cursorPos + TextEdit::jumpWordRight(str, cursorPos);
 
   std::string newStr = utf8::utf8_substring(str, 0, cursorPos) +
@@ -45,5 +45,15 @@ size_t TextEdit::jumpWordRight(const std::string &str, size_t cursorPos) {
     return utf8::utf8_length(str) - cursorPos;
   else
     return wordEnd - cursorPos;
+}
+
+TextEditOP TextEdit::insertAt(const std::string &str, const std::string &add, size_t at) {
+  std::string newStr =
+    utf8::utf8_substring(str, 0, at) + add +
+    utf8::utf8_substring(str, at, utf8::utf8_length(str) - at);
+
+  at += utf8::utf8_length(add);
+
+  return std::make_pair(newStr, at);
 }
 
