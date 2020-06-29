@@ -66,6 +66,10 @@ set(USE_SYSTEM_XDG $<AND:$<BOOL:${PREFER_SYSTEM_XDG}>,$<BOOL:${XDG_FOUND}>>)
 
 find_package(ZLIB REQUIRED)
 
+if(APPLE)
+  find_library(COREFOUNDATION_LIBRARY CoreFoundation)
+endif()
+
 # sources
 
 add_subdirectory("${PROJECT_SOURCE_DIR}/vendor/bzip2" bzip2)
@@ -448,6 +452,7 @@ target_link_libraries(xmoto PUBLIC
   $<${USE_SYSTEM_XDG}:${XDG_LIBRARY}>
   $<$<NOT:${USE_SYSTEM_XDG}>:xdgbasedir>
   ${ZLIB_LIBRARIES}
+  $<$<PLATFORM_ID:Darwin>:${COREFOUNDATION_LIBRARY}>
 )
 
 set_property(TARGET xmoto PROPERTY CXX_STANDARD 11)
