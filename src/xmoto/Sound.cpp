@@ -266,7 +266,7 @@ void Sound::playMusic(std::string i_musicPath) {
   }
 
 /* No music available, try loading */
-#if defined(WIN32) || \
+#if 0 && defined(WIN32) || \
   defined(            \
     __amigaos4__) /* this works around a bug in SDL_mixer 1.2.7 on Windows */
   SDL_RWops *rwfp;
