@@ -115,7 +115,7 @@ DrawLib::DrawLib() {
   m_blendMode = BLEND_MODE_NONE;
   m_ownsRenderSurface = false;
   m_renderSurf = NULL;
-  m_screen = NULL;
+  m_window = NULL;
   m_menuCamera = NULL;
 
   m_fontSmall = NULL;

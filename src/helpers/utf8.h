@@ -46,7 +46,7 @@ public:
   static std::string utf8_substring(const std::string &i_a,
                                     unsigned int i_numChar,
                                     unsigned int i_nbChars);
-  /* substring with absolute indexes instad of a length */
+  /* substring with absolute indexes instead of a length */
   static std::string utf8_substring_abs(const std::string &str,
                                     size_t start,
                                     size_t end = std::string::npos);
