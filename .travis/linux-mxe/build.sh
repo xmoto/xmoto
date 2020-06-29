@@ -52,11 +52,6 @@ make -j"$(nproc)"
 Xvfb :0 -screen 0 1024x768x16 &
 xvfb_pid=$!
 
-sleep 5
-
-echo "pidof Xvfb:"
-pidof Xvfb
-
 make xmoto_pack
 
 # not that any reasonable PID 1 responds to SIGTERM anyway ;)
