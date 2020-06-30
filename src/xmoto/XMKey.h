@@ -28,6 +28,7 @@ enum XMKey_input {
   XMK_NONE,
   XMK_KEYBOARD,
   XMK_MOUSEBUTTON,
+  XMK_MOUSEWHEEL,
   XMK_JOYSTICKBUTTON,
   XMK_JOYSTICKAXIS
 };
@@ -41,6 +42,7 @@ enum XMKey_direction {
 enum InputEventType {
   INPUT_DOWN,
   INPUT_UP,
+  INPUT_SCROLL,
   INPUT_TEXT,
 };
 
@@ -50,6 +52,10 @@ enum InputEventType {
 /* define a key to do something (keyboard:a, mouse:left, ...) */
 class XMKey {
 public:
+  /* TODO: Make these named constructors so you can
+   * add another ctor like this and avoid ambiguity? */
+  // XMKey(Sint32 wheelX, Sint32 wheelY);
+
   XMKey();
   XMKey(SDL_Event &i_event);
   XMKey(const std::string &i_key,
@@ -80,6 +86,7 @@ public:
 
   bool toKeyboard(SDL_Keycode &nKey, SDL_Keymod &o_mod, std::string &o_utf8Char) const;
   bool toMouse(int &nX, int &nY, Uint8 &nButton) const;
+  bool toMouseWheel(Sint32 &wheelX, Sint32 &wheelY) const;
   bool toJoystickButton(Uint8 &o_joyNum, Uint8 &o_joyButton) const;
   bool toJoystickAxisMotion(Uint8 &o_joyNum,
                             Uint8 &o_joyAxis,
@@ -94,8 +101,10 @@ private:
   SDL_Keymod m_keyboard_mod;
   std::string m_keyboard_utf8Char;
   Uint8 m_mouseButton_button;
-  std::string *m_joyId; // a pointer to avoid the copy while joyId are store
-  // from load to unload
+  Sint32 m_wheelX, m_wheelY;
+
+  // a pointer to avoid the copy while joyId are stored from load to unload
+  std::string *m_joyId;
   Uint8 m_joyButton;
   Uint8 m_joyAxis;
   Sint16 m_joyAxisValue;

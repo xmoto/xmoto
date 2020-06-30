@@ -53,6 +53,12 @@ XMKey::XMKey(SDL_Event &i_event) {
       m_mouseButton_button = i_event.button.button;
       break;
 
+    case SDL_MOUSEWHEEL:
+      m_input = XMK_MOUSEWHEEL;
+      m_wheelX = i_event.wheel.x;
+      m_wheelY = i_event.wheel.y;
+      break;
+
     case SDL_JOYAXISMOTION:
       m_input = XMK_JOYSTICKAXIS;
       m_joyId = InputHandler::instance()->getJoyId(i_event.jaxis.which);
@@ -375,11 +381,12 @@ std::string XMKey::toFancyString() const {
         v_button = GAMETEXT_MOUSE_RIGHTBUTTON;
         break;
 
+      /* TODO:
       case SDL_MOUSEWHEEL:
-        /* TODO: */
-        //v_button = GAMETEXT_MOUSE_WHEELUPBUTTON;
-        //v_button = GAMETEXT_MOUSE_WHEELDOWNBUTTON;
+        v_button = GAMETEXT_MOUSE_WHEELUPBUTTON;
+        v_button = GAMETEXT_MOUSE_WHEELDOWNBUTTON;
         break;
+      */
 
       default:
         char v_button_tmp[256];
@@ -482,15 +489,24 @@ bool XMKey::toMouse(int &nX, int &nY, Uint8 &nButton) const {
   return true;
 }
 
+bool XMKey::toMouseWheel(Sint32 &wheelX, Sint32 &wheelY) const {
+  if (m_input != XMK_MOUSEWHEEL) {
+    return false;
+  }
+
+  wheelX = m_wheelX;
+  wheelY = m_wheelY;
+  return true;
+}
+
 bool XMKey::toJoystickButton(Uint8 &o_joyNum, Uint8 &o_joyButton) const {
   if (m_input != XMK_JOYSTICKBUTTON) {
     return false;
   }
 
-  o_joyNum = InputHandler::instance()->getJoyNum(*m_joyId); // takes potentially
-  // time // could be
-  // better by storing
-  // the joy id
+  // takes potentially time. could be better by storing the joy id
+  o_joyNum = InputHandler::instance()->getJoyNum(*m_joyId);
+
   o_joyButton = m_joyButton;
 
   return true;
@@ -503,10 +519,9 @@ bool XMKey::toJoystickAxisMotion(Uint8 &o_joyNum,
     return false;
   }
 
-  o_joyNum = InputHandler::instance()->getJoyNum(*m_joyId); // takes potentially
-  // time // could be
-  // better by storing
-  // the joy id
+  // takes potentially time. could be better by storing the joy id
+  o_joyNum = InputHandler::instance()->getJoyNum(*m_joyId);
+
   o_joyAxis = m_joyAxis;
   o_joyAxisValue = m_joyAxisValue;
 

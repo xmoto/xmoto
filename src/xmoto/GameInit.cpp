@@ -836,7 +836,9 @@ void GameApp::manageEvent(SDL_Event *Event) {
     case SDL_MOUSEBUTTONUP:
       StateManager::instance()->xmKey(INPUT_UP, XMKey(Event->button.button));
       break;
-
+    case SDL_MOUSEWHEEL:
+      StateManager::instance()->xmKey(INPUT_SCROLL, XMKey(Event));
+      break;
     case SDL_JOYAXISMOTION:
       StateManager::instance()->xmKey(
         InputHandler::instance()->joystickAxisSens(Event->jaxis.value),

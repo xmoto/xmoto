@@ -74,6 +74,7 @@ bool StateMenu::render() {
 void StateMenu::xmKey(InputEventType i_type, const XMKey &i_xmkey) {
   int nX, nY;
   Uint8 nButton;
+  Sint32 wheelX, wheelY;
   Uint8 v_joyNum;
   Uint8 v_joyAxis;
   Sint16 v_joyAxisValue;
@@ -112,18 +113,7 @@ void StateMenu::xmKey(InputEventType i_type, const XMKey &i_xmkey) {
         } else if (nButton == SDL_BUTTON_RIGHT) {
           m_GUI->mouseRDown(nX, nY);
           checkEvents();
-        /* TODO: This is an invalid comparison */
-        } else if (nButton == SDL_MOUSEWHEEL) {
-          /* TODO
-          if (event.wheel.y > 0) {
-            m_GUI->mouseWheelUp(nX, nY);
-          } else if (event.wheel.y < 0) {
-            m_GUI->mouseWheelDown(nX, nY);
-          }
-          */
-          checkEvents();
         }
-
       } else if (i_type == INPUT_UP) {
         if (nButton == SDL_BUTTON_LEFT) {
           m_GUI->mouseLUp(nX, nY);
@@ -138,6 +128,17 @@ void StateMenu::xmKey(InputEventType i_type, const XMKey &i_xmkey) {
         m_GUI->mouseLDoubleClick(nX, nY);
         checkEvents();
       }
+    }
+  }
+
+  else if (i_xmkey.toMouseWheel(wheelX, wheelY)) {
+    if (i_type == INPUT_SCROLL) {
+      if (wheelY > 0) {
+        m_GUI->mouseWheelUp(wheelX, wheelY);
+      } else if (wheelY < 0) {
+        m_GUI->mouseWheelDown(wheelX, wheelY);
+      }
+      checkEvents();
     }
   }
 
