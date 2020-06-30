@@ -131,12 +131,12 @@ void StateMenu::xmKey(InputEventType i_type, const XMKey &i_xmkey) {
     }
   }
 
-  else if (i_xmkey.toMouseWheel(wheelX, wheelY)) {
+  else if (i_xmkey.toMouseWheel(nX, nY, wheelX, wheelY)) {
     if (i_type == INPUT_SCROLL) {
       if (wheelY > 0) {
-        m_GUI->mouseWheelUp(wheelX, wheelY);
+        m_GUI->mouseWheelUp(nX, nY, wheelX, wheelY);
       } else if (wheelY < 0) {
-        m_GUI->mouseWheelDown(wheelX, wheelY);
+        m_GUI->mouseWheelDown(nX, nY, wheelX, wheelY);
       }
       checkEvents();
     }

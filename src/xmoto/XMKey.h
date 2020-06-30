@@ -52,9 +52,7 @@ enum InputEventType {
 /* define a key to do something (keyboard:a, mouse:left, ...) */
 class XMKey {
 public:
-  /* TODO: Make these named constructors so you can
-   * add another ctor like this and avoid ambiguity? */
-  // XMKey(Sint32 wheelX, Sint32 wheelY);
+  /* TODO: Make these named constructors so to void ambiguity? */
 
   XMKey();
   XMKey(SDL_Event &i_event);
@@ -86,7 +84,7 @@ public:
 
   bool toKeyboard(SDL_Keycode &nKey, SDL_Keymod &o_mod, std::string &o_utf8Char) const;
   bool toMouse(int &nX, int &nY, Uint8 &nButton) const;
-  bool toMouseWheel(Sint32 &wheelX, Sint32 &wheelY) const;
+  bool toMouseWheel(int &nX, int &nY, Sint32 &wheelX, Sint32 &wheelY) const;
   bool toJoystickButton(Uint8 &o_joyNum, Uint8 &o_joyButton) const;
   bool toJoystickAxisMotion(Uint8 &o_joyNum,
                             Uint8 &o_joyAxis,

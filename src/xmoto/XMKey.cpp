@@ -489,13 +489,17 @@ bool XMKey::toMouse(int &nX, int &nY, Uint8 &nButton) const {
   return true;
 }
 
-bool XMKey::toMouseWheel(Sint32 &wheelX, Sint32 &wheelY) const {
+bool XMKey::toMouseWheel(int &nX, int &nY, Sint32 &wheelX, Sint32 &wheelY) const {
   if (m_input != XMK_MOUSEWHEEL) {
     return false;
   }
 
+  // used by UIRoot::_RootMouseEvent
+  GameApp::getMousePos(&nX, &nY);
+
   wheelX = m_wheelX;
   wheelY = m_wheelY;
+
   return true;
 }
 

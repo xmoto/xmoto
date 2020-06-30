@@ -837,7 +837,7 @@ void GameApp::manageEvent(SDL_Event *Event) {
       StateManager::instance()->xmKey(INPUT_UP, XMKey(Event->button.button));
       break;
     case SDL_MOUSEWHEEL:
-      StateManager::instance()->xmKey(INPUT_SCROLL, XMKey(Event));
+      StateManager::instance()->xmKey(INPUT_SCROLL, XMKey(*Event));
       break;
     case SDL_JOYAXISMOTION:
       StateManager::instance()->xmKey(

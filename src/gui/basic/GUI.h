@@ -968,7 +968,7 @@ private:
 /*===========================================================================
   UI root
   ===========================================================================*/
-enum UIRootMouseEvent {
+enum UIRootMouseEventType {
   UI_ROOT_MOUSE_LBUTTON_DOWN,
   UI_ROOT_MOUSE_LBUTTON_UP,
   UI_ROOT_MOUSE_RBUTTON_DOWN,
@@ -979,10 +979,23 @@ enum UIRootMouseEvent {
   UI_ROOT_MOUSE_DOUBLE_CLICK
 };
 
-enum UIRootKeyEvent {
+enum UIRootKeyEventType {
   UI_ROOT_KEY_DOWN,
   UI_ROOT_KEY_UP,
   UI_ROOT_TEXT_INPUT
+};
+
+struct UIRootMouseEvent {
+  UIRootMouseEventType type;
+  int x, y;
+  int wheelX, wheelY;
+};
+
+struct UIRootKeyEvent {
+  UIRootKeyEventType type;
+  int nKey;
+  SDL_Keymod mod;
+  const std::string &utf8Char;
 };
 
 struct UIRootActCandidate {
@@ -1003,8 +1016,8 @@ public:
   virtual void mouseRDown(int x, int y);
   virtual void mouseRUp(int x, int y);
   virtual void mouseHover(int x, int y);
-  virtual void mouseWheelUp(int x, int y);
-  virtual void mouseWheelDown(int x, int y);
+  virtual void mouseWheelUp(int x, int y, Sint16 wheelX, Sint16 wheelY);
+  virtual void mouseWheelDown(int x, int y, Sint16 wheelX, Sint16 wheelY);
   virtual bool keyDown(int nKey, SDL_Keymod mod, const std::string &i_utf8Char);
   virtual bool keyUp(int nKey, SDL_Keymod mod, const std::string &i_utf8Char);
   virtual bool textInput(int nKey, SDL_Keymod mod, const std::string &i_utf8Char);
@@ -1036,11 +1049,7 @@ private:
   GameApp *m_pApp; /* Application */
 
   /* Helpers */
-  bool _RootKeyEvent(UIWindow *pWindow,
-                     UIRootKeyEvent Event,
-                     int nKey,
-                     SDL_Keymod mod,
-                     const std::string &i_utf8Char);
+  bool _RootKeyEvent(UIWindow *pWindow, UIRootKeyEvent Event);
 
   bool _RootJoystickAxisMotionEvent(UIWindow *pWindow,
                                     Uint8 i_joyNum,
@@ -1050,7 +1059,7 @@ private:
                                     Uint8 i_joyNum,
                                     Uint8 i_joyButton);
 
-  bool _RootMouseEvent(UIWindow *pWindow, UIRootMouseEvent Event, int x, int y);
+  bool _RootMouseEvent(UIWindow *pWindow, UIRootMouseEvent Event);
   void _RootPaint(int x, int y, UIWindow *pWindow, UIRect *pRect);
   void _ClipRect(UIRect *pRect, UIRect *pClipWith);
   unsigned int _UpdateActivationMap(UIWindow *pWindow,

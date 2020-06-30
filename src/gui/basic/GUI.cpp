@@ -1152,39 +1152,48 @@ void UIRoot::paint(void) {
 }
 
 void UIRoot::mouseLDown(int x, int y) {
-  _RootMouseEvent(this, UI_ROOT_MOUSE_LBUTTON_DOWN, x, y);
+  UIRootMouseEvent evt = { UI_ROOT_MOUSE_LBUTTON_DOWN, x, y };
+  _RootMouseEvent(this, evt);
 }
 
 void UIRoot::mouseLDoubleClick(int x, int y) {
-  _RootMouseEvent(this, UI_ROOT_MOUSE_DOUBLE_CLICK, x, y);
+  UIRootMouseEvent evt = { UI_ROOT_MOUSE_DOUBLE_CLICK, x, y };
+  _RootMouseEvent(this, evt);
 }
 
 void UIRoot::mouseLUp(int x, int y) {
-  _RootMouseEvent(this, UI_ROOT_MOUSE_LBUTTON_UP, x, y);
+  UIRootMouseEvent evt = { UI_ROOT_MOUSE_LBUTTON_UP, x, y };
+  _RootMouseEvent(this, evt);
 }
 
 void UIRoot::mouseRDown(int x, int y) {
-  _RootMouseEvent(this, UI_ROOT_MOUSE_RBUTTON_DOWN, x, y);
+  UIRootMouseEvent evt = { UI_ROOT_MOUSE_RBUTTON_DOWN, x, y };
+  _RootMouseEvent(this, evt);
 }
 
 void UIRoot::mouseRUp(int x, int y) {
-  _RootMouseEvent(this, UI_ROOT_MOUSE_RBUTTON_UP, x, y);
+  UIRootMouseEvent evt = { UI_ROOT_MOUSE_RBUTTON_UP, x, y };
+  _RootMouseEvent(this, evt);
 }
 
 void UIRoot::mouseHover(int x, int y) {
-  _RootMouseEvent(this, UI_ROOT_MOUSE_HOVER, x, y);
+  UIRootMouseEvent evt = { UI_ROOT_MOUSE_HOVER, x, y };
+  _RootMouseEvent(this, evt);
 }
 
-void UIRoot::mouseWheelUp(int x, int y) {
-  _RootMouseEvent(this, UI_ROOT_MOUSE_WHEEL_UP, x, y);
+void UIRoot::mouseWheelUp(int x, int y, Sint16 wheelX, Sint16 wheelY) {
+  UIRootMouseEvent evt = { UI_ROOT_MOUSE_WHEEL_UP, x, y };
+  _RootMouseEvent(this, evt);
 }
 
-void UIRoot::mouseWheelDown(int x, int y) {
-  _RootMouseEvent(this, UI_ROOT_MOUSE_WHEEL_DOWN, x, y);
+void UIRoot::mouseWheelDown(int x, int y, Sint16 wheelX, Sint16 wheelY) {
+  UIRootMouseEvent evt = { UI_ROOT_MOUSE_WHEEL_DOWN, x, y };
+  _RootMouseEvent(this, evt);
 }
 
 bool UIRoot::keyDown(int nKey, SDL_Keymod mod, const std::string &i_utf8Char) {
-  if (!_RootKeyEvent(this, UI_ROOT_KEY_DOWN, nKey, mod, i_utf8Char)) {
+  UIRootKeyEvent evt = { UI_ROOT_KEY_DOWN, nKey, mod, i_utf8Char };
+  if (!_RootKeyEvent(this, evt)) {
     switch (nKey) {
       case SDLK_UP:
         activateUp();
@@ -1211,25 +1220,22 @@ bool UIRoot::keyDown(int nKey, SDL_Keymod mod, const std::string &i_utf8Char) {
 }
 
 bool UIRoot::keyUp(int nKey, SDL_Keymod mod, const std::string &i_utf8Char) {
-  return _RootKeyEvent(this, UI_ROOT_KEY_UP, nKey, mod, i_utf8Char);
+  UIRootKeyEvent evt = { UI_ROOT_KEY_UP, nKey, mod, i_utf8Char };
+  return _RootKeyEvent(this, evt);
 }
 
 bool UIRoot::textInput(int nKey, SDL_Keymod mod, const std::string &i_utf8Char) {
-  return _RootKeyEvent(this, UI_ROOT_TEXT_INPUT, 0, (SDL_Keymod)0, i_utf8Char);
+  UIRootKeyEvent evt = { UI_ROOT_TEXT_INPUT, 0, (SDL_Keymod)0, i_utf8Char };
 }
 
-bool UIRoot::_RootKeyEvent(UIWindow *pWindow,
-                           UIRootKeyEvent Event,
-                           int nKey,
-                           SDL_Keymod mod,
-                           const std::string &i_utf8Char) {
+bool UIRoot::_RootKeyEvent(UIWindow *pWindow, UIRootKeyEvent Event) {
   /* Hidden or disabled? */
   if (pWindow->isHidden() || pWindow->isDisabled())
     return false;
 
   /* First try if any children want it */
   for (unsigned int i = 0; i < pWindow->getChildren().size(); i++) {
-    if (_RootKeyEvent(pWindow->getChildren()[i], Event, nKey, mod, i_utf8Char))
+    if (_RootKeyEvent(pWindow->getChildren()[i], Event))
       return true;
   }
 
@@ -1237,15 +1243,15 @@ bool UIRoot::_RootKeyEvent(UIWindow *pWindow,
   if (pWindow != this && pWindow->isActive()) {
     bool b = false;
 
-    switch (Event) {
+    switch (Event.type) {
       case UI_ROOT_KEY_DOWN:
-        b = pWindow->keyDown(nKey, mod, i_utf8Char);
+        b = pWindow->keyDown(Event.nKey, Event.mod, Event.utf8Char);
         break;
       case UI_ROOT_KEY_UP:
-        b = pWindow->keyUp(nKey, mod, i_utf8Char);
+        b = pWindow->keyUp(Event.nKey, Event.mod, Event.utf8Char);
         break;
       case UI_ROOT_TEXT_INPUT:
-        b = pWindow->textInput(nKey, mod, i_utf8Char);
+        b = pWindow->textInput(Event.nKey, Event.mod, Event.utf8Char);
         break;
     }
 
@@ -1336,24 +1342,21 @@ bool UIRoot::_RootJoystickButtonDownEvent(UIWindow *pWindow,
   return true;
 }
 
-bool UIRoot::_RootMouseEvent(UIWindow *pWindow,
-                             UIRootMouseEvent Event,
-                             int x,
-                             int y) {
+bool UIRoot::_RootMouseEvent(UIWindow *pWindow, UIRootMouseEvent Event) {
   /* Hidden or disabled? */
   if (pWindow->isHidden() || pWindow->isDisabled())
     return false;
 
   /* All root mouse events are handled the same... - first remap coords */
-  int wx = x - pWindow->getPosition().nX;
-  int wy = y - pWindow->getPosition().nY;
+  int wx = Event.x - pWindow->getPosition().nX;
+  int wy = Event.y - pWindow->getPosition().nY;
 
   /* Inside window? */
   if (wx >= 0 && wy >= 0 && wx < pWindow->getPosition().nWidth &&
       wy < pWindow->getPosition().nHeight) {
     /* Offer activation to this window first */
-    if ((Event == UI_ROOT_MOUSE_LBUTTON_UP ||
-         Event == UI_ROOT_MOUSE_RBUTTON_UP) &&
+    if ((Event.type == UI_ROOT_MOUSE_LBUTTON_UP ||
+         Event.type == UI_ROOT_MOUSE_RBUTTON_UP) &&
         pWindow->offerActivation()) {
       /* Nice, acquire it. */
       deactivate(this); /* start by making sure nothing is activated */
@@ -1363,7 +1366,8 @@ bool UIRoot::_RootMouseEvent(UIWindow *pWindow,
     /* Recurse children */
     for (int i = (int)pWindow->getChildren().size() - 1; i >= 0; i--) {
       if (pWindow->getChildren()[i]->offerMouseEvent()) {
-        if (_RootMouseEvent(pWindow->getChildren()[i], Event, wx, wy)) {
+        UIRootMouseEvent evt = { Event.type, wx, wy, 0, 0 };
+        if (_RootMouseEvent(pWindow->getChildren()[i], evt)) {
           return true;
         }
       }
@@ -1373,12 +1377,12 @@ bool UIRoot::_RootMouseEvent(UIWindow *pWindow,
     if (pWindow != this) {
       if (m_lastHover != pWindow) { // change of focus for the children
         if (m_lastHover != NULL) {
-          m_lastHover->mouseOut(x, y);
+          m_lastHover->mouseOut(Event.x, Event.y);
         }
         m_lastHover = pWindow;
       }
 
-      switch (Event) {
+      switch (Event.type) {
         case UI_ROOT_MOUSE_LBUTTON_DOWN:
           pWindow->mouseLDown(wx, wy);
           break;
