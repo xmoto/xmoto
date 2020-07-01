@@ -296,7 +296,7 @@ void DrawLibOpenGL::init(unsigned int nDispWidth,
   const int displayIndex = 0;
   int displayModeCount = 0;
   if ((displayModeCount = SDL_GetNumDisplayModes(displayIndex)) < 1) {
-    throw Exception("getDisplayModes: No display modes found.");
+    throw Exception("DrawLib: No display modes found.");
   }
   std::vector<SDL_DisplayMode> modes(displayModeCount);
 
@@ -308,12 +308,6 @@ void DrawLibOpenGL::init(unsigned int nDispWidth,
     }
     modes[modeIndex] = mode;
   }
-
-  printf("[DEBUG]: display modes:\n");
-  for (auto& mode : modes) {
-    printf("w: %d, h: %d, refresh_rate: %d\n", mode.w, mode.h, mode.refresh_rate);
-  }
-  printf("\n");
 
   /* Determine target bit depth */
   if (m_bWindowed == true) {
@@ -330,10 +324,12 @@ void DrawLibOpenGL::init(unsigned int nDispWidth,
   int nFlags = SDL_WINDOW_SHOWN | SDL_WINDOW_OPENGL;
   if (m_bWindowed == false)
     nFlags |= SDL_WINDOW_FULLSCREEN;
+
   printf("dispWidth: %u, dispHeight: %u\n", m_nDispWidth, m_nDispHeight);
 
   /* At last, try to "set the video mode" */
-  if ((m_window = SDL_CreateWindow("xmoto 0.6.0",
+  std::string title = std::string("xmoto") + XMBuild::getVersionString(true);
+  if ((m_window = SDL_CreateWindow(title.c_str(),
           SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED,
           m_nDispWidth, m_nDispHeight, nFlags)) == NULL) {
     LogWarning(
@@ -348,26 +344,26 @@ void DrawLibOpenGL::init(unsigned int nDispWidth,
     /* Hmm, try letting it decide the BPP automatically */
     // TODO: This call should be removed as it's exactly the same as the previous one.
     // Not sure if SDL2 lets you screw around with the BPP anyway
-    if ((m_window = SDL_CreateWindow("xmoto 0.6.0",
-            SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, m_nDispWidth, m_nDispHeight, nFlags))) {
+    if ((m_window = SDL_CreateWindow(title.c_str(),
+            SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED,
+            m_nDispWidth, m_nDispHeight, nFlags)) == NULL) {
       /* Still no luck */
       LogWarning("Still no luck, now we'll try 800x600 in a window.");
       m_nDispWidth = 800;
       m_nDispHeight = 600;
       m_nDispBPP = 0;
       m_bWindowed = true;
-      /* TODO: Add this back in!
-      m_window = SDL_SetVideoMode(m_nDispWidth, m_nDispHeight, 0, SDL_WINDOW_OPENGL);
-      if (m_window == NULL) {
-        throw Exception("SDL_SetVideoMode : " + std::string(SDL_GetError()));
+
+      if ((m_window = SDL_CreateWindow(title.c_str(),
+              SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED,
+              800, 600, SDL_WINDOW_SHOWN | SDL_WINDOW_OPENGL)) == NULL) {
+        throw Exception("SDL_CreateWindow: " + std::string(SDL_GetError()));
       }
-      */
     }
   }
 
   /* TODO: Maybe this shouldn't be done here.. */
-  SDL_SetWindowTitle(m_window,
-      (std::string("xmoto ") + XMBuild::getVersionString(true)).c_str());
+  SDL_SetWindowTitle(m_window, title.c_str());
 
 #if !defined(WIN32) && !defined(__APPLE__) && !defined(__amigaos4__)
   /* This probably doesn't work */

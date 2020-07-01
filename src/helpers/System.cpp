@@ -31,11 +31,30 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #endif
 
 std::vector<std::string> *System::getDisplayModes(int windowed) {
-  std::vector<std::string> *modes = new std::vector<std::string>;
+  std::vector<std::string> *strModes = new std::vector<std::string>({
+    /* Always include these to modes */
+    "800 X 600", "1024 X 768", "1280 X 1024", "1600 X 1200",
+  });
 
   /* Always use the fullscreen flags to be sure to
      always get a result (no any modes available like in windowed) */
   //nFlags = SDL_WINDOW_OPENGL | SDL_WINDOW_FULLSCREEN;
+
+  const int displayIndex = 0;
+  int displayModeCount = 0;
+  if ((displayModeCount = SDL_GetNumDisplayModes(displayIndex)) < 1) {
+    throw Exception("getDisplayModes: No display modes found.");
+  }
+  std::vector<SDL_DisplayMode> modes(displayModeCount);
+
+  for (int modeIndex = 0; modeIndex < displayModeCount; ++modeIndex) {
+    SDL_DisplayMode mode;
+    if (SDL_GetDisplayMode(displayIndex, modeIndex, &mode) != 0) {
+      throw Exception("getDisplayModes: SDL_GetDisplayMode failed: "
+          + std::string(SDL_GetError()));
+    }
+    modes[modeIndex] = mode;
+  }
 
   /* Get available fullscreen/hardware modes */
   //sdlModes = SDL_ListModes(NULL, nFlags);
@@ -48,13 +67,8 @@ std::vector<std::string> *System::getDisplayModes(int windowed) {
   }
   */
 
-#if 0
-  /* Always include these to modes */
-  const std::vector<std::string> defaultModes = {
-    "800 X 600", "1024 X 768", "1280 X 1024", "1600 X 1200",
-  };
-
-  for (auto &mode : sdlModes) {
+  /* Create a string-list of the display modes */
+  for (auto &mode : modes) {
     char tmp[128];
 
     /* Menus don't fit under 800x600 */
@@ -66,19 +80,24 @@ std::vector<std::string> *System::getDisplayModes(int windowed) {
 
     /* Only add if not a duplicate */
     bool isDuplicate = false;
-    for (size_t j = 0; j < modes->size(); ++j) {
-      if (!strcmp(tmp, (*modes)[j].c_str())) {
+    for (auto &mode : *strModes) {
+      if (!strncmp(tmp, mode.c_str(), mode.length())) {
         isDuplicate = true;
         break;
       }
     }
     if (!isDuplicate) {
-      modes->push_back(tmp);
+      strModes->push_back(tmp);
     }
   }
-#endif
 
-  return modes;
+  printf("[DEBUG]: display modes:\n");
+  for (auto& mode : modes) {
+    printf("%dx%d@%dHz\n", mode.w, mode.h, mode.refresh_rate);
+  }
+  printf("\n");
+
+  return strModes;
 }
 
 std::string System::getMemoryInfo() {
