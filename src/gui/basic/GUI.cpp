@@ -1226,6 +1226,7 @@ bool UIRoot::keyUp(int nKey, SDL_Keymod mod, const std::string &i_utf8Char) {
 
 bool UIRoot::textInput(int nKey, SDL_Keymod mod, const std::string &i_utf8Char) {
   UIRootKeyEvent evt = { UI_ROOT_TEXT_INPUT, 0, (SDL_Keymod)0, i_utf8Char };
+  return _RootKeyEvent(this, evt);
 }
 
 bool UIRoot::_RootKeyEvent(UIWindow *pWindow, UIRootKeyEvent Event) {
