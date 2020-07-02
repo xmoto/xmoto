@@ -25,6 +25,7 @@ template<class TClass>
 class TFunctor {
 public:
   virtual void call(TClass *) = 0;
+  virtual ~TFunctor() {};
 };
 
 template<class TClass, typename TArg1>
