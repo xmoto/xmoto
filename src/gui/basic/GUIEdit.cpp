@@ -144,7 +144,7 @@ bool UIEdit::keyDown(int nKey, SDL_Keymod mod, const std::string &i_utf8Char) {
         if (SDL_HasClipboardText() == SDL_TRUE) {
           char *clipboard = SDL_GetClipboardText();
           if (!clipboard) {
-            break;
+            return true;
           }
 
           std::string s = getCaption();
@@ -153,7 +153,7 @@ bool UIEdit::keyDown(int nKey, SDL_Keymod mod, const std::string &i_utf8Char) {
           SDL_free(clipboard);
         }
       }
-      break;
+      return true;
     case SDLK_LEFT:
       if (m_nCursorPos > 0) {
         if (mod & KMOD_CTRL) {
@@ -166,9 +166,6 @@ bool UIEdit::keyDown(int nKey, SDL_Keymod mod, const std::string &i_utf8Char) {
       }
       return true;
     case SDLK_RIGHT:
-      if (mod & KMOD_CTRL) {
-        //m_nCursorPos +=;
-      }
       if (m_nCursorPos < utf8::utf8_length(getCaption())) {
         if (mod & KMOD_CTRL) {
           m_nCursorPos += TextEdit::jumpWordRight(getCaption(), m_nCursorPos);
@@ -198,14 +195,8 @@ bool UIEdit::keyDown(int nKey, SDL_Keymod mod, const std::string &i_utf8Char) {
       }
 
       setCaptionResetCursor(s, false);
-
-      /*
-      if (m_nCursorPos < utf8::utf8_length(s)) {
-        setCaptionResetCursor(utf8::utf8_delete(s, m_nCursorPos + 1), false);
-      }
-      */
-    }
       return true;
+    }
     case SDLK_BACKSPACE: {
       std::string s = getCaption();
 
@@ -227,20 +218,14 @@ bool UIEdit::keyDown(int nKey, SDL_Keymod mod, const std::string &i_utf8Char) {
       }
       return true;
     }
-    default:
-      break;
   }
 
   return false;
 }
 
 bool UIEdit::textInput(int nKey, SDL_Keymod mod, const std::string &i_utf8Char) {
-  /*
-   *
-   * NEXT: Implement the same thing here as you did in GUI.cpp:442
-   * */
-  if (utf8::utf8_length(i_utf8Char) ==
-      1) { // alt/... and special keys must not be kept
+  // alt/... and special keys must not be kept
+  if (utf8::utf8_length(i_utf8Char) == 1) {
     std::string s = getCaption();
 
     if ((unsigned int)m_nCursorPos == s.length()) {

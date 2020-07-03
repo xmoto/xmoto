@@ -409,10 +409,10 @@ void UIMsgBox::paint(void) {
 }
 
 bool UIMsgBox::textInput(int nKey, SDL_Keymod mod, const std::string &i_utf8Char) {
-  if (utf8::utf8_length(i_utf8Char) == 1) { // alt/... and special keys must not be kept
-    if (i_utf8Char[0] != '\n') { // you can generate ascii 10 with
-      // ctrl+j or keyboard having new line
-      // key
+  // alt/... and special keys must not be kept
+  if (utf8::utf8_length(i_utf8Char) == 1) {
+    // you can generate ascii 10 with ctrl+j or keyboard having new line key
+    if (i_utf8Char[0] != '\n') {
       m_TextInput_fake = utf8::utf8_concat(m_TextInput_fake, i_utf8Char);
       m_TextInput_real = m_TextInput_fake;
     }

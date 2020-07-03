@@ -20,6 +20,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
 #include "StatePlaying.h"
 #include "common/XMSession.h"
+#include "helpers/VExcept.h"
 #include "xmoto/LuaLibGame.h"
 #include "xmoto/Renderer.h"
 #include "xmoto/Universe.h"
@@ -241,17 +242,16 @@ void StatePlaying::handleScriptKeys(InputEventType Type, const XMKey &i_xmkey) {
   }
 }
 
-#include <cassert>
-
 void StatePlaying::dealWithActivedKeys() {
   int numkeys = 0;
   const Uint8 *v_keystate = SDL_GetKeyboardState(&numkeys);
-  assert(numkeys > 0 && v_keystate);
+  if (!v_keystate) {
+    throw Exception("dealWithActivedKeys: SDL_GetKeyboardState returned NULL");
+  }
 
   Uint8 v_mousestate = SDL_GetMouseState(NULL, NULL);
   unsigned int p, pW;
   Biker *v_biker;
-  printf("dealWithActivedKeys()\n");
 
   p = 0; // player number p
   pW = 0; // number of players in the previous worlds

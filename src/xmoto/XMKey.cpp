@@ -287,26 +287,23 @@ std::string XMKey::toString() const {
 
   switch (m_input) {
     case XMK_KEYBOARD:
-      v_res << "K"
-            << ":" << m_keyboard_sym << ":" << m_keyboard_mod;
+      v_res << "K:" << m_keyboard_sym << ":" << m_keyboard_mod;
       break;
 
     case XMK_MOUSEBUTTON:
-      v_res << "M"
-            << ":" << ((int)m_mouseButton_button);
+      v_res << "M:" << ((int)m_mouseButton_button);
       break;
 
     case XMK_JOYSTICKAXIS:
       // put the joyid at the end while it can contain any char
-      v_res << "A"
-            << ":" << ((int)m_joyAxis) << ":" << ((int)m_joyAxisValue) << ":"
+      v_res << "A:"
+            << ((int)m_joyAxis) << ":" << ((int)m_joyAxisValue) << ":"
             << *m_joyId;
       break;
 
     case XMK_JOYSTICKBUTTON:
       // put the joyid at the end while it can contain any char
-      v_res << "J"
-            << ":" << ((int)m_joyButton) << ":" << *m_joyId;
+      v_res << "J:" << ((int)m_joyButton) << ":" << *m_joyId;
       break;
 
     case XMK_NONE:

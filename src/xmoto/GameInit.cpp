@@ -387,7 +387,7 @@ void GameApp::run_load(int nNumArgs, char **ppcArgs) {
             XMSession::instance()->bpp());
   }
 
-  /* set focus */
+  /* set initial focus state */
   uint32_t wflags = SDL_GetWindowFlags(GameApp::instance()->getDrawLib()->getWindow());
   m_hasKeyboardFocus = wflags & SDL_WINDOW_INPUT_FOCUS;
   m_hasMouseFocus    = wflags & SDL_WINDOW_MOUSE_FOCUS;
@@ -764,8 +764,6 @@ void GameApp::manageEvent(SDL_Event *Event) {
   /* What event? */
   switch (Event->type) {
     case SDL_TEXTINPUT:
-      printf("SDL_TEXTINPUT\n");
-
       utf8Char = Event->text.text;
       printf("text: %s\n", utf8Char.c_str());
 
@@ -774,12 +772,7 @@ void GameApp::manageEvent(SDL_Event *Event) {
         XMKey(0, (SDL_Keymod)0, utf8Char));
 
       break;
-    case SDL_TEXTEDITING:
-      printf("SDL_TEXTEDITING\n");
-
-      break;
     case SDL_KEYDOWN: {
-      printf("Event->key.keysym.[sym,mod]: %lld, %lld\n", Event->key.keysym.sym, Event->key.keysym.mod);
       StateManager::instance()->xmKey(
         INPUT_DOWN,
         XMKey(Event->key.keysym.sym, (SDL_Keymod)Event->key.keysym.mod, ""));
@@ -806,8 +799,6 @@ void GameApp::manageEvent(SDL_Event *Event) {
         INPUT_UP,
         XMKey(Event->key.keysym.sym, (SDL_Keymod)Event->key.keysym.mod, utf8Char));
 
-      printf("%s [%s]\n", sdlEventEnumTable(Event->type), SDL_GetKeyName(Event->key.keysym.sym));
-      printf("kbd focus?: %s\n", m_hasKeyboardFocus ? "yes" : "no");
       break;
     case SDL_QUIT:
       /* Force quit */

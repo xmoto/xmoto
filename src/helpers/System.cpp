@@ -32,7 +32,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
 std::vector<std::string> *System::getDisplayModes(int windowed) {
   std::vector<std::string> *strModes = new std::vector<std::string>({
-    /* Always include these to modes */
+    /* Always include these in the modes */
     "800 X 600", "1024 X 768", "1280 X 1024", "1600 X 1200",
   });
 
@@ -90,12 +90,6 @@ std::vector<std::string> *System::getDisplayModes(int windowed) {
       strModes->push_back(tmp);
     }
   }
-
-  printf("[DEBUG]: display modes:\n");
-  for (auto& mode : modes) {
-    printf("%dx%d@%dHz\n", mode.w, mode.h, mode.refresh_rate);
-  }
-  printf("\n");
 
   return strModes;
 }

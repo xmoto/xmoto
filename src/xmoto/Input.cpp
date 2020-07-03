@@ -56,9 +56,6 @@ void InputHandler::init(UserConfig *pConfig,
 
   enableJoysticks(i_enableJoysticks);
 
-  // TODO:
-  //SDL_EnableKeyRepeat(SDL_DEFAULT_REPEAT_DELAY, SDL_DEFAULT_REPEAT_INTERVAL);
-
   /* Open all joysticks */
   recheckJoysticks();
   loadConfig(pConfig, pDb, i_id_profile);
@@ -555,8 +552,7 @@ void InputHandler::recheckJoysticks() {
       if ((v_joystick = SDL_JoystickOpen(i)) != NULL) {
         std::ostringstream v_id;
         n = 0;
-        // TODO:
-        //v_joyName = SDL_JoystickName(i);
+        v_joyName = SDL_JoystickName(v_joystick);
 
         // check if there is an other joystick with the same name
         for (unsigned int j = 0; j < m_Joysticks.size(); j++) {
