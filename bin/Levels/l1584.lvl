@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
-<level id="Aroundtheworldtest" levelpack="Cup o' Joe" rversion="0.2.7">
+<level id="Aroundtheworld" levelpack="Cup o' Joe" rversion="0.2.7">
 	<info>
-		<name>Around The World test</name>
+		<name>Around The World</name>
 		<description>get into orbit =)</description>
 		<author>mig</author>
 		<date>2007-08-09</date>
