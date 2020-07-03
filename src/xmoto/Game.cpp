@@ -135,6 +135,7 @@ void GameApp::_InitWin(bool bInitGraphics) {
     SDL_SetColorKey(
       v_icon, SDL_SRCCOLORKEY, SDL_MapRGB(v_icon->format, 236, 45, 211));
     SDL_WM_SetIcon(v_icon, NULL);
+    m_icon = v_icon;
   }
 #endif
 
@@ -156,6 +157,9 @@ GameApp::~GameApp() {
   StateManager::cleanStates();
   delete m_userConfig;
   //  delete m_fileGhost;
+  if (m_icon != NULL) {
+    SDL_FreeSurface(m_icon);
+  }
 }
 
 GameApp::GameApp() {
@@ -201,6 +205,7 @@ GameApp::GameApp() {
 
   m_xmdemo = NULL;
   m_loadLevelHook_per = 0;
+  m_icon = NULL;
 }
 
 /*===========================================================================
