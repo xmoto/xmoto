@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
-<level id="Aroundtheworld" levelpack="Cup o' Joe" rversion="0.2.7">
+<level id="Aroundtheworldtest" levelpack="Cup o' Joe" rversion="0.2.7">
 	<info>
-		<name>Around The World</name>
+		<name>Around The World test</name>
 		<description>get into orbit =)</description>
 		<author>mig</author>
 		<date>2007-08-09</date>
@@ -44,6 +44,11 @@ function my_tanh(x)
   return (math.exp(x) - math.exp(-x)) / (math.exp(x) + math.exp(-x))
 end
 
+-- math.mod was deprecated in favor of math.modf, which only some xmoto versions support.
+function my_mod(a, b)
+	return a - math.floor(a/b)*b
+end
+
 function prepareCamera(fromTime, maxTime, zoomStep)
   if (Game.GetTime() - fromTime) &lt; maxTime
   then
@@ -83,7 +88,7 @@ function Tick()
   -- not call every tick to limit replay size
   limit = 5
   nt = nt+1
-  if(math.mod(nt, limit) ~= 0)
+  if(my_mod(nt, limit) ~= 0)
   then
     return true
   end
