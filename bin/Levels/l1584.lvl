@@ -44,6 +44,11 @@ function my_tanh(x)
   return (math.exp(x) - math.exp(-x)) / (math.exp(x) + math.exp(-x))
 end
 
+-- math.mod was deprecated in favor of math.modf, which only some xmoto versions support.
+function my_mod(a, b)
+	return a - math.floor(a/b)*b
+end
+
 function prepareCamera(fromTime, maxTime, zoomStep)
   if (Game.GetTime() - fromTime) &lt; maxTime
   then
@@ -83,7 +88,7 @@ function Tick()
   -- not call every tick to limit replay size
   limit = 5
   nt = nt+1
-  if(math.mod(nt, limit) ~= 0)
+  if(my_mod(nt, limit) ~= 0)
   then
     return true
   end
