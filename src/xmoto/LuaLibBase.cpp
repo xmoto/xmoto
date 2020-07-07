@@ -44,11 +44,17 @@ LuaLibBase::LuaLibBase(const std::string &i_libname, luaL_Reg i_reg[]) {
 
 #if HAVE_LUAL_OPENLIB
   luaL_openlib(m_pL, i_libname.c_str(), i_reg, 0);
-#else
+#else // HAVE_LUAL_OPENLIB
   lua_newtable(m_pL);
+
+#if LUA_VERSION_NUM >= 502
+  luaL_setfuncs(m_pL, i_reg, 0);
+#else // LUA_VERSION_NUM >= 502
   luaL_register(m_pL, i_libname.c_str(), i_reg);
+#endif // LUA_VERSION_NUM >= 502
+
   lua_setglobal(m_pL, i_libname.c_str());
-#endif
+#endif // HAVE_LUAL_OPENLIB
 }
 
 LuaLibBase::~LuaLibBase() {
