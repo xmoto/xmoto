@@ -461,6 +461,11 @@ check_prototype_definition(mkdir
 )
 target_compile_definitions(xmoto PUBLIC MS_MKDIR=$<BOOL:${MS_MKDIR}>)
 
+if(USE_SYSTEM_Lua)
+  check_symbol_exists(luaL_openlib lauxlib.h HAVE_LUAL_OPENLIB)
+  target_compile_definitions(xmoto PUBLIC HAVE_LUAL_OPENLIB=$<BOOL:${HAVE_LUAL_OPENLIB}>)
+endif()
+
 target_compile_definitions(xmoto PUBLIC USE_OPENGL=$<BOOL:${USE_OPENGL}>)
 target_compile_definitions(xmoto PUBLIC USE_SDLGFX=$<BOOL:${USE_SDLGFX}>)
 target_compile_definitions(xmoto PUBLIC USE_GETTEXT=$<BOOL:${USE_GETTEXT}>)

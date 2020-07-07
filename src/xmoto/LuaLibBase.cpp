@@ -42,7 +42,13 @@ LuaLibBase::LuaLibBase(const std::string &i_libname, luaL_Reg i_reg[]) {
   luaL_requiref(m_pL, LUA_TABLIBNAME, luaopen_table, 1);
 #endif
 
+#if HAVE_LUAL_OPENLIB
   luaL_openlib(m_pL, i_libname.c_str(), i_reg, 0);
+#else
+  lua_newtable(m_pL);
+  luaL_register(m_pL, i_libname.c_str(), i_reg);
+  lua_setglobal(m_pL, i_libname.c_str());
+#endif
 }
 
 LuaLibBase::~LuaLibBase() {
