@@ -65,13 +65,21 @@ find_package(ZLIB REQUIRED)
 
 # sources
 
-add_subdirectory("${PROJECT_SOURCE_DIR}/vendor/bzip2" bzip2)
-add_subdirectory("${PROJECT_SOURCE_DIR}/vendor/libccd" libccd)
+if(NOT ${USE_SYSTEM_BZip2})
+  add_subdirectory("${PROJECT_SOURCE_DIR}/vendor/bzip2" bzip2)
+endif()
 add_subdirectory("${PROJECT_SOURCE_DIR}/vendor/chipmunk" chipmunk)
-add_subdirectory("${PROJECT_SOURCE_DIR}/vendor/lua" lua)
+if(NOT ${USE_SYSTEM_Lua})
+  add_subdirectory("${PROJECT_SOURCE_DIR}/vendor/lua" lua)
+endif()
 add_subdirectory("${PROJECT_SOURCE_DIR}/vendor/md5sum" md5sum)
-add_subdirectory("${PROJECT_SOURCE_DIR}/vendor/ode" ode)
-add_subdirectory("${PROJECT_SOURCE_DIR}/vendor/xdgbasedir" xdgbasedir)
+if(NOT ${USE_SYSTEM_ODE})
+  add_subdirectory("${PROJECT_SOURCE_DIR}/vendor/libccd" libccd)
+  add_subdirectory("${PROJECT_SOURCE_DIR}/vendor/ode" ode)
+endif()
+if(NOT ${USE_SYSTEM_XDG})
+  add_subdirectory("${PROJECT_SOURCE_DIR}/vendor/xdgbasedir" xdgbasedir)
+endif()
 add_subdirectory("${PROJECT_SOURCE_DIR}/vendor/glad" glad)
 
 set(common_src
