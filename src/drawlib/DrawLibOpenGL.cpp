@@ -326,7 +326,7 @@ void DrawLibOpenGL::init(unsigned int nDispWidth,
     nFlags |= SDL_WINDOW_FULLSCREEN;
 
   /* At last, try to "set the video mode" */
-  std::string title = std::string("xmoto") + XMBuild::getVersionString(true);
+  std::string title = std::string("X-Moto ") + XMBuild::getVersionString(true);
   if ((m_window = SDL_CreateWindow(title.c_str(),
           SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED,
           m_nDispWidth, m_nDispHeight, nFlags)) == NULL) {
