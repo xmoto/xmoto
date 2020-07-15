@@ -145,6 +145,15 @@ void StateEditProfile::checkEvents() {
     v_msgboxState->setMsgBxId("DELETEPROFILE");
     StateManager::instance()->pushState(v_msgboxState);
   }
+
+  // close profile menu
+  v_button = reinterpret_cast<UIButton *>(
+    m_GUI->getChild("EDITPROFILE_FRAME:CLOSE_BUTTON"));
+  if (v_button->isClicked()) {
+    v_button->setClicked(false);
+
+    m_requestForEnd = true;
+  }
 }
 
 void StateEditProfile::xmKey(InputEventType i_type, const XMKey &i_xmkey) {
@@ -233,13 +242,23 @@ void StateEditProfile::createGUIIfNeeded(RenderSurface *i_screen) {
 
   v_button = new UIButton(v_frame,
                           v_frame->getPosition().nWidth - 20 - 207,
-                          v_frame->getPosition().nHeight - 40 - 57,
+                          v_frame->getPosition().nHeight - 40 - 57 - 57,
                           GAMETEXT_DELETEPROFILE,
                           207,
                           57);
   v_button->setID("DELETEPROFILE_BUTTON");
   v_button->setContextHelp(CONTEXTHELP_DELETE_PROFILE);
   v_button->setFont(drawLib->getFontSmall());
+
+  v_button = new UIButton(v_frame,
+                          v_frame->getPosition().nWidth - 20 - 207,
+                          v_frame->getPosition().nHeight - 40 - 57,
+                          GAMETEXT_CLOSE,
+                          207,
+                          57);
+  v_button->setID("CLOSE_BUTTON");
+  v_button->setFont(drawLib->getFontSmall());
+
 
   createProfileList();
 }
@@ -281,13 +300,17 @@ void StateEditProfile::createProfileList() {
       m_sGUI->getChild("EDITPROFILE_FRAME:USEPROFILE_BUTTON"));
     UIButton *pDeleteButton = reinterpret_cast<UIButton *>(
       m_sGUI->getChild("EDITPROFILE_FRAME:DELETEPROFILE_BUTTON"));
+    UIButton *pCloseButton = reinterpret_cast<UIButton *>(
+      m_sGUI->getChild("EDITPROFILE_FRAME:CLOSE_BUTTON"));
 
     if (nrow == 0) {
       pUseButton->enableWindow(false);
       pDeleteButton->enableWindow(false);
+      pCloseButton->enableWindow(false);
     } else {
       pUseButton->enableWindow(true);
       pDeleteButton->enableWindow(true);
+      pCloseButton->enableWindow(true);
     }
   }
 }
