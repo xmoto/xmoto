@@ -176,6 +176,29 @@ void UIConsole::addNewLine(const std::string &i_line) {
   m_lines.push_back(i_line);
 }
 
+bool UIConsole::textInput(int nKey, SDL_Keymod mod, const std::string &i_utf8Char) {
+  // add the key
+  if (utf8::utf8_length(i_utf8Char) ==
+      1) { // alt/... and special keys must not be kept
+    if (m_cursorChar == (int)utf8::utf8_length(m_lines[m_lines.size() - 1])) {
+      m_lines[m_lines.size() - 1] += i_utf8Char;
+    } else {
+      std::string s;
+      s = utf8::utf8_substring(m_lines[m_lines.size() - 1], 0, m_cursorChar);
+      s += i_utf8Char;
+      s += utf8::utf8_substring(m_lines[m_lines.size() - 1],
+                                m_cursorChar,
+                                utf8::utf8_length(m_lines[m_lines.size() - 1]) -
+                                  m_cursorChar);
+      m_lines[m_lines.size() - 1] = s;
+    }
+    m_cursorChar++;
+    m_lastEdit = m_lines[m_lines.size() - 1];
+  }
+
+  return true;
+}
+
 bool UIConsole::keyDown(int nKey, SDL_Keymod mod, const std::string &i_utf8Char) {
   if (nKey == SDLK_d && (mod & KMOD_LCTRL) == KMOD_LCTRL) {
     execInternal("exit");
@@ -265,26 +288,6 @@ bool UIConsole::keyDown(int nKey, SDL_Keymod mod, const std::string &i_utf8Char)
   if (nKey == SDLK_HOME) {
     m_cursorChar = utf8::utf8_length(UIC_PROMPT);
   }
-
-  // add the key
-  if (utf8::utf8_length(i_utf8Char) ==
-      1) { // alt/... and special keys must not be kept
-    if (m_cursorChar == (int)utf8::utf8_length(m_lines[m_lines.size() - 1])) {
-      m_lines[m_lines.size() - 1] += i_utf8Char;
-    } else {
-      std::string s;
-      s = utf8::utf8_substring(m_lines[m_lines.size() - 1], 0, m_cursorChar);
-      s += i_utf8Char;
-      s += utf8::utf8_substring(m_lines[m_lines.size() - 1],
-                                m_cursorChar,
-                                utf8::utf8_length(m_lines[m_lines.size() - 1]) -
-                                  m_cursorChar);
-      m_lines[m_lines.size() - 1] = s;
-    }
-    m_cursorChar++;
-    m_lastEdit = m_lines[m_lines.size() - 1];
-  }
-
   return true;
 }
 

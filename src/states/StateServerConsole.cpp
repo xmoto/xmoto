@@ -67,6 +67,9 @@ void StateServerConsole::xmKey(InputEventType i_type, const XMKey &i_xmkey) {
     if (i_type == INPUT_DOWN) {
       m_console->keyDown(v_nKey, v_mod, v_utf8Char);
       return;
+    } else if (i_type == INPUT_TEXT) {
+      m_console->textInput(v_nKey, v_mod, v_utf8Char);
+      return;
     }
   }
 
