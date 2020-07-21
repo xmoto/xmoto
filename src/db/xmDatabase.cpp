@@ -26,11 +26,9 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "helpers/VExcept.h"
 #include "xmoto/Game.h"
 #include "xmoto/GameText.h"
-#include "xmoto/UserConfig.h"
-#include "xmoto/Input.h"
 #include <sstream>
 
-#define XMDB_VERSION 37
+#define XMDB_VERSION 36
 #define DB_MAX_SQL_RUNTIME 0.25
 #define DB_BUSY_TIMEOUT 60000 // 60 seconds
 
@@ -967,32 +965,6 @@ void xmDatabase::upgradeXmDbToVersion(int i_fromVersion,
         updateXmDbVersion(36, i_interface);
       } catch (Exception &e) {
         throw Exception("Unable to update xmDb from 35: " + e.getMsg());
-      }
-
-    case 36:
-      try {
-        if (!checkKey("SELECT count(1) FROM xm_parameters WHERE param='sdl2_migrated';")) {
-          simpleSql("INSERT OR IGNORE INTO xm_parameters(param, value) VALUES ('sdl2_migrated', 1);");
-
-          InputHandler::instance()->setDefaultConfig();
-
-          InputHandler::instance()->saveConfig(
-              GameApp::instance()->getUserConfig(),
-              xmDatabase::instance("main"),
-              XMSession::instance("file")->profile()
-            );
-        }
-
-        /* We don't want to get into the middle of a "db upgrade bootloop" */
-        setUpdateAfterInitDone();
-
-        /*
-         * don't store the bluffed version bump in the db - this preserves
-         * a primitive form of backward compatibility
-         */
-
-      } catch (Exception &e) {
-        throw Exception("Unable to update xmDb from 36: " + e.getMsg());
       }
 
       // next
