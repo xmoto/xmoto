@@ -21,7 +21,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #ifndef __XMKEY_H__
 #define __XMKEY_H__
 
-#define INPUT_JOYSTICK_MINIMUM_DETECTION 100
+#define INPUT_JOYSTICK_MINIMUM_DETECTION 8000 // deadzone
 #define INPUT_JOYSTICK_MAXIMUM_VALUE 32760
 
 enum XMKey_input {
@@ -90,8 +90,10 @@ public:
                             Uint8 &o_joyAxis,
                             Sint16 &o_joyAxisValue) const;
 
-  inline SDL_Keycode getKeyboardSym() const { return m_keyboard_sym; };
-  inline SDL_Keymod  getKeyboardMod() const { return m_keyboard_mod; };
+  inline SDL_Keycode getKeyboardSym() const { return m_keyboard_sym; }
+  inline SDL_Keymod  getKeyboardMod() const { return m_keyboard_mod; }
+
+  inline Uint8 getJoyButton() const { return m_joyButton; }
 
 private:
   XMKey_input m_input;

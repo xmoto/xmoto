@@ -27,17 +27,20 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
 XMKey::XMKey() {
   m_input = XMK_NONE;
+  m_joyButton = SDL_CONTROLLER_BUTTON_INVALID;
   m_repetition = 1;
 }
 
 XMKey::XMKey(Uint8 nButton, unsigned int i_repetition) {
   m_input = XMK_MOUSEBUTTON;
   m_mouseButton_button = nButton;
+  m_joyButton = SDL_CONTROLLER_BUTTON_INVALID;
   m_repetition = i_repetition;
 }
 
 XMKey::XMKey(SDL_Event &i_event) {
   m_repetition = 1;
+  m_joyButton = SDL_CONTROLLER_BUTTON_INVALID;
 
   switch (i_event.type) {
     case SDL_KEYDOWN:
@@ -83,6 +86,7 @@ XMKey::XMKey(SDL_Keycode nKey, SDL_Keymod mod, const std::string &i_utf8Char) {
   m_keyboard_mod = (SDL_Keymod)(mod & (KMOD_CTRL | KMOD_SHIFT | KMOD_ALT |
                                        KMOD_GUI)); // only allow these modifiers
   m_keyboard_utf8Char = i_utf8Char;
+  m_joyButton = SDL_CONTROLLER_BUTTON_INVALID;
   m_repetition = 1;
 }
 
@@ -98,6 +102,7 @@ XMKey::XMKey(std::string *i_joyId, Uint8 i_joyAxis, Sint16 i_joyAxisValue) {
   m_joyId = i_joyId;
   m_joyAxis = i_joyAxis;
   m_joyAxisValue = i_joyAxisValue;
+  m_joyButton = SDL_CONTROLLER_BUTTON_INVALID;
   m_repetition = 1;
 }
 
@@ -106,6 +111,7 @@ XMKey::XMKey(const std::string &i_key, bool i_basicMode) {
   std::string v_current, v_rest;
 
   m_repetition = 1;
+  m_joyButton = SDL_CONTROLLER_BUTTON_INVALID;
 
   if (i_basicMode) {
     m_input = XMK_KEYBOARD;

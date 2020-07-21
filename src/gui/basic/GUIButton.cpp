@@ -383,15 +383,18 @@ bool UIButton::keyDown(int nKey, SDL_Keymod mod, const std::string &i_utf8Char) 
     case SDLK_RETURN:
       toggle();
       return true;
-      break;
   }
 
   return false;
 }
 
 bool UIButton::joystickButtonDown(Uint8 i_joyNum, Uint8 i_joyButton) {
-  toggle();
-  return true;
+  switch (i_joyButton) {
+    case SDL_CONTROLLER_BUTTON_A:
+      toggle();
+      return true;
+  }
+  return false;
 }
 
 void UIButton::toggle() {

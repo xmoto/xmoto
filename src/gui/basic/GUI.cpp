@@ -1257,18 +1257,19 @@ bool UIRoot::_RootKeyEvent(UIWindow *pWindow, UIRootKeyEvent Event) {
     }
 
     return b;
-  } else
+  } else {
     return false;
+  }
 
   /* Ok */
-  return true;
+  return true; // never reached
 }
 
 bool UIRoot::joystickAxisMotion(Uint8 i_joyNum,
                                 Uint8 i_joyAxis,
                                 Sint16 i_joyAxisValue) {
-  if (!_RootJoystickAxisMotionEvent(
-        this, i_joyNum, i_joyAxis, i_joyAxisValue)) {
+
+  if (!_RootJoystickAxisMotionEvent(this, i_joyNum, i_joyAxis, i_joyAxisValue)) {
     if (i_joyAxis % 2 == 0) { // horizontal
       if (i_joyAxisValue < -(GUI_JOYSTICK_MINIMUM_DETECTION)) {
         activateLeft();
@@ -1291,7 +1292,23 @@ bool UIRoot::joystickAxisMotion(Uint8 i_joyNum,
 }
 
 bool UIRoot::joystickButtonDown(Uint8 i_joyNum, Uint8 i_joyButton) {
-  return _RootJoystickButtonDownEvent(this, i_joyNum, i_joyButton);
+  if (!_RootJoystickButtonDownEvent(this, i_joyNum, i_joyButton)) {
+    switch (i_joyButton) {
+      case SDL_CONTROLLER_BUTTON_DPAD_UP:
+        activateUp();
+        return true;
+      case SDL_CONTROLLER_BUTTON_DPAD_DOWN:
+        activateDown();
+        return true;
+      case SDL_CONTROLLER_BUTTON_DPAD_LEFT:
+        activateLeft();
+        return true;
+      case SDL_CONTROLLER_BUTTON_DPAD_RIGHT:
+        activateRight();
+        return true;
+    }
+  }
+  return false;
 }
 
 bool UIRoot::_RootJoystickAxisMotionEvent(UIWindow *pWindow,
@@ -1336,8 +1353,9 @@ bool UIRoot::_RootJoystickButtonDownEvent(UIWindow *pWindow,
   /* Try this */
   if (pWindow != this && pWindow->isActive()) {
     return pWindow->joystickButtonDown(i_joyNum, i_joyButton);
-  } else
+  } else {
     return false;
+  }
 
   /* Ok */
   return true;

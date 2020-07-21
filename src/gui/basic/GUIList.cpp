@@ -1010,8 +1010,24 @@ bool UIList::joystickAxisMotion(Uint8 i_joyNum,
 }
 
 bool UIList::joystickButtonDown(Uint8 i_joyNum, Uint8 i_joyButton) {
-  eventGo();
-  return true;
+  switch (i_joyButton) {
+    case SDL_CONTROLLER_BUTTON_A:
+      eventGo();
+      return true;
+    case SDL_CONTROLLER_BUTTON_DPAD_UP:
+      eventUp();
+      return true;
+    case SDL_CONTROLLER_BUTTON_DPAD_DOWN:
+      eventDown();
+      return true;
+    case SDL_CONTROLLER_BUTTON_DPAD_LEFT:
+      eventLeft();
+      return true;
+    case SDL_CONTROLLER_BUTTON_DPAD_RIGHT:
+      eventRight();
+      return true;
+  }
+  return false;
 }
 
 void UIList::adaptRealSelectedOnVisibleEntries() { // m_nRealSelected must be >=

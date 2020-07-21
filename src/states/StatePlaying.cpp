@@ -307,8 +307,18 @@ void StatePlaying::dealWithActivedKeys() {
       }
 
       if (InputHandler::instance()
-            ->getPlayerKey(INPUT_CHANGEDIR, p)
-            ->isPressed(v_keystate, v_mousestate)) {
+          ->getPlayerKey(INPUT_CHANGEDIR, p)
+          ->isPressed(v_keystate, v_mousestate)
+          /*
+           * Make sure we aren't holding down the A button, as this would cause
+           * the player to change directions instantly after opening the level
+           * (or after skipping the initial zoom) or restarting/resuming from
+           * the pause menu, as this likely isn't wanted when playing with a
+           * controller. Note that this behavior still stands for the spacebar.
+           */
+          && !(InputHandler::instance()
+               ->getPlayerKey(INPUT_CHANGEDIR, p)
+               ->getJoyButton() == SDL_CONTROLLER_BUTTON_A)) {
         /* Change dir */
         if (m_changeDirKeyAlreadyPress[p] == false) {
           v_biker->getControler()->setChangeDir(true);

@@ -428,6 +428,9 @@ public:
 
   void makeMinimizable(int nMinX, int nMinY);
   void setMinimized(bool b);
+  void toggle();
+
+  bool isMinimized() const { return m_bMinimized; }
 
   /* Data interface */
   UIFrameStyle getStyle(void) { return m_Style; }

@@ -784,17 +784,29 @@ void StateMainMenu::xmKey(InputEventType i_type, const XMKey &i_xmkey) {
     }
   }
 
-  else if (i_type == INPUT_DOWN && i_xmkey == XMKey(SDLK_ESCAPE, KMOD_NONE)) {
+  else if (i_type == INPUT_DOWN && (i_xmkey == XMKey(SDLK_ESCAPE, KMOD_NONE) ||
+                                    i_xmkey.getJoyButton() == SDL_CONTROLLER_BUTTON_B)) {
     UIWindow *v_windowLevels =
       reinterpret_cast<UIWindow *>(m_GUI->getChild("MAIN:FRAME_LEVELS"));
     UIWindow *v_windowReplays =
       reinterpret_cast<UIWindow *>(m_GUI->getChild("MAIN:FRAME_REPLAYS"));
+    UIFrame *v_stats =
+      reinterpret_cast<UIFrame *>(m_GUI->getChild("MAIN:STATS"));
 
     if (v_windowLevels->isHidden() == false) {
       v_windowLevels->showWindow(false);
     } else if (v_windowReplays->isHidden() == false) {
       v_windowReplays->showWindow(false);
     }
+    if (!v_stats->isMinimized()) {
+      v_stats->toggle();
+    }
+  }
+
+  /* the "Back" button is the one on the left side of the guide button */
+  else if (i_type == INPUT_DOWN && i_xmkey.getJoyButton() == SDL_CONTROLLER_BUTTON_BACK) {
+    UIFrame *v_stats = reinterpret_cast<UIFrame *>(m_GUI->getChild("MAIN:STATS"));
+    v_stats->toggle();
   }
 
   else {

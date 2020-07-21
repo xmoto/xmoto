@@ -254,6 +254,10 @@ void UIFrame::paint(void) {
 Clicking
 ===========================================================================*/
 void UIFrame::mouseLDown(int x, int y) {
+  toggle();
+}
+
+void UIFrame::toggle() {
   m_bMinimized = !m_bMinimized;
   m_fMinMaxTime = getApp()->getXMTime();
 

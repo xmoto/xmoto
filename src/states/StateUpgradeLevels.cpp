@@ -135,7 +135,8 @@ void StateUpgradeLevels::callAfterThreadFinished(int threadResult) {
 }
 
 void StateUpgradeLevels::xmKey(InputEventType i_type, const XMKey &i_xmkey) {
-  if (i_type == INPUT_DOWN && i_xmkey == XMKey(SDLK_ESCAPE, KMOD_NONE)) {
+  if (i_type == INPUT_DOWN && (i_xmkey == XMKey(SDLK_ESCAPE, KMOD_NONE) ||
+                               i_xmkey.getJoyButton() == SDL_CONTROLLER_BUTTON_B)) {
     m_pThread->askThreadToEnd();
   }
 

@@ -77,7 +77,8 @@ void StateDeadJust::enter() {
 }
 
 void StateDeadJust::xmKey(InputEventType i_type, const XMKey &i_xmkey) {
-  if (i_type == INPUT_DOWN && i_xmkey == XMKey(SDLK_ESCAPE, KMOD_NONE)) {
+  if (i_type == INPUT_DOWN && (i_xmkey == XMKey(SDLK_ESCAPE, KMOD_NONE) ||
+                               i_xmkey.getJoyButton() == SDL_CONTROLLER_BUTTON_START)) {
     StateManager::instance()->pushState(
       new StateDeadMenu(m_universe, getStateId()));
   }
