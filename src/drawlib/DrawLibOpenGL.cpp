@@ -372,6 +372,7 @@ void DrawLibOpenGL::init(unsigned int nDispWidth,
     SDL_SetColorKey(
       v_icon, SDL_TRUE, SDL_MapRGB(v_icon->format, 236, 45, 211));
     SDL_SetWindowIcon(m_window, v_icon);
+    SDL_FreeSurface(v_icon);
   }
 #endif
 
