@@ -37,10 +37,10 @@ Build configuration
 #define ENABLE_OPENGL
 #endif
 
-#ifndef USE_SDL_GFX
-#define USE_SDL_GFX 0
+#ifndef USE_SDL_gfx
+#define USE_SDL_gfx 0
 #endif
-#if USE_SDL_GFX == 1
+#if USE_SDL_gfx == 1
 #define ENABLE_SDL_GFX
 #endif
 

@@ -3,7 +3,7 @@ include(CMakeDependentOption)
 option(STATIC_BUILD "Build a static executable" OFF)
 option(USE_OPENGL "Build with OpenGL for graphics" ON)
 option(USE_SDL "Build with SDL" ON)
-CMAKE_DEPENDENT_OPTION(USE_SDL_GFX "Build with SDL for graphics" OFF
+CMAKE_DEPENDENT_OPTION(USE_SDL_gfx "Build with SDL for graphics" OFF
   "USE_SDL" OFF)
 option(USE_GETTEXT "Build with Gettext for internationalization" ON)
 option(PREFER_SYSTEM_BZip2 "Prefer to build with system BZip2" ON)
@@ -31,12 +31,24 @@ set(USE_SYSTEM_BZip2 $<IF:$<AND:$<BOOL:${PREFER_SYSTEM_BZip2}>,$<BOOL:${BZIP2_FO
 
 find_package(CURL REQUIRED)
 if(USE_GETTEXT)
-  find_package(Gettext REQUIRED)
-  find_package(Intl REQUIRED)
+  find_package(Gettext REQUIRED) # GNU Gettext tools
+  find_package(Intl REQUIRED) # Gettext libintl library
+  if(Intl_FOUND AND NOT TARGET Gettext::Intl)
+    add_library(Gettext::Intl INTERFACE IMPORTED)
+    set_target_properties(Gettext::Intl PROPERTIES
+      INTERFACE_INCLUDE_DIRECTORIES "${Intl_INCLUDE_DIRS}"
+      INTERFACE_LINK_LIBRARIES "${Intl_LIBRARIES}"
+    )
+    if(Intl_LIBRARY)
+      set_target_properties(Gettext::Intl PROPERTIES IMPORTED_LOCATION "${Intl_LIBRARY}")
+    endif()
+  endif()
 endif()
 find_package(JPEG REQUIRED)
 
-find_package(LibLZMA)
+if(STATIC_BUILD)
+  find_package(LibLZMA)
+endif()
 find_package(LibXml2 REQUIRED)
 
 find_package(ODE)
@@ -57,16 +69,16 @@ endif()
 # Can't disable yet
 if(USE_SDL)
   find_package(SDL REQUIRED)
-  find_package(SDL_gfx) # REQUIRED?
+  if(USE_SDL_gfx)
+    find_package(SDL_gfx REQUIRED)
+  endif()
   find_package(SDL_mixer REQUIRED)
   find_package(SDL_net REQUIRED)
   find_package(SDL_ttf REQUIRED)
-  if(USE_SDL_GFX)
-    # find_package(SDL_gfx REQUIRED)
-  endif()
+  include(FindSDLTargets)
 else()
   message(FATAL_ERROR "SDL must be used.")
-  if(USE_SDL_GFX)
+  if(USE_SDL_gfx)
     message(FATAL_ERROR "SDL_gfx must be used with SDL.")
   endif()
 endif()
@@ -136,20 +148,30 @@ endif()
 
 target_link_libraries(xmoto PUBLIC CURL::libcurl)
 target_compile_definitions(xmoto PUBLIC $<$<BOOL:${STATIC_BUILD}>:CURL_STATICLIB>)
+if(USE_GETTEXT)
+  target_link_libraries(xmoto PUBLIC Gettext::Intl)
+endif()
 target_link_libraries(xmoto PUBLIC JPEG::JPEG)
+if(STATIC_BUILD AND TARGET LibLZMA::LibLZMA)
+  target_link_libraries(xmoto PUBLIC LibLZMA::LibLZMA)
+endif()
 target_link_libraries(xmoto PUBLIC LibXml2::LibXml2)
 target_compile_definitions(xmoto PUBLIC $<$<BOOL:${STATIC_BUILD}>:LIBXML_STATIC>)
 target_link_libraries(xmoto PUBLIC PNG::PNG)
+if(USE_SDL)
+  target_link_libraries(xmoto PUBLIC SDL::SDL)
+  if(USE_SDL_gfx)
+    target_link_libraries(xmoto PUBLIC SDL::SDL_gfx)
+  endif()
+  target_link_libraries(xmoto PUBLIC SDL::SDL_mixer)
+  target_link_libraries(xmoto PUBLIC SDL::SDL_net)
+  target_link_libraries(xmoto PUBLIC SDL::SDL_ttf)
+endif()
 target_link_libraries(xmoto PUBLIC SQLite::SQLite3)
 target_link_libraries(xmoto PUBLIC ZLIB::ZLIB)
 
 target_include_directories(xmoto PRIVATE
   "${PROJECT_SOURCE_DIR}/src"
-  "$<$<BOOL:${USE_SDL}>:${SDL_INCLUDE_DIR}>"
-  "$<$<BOOL:${USE_SDL_GFX}>:${SDL_GFX_INCLUDE_DIRS}>"
-  "$<$<BOOL:${USE_SDL}>:${SDL_MIXER_INCLUDE_DIRS}>"
-  "$<$<BOOL:${USE_SDL}>:${SDL_NET_INCLUDE_DIRS}>"
-  "$<$<BOOL:${USE_SDL}>:${SDL_TTF_INCLUDE_DIRS}>"
   "$<IF:$<BOOL:${USE_SYSTEM_Lua}>,${LUA_INCLUDE_DIR},${PROJECT_SOURCE_DIR}/vendor/lua/lua>"
 )
 
@@ -167,19 +189,12 @@ target_link_libraries(xmoto PUBLIC
       $<$<BOOL:${STATIC_BUILD}>:gcrypt>
       $<$<BOOL:${STATIC_BUILD}>:gpg-error>
     $<$<BOOL:${STATIC_BUILD}>:wldap32>
-  "${Intl_LIBRARIES}"
-    "$<$<BOOL:${STATIC_BUILD}>:${LIBLZMA_LIBRARIES}>"
   "$<IF:$<BOOL:${USE_SYSTEM_Lua}>,${LUA_LIBRARIES},lua>"
   md5sum
   "$<IF:$<BOOL:${USE_SYSTEM_ODE}>,${ODE_LIBRARY},ode>"
   glad
   "${CMAKE_DL_LIBS}"
   "${OPENGL_LIBRARIES}"
-  "$<$<BOOL:${USE_SDL}>:${SDL_LIBRARY}>"
-  "$<$<BOOL:${USE_SDL_GFX}>:${SDL_GFX_LIBRARIES}>"
-  "$<$<BOOL:${USE_SDL}>:${SDL_MIXER_LIBRARIES}>"
-  "$<$<BOOL:${USE_SDL}>:${SDL_NET_LIBRARIES}>"
-  "$<$<BOOL:${USE_SDL}>:${SDL_TTF_LIBRARIES}>"
   "$<IF:$<BOOL:${USE_SYSTEM_XDG}>,${XDG_LIBRARY},xdgbasedir>"
 )
 
@@ -201,7 +216,7 @@ target_compile_definitions(xmoto PUBLIC MS_MKDIR=$<BOOL:${MS_MKDIR}>)
 
 target_compile_definitions(xmoto PUBLIC USE_OPENGL=$<BOOL:${USE_OPENGL}>)
 target_compile_definitions(xmoto PUBLIC USE_SDL=$<BOOL:${USE_SDL}>)
-target_compile_definitions(xmoto PUBLIC USE_SDL_GFX=$<BOOL:${USE_SDL_GFX}>)
+target_compile_definitions(xmoto PUBLIC USE_SDL_gfx=$<BOOL:${USE_SDL_gfx}>)
 target_compile_definitions(xmoto PUBLIC USE_GETTEXT=$<BOOL:${USE_GETTEXT}>)
 target_compile_definitions(xmoto PUBLIC ALLOW_DEV=$<BOOL:${ALLOW_DEV}>)
 target_compile_definitions(xmoto PUBLIC BUILD_MACOS_BUNDLE=$<BOOL:${BUILD_MACOS_BUNDLE}>)
@@ -383,6 +398,7 @@ endif()
 
 message("BZip2     libraries: ${BZIP2_LIBRARIES}")
 message("libcurl   libraries: ${CURL_LIBRARIES}")
+message("Intl   include dirs: ${Intl_INCLUDE_DIRS}")
 message("Intl      libraries: ${Intl_LIBRARIES}")
 message("JPEG      libraries: ${JPEG_LIBRARIES}")
 message("LibLZMA   libraries: ${LIBLZMA_LIBRARIES}")

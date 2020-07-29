@@ -89,7 +89,7 @@ stdenv.mkDerivation rec {
     (cmakeOption "USE_GETTEXT" enableGettext)
     (cmakeOption "USE_OPENGL" enableOpengl)
     (cmakeOption "USE_SDL" enableSdl)
-    (cmakeOption "USE_SDL_GFX" enableSdl-gfx)
+    (cmakeOption "USE_SDL_gfx" enableSdl-gfx)
     (cmakeOption "PREFER_SYSTEM_BZip2" enableSystemBzip2)
     (cmakeOption "PREFER_SYSTEM_Lua" enableSystemLua)
     (cmakeOption "PREFER_SYSTEM_ODE" enableSystemOde)
