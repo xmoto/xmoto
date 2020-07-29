@@ -14,7 +14,7 @@ option(ALLOW_DEV "Enable some development/debug features" OFF)
 option(BUILD_MACOS_BUNDLE "Build xmoto as a macOS Bundle" OFF)
 
 if(CMAKE_GENERATOR MATCHES "Ninja")
-  message("-- Using Ninja, try to colorize")
+  message("-- Using ${CMAKE_GENERATOR}, try to colorize")
   check_cxx_compiler_flag(-fdiagnostics-color FLAG_CXX_DIAGNOSTICS_COLOR)
   if(FLAG_CXX_DIAGNOSTICS_COLOR)
     add_compile_options("-fdiagnostics-color")
@@ -54,7 +54,7 @@ find_package(LibXml2 REQUIRED)
 find_package(ODE)
 set(USE_SYSTEM_ODE $<IF:$<AND:$<BOOL:${PREFER_SYSTEM_ODE}>,$<BOOL:${ODE_FOUND}>>,ON,OFF>)
 if(USE_OPENGL)
-  find_package(OpenGL REQUIRED)
+  find_package(OpenGL REQUIRED COMPONENTS OpenGL)
 endif()
 find_package(PNG REQUIRED)
 
@@ -157,6 +157,10 @@ if(STATIC_BUILD AND TARGET LibLZMA::LibLZMA)
 endif()
 target_link_libraries(xmoto PUBLIC LibXml2::LibXml2)
 target_compile_definitions(xmoto PUBLIC $<$<BOOL:${STATIC_BUILD}>:LIBXML_STATIC>)
+if(USE_OPENGL)
+  target_link_libraries(xmoto PUBLIC OpenGL::GL)
+  target_link_libraries(xmoto PUBLIC OpenGL::GLU)
+endif()
 target_link_libraries(xmoto PUBLIC PNG::PNG)
 if(USE_SDL)
   target_link_libraries(xmoto PUBLIC SDL::SDL)
@@ -193,8 +197,6 @@ target_link_libraries(xmoto PUBLIC
   md5sum
   "$<IF:$<BOOL:${USE_SYSTEM_ODE}>,${ODE_LIBRARY},ode>"
   glad
-  "${CMAKE_DL_LIBS}"
-  "${OPENGL_LIBRARIES}"
   "$<IF:$<BOOL:${USE_SYSTEM_XDG}>,${XDG_LIBRARY},xdgbasedir>"
 )
 
