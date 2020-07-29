@@ -16,9 +16,6 @@ assert enableCmakeNinja -> buildPackages.ninja != null;
 assert enableGettext -> buildPackages.gettext != null;
 assert enableGettext -> buildPackages.libintl != null;
 
-# Can't disable OpenGL yet.
-assert libGL != null;
-
 assert enableOpengl -> libGL != null;
 
 # Can't disable SDL yet.
@@ -68,10 +65,8 @@ stdenv.mkDerivation rec {
     libxml2
     sqlite
     zlib
-  ] ++ [
+  ] ++  optionals enableOpengl [
     libGL
-  ] ++ optionals enableOpengl [
-    # libGL
   ] ++ [
     SDL
     SDL_mixer
