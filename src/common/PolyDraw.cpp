@@ -24,6 +24,8 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
 #include <string.h>
 
+#include "../include/xm_SDL_gfx.h"
+
 #include "PolyDraw.h"
 
 #if defined(MIN)
@@ -35,8 +37,6 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #undef MAX
 #endif
 #define MAX(a, b) ((a) > (b) ? (a) : (b))
-
-#include "SDL_gfxPrimitives.h"
 
 PolyDraw::PolyDraw(SDL_Surface *pBuf) {
   /* Set defaults */

@@ -22,15 +22,16 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  *  Simple 2D drawing library, built closely on top of OpenGL.
  */
 #include "DrawLibSDLgfx.h"
-#include "common/Image.h"
-#include "helpers/Log.h"
-#include "xmoto/Game.h"
+#include "../common/Image.h"
+#include "../helpers/Log.h"
+#include "../xmoto/Game.h"
 
 #ifdef ENABLE_SDL_GFX
-#include "PolyDraw.h"
-#include "SDL_gfxPrimitives.h"
-#include "SDL_rotozoom.h"
-#include "helpers/iqsort.h"
+#include "../common/PolyDraw.h"
+#include "../common/VFileIO.h"
+#include "../include/xm_SDL_gfx.h"
+#include "../include/xm_SDL_ttf.h"
+#include "../helpers/iqsort.h"
 //#define islt(a,b) ((*(const int *)a) - (*(const int *)b))
 #define islt(a, b) ((*a) < (*b))
 
@@ -103,13 +104,16 @@ public:
   virtual ~SDLFontManager();
 
   FontGlyph *getGlyph(const std::string &i_string);
-  void printString(FontGlyph *i_glyph,
+  FontGlyph *getGlyphTabExtended(const std::string &i_string);
+  void printString(DrawLib *pDrawLib,
+		   FontGlyph *i_glyph,
                    int i_x,
                    int i_y,
                    Color i_color,
                    float i_perCentered = -1.0,
                    bool i_shadowEffect = false);
-  void printStringGrad(FontGlyph *i_glyph,
+  void printStringGrad(DrawLib *pDrawLib,
+		       FontGlyph *i_glyph,
                        int i_x,
                        int i_y,
                        Color c1,
@@ -118,6 +122,8 @@ public:
                        Color c4,
                        float i_perCentered = -1.0,
                        bool i_shadowEffect = false);
+
+  void displayScrap(DrawLib *pDrawLib);
 
 private:
   DrawLib *m_drawlib;
@@ -132,8 +138,12 @@ SDLFontManager::SDLFontManager(DrawLib *i_drawLib,
 FontGlyph *SDLFontManager::getGlyph(const std::string &i_string) {
   return new SDLFontGlyph("test");
 };
+FontGlyph *SDLFontManager::getGlyphTabExtended(const std::string &i_string) {
+  return new SDLFontGlyph("test");
+};
 
-void SDLFontManager::printStringGrad(FontGlyph *i_glyph,
+void SDLFontManager::printStringGrad(DrawLib *pDrawLib,
+				     FontGlyph *i_glyph,
                                      int i_x,
                                      int i_y,
                                      Color c1,
@@ -147,14 +157,19 @@ void SDLFontManager::printStringGrad(FontGlyph *i_glyph,
     m_ttf, ((SDLFontGlyph *)i_glyph)->Value().c_str(), color);
   SDL_FreeSurface(text_surface);
 }
-void SDLFontManager::printString(FontGlyph *i_glyph,
+void SDLFontManager::printString(DrawLib *pDrawLib,
+				 FontGlyph *i_glyph,
                                  int i_x,
                                  int i_y,
                                  Color i_color,
                                  float i_perCentered,
                                  bool i_shadowEffect) {
-  printStringGrad(
+  printStringGrad(pDrawLib,
     i_glyph, i_x, i_y, i_color, i_color, i_color, i_color, i_perCentered);
+}
+
+void SDLFontManager::displayScrap(DrawLib *pDrawLib) {
+  // TODO
 }
 
 SDLFontManager::~SDLFontManager() {}
@@ -181,10 +196,11 @@ DrawLibSDLgfx::DrawLibSDLgfx()
   m_texture = NULL;
 
   m_fontSmall =
-    getFontManager(FS::FullPath(FontManager::getDrawFontFile()), 14);
+    getFontManager(XMFS::FullPath(FDT_DATA, FontManager::getDrawFontFile()), 14);
   m_fontMedium =
-    getFontManager(FS::FullPath(FontManager::getDrawFontFile()), 22);
-  m_fontBig = getFontManager(FS::FullPath(FontManager::getDrawFontFile()), 60);
+    getFontManager(XMFS::FullPath(FDT_DATA, FontManager::getDrawFontFile()), 22);
+  m_fontBig =
+    getFontManager(XMFS::FullPath(FDT_DATA, FontManager::getDrawFontFile()), 60);
 };
 
 DrawLibSDLgfx::~DrawLibSDLgfx(){};
@@ -215,8 +231,8 @@ void DrawLibSDLgfx::glVertexSP(float x, float y) {
 
 void DrawLibSDLgfx::glVertex(float x, float y) {
   Vector2f *v =
-    new Vector2f(m_nDrawWidth / 2 + ((x + m_translate.x) * m_scale.x),
-                 m_nDrawHeight / 2 - ((y + m_translate.y) * m_scale.y));
+    new Vector2f(m_nDispWidth / 2 + ((x + m_translate.x) * m_scale.x),
+                 m_nDispHeight / 2 - ((y + m_translate.y) * m_scale.y));
 
   if (m_drawingPoints.size() == 0) {
     m_min.x = m_max.x = v->x;
@@ -242,10 +258,6 @@ void DrawLibSDLgfx::glTexCoord(float x, float y) {
   m_texturePoints.push_back(new Vector2f(x, y));
 }
 
-void DrawLibSDLgfx::screenProjVertex(float *x, float *y) {
-  *y = m_nActualHeight - (*y);
-}
-
 void DrawLibSDLgfx::setClipRect(int x, int y, unsigned int w, unsigned int h) {
   SDL_Rect *rect = new SDL_Rect();
 
@@ -268,8 +280,8 @@ void DrawLibSDLgfx::getClipRect(int *px, int *py, int *pnWidth, int *pnHeight) {
 }
 
 void DrawLibSDLgfx::setScale(float x, float y) {
-  m_scale.x = x * m_nDrawWidth / 2;
-  m_scale.y = y * m_nDrawHeight / 2;
+  m_scale.x = x * m_nDispWidth / 2;
+  m_scale.y = y * m_nDispHeight / 2;
 }
 void DrawLibSDLgfx::setTranslate(float x, float y) {
   m_translate.x = x;
@@ -398,8 +410,8 @@ Img *DrawLibSDLgfx::grabScreen(int i_reduce) {
 void DrawLibSDLgfx::startDraw(DrawMode mode) {
   m_drawMode = mode;
   if (m_drawingPoints.size() != 0 || m_texturePoints.size() != 0) {
-    printf(
-      "error drawingPoints.size(%i) of texturePoints.size(%i) was not 0 =%i\n",
+    LogError(
+      "error drawingPoints.size(%zu) of texturePoints.size(%zu) was not 0",
       m_drawingPoints.size(),
       m_texturePoints.size());
   }

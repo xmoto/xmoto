@@ -52,6 +52,7 @@ endif()
 # Can't disable yet
 if(USE_SDL)
   find_package(SDL REQUIRED)
+  find_package(SDL_gfx) # REQUIRED?
   find_package(SDL_mixer REQUIRED)
   find_package(SDL_net REQUIRED)
   find_package(SDL_ttf REQUIRED)
@@ -412,6 +413,7 @@ target_include_directories(xmoto
   "${PROJECT_SOURCE_DIR}/src"
   "${LIBXML2_INCLUDE_DIR}"
   "$<$<BOOL:${USE_SDL}>:${SDL_INCLUDE_DIR}>"
+  "$<$<BOOL:${USE_SDL_GFX}>:${SDL_GFX_INCLUDE_DIRS}>"
   "$<$<BOOL:${USE_SDL}>:${SDL_MIXER_INCLUDE_DIRS}>"
   "$<$<BOOL:${USE_SDL}>:${SDL_NET_INCLUDE_DIRS}>"
   "$<$<BOOL:${USE_SDL}>:${SDL_TTF_INCLUDE_DIRS}>"
@@ -449,6 +451,7 @@ target_link_libraries(xmoto PUBLIC
   ${OPENGL_LIBRARIES}
   ${PNG_LIBRARY}
   "$<$<BOOL:${USE_SDL}>:${SDL_LIBRARY}>"
+  "$<$<BOOL:${USE_SDL_GFX}>:${SDL_GFX_LIBRARIES}>"
   "$<$<BOOL:${USE_SDL}>:${SDL_MIXER_LIBRARIES}>"
   "$<$<BOOL:${USE_SDL}>:${SDL_NET_LIBRARIES}>"
   "$<$<BOOL:${USE_SDL}>:${SDL_TTF_LIBRARIES}>"
@@ -669,6 +672,7 @@ message("Ode       libraries: ${ODE_LIBRARY}")
 message("OpenGL    libraries: ${OPENGL_LIBRARIES}")
 message("Png       libraries: ${PNG_LIBRARY}")
 message("SDL       libraries: ${SDL_LIBRARY}")
+message("SDL_gfx   libraries: ${SDL_GFX_LIBRARIES}")
 message("SDL_mixer libraries: ${SDL_MIXER_LIBRARIES}")
 message("SDL_net   libraries: ${SDL_NET_LIBRARIES}")
 message("SDL_ttf   libraries: ${SDL_TTF_LIBRARIES}")
