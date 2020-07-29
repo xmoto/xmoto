@@ -8,6 +8,11 @@ include(CheckCXXCompilerFlag)
 include(CheckPrototypeDefinition)
 include(CheckSymbolExists)
 
+function(target_sources_relative ARG_TARGET)
+  list(TRANSFORM ARGN REPLACE "^(\\.+)/" "${CMAKE_CURRENT_LIST_DIR}/\\1/")
+  target_sources("${ARG_TARGET}" ${ARGN})
+endfunction()
+
 add_subdirectory(src)
 
 # we set some cpack variables in src/CMakeLists.txt so include this after src/
