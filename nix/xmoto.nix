@@ -14,8 +14,9 @@
 
 assert enableCmakeNinja -> buildPackages.ninja != null;
 
+# libintl is sometimes null.
 assert enableGettext -> buildPackages.gettext != null;
-assert enableGettext -> buildPackages.libintl != null;
+# assert enableGettext -> buildPackages.libintl != null;
 
 assert enableOpengl -> libGL != null;
 

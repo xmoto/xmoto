@@ -5,4 +5,23 @@
   ];
 common = {
   xmoto = pkgs.callPackage ./xmoto.nix commonArgsPruned;
+  xmotoShell = pkgs.mkShell {
+    name = "xmotoShell";
+    inputsFrom = [ (common.xmoto.override (o: {
+      enableCmakeNinja = true;
+      enableDev = true;
+      enableGettext = true;
+      enableOpengl = true;
+      enableSdl = true;
+      enableSdl-gfx = true;
+      enableSystemBzip2 = true;
+      enableSystemLua = true;
+      enableSystemOde = true;
+      enableSystemXdg = true;
+    })) ];
+    nativeBuildInputs = [
+      pkgs.clang-tools
+      pkgs.include-what-you-use
+    ];
+  };
 }; in common
