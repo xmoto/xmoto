@@ -136,10 +136,8 @@ add_library(ode STATIC
   src/util.cpp
   src/util.h
 )
-target_include_directories(ode
-  PUBLIC
-  "$<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>"
+target_include_directories(ode PUBLIC "$<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>"
 )
 target_compile_definitions(ode PUBLIC dDOUBLE)
 
-target_link_libraries(ode PUBLIC libccd)
+target_link_libraries(ode PUBLIC "${LibCcd}")

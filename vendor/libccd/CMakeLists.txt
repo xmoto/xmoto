@@ -9,7 +9,6 @@ add_library(libccd STATIC
   src/support.c
   src/vec3.c
 )
-target_include_directories(libccd
-  PUBLIC
+target_include_directories(libccd PUBLIC
   "$<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>"
 )

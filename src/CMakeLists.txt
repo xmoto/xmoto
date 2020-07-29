@@ -6,10 +6,18 @@ option(USE_SDL "Build with SDL" ON)
 CMAKE_DEPENDENT_OPTION(USE_SDL_gfx "Build with SDL for graphics" OFF
   "USE_SDL" OFF)
 option(USE_GETTEXT "Build with Gettext for internationalization" ON)
+option(USE_SYSTEM_BZip2 "Build with system BZip2" OFF)
 option(PREFER_SYSTEM_BZip2 "Prefer to build with system BZip2" ON)
+mark_as_advanced(USE_SYSTEM_BZip2)
+option(USE_SYSTEM_Lua "Build with system Lua" OFF)
 option(PREFER_SYSTEM_Lua "Prefer to build with system Lua" ON)
+mark_as_advanced(USE_SYSTEM_Lua)
+option(USE_SYSTEM_ODE "Build with system ODE" OFF)
 option(PREFER_SYSTEM_ODE "Prefer to build with system ODE" ON)
-option(PREFER_SYSTEM_XDG "Prefer to build with system XDG" ON)
+mark_as_advanced(USE_SYSTEM_ODE)
+option(USE_SYSTEM_XDG "Build with system XDG basedir" OFF)
+option(PREFER_SYSTEM_XDG "Prefer to build with system XDG basedir" ON)
+mark_as_advanced(USE_SYSTEM_XDG)
 option(ALLOW_DEV "Enable some development/debug features" OFF)
 option(BUILD_MACOS_BUNDLE "Build xmoto as a macOS Bundle" OFF)
 
@@ -25,11 +33,24 @@ endif()
 
 add_executable(xmoto)
 
-# find dependencies
-find_package(BZip2)
-set(USE_SYSTEM_BZip2 $<IF:$<AND:$<BOOL:${PREFER_SYSTEM_BZip2}>,$<BOOL:${BZIP2_FOUND}>,$<NOT:$<BOOL:${WIN32}>>>,ON,OFF>)
+# Find dependencies
 
+if(USE_SYSTEM_BZip2 AND NOT WIN32)
+  find_package(BZip2 REQUIRED)
+elseif(PREFER_SYSTEM_BZip2 AND NOT WIN32)
+  find_package(BZip2)
+endif()
+if(TARGET BZip2::BZip2)
+  set(BZip2 BZip2::BZip2)
+else()
+  add_subdirectory("${PROJECT_SOURCE_DIR}/vendor/bzip2" bzip2 EXCLUDE_FROM_ALL)
+  set(BZip2 bzip2)
+endif()
+add_subdirectory("${PROJECT_SOURCE_DIR}/vendor/chipmunk" chipmunk EXCLUDE_FROM_ALL)
+set(Chipmunk chipmunk)
 find_package(CURL REQUIRED)
+target_compile_definitions(xmoto PUBLIC $<$<BOOL:${STATIC_BUILD}>:CURL_STATICLIB>)
+
 if(USE_GETTEXT)
   find_package(Gettext REQUIRED) # GNU Gettext tools
   find_package(Intl REQUIRED) # Gettext libintl library
@@ -44,27 +65,57 @@ if(USE_GETTEXT)
     endif()
   endif()
 endif()
-find_package(JPEG REQUIRED)
 
+find_package(JPEG REQUIRED)
 if(STATIC_BUILD)
   find_package(LibLZMA)
 endif()
 find_package(LibXml2 REQUIRED)
+target_compile_definitions(xmoto PUBLIC $<$<BOOL:${STATIC_BUILD}>:LIBXML_STATIC>)
 
-find_package(ODE)
-set(USE_SYSTEM_ODE $<IF:$<AND:$<BOOL:${PREFER_SYSTEM_ODE}>,$<BOOL:${ODE_FOUND}>>,ON,OFF>)
+if(USE_SYSTEM_Lua AND NOT WIN32)
+  find_package(Lua REQUIRED)
+elseif(PREFER_SYSTEM_Lua AND NOT WIN32)
+  find_package(Lua)
+endif()
+include(FindLuaTargets)
+if(TARGET Lua::Lua)
+  set(Lua Lua::Lua)
+else()
+  add_subdirectory("${PROJECT_SOURCE_DIR}/vendor/lua" lua EXCLUDE_FROM_ALL)
+  set(Lua lua)
+endif()
+if(NOT LUA_VERSION_STRING VERSION_LESS "5.2" AND LUA_VERSION_STRING VERSION_LESS "5.3")
+  set_property(TARGET "${Lua}" APPEND PROPERTY COMPILE_DEFINITIONS "LUA_COMPAT_ALL")
+  set_property(TARGET "${Lua}" APPEND PROPERTY INTERFACE_COMPILE_DEFINITIONS "LUA_COMPAT_ALL")
+  # target_compile_definitions("${Lua}" PUBLIC "LUA_COMPAT_ALL")
+elseif(LUA_VERSION_STRING VERSION_GREATER_EQUAL "5.3")
+  set_property(TARGET "${Lua}" APPEND PROPERTY COMPILE_DEFINITIONS "LUA_COMPAT_5_1")
+  set_property(TARGET "${Lua}" APPEND PROPERTY INTERFACE_COMPILE_DEFINITIONS "LUA_COMPAT_5_1")
+  # target_compile_definitions("${Lua}" PUBLIC "LUA_COMPAT_5_1")
+endif()
+
+add_subdirectory("${PROJECT_SOURCE_DIR}/vendor/md5sum" md5sum EXCLUDE_FROM_ALL)
+set(Md5sum md5sum)
+if(USE_SYSTEM_ODE)
+  find_package(ODE REQUIRED)
+elseif(PREFER_SYSTEM_ODE)
+  find_package(ODE)
+endif()
+if(TARGET ODE::ODE)
+  set(ODE ODE::ODE)
+else()
+  add_subdirectory("${PROJECT_SOURCE_DIR}/vendor/libccd" libccd EXCLUDE_FROM_ALL)
+  set(LibCcd libccd)
+  add_subdirectory("${PROJECT_SOURCE_DIR}/vendor/ode" ode EXCLUDE_FROM_ALL)
+  set(ODE ode)
+endif()
 if(USE_OPENGL)
   find_package(OpenGL REQUIRED COMPONENTS OpenGL)
+  add_subdirectory("${PROJECT_SOURCE_DIR}/vendor/glad" glad EXCLUDE_FROM_ALL)
+  set(Glad glad)
 endif()
 find_package(PNG REQUIRED)
-
-find_package(Lua)
-set(USE_SYSTEM_Lua $<IF:$<AND:$<BOOL:${PREFER_SYSTEM_Lua}>,$<BOOL:${LUA_FOUND}>,$<NOT:$<BOOL:${WIN32}>>>,ON,OFF>)
-if(NOT LUA_VERSION_STRING VERSION_LESS 5.2 AND LUA_VERSION_STRING VERSION_LESS 5.3)
-  add_definitions("-DLUA_COMPAT_ALL")
-elseif(LUA_VERSION_STRING VERSION_GREATER_EQUAL "5.3")
-  add_definitions("-DLUA_COMPAT_5_1")
-endif()
 
 # Can't disable yet
 if(USE_SDL)
@@ -84,30 +135,20 @@ else()
 endif()
 
 find_package(SQLite3 REQUIRED)
-
-find_package(XDG)
-set(USE_SYSTEM_XDG $<IF:$<AND:$<BOOL:${PREFER_SYSTEM_XDG}>,$<BOOL:${XDG_FOUND}>>,ON,OFF>)
-
+if(USE_SYSTEM_XDG)
+  find_package(XDG REQUIRED)
+elseif(PREFER_SYSTEM_XDG)
+  find_package(XDG)
+endif()
+if(TARGET XDG::Basedir)
+  set(XDG_Basedir XDG::Basedir)
+else()
+  add_subdirectory("${PROJECT_SOURCE_DIR}/vendor/xdgbasedir" xdgbasedir EXCLUDE_FROM_ALL)
+  set(XDG_Basedir xdgbasedir)
+endif()
 find_package(ZLIB REQUIRED)
 
-# sources
-
-if(NOT ${USE_SYSTEM_BZip2})
-  add_subdirectory("${PROJECT_SOURCE_DIR}/vendor/bzip2" bzip2 EXCLUDE_FROM_ALL)
-endif()
-add_subdirectory("${PROJECT_SOURCE_DIR}/vendor/chipmunk" chipmunk EXCLUDE_FROM_ALL)
-if(NOT ${USE_SYSTEM_Lua})
-  add_subdirectory("${PROJECT_SOURCE_DIR}/vendor/lua" lua EXCLUDE_FROM_ALL)
-endif()
-add_subdirectory("${PROJECT_SOURCE_DIR}/vendor/md5sum" md5sum EXCLUDE_FROM_ALL)
-if(NOT ${USE_SYSTEM_ODE})
-  add_subdirectory("${PROJECT_SOURCE_DIR}/vendor/libccd" libccd EXCLUDE_FROM_ALL)
-  add_subdirectory("${PROJECT_SOURCE_DIR}/vendor/ode" ode EXCLUDE_FROM_ALL)
-endif()
-if(NOT ${USE_SYSTEM_XDG})
-  add_subdirectory("${PROJECT_SOURCE_DIR}/vendor/xdgbasedir" xdgbasedir EXCLUDE_FROM_ALL)
-endif()
-add_subdirectory("${PROJECT_SOURCE_DIR}/vendor/glad" glad EXCLUDE_FROM_ALL)
+# Sources
 
 include("${CMAKE_CURRENT_SOURCE_DIR}/common/CMakeSources.cmake")
 include("${CMAKE_CURRENT_SOURCE_DIR}/db/CMakeSources.cmake")
@@ -146,8 +187,9 @@ elseif(APPLE AND BUILD_MACOS_BUNDLE)
   set_property(TARGET xmoto PROPERTY MACOSX_BUNDLE TRUE)
 endif()
 
+target_link_libraries(xmoto PUBLIC "${BZip2}")
+target_link_libraries(xmoto PUBLIC "${Chipmunk}")
 target_link_libraries(xmoto PUBLIC CURL::libcurl)
-target_compile_definitions(xmoto PUBLIC $<$<BOOL:${STATIC_BUILD}>:CURL_STATICLIB>)
 if(USE_GETTEXT)
   target_link_libraries(xmoto PUBLIC Gettext::Intl)
 endif()
@@ -156,10 +198,13 @@ if(STATIC_BUILD AND TARGET LibLZMA::LibLZMA)
   target_link_libraries(xmoto PUBLIC LibLZMA::LibLZMA)
 endif()
 target_link_libraries(xmoto PUBLIC LibXml2::LibXml2)
-target_compile_definitions(xmoto PUBLIC $<$<BOOL:${STATIC_BUILD}>:LIBXML_STATIC>)
+target_link_libraries(xmoto PUBLIC "${Lua}")
+target_link_libraries(xmoto PUBLIC "${Md5sum}")
+target_link_libraries(xmoto PUBLIC "${ODE}")
 if(USE_OPENGL)
   target_link_libraries(xmoto PUBLIC OpenGL::GL)
   target_link_libraries(xmoto PUBLIC OpenGL::GLU)
+  target_link_libraries(xmoto PUBLIC "${Glad}")
 endif()
 target_link_libraries(xmoto PUBLIC PNG::PNG)
 if(USE_SDL)
@@ -172,18 +217,16 @@ if(USE_SDL)
   target_link_libraries(xmoto PUBLIC SDL::SDL_ttf)
 endif()
 target_link_libraries(xmoto PUBLIC SQLite::SQLite3)
+target_link_libraries(xmoto PUBLIC "${XDG_Basedir}")
 target_link_libraries(xmoto PUBLIC ZLIB::ZLIB)
 
 target_include_directories(xmoto PRIVATE
   "${PROJECT_SOURCE_DIR}/src"
-  "$<IF:$<BOOL:${USE_SYSTEM_Lua}>,${LUA_INCLUDE_DIR},${PROJECT_SOURCE_DIR}/vendor/lua/lua>"
 )
 
 target_link_libraries(xmoto PUBLIC
   $<$<PLATFORM_ID:Windows>:userenv>
 
-  "$<IF:$<BOOL:${USE_SYSTEM_BZip2}>,${BZIP2_LIBRARIES},bzip2>"
-  chipmunk
     $<$<BOOL:${STATIC_BUILD}>:gnutls>
       #$<$<BOOL:${STATIC_BUILD}>:idn>
       #$<$<BOOL:${STATIC_BUILD}>:unistring>
@@ -193,11 +236,6 @@ target_link_libraries(xmoto PUBLIC
       $<$<BOOL:${STATIC_BUILD}>:gcrypt>
       $<$<BOOL:${STATIC_BUILD}>:gpg-error>
     $<$<BOOL:${STATIC_BUILD}>:wldap32>
-  "$<IF:$<BOOL:${USE_SYSTEM_Lua}>,${LUA_LIBRARIES},lua>"
-  md5sum
-  "$<IF:$<BOOL:${USE_SYSTEM_ODE}>,${ODE_LIBRARY},ode>"
-  glad
-  "$<IF:$<BOOL:${USE_SYSTEM_XDG}>,${XDG_LIBRARY},xdgbasedir>"
 )
 
 set_property(TARGET xmoto PROPERTY CXX_STANDARD 11)

@@ -1,41 +1,48 @@
-# find XDG (Open Dynamics Engine) includes and library
-#
-# XDG_INCLUDE_DIR - where the directory containing the XDG headers can be
-#                   found
-# XDG_LIBRARY     - full path to the XDG library
-# XDG_FOUND       - TRUE if XDG was found
+#[=======================================================================[.rst:
+FindXDG
+-----------
 
-IF (NOT XDG_FOUND)
+Locate xdgbasedir library
 
-  FIND_PATH(XDG_INCLUDE_DIR basedir.h
-    /usr/include
-    /usr/local/include
+This module defines:
+
+::
+
+  XDG_LIBRARIES, the name of the library to link against
+  XDG_INCLUDE_DIRS, where to find the headers
+  XDG_FOUND, if false, do not try to link against
+
+
+
+#]=======================================================================]
+
+find_path(XDG_INCLUDE_DIR basedir.h)
+
+if(CMAKE_SIZEOF_VOID_P EQUAL 8)
+  set(VC_LIB_PATH_SUFFIX lib/x64)
+else()
+  set(VC_LIB_PATH_SUFFIX lib/x86)
+endif()
+
+find_library(XDG_LIBRARY
+  NAMES xdg-basedir
+  PATH_SUFFIXES lib ${VC_LIB_PATH_SUFFIX}
+)
+
+set(XDG_LIBRARIES ${XDG_LIBRARY})
+set(XDG_INCLUDE_DIRS ${XDG_INCLUDE_DIR})
+
+include(FindPackageHandleStandardArgs)
+
+FIND_PACKAGE_HANDLE_STANDARD_ARGS(XDG
+  REQUIRED_VARS XDG_LIBRARIES XDG_INCLUDE_DIRS)
+
+mark_as_advanced(XDG_LIBRARY XDG_INCLUDE_DIR)
+
+if(XDG_FOUND AND NOT TARGET XDG::Basedir)
+  add_library(XDG::Basedir UNKNOWN IMPORTED)
+  set_target_properties(XDG::Basedir PROPERTIES
+    INTERFACE_INCLUDE_DIRECTORIES "${XDG_INCLUDE_DIR}"
+    IMPORTED_LOCATION "${XDG_LIBRARY}"
   )
-  FIND_LIBRARY(XDG_LIBRARY
-    NAMES xdg-basedir
-    PATHS
-    /usr/lib
-    /usr/local/lib
-  )
-
-  IF(XDG_INCLUDE_DIR)
-    MESSAGE(STATUS "Found xdg-basedir include dir: ${XDG_INCLUDE_DIR}")
-  ELSE(XDG_INCLUDE_DIR)
-    MESSAGE(STATUS "Could NOT find xdg-basedir headers.")
-  ENDIF(XDG_INCLUDE_DIR)
-
-  IF(XDG_LIBRARY)
-    MESSAGE(STATUS "Found xdg-basedir library: ${XDG_LIBRARY}")
-  ELSE(XDG_LIBRARY)
-    MESSAGE(STATUS "Could NOT find xdg-basedir library.")
-  ENDIF(XDG_LIBRARY)
-
-  IF(XDG_INCLUDE_DIR AND XDG_LIBRARY)
-     SET(XDG_FOUND TRUE CACHE STRING "Whether libxdg-basedir was found or not")
-   ELSE(XDG_INCLUDE_DIR AND XDG_LIBRARY)
-     SET(XDG_FOUND FALSE)
-     IF(XDG_FIND_REQUIRED)
-       MESSAGE(FATAL_ERROR "Could not find libxdg-basedir Please install libxdg-basedir")
-     ENDIF(XDG_FIND_REQUIRED)
-   ENDIF(XDG_INCLUDE_DIR AND XDG_LIBRARY)
-ENDIF (NOT XDG_FOUND)
+endif()

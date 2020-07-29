@@ -39,7 +39,6 @@ add_library(lua STATIC
   lua/lzio.c lua/lzio.h
   lua/print.c
 )
-target_include_directories(lua
-  PUBLIC
+target_include_directories(lua PUBLIC
   "$<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}>"
 )

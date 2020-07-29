@@ -17,8 +17,6 @@ add_library(chipmunk STATIC
   cpVect.c cpVect.h
   prime.h
 )
-target_include_directories(chipmunk
-  PUBLIC
+target_include_directories(chipmunk PUBLIC
   "$<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}>"
 )
-

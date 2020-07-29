@@ -8,7 +8,6 @@ add_library(md5sum STATIC
   src/md5.c
   src/md5file.cpp
 )
-target_include_directories(md5sum
-  PUBLIC
+target_include_directories(md5sum PUBLIC
   "$<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>"
 )
