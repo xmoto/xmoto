@@ -1,6 +1,7 @@
 option(STATIC_BUILD "Build a static executable" OFF)
 option(USE_OPENGL "Build with OpenGL for graphics" ON)
-option(USE_SDLGFX "Build with SDL for graphics" OFF)
+option(USE_SDL "Build with SDL" ON)
+option(USE_SDL_GFX "Build with SDL for graphics" OFF)
 option(USE_GETTEXT "Build with Gettext for internationalization" ON)
 option(PREFER_SYSTEM_BZip2 "Prefer system BZip2" ON)
 option(PREFER_SYSTEM_Lua "Prefer system Lua" ON)
@@ -43,17 +44,25 @@ find_package(PNG REQUIRED)
 find_package(Lua)
 set(USE_SYSTEM_Lua $<AND:$<BOOL:${PREFER_SYSTEM_Lua}>,$<BOOL:${LUA_FOUND}>,$<NOT:$<BOOL:${WIN32}>>>)
 if (NOT LUA_VERSION_STRING VERSION_LESS 5.2 AND LUA_VERSION_STRING VERSION_LESS 5.3)
-    add_definitions("-DLUA_COMPAT_ALL")
+  add_definitions("-DLUA_COMPAT_ALL")
 elseif (LUA_VERSION_STRING VERSION_GREATER_EQUAL "5.3")
-    add_definitions("-DLUA_COMPAT_5_1")
+  add_definitions("-DLUA_COMPAT_5_1")
 endif()
 
 # Can't disable yet
-if(ON OR USE_SDLGFX)
+if(USE_SDL)
   find_package(SDL REQUIRED)
   find_package(SDL_mixer REQUIRED)
   find_package(SDL_net REQUIRED)
   find_package(SDL_ttf REQUIRED)
+  if(USE_SDL_GFX)
+    # find_package(SDL_gfx REQUIRED)
+  endif()
+else()
+  message(FATAL_ERROR "SDL must be used.")
+  if(USE_SDL_GFX)
+    message(FATAL_ERROR "SDL_gfx must be used with SDL.")
+  endif()
 endif()
 
 find_package(SQLITE3 REQUIRED)
@@ -145,7 +154,7 @@ if(USE_OPENGL)
     drawlib/DrawLibOpenGL.cpp drawlib/DrawLibOpenGL.h
   )
 endif()
-if(USE_SDLGFX)
+if(USE_SDL_GFX)
   list(APPEND drawlib_src
     drawlib/DrawLibSDLgfx.cpp drawlib/DrawLibSDLgfx.h
   )
@@ -402,10 +411,10 @@ target_include_directories(xmoto
 
   "${PROJECT_SOURCE_DIR}/src"
   "${LIBXML2_INCLUDE_DIR}"
-  "${SDL_INCLUDE_DIR}"
-  "${SDL_MIXER_INCLUDE_DIRS}"
-  "${SDL_NET_INCLUDE_DIRS}"
-  "${SDL_TTF_INCLUDE_DIRS}"
+  "$<$<BOOL:${USE_SDL}>:${SDL_INCLUDE_DIR}>"
+  "$<$<BOOL:${USE_SDL}>:${SDL_MIXER_INCLUDE_DIRS}>"
+  "$<$<BOOL:${USE_SDL}>:${SDL_NET_INCLUDE_DIRS}>"
+  "$<$<BOOL:${USE_SDL}>:${SDL_TTF_INCLUDE_DIRS}>"
   "$<${USE_SYSTEM_Lua}:${LUA_INCLUDE_DIR}>"
   "$<$<NOT:${USE_SYSTEM_Lua}>:${PROJECT_SOURCE_DIR}/vendor/lua/lua>"
 )
@@ -439,10 +448,10 @@ target_link_libraries(xmoto PUBLIC
   ${CMAKE_DL_LIBS}
   ${OPENGL_LIBRARIES}
   ${PNG_LIBRARY}
-  ${SDL_LIBRARY}
-  ${SDL_MIXER_LIBRARIES}
-  ${SDL_NET_LIBRARIES}
-  ${SDL_TTF_LIBRARIES}
+  "$<$<BOOL:${USE_SDL}>:${SDL_LIBRARY}>"
+  "$<$<BOOL:${USE_SDL}>:${SDL_MIXER_LIBRARIES}>"
+  "$<$<BOOL:${USE_SDL}>:${SDL_NET_LIBRARIES}>"
+  "$<$<BOOL:${USE_SDL}>:${SDL_TTF_LIBRARIES}>"
   ${SQLITE3_LIBRARIES}
   $<${USE_SYSTEM_XDG}:${XDG_LIBRARY}>
   $<$<NOT:${USE_SYSTEM_XDG}>:xdgbasedir>
@@ -466,7 +475,8 @@ check_prototype_definition(mkdir
 target_compile_definitions(xmoto PUBLIC MS_MKDIR=$<BOOL:${MS_MKDIR}>)
 
 target_compile_definitions(xmoto PUBLIC USE_OPENGL=$<BOOL:${USE_OPENGL}>)
-target_compile_definitions(xmoto PUBLIC USE_SDLGFX=$<BOOL:${USE_SDLGFX}>)
+target_compile_definitions(xmoto PUBLIC USE_SDL=$<BOOL:${USE_SDL}>)
+target_compile_definitions(xmoto PUBLIC USE_SDL_GFX=$<BOOL:${USE_SDL_GFX}>)
 target_compile_definitions(xmoto PUBLIC USE_GETTEXT=$<BOOL:${USE_GETTEXT}>)
 target_compile_definitions(xmoto PUBLIC ALLOW_DEV=$<BOOL:${ALLOW_DEV}>)
 target_compile_definitions(xmoto PUBLIC BUILD_MACOS_BUNDLE=$<BOOL:${BUILD_MACOS_BUNDLE}>)

@@ -2117,7 +2117,7 @@ void GameRenderer::_RenderDynamicBlocks(Scene *i_scene, bool bBackground) {
         glDisableClientState(GL_TEXTURE_COORD_ARRAY);
 #endif
       } else if (pDrawlib->getBackend() == DrawLib::backend_SdlGFX) {
-#ifdef ENABLE_SDLGFX
+#ifdef ENABLE_SDL_GFX
         if (geom->Polys.size() > 0) {
           if (block->getSprite() != NULL) {
             pDrawlib->setTexture(block->getSprite()->getTexture() != NULL
@@ -2154,7 +2154,7 @@ void GameRenderer::_RenderDynamicBlocks(Scene *i_scene, bool bBackground) {
       }
     }
     if (pDrawlib->getBackend() == DrawLib::backend_SdlGFX) {
-#ifdef ENABLE_SDLGFX
+#ifdef ENABLE_SDL_GFX
       /* Render all special edges (if quality!=low) */
       if (XMSession::instance()->gameGraphics() != GFX_LOW) {
         for (unsigned int i = 0; i < Blocks.size(); i++) {
@@ -2292,7 +2292,7 @@ void GameRenderer::_RenderStaticBlock(Block *block) {
     glDisableClientState(GL_TEXTURE_COORD_ARRAY);
 #endif
   } else if (pDrawlib->getBackend() == DrawLib::backend_SdlGFX) {
-#ifdef ENABLE_SDLGFX
+#ifdef ENABLE_SDL_GFX
     for (unsigned int j = 0; j < geom->Polys.size(); j++) {
       if (block->getSprite() != NULL) {
         pDrawlib->setTexture(block->getSprite()->getTexture() != NULL
@@ -2380,8 +2380,8 @@ void GameRenderer::_RenderBlockEdges(Block *pBlock) {
     }
 #endif
   } else if (pDrawlib->getBackend() == DrawLib::backend_SdlGFX) {
-#ifdef ENABLE_SDLGFX
-    // SDLGFX::TODO
+#ifdef ENABLE_SDL_GFX
+    // SDL_GFX::TODO
 #endif
   }
 }
@@ -2412,7 +2412,7 @@ void GameRenderer::_RenderStaticBlocks(Scene *i_scene) {
         }
       }
       if (pDrawlib->getBackend() == DrawLib::backend_SdlGFX) {
-#ifdef ENABLE_SDLGFX
+#ifdef ENABLE_SDL_GFX
         /* Render all special edges (if quality!=low) */
         if (XMSession::instance()->gameGraphics() != GFX_LOW) {
           for (unsigned int i = 0; i < Blocks.size(); i++) {
@@ -2601,7 +2601,7 @@ void GameRenderer::_RenderBackground(Scene *i_scene) {
 
   if (GameApp::instance()->getDrawLib()->getBackend() ==
       DrawLib::backend_SdlGFX) {
-#ifdef ENABLE_SDLGFX
+#ifdef ENABLE_SDL_GFX
     /* Render all special edges (if quality != low) */
     if (XMSession::instance()->gameGraphics() != GFX_LOW) {
       for (unsigned int i = 0; i < Blocks.size(); i++) {

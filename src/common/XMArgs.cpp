@@ -729,11 +729,15 @@ void XMArguments::help(const std::string &i_cmd) {
   printf(
     "\t--buildQueries\n\t\tBuild sql queries into file " XM_SQLQUERIES_GEN_FILE
     ".\n");
-// If both sdlgfx and opengl are available give the user the posibility
-// to select the draw library
-#ifdef ENABLE_SDLGFX
+  printf("\t--drawlib ["
 #ifdef ENABLE_OPENGL
-  printf("\t--drawlib [OPENGL|SDLGFX]\n\t\tSelect the draw library to use.\n");
+        "OPENGL"
 #endif
+#ifdef ENABLE_SDL_GFX
+#if defined(ENABLE_OPENGL)
+        "|"
 #endif
+        "SDL_GFX"
+#endif
+      "]\n\t\tSelect the draw library to use.\n");
 }

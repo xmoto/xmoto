@@ -20,7 +20,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
 #include "VCommon.h"
 
-#ifdef ENABLE_SDLGFX
+#ifdef ENABLE_SDL_GFX
 
 #include <string.h>
 

@@ -26,7 +26,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "helpers/Log.h"
 #include "xmoto/Game.h"
 
-#ifdef ENABLE_SDLGFX
+#ifdef ENABLE_SDL_GFX
 #include "PolyDraw.h"
 #include "SDL_gfxPrimitives.h"
 #include "SDL_rotozoom.h"
