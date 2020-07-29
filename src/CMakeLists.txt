@@ -402,6 +402,10 @@ target_include_directories(xmoto
 
   "${PROJECT_SOURCE_DIR}/src"
   "${LIBXML2_INCLUDE_DIR}"
+  "${SDL_INCLUDE_DIR}"
+  "${SDL_MIXER_INCLUDE_DIRS}"
+  "${SDL_NET_INCLUDE_DIRS}"
+  "${SDL_TTF_INCLUDE_DIRS}"
   "$<${USE_SYSTEM_Lua}:${LUA_INCLUDE_DIR}>"
   "$<$<NOT:${USE_SYSTEM_Lua}>:${PROJECT_SOURCE_DIR}/vendor/lua/lua>"
 )
@@ -436,9 +440,9 @@ target_link_libraries(xmoto PUBLIC
   ${OPENGL_LIBRARIES}
   ${PNG_LIBRARY}
   ${SDL_LIBRARY}
-  ${SDLMIXER_LIBRARY}
-  ${SDLNET_LIBRARY}
-  ${SDLTTF_LIBRARY}
+  ${SDL_MIXER_LIBRARIES}
+  ${SDL_NET_LIBRARIES}
+  ${SDL_TTF_LIBRARIES}
   ${SQLITE3_LIBRARIES}
   $<${USE_SYSTEM_XDG}:${XDG_LIBRARY}>
   $<$<NOT:${USE_SYSTEM_XDG}>:xdgbasedir>
@@ -655,9 +659,9 @@ message("Ode       libraries: ${ODE_LIBRARY}")
 message("OpenGL    libraries: ${OPENGL_LIBRARIES}")
 message("Png       libraries: ${PNG_LIBRARY}")
 message("SDL       libraries: ${SDL_LIBRARY}")
-message("SDL_mixer libraries: ${SDLMIXER_LIBRARY}")
-message("SDL_net   libraries: ${SDLNET_LIBRARY}")
-message("SDL_ttf   libraries: ${SDLTTF_LIBRARY}")
+message("SDL_mixer libraries: ${SDL_MIXER_LIBRARIES}")
+message("SDL_net   libraries: ${SDL_NET_LIBRARIES}")
+message("SDL_ttf   libraries: ${SDL_TTF_LIBRARIES}")
 message("Sqlite3   libraries: ${SQLITE3_LIBRARIES}")
 message("Xdg       libraries: ${XDG_LIBRARY}")
 message("Zlib      libraries: ${ZLIB_LIBRARIES}")
