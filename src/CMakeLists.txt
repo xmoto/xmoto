@@ -66,7 +66,7 @@ else()
   endif()
 endif()
 
-find_package(SQLITE3 REQUIRED)
+find_package(SQLite3 REQUIRED)
 
 find_package(XDG)
 set(USE_SYSTEM_XDG $<AND:$<BOOL:${PREFER_SYSTEM_XDG}>,$<BOOL:${XDG_FOUND}>>)
@@ -455,7 +455,7 @@ target_link_libraries(xmoto PUBLIC
   "$<$<BOOL:${USE_SDL}>:${SDL_MIXER_LIBRARIES}>"
   "$<$<BOOL:${USE_SDL}>:${SDL_NET_LIBRARIES}>"
   "$<$<BOOL:${USE_SDL}>:${SDL_TTF_LIBRARIES}>"
-  ${SQLITE3_LIBRARIES}
+  ${SQLite3_LIBRARIES}
   $<${USE_SYSTEM_XDG}:${XDG_LIBRARY}>
   $<$<NOT:${USE_SYSTEM_XDG}>:xdgbasedir>
   ${ZLIB_LIBRARIES}
@@ -662,23 +662,23 @@ elseif(NOT BUILD_MACOS_BUNDLE)
 endif()
 
 message("BZip2     libraries: ${BZIP2_LIBRARIES}")
-message("Curl      libraries: ${CURL_LIBRARIES}")
+message("libcurl   libraries: ${CURL_LIBRARIES}")
 message("Intl      libraries: ${Intl_LIBRARIES}")
-message("Jpeg      libraries: ${JPEG_LIBRARIES}")
-message("LibXml2   libraries: ${LIBXML2_LIBRARIES}")
+message("JPEG      libraries: ${JPEG_LIBRARIES}")
 message("LibLZMA   libraries: ${LIBLZMA_LIBRARIES}")
+message("LibXml2   libraries: ${LIBXML2_LIBRARIES}")
 message("Lua       libraries: ${LUA_LIBRARIES}")
-message("Ode       libraries: ${ODE_LIBRARY}")
+message("ODE       libraries: ${ODE_LIBRARY}")
 message("OpenGL    libraries: ${OPENGL_LIBRARIES}")
-message("Png       libraries: ${PNG_LIBRARY}")
+message("PNG       libraries: ${PNG_LIBRARY}")
 message("SDL       libraries: ${SDL_LIBRARY}")
 message("SDL_gfx   libraries: ${SDL_GFX_LIBRARIES}")
 message("SDL_mixer libraries: ${SDL_MIXER_LIBRARIES}")
 message("SDL_net   libraries: ${SDL_NET_LIBRARIES}")
 message("SDL_ttf   libraries: ${SDL_TTF_LIBRARIES}")
-message("Sqlite3   libraries: ${SQLITE3_LIBRARIES}")
-message("Xdg       libraries: ${XDG_LIBRARY}")
-message("Zlib      libraries: ${ZLIB_LIBRARIES}")
+message("SQLite3   libraries: ${SQLite3_LIBRARIES}")
+message("XDG       libraries: ${XDG_LIBRARY}")
+message("ZLIB      libraries: ${ZLIB_LIBRARIES}")
 message("")
 
 message("Installation path: ${CMAKE_INSTALL_PREFIX}")
