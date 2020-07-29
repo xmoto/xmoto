@@ -1,12 +1,15 @@
+include(CMakeDependentOption)
+
 option(STATIC_BUILD "Build a static executable" OFF)
 option(USE_OPENGL "Build with OpenGL for graphics" ON)
 option(USE_SDL "Build with SDL" ON)
-option(USE_SDL_GFX "Build with SDL for graphics" OFF)
+CMAKE_DEPENDENT_OPTION(USE_SDL_GFX "Build with SDL for graphics" OFF
+  "USE_SDL" OFF)
 option(USE_GETTEXT "Build with Gettext for internationalization" ON)
-option(PREFER_SYSTEM_BZip2 "Prefer system BZip2" ON)
-option(PREFER_SYSTEM_Lua "Prefer system Lua" ON)
-option(PREFER_SYSTEM_ODE "Prefer system ODE" ON)
-option(PREFER_SYSTEM_XDG "Prefer system XDG" ON)
+option(PREFER_SYSTEM_BZip2 "Prefer to build with system BZip2" ON)
+option(PREFER_SYSTEM_Lua "Prefer to build with system Lua" ON)
+option(PREFER_SYSTEM_ODE "Prefer to build with system ODE" ON)
+option(PREFER_SYSTEM_XDG "Prefer to build with system XDG" ON)
 option(ALLOW_DEV "Enable some development/debug features" OFF)
 option(BUILD_MACOS_BUNDLE "Build xmoto as a macOS Bundle" OFF)
 
@@ -22,7 +25,7 @@ endif()
 
 # find dependencies
 find_package(BZip2)
-set(USE_SYSTEM_BZip2 $<AND:$<BOOL:${PREFER_SYSTEM_BZip2}>,$<BOOL:${BZIP2_FOUND}>,$<NOT:$<BOOL:${WIN32}>>>)
+set(USE_SYSTEM_BZip2 $<IF:$<AND:$<BOOL:${PREFER_SYSTEM_BZip2}>,$<BOOL:${BZIP2_FOUND}>,$<NOT:$<BOOL:${WIN32}>>>,ON,OFF>)
 
 find_package(CURL REQUIRED)
 if(USE_GETTEXT)
@@ -35,17 +38,17 @@ find_package(LibLZMA)
 find_package(LibXml2 REQUIRED)
 
 find_package(ODE)
-set(USE_SYSTEM_ODE $<AND:$<BOOL:${PREFER_SYSTEM_ODE}>,$<BOOL:${ODE_FOUND}>>)
+set(USE_SYSTEM_ODE $<IF:$<AND:$<BOOL:${PREFER_SYSTEM_ODE}>,$<BOOL:${ODE_FOUND}>>,ON,OFF>)
 if(USE_OPENGL)
   find_package(OpenGL REQUIRED)
 endif()
 find_package(PNG REQUIRED)
 
 find_package(Lua)
-set(USE_SYSTEM_Lua $<AND:$<BOOL:${PREFER_SYSTEM_Lua}>,$<BOOL:${LUA_FOUND}>,$<NOT:$<BOOL:${WIN32}>>>)
-if (NOT LUA_VERSION_STRING VERSION_LESS 5.2 AND LUA_VERSION_STRING VERSION_LESS 5.3)
+set(USE_SYSTEM_Lua $<IF:$<AND:$<BOOL:${PREFER_SYSTEM_Lua}>,$<BOOL:${LUA_FOUND}>,$<NOT:$<BOOL:${WIN32}>>>,ON,OFF>)
+if(NOT LUA_VERSION_STRING VERSION_LESS 5.2 AND LUA_VERSION_STRING VERSION_LESS 5.3)
   add_definitions("-DLUA_COMPAT_ALL")
-elseif (LUA_VERSION_STRING VERSION_GREATER_EQUAL "5.3")
+elseif(LUA_VERSION_STRING VERSION_GREATER_EQUAL "5.3")
   add_definitions("-DLUA_COMPAT_5_1")
 endif()
 
@@ -69,7 +72,7 @@ endif()
 find_package(SQLite3 REQUIRED)
 
 find_package(XDG)
-set(USE_SYSTEM_XDG $<AND:$<BOOL:${PREFER_SYSTEM_XDG}>,$<BOOL:${XDG_FOUND}>>)
+set(USE_SYSTEM_XDG $<IF:$<AND:$<BOOL:${PREFER_SYSTEM_XDG}>,$<BOOL:${XDG_FOUND}>>,ON,OFF>)
 
 find_package(ZLIB REQUIRED)
 
@@ -425,17 +428,15 @@ target_include_directories(xmoto
   "$<$<BOOL:${USE_SDL}>:${SDL_MIXER_INCLUDE_DIRS}>"
   "$<$<BOOL:${USE_SDL}>:${SDL_NET_INCLUDE_DIRS}>"
   "$<$<BOOL:${USE_SDL}>:${SDL_TTF_INCLUDE_DIRS}>"
-  "$<${USE_SYSTEM_Lua}:${LUA_INCLUDE_DIR}>"
-  "$<$<NOT:${USE_SYSTEM_Lua}>:${PROJECT_SOURCE_DIR}/vendor/lua/lua>"
+  "$<IF:$<BOOL:${USE_SYSTEM_Lua}>,${LUA_INCLUDE_DIR},${PROJECT_SOURCE_DIR}/vendor/lua/lua>"
 )
 
 target_link_libraries(xmoto PUBLIC
   $<$<PLATFORM_ID:Windows>:userenv>
 
-  "$<${USE_SYSTEM_BZip2}:${BZIP2_LIBRARIES}>"
-  "$<$<NOT:${USE_SYSTEM_BZip2}>:bzip2>"
+  "$<IF:$<BOOL:${USE_SYSTEM_BZip2}>,${BZIP2_LIBRARIES},bzip2>"
   chipmunk
-  ${CURL_LIBRARIES}
+  "${CURL_LIBRARIES}"
     $<$<BOOL:${STATIC_BUILD}>:gnutls>
       #$<$<BOOL:${STATIC_BUILD}>:idn>
       #$<$<BOOL:${STATIC_BUILD}>:unistring>
@@ -445,28 +446,25 @@ target_link_libraries(xmoto PUBLIC
       $<$<BOOL:${STATIC_BUILD}>:gcrypt>
       $<$<BOOL:${STATIC_BUILD}>:gpg-error>
     $<$<BOOL:${STATIC_BUILD}>:wldap32>
-  ${Intl_LIBRARIES}
-  ${JPEG_LIBRARIES}
-  ${LIBXML2_LIBRARIES}
+  "${Intl_LIBRARIES}"
+  "${JPEG_LIBRARIES}"
+  "${LIBXML2_LIBRARIES}"
     "$<$<BOOL:${STATIC_BUILD}>:${LIBLZMA_LIBRARIES}>"
-  "$<${USE_SYSTEM_Lua}:${LUA_LIBRARIES}>"
-  $<$<NOT:${USE_SYSTEM_Lua}>:lua>
+  "$<IF:$<BOOL:${USE_SYSTEM_Lua}>,${LUA_LIBRARIES},lua>"
   md5sum
-  $<${USE_SYSTEM_ODE}:${ODE_LIBRARY}>
-  $<$<NOT:${USE_SYSTEM_ODE}>:ode>
+  "$<IF:$<BOOL:${USE_SYSTEM_ODE}>,${ODE_LIBRARY},ode>"
   glad
-  ${CMAKE_DL_LIBS}
-  ${OPENGL_LIBRARIES}
-  ${PNG_LIBRARY}
+  "${CMAKE_DL_LIBS}"
+  "${OPENGL_LIBRARIES}"
+  "${PNG_LIBRARY}"
   "$<$<BOOL:${USE_SDL}>:${SDL_LIBRARY}>"
   "$<$<BOOL:${USE_SDL_GFX}>:${SDL_GFX_LIBRARIES}>"
   "$<$<BOOL:${USE_SDL}>:${SDL_MIXER_LIBRARIES}>"
   "$<$<BOOL:${USE_SDL}>:${SDL_NET_LIBRARIES}>"
   "$<$<BOOL:${USE_SDL}>:${SDL_TTF_LIBRARIES}>"
-  ${SQLite3_LIBRARIES}
-  $<${USE_SYSTEM_XDG}:${XDG_LIBRARY}>
-  $<$<NOT:${USE_SYSTEM_XDG}>:xdgbasedir>
-  ${ZLIB_LIBRARIES}
+  "${SQLite3_LIBRARIES}"
+  "$<IF:$<BOOL:${USE_SYSTEM_XDG}>,${XDG_LIBRARY},xdgbasedir>"
+  "${ZLIB_LIBRARIES}"
 )
 
 set_property(TARGET xmoto PROPERTY CXX_STANDARD 11)
@@ -576,7 +574,7 @@ function(set_win32_compat_path COMPAT REAL)
 endfunction()
 
 function(win32_run_script _CMD _ARGS _IS_MSYS2)
-  if (IS_MSYS2)
+  if(IS_MSYS2)
     # msys2's cmake is a native win32 program, and it can't run bash scripts directly
     install(CODE "execute_process(COMMAND bash -l -c '${_CMD} ${_ARGS}' \n\
       RESULT_VARIABLE ret ERROR_VARIABLE err)")
@@ -653,7 +651,7 @@ if(WIN32)
     FILES_MATCHING PATTERN "*.dll"
   )
 
-  if (CMAKE_BUILD_TYPE STREQUAL "Release")
+  if(CMAKE_BUILD_TYPE STREQUAL "Release")
     # strip the dlls
     set(STRIP_DLLS_CMD "${WIN32_COMPAT_SOURCE_DIR}/tools/win32_strip_dlls.sh")
     string(CONCAT
