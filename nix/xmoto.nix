@@ -1,4 +1,4 @@
-{ lib, stdenv, buildPackages, fetchurl, nix-gitignore
+{ lib, stdenv, buildPackages, fetchurl, makeWrapper, nix-gitignore
 , curl, libjpeg, libpng, libxml2, sqlite, zlib
 , enableCmakeNinja ? false
 , enableDev ? false
@@ -53,6 +53,7 @@ stdenv.mkDerivation rec {
 
   nativeBuildInputs = [
     buildPackages.cmake
+    makeWrapper
   ] ++ optionals enableCmakeNinja [
     buildPackages.ninja
   ] ++ optionals enableGettext [
@@ -102,6 +103,12 @@ stdenv.mkDerivation rec {
     (cmakeOption "PREFER_SYSTEM_ODE" enableSystemOde)
     (cmakeOption "PREFER_SYSTEM_XDG" enableSystemXdg)
   ];
+
+  preFixup = ''
+    wrapProgram "$out/bin/xmoto" \
+      --suffix XDG_DATA_DIRS ':' "$out/share" \
+      #
+  '';
 
   meta = with lib; {
     description =
