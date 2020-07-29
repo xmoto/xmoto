@@ -418,11 +418,19 @@ elseif(APPLE AND BUILD_MACOS_BUNDLE)
   set_property(TARGET xmoto PROPERTY MACOSX_BUNDLE TRUE)
 endif()
 
+target_link_libraries(xmoto PUBLIC CURL::libcurl)
+target_compile_definitions(xmoto PUBLIC $<$<BOOL:${STATIC_BUILD}>:CURL_STATICLIB>)
+target_link_libraries(xmoto PUBLIC JPEG::JPEG)
+target_link_libraries(xmoto PUBLIC LibXml2::LibXml2)
+target_compile_definitions(xmoto PUBLIC $<$<BOOL:${STATIC_BUILD}>:LIBXML_STATIC>)
+target_link_libraries(xmoto PUBLIC PNG::PNG)
+target_link_libraries(xmoto PUBLIC SQLite::SQLite3)
+target_link_libraries(xmoto PUBLIC ZLIB::ZLIB)
+
 target_include_directories(xmoto
   PRIVATE
 
   "${PROJECT_SOURCE_DIR}/src"
-  "${LIBXML2_INCLUDE_DIR}"
   "$<$<BOOL:${USE_SDL}>:${SDL_INCLUDE_DIR}>"
   "$<$<BOOL:${USE_SDL_GFX}>:${SDL_GFX_INCLUDE_DIRS}>"
   "$<$<BOOL:${USE_SDL}>:${SDL_MIXER_INCLUDE_DIRS}>"
@@ -436,7 +444,6 @@ target_link_libraries(xmoto PUBLIC
 
   "$<IF:$<BOOL:${USE_SYSTEM_BZip2}>,${BZIP2_LIBRARIES},bzip2>"
   chipmunk
-  "${CURL_LIBRARIES}"
     $<$<BOOL:${STATIC_BUILD}>:gnutls>
       #$<$<BOOL:${STATIC_BUILD}>:idn>
       #$<$<BOOL:${STATIC_BUILD}>:unistring>
@@ -447,8 +454,6 @@ target_link_libraries(xmoto PUBLIC
       $<$<BOOL:${STATIC_BUILD}>:gpg-error>
     $<$<BOOL:${STATIC_BUILD}>:wldap32>
   "${Intl_LIBRARIES}"
-  "${JPEG_LIBRARIES}"
-  "${LIBXML2_LIBRARIES}"
     "$<$<BOOL:${STATIC_BUILD}>:${LIBLZMA_LIBRARIES}>"
   "$<IF:$<BOOL:${USE_SYSTEM_Lua}>,${LUA_LIBRARIES},lua>"
   md5sum
@@ -456,15 +461,12 @@ target_link_libraries(xmoto PUBLIC
   glad
   "${CMAKE_DL_LIBS}"
   "${OPENGL_LIBRARIES}"
-  "${PNG_LIBRARY}"
   "$<$<BOOL:${USE_SDL}>:${SDL_LIBRARY}>"
   "$<$<BOOL:${USE_SDL_GFX}>:${SDL_GFX_LIBRARIES}>"
   "$<$<BOOL:${USE_SDL}>:${SDL_MIXER_LIBRARIES}>"
   "$<$<BOOL:${USE_SDL}>:${SDL_NET_LIBRARIES}>"
   "$<$<BOOL:${USE_SDL}>:${SDL_TTF_LIBRARIES}>"
-  "${SQLite3_LIBRARIES}"
   "$<IF:$<BOOL:${USE_SYSTEM_XDG}>,${XDG_LIBRARY},xdgbasedir>"
-  "${ZLIB_LIBRARIES}"
 )
 
 set_property(TARGET xmoto PROPERTY CXX_STANDARD 11)
@@ -490,8 +492,6 @@ target_compile_definitions(xmoto PUBLIC USE_GETTEXT=$<BOOL:${USE_GETTEXT}>)
 target_compile_definitions(xmoto PUBLIC ALLOW_DEV=$<BOOL:${ALLOW_DEV}>)
 target_compile_definitions(xmoto PUBLIC BUILD_MACOS_BUNDLE=$<BOOL:${BUILD_MACOS_BUNDLE}>)
 
-target_compile_definitions(xmoto PUBLIC $<$<BOOL:${STATIC_BUILD}>:CURL_STATICLIB>)
-target_compile_definitions(xmoto PUBLIC $<$<BOOL:${STATIC_BUILD}>:LIBXML_STATIC>)
 
 target_compile_definitions(xmoto PUBLIC SVN_REV=\"git\")
 
@@ -676,7 +676,7 @@ message("LibXml2   libraries: ${LIBXML2_LIBRARIES}")
 message("Lua       libraries: ${LUA_LIBRARIES}")
 message("ODE       libraries: ${ODE_LIBRARY}")
 message("OpenGL    libraries: ${OPENGL_LIBRARIES}")
-message("PNG       libraries: ${PNG_LIBRARY}")
+message("PNG       libraries: ${PNG_LIBRARIES}")
 message("SDL       libraries: ${SDL_LIBRARY}")
 message("SDL_gfx   libraries: ${SDL_GFX_LIBRARIES}")
 message("SDL_mixer libraries: ${SDL_MIXER_LIBRARIES}")
