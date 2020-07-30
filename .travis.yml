@@ -65,40 +65,32 @@ matrix:
       os: linux
       dist: bionic # 18.04 LTS
       script: ".travis/linux-mxe/build.sh"
+      env:
+      - MXE_PATH="/usr/lib/mxe"
+      - MXE_HOST="x86_64-pc-linux-gnu"
+      - MXE_TARGET="i686-w64-mingw32.shared"
+      - PATH="$MXE_PATH/usr/bin:$PATH"
+      - MXE_HOST_PFX="$MXE_PATH/usr/$MXE_HOST/bin/$MXE_TARGET"
+      - MXE_CROSS_PFX="$MXE_PATH/usr/bin/$MXE_TARGET"
+      - WINEARCH="win32"
+      # add the MXE DLLs to Wine's path
+      - WINEPATH="$MXE_PATH/usr/$MXE_TARGET/bin${WINEPATH:+:$WINEPATH}"
+      before_install:
+      - sudo git clone "https://github.com/mxe/mxe" "$MXE_PATH"
+      - (cd "$MXE_PATH" && sudo make MXE_TARGETS="$MXE_TARGET"
+          download-{bzip2,cmake,curl,gcc,gettext,jpeg,libpng,libxml2,lzma,nsis,pkgconf,sdl,sdl_mixer,sdl_net,sdl_ttf,smpeg2,sqlite,zlib})
       addons:
         apt:
           update: true
           sources:
-          - sourceline: 'deb [arch=amd64] http://mirror.mxe.cc/repos/apt bionic main'
-            key_url: 'https://keyserver.ubuntu.com/pks/lookup?op=get&search=0x86B72ED9'
           # for xvfb
           - sourceline: 'deb http://archive.ubuntu.com/ubuntu bionic universe'
           - sourceline: 'deb http://archive.ubuntu.com/ubuntu bionic-updates universe'
           packages:
-          - mxe-i686-w64-mingw32.shared-bzip2
-          - mxe-i686-w64-mingw32.shared-cc
-          - mxe-i686-w64-mingw32.shared-curl
-          - mxe-i686-w64-mingw32.shared-gettext
-          - mxe-i686-w64-mingw32.shared-jpeg
-          - mxe-i686-w64-mingw32.shared-libpng
-          - mxe-i686-w64-mingw32.shared-libxml2
-          - mxe-i686-w64-mingw32.shared-lzma
-          - mxe-i686-w64-mingw32.shared-nsis
-          - mxe-i686-w64-mingw32.shared-sdl
-          - mxe-i686-w64-mingw32.shared-sdl-mixer
-          - mxe-i686-w64-mingw32.shared-sdl-net
-          - mxe-i686-w64-mingw32.shared-sdl-ttf
-          - mxe-i686-w64-mingw32.shared-smpeg2
-          - mxe-i686-w64-mingw32.shared-sqlite
-          - mxe-i686-w64-mingw32.shared-zlib
+          - ninja-build
           - wine-stable
           - wine32
           - xvfb
-      before_install:
-      - ( shopt dotglob; sudo rm -rf /usr/local/cmake/* )
-      - >-
-          curl --retry 2 --retry-delay 30 'https://cmake.org/files/v3.13/cmake-3.13.4-Linux-x86_64.tar.gz' |
-          sudo tar -xz -C /usr/local/cmake --strip-components 1
 
 deploy:
   provider: releases

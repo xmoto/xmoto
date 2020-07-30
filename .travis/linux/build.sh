@@ -16,4 +16,3 @@ cpack -G "RPM"
 mkdir artifacts
 mv xmoto-*.deb artifacts/
 mv xmoto-*.rpm artifacts/
-

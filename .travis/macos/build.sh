@@ -14,4 +14,3 @@ sudo \
 
 mkdir artifacts
 mv xmoto-*.dmg artifacts/
-
