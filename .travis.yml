@@ -31,8 +31,25 @@ matrix:
 
     - os: osx
       osx_image: xcode10.1 # =10.13/high sierra
-      install: ".travis/macos/deps.sh"
       script: ".travis/macos/build.sh"
+      addons:
+        homebrew:
+          update: true
+          packages:
+            - bzip2
+            - cmake
+            - curl
+            - gettext
+            - jpeg
+            - libpng
+            - libxml2
+            - ninja
+            - sdl
+            - sdl_mixer
+            - sdl_net
+            - sdl_ttf
+            - sqlite3
+            - zlib
       cache:
         directories:
           - $HOME/Library/Caches/Homebrew
