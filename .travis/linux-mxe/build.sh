@@ -43,9 +43,9 @@ echo "WINEPATH: $WINEPATH"
 relink "gcc" "g++"
 
 "$MXE_CROSS_PFX-cmake" \
-  -DCMAKE_INSTALL_PREFIX=/tmp/xmoto \
-  -DCMAKE_BUILD_TYPE=Release \
-  -DXMOTO_PACK=manual ..
+  -D CMAKE_INSTALL_PREFIX=/tmp/xmoto \
+  -D XMOTO_PACK=manual \
+  -D CMAKE_BUILD_TYPE=Release ..
 
 make -j"$(nproc)"
 

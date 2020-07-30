@@ -4,8 +4,8 @@ set -ex
 
 mkdir build && cd build
 mkdir -p /tmp/xminstall
-cmake -DCMAKE_INSTALL_PREFIX=/tmp/xminstall \
-      -DCMAKE_BUILD_TYPE=Release -G Ninja ..
+cmake -D CMAKE_INSTALL_PREFIX=/tmp/xminstall \
+      -D CMAKE_BUILD_TYPE=Release -G Ninja ..
 ninja
 ninja xmoto_pack
 ninja install

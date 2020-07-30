@@ -4,9 +4,30 @@ dist: bionic
 matrix:
   include:
     - os: linux
-      dist: bionic
-      install: ".travis/linux/deps.sh"
+      dist: bionic # 18.04 LTS
       script: ".travis/linux/build.sh"
+      addons:
+        apt:
+          update: true
+          packages:
+          - curl
+          - libbz2-dev
+          - libcurl3-openssl-dev
+          - libgl1-mesa-dev
+          - libglu1-mesa-dev
+          - libjpeg-dev
+          - liblua5.1-0-dev
+          - libpng-dev
+          - libsdl-mixer1.2-dev
+          - libsdl-net1.2-dev
+          - libsdl-ttf2.0-dev
+          - libsdl1.2-dev
+          - libsqlite3-dev
+          - libxdg-basedir-dev
+          - libxml2-dev
+          - ninja-build
+          - rpm
+          - zlib1g-dev
 
     - os: osx
       osx_image: xcode10.1 # =10.13/high sierra
@@ -18,11 +39,39 @@ matrix:
       before_cache:
         - brew cleanup
 
-    - os: linux
-      dist: bionic
-      name: "Linux MXE"
-      install: ".travis/linux-mxe/deps.sh"
+    - name: "Linux MXE"
+      os: linux
+      dist: bionic # 18.04 LTS
       script: ".travis/linux-mxe/build.sh"
+      addons:
+        apt:
+          update: true
+          sources:
+          - sourceline: 'deb [arch=amd64] http://mirror.mxe.cc/repos/apt bionic main'
+            key_url: 'https://keyserver.ubuntu.com/pks/lookup?op=get&search=0x86B72ED9'
+          # for xvfb
+          - sourceline: 'deb http://archive.ubuntu.com/ubuntu bionic universe'
+          - sourceline: 'deb http://archive.ubuntu.com/ubuntu bionic-updates universe'
+          packages:
+          - mxe-i686-w64-mingw32.shared-bzip2
+          - mxe-i686-w64-mingw32.shared-cc
+          - mxe-i686-w64-mingw32.shared-curl
+          - mxe-i686-w64-mingw32.shared-gettext
+          - mxe-i686-w64-mingw32.shared-jpeg
+          - mxe-i686-w64-mingw32.shared-libpng
+          - mxe-i686-w64-mingw32.shared-libxml2
+          - mxe-i686-w64-mingw32.shared-lzma
+          - mxe-i686-w64-mingw32.shared-nsis
+          - mxe-i686-w64-mingw32.shared-sdl
+          - mxe-i686-w64-mingw32.shared-sdl-mixer
+          - mxe-i686-w64-mingw32.shared-sdl-net
+          - mxe-i686-w64-mingw32.shared-sdl-ttf
+          - mxe-i686-w64-mingw32.shared-smpeg2
+          - mxe-i686-w64-mingw32.shared-sqlite
+          - mxe-i686-w64-mingw32.shared-zlib
+          - wine-stable
+          - wine32
+          - xvfb
 
 deploy:
   provider: releases
