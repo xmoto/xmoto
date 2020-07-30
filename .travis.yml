@@ -28,6 +28,11 @@ matrix:
           - ninja-build
           - rpm
           - zlib1g-dev
+      before_install:
+      - ( shopt dotglob; sudo rm -rf /usr/local/cmake/* )
+      - >-
+          curl --retry 2 --retry-delay 30 'https://cmake.org/files/v3.13/cmake-3.13.4-Linux-x86_64.tar.gz' |
+          sudo tar -xz -C /usr/local/cmake --strip-components 1
 
     - os: osx
       osx_image: xcode10.1 # =10.13/high sierra
@@ -89,6 +94,11 @@ matrix:
           - wine-stable
           - wine32
           - xvfb
+      before_install:
+      - ( shopt dotglob; sudo rm -rf /usr/local/cmake/* )
+      - >-
+          curl --retry 2 --retry-delay 30 'https://cmake.org/files/v3.13/cmake-3.13.4-Linux-x86_64.tar.gz' |
+          sudo tar -xz -C /usr/local/cmake --strip-components 1
 
 deploy:
   provider: releases
