@@ -60,9 +60,6 @@ if(USE_GETTEXT)
       INTERFACE_INCLUDE_DIRECTORIES "${Intl_INCLUDE_DIRS}"
       INTERFACE_LINK_LIBRARIES "${Intl_LIBRARIES}"
     )
-    if(Intl_LIBRARY)
-      set_target_properties(Gettext::Intl PROPERTIES IMPORTED_LOCATION "${Intl_LIBRARY}")
-    endif()
   endif()
 endif()
 
