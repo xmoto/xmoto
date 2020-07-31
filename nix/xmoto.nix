@@ -6,10 +6,11 @@
 , enableOpengl ? true, libGL ? null #, libGLU ? null
 , enableSdl ? true, SDL ? null, SDL_mixer ? null, SDL_net ? null, SDL_ttf ? null
 , enableSdl-gfx ? false, SDL_gfx ? null
-, enableSystemBzip2 ? false, bzip2 ? null
-, enableSystemLua ? false, lua ? null
-, enableSystemOde ? false, ode ? null
-, enableSystemXdg ? false, libxdg_basedir ? null
+, enableSystem ? true
+, enableSystemBzip2 ? enableSystem, bzip2 ? null
+, enableSystemLua ? enableSystem, lua ? null
+, enableSystemOde ? enableSystem, ode ? null
+, enableSystemXdg ? enableSystem, libxdg_basedir ? null
 }:
 
 assert enableCmakeNinja -> buildPackages.ninja != null;
@@ -90,6 +91,8 @@ stdenv.mkDerivation rec {
     (cmakeOption "USE_OPENGL" enableOpengl)
     (cmakeOption "USE_SDL" enableSdl)
     (cmakeOption "USE_SDL_gfx" enableSdl-gfx)
+    (cmakeOption "USE_SYSTEM" enableSystem)
+    (cmakeOption "PREFER_SYSTEM" false)
     (cmakeOption "USE_SYSTEM_BZip2" enableSystemBzip2)
     (cmakeOption "USE_SYSTEM_Lua" enableSystemLua)
     (cmakeOption "USE_SYSTEM_ODE" enableSystemOde)

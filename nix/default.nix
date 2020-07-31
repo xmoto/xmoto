@@ -14,10 +14,7 @@ common = {
       enableOpengl = true;
       enableSdl = true;
       enableSdl-gfx = true;
-      enableSystemBzip2 = true;
-      enableSystemLua = true;
-      enableSystemOde = true;
-      enableSystemXdg = true;
+      enableSystem = true;
     })) ];
     nativeBuildInputs = [
       pkgs.clang-tools
