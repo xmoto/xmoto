@@ -40,5 +40,5 @@ add_library(lua STATIC
   lua/print.c
 )
 target_include_directories(lua PUBLIC
-  "$<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}>"
+  "$<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}>/lua"
 )
