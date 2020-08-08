@@ -140,8 +140,8 @@ void StatePause::checkEvents() {
 
 void StatePause::xmKey(InputEventType i_type, const XMKey &i_xmkey) {
   if (i_type == INPUT_DOWN &&
-      i_xmkey ==
-        (*InputHandler::instance()->getGlobalKey(INPUT_PLAYINGPAUSE))) {
+      (i_xmkey == (*InputHandler::instance()->getGlobalKey(INPUT_PLAYINGPAUSE)) ||
+       i_xmkey.getJoyButton() == SDL_CONTROLLER_BUTTON_START)) {
     /* quit this state */
     m_requestForEnd = true;
   }

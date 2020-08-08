@@ -905,6 +905,23 @@ void UIList::eventRight() {
   getRoot()->activateRight();
 }
 
+bool UIList::eventJump(int count) {
+  int last = (int)(m_Entries.size() - m_filteredItems - 1);
+  int newPos = m_nVisibleSelected + count;
+
+  if (newPos <= 0) {
+    setVisibleSelected(0);
+    return true;
+  } else if (newPos >= last) {
+    setVisibleSelected(last);
+    return true;
+  }
+
+  setVisibleSelected(newPos);
+
+  return false;
+}
+
 /*===========================================================================
 Up/down keys select elements
 ===========================================================================*/
@@ -920,22 +937,12 @@ bool UIList::keyDown(int nKey, SDL_Keymod mod, const std::string &i_utf8Char) {
       eventDown();
       return true;
     case SDLK_PAGEUP:
-      for (int i = 0; i < 10; i++) {
-        if (m_nVisibleSelected <= 0)
-          break;
-        else {
-          setVisibleSelected(m_nVisibleSelected - 1);
-        }
-      }
+      if (eventJump(-10))
+        break;
       return true;
     case SDLK_PAGEDOWN:
-      for (int i = 0; i < 10; i++) {
-        if (m_nVisibleSelected >= (int)(m_Entries.size() - m_filteredItems - 1))
-          break;
-        else {
-          setVisibleSelected(m_nVisibleSelected + 1);
-        }
-      }
+      if (eventJump(10))
+        break;
       return true;
 
     /* Left and right always selects another window */
@@ -989,23 +996,37 @@ bool UIList::keyDown(int nKey, SDL_Keymod mod, const std::string &i_utf8Char) {
 bool UIList::joystickAxisMotion(Uint8 i_joyNum,
                                 Uint8 i_joyAxis,
                                 Sint16 i_joyAxisValue) {
-  if (i_joyAxis % 2 == 0) { // horizontal
-    if (i_joyAxisValue < -(GUI_JOYSTICK_MINIMUM_DETECTION)) {
-      eventLeft();
-      return true;
-    } else if (i_joyAxisValue > GUI_JOYSTICK_MINIMUM_DETECTION) {
-      eventRight();
-      return true;
+  switch (i_joyAxis) {
+    case SDL_CONTROLLER_AXIS_LEFTX:
+      if (i_joyAxisValue <= -(GUI_JOYSTICK_MINIMUM_DETECTION)) {
+        eventLeft();
+        return true;
+      } else if (i_joyAxisValue >= GUI_JOYSTICK_MINIMUM_DETECTION) {
+        eventRight();
+        return true;
+      }
+      break;
+    case SDL_CONTROLLER_AXIS_LEFTY: {
+      if (i_joyAxisValue <= -(GUI_JOYSTICK_MINIMUM_DETECTION)) {
+        eventUp();
+        return true;
+      } else if (i_joyAxisValue >= GUI_JOYSTICK_MINIMUM_DETECTION) {
+        eventDown();
+        return true;
+      }
+      break;
     }
-  } else { // vertical
-    if (i_joyAxisValue < -(GUI_JOYSTICK_MINIMUM_DETECTION)) {
-      eventUp();
-      return true;
-    } else if (i_joyAxisValue > GUI_JOYSTICK_MINIMUM_DETECTION) {
-      eventDown();
-      return true;
-    }
+
+    case SDL_CONTROLLER_AXIS_TRIGGERLEFT:
+      if (!eventJump(-10))
+        return true;
+      break;
+    case SDL_CONTROLLER_AXIS_TRIGGERRIGHT:
+      if (!eventJump(10))
+        return true;
+      break;
   }
+
   return false;
 }
 

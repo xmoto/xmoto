@@ -1268,24 +1268,31 @@ bool UIRoot::_RootKeyEvent(UIWindow *pWindow, UIRootKeyEvent Event) {
 bool UIRoot::joystickAxisMotion(Uint8 i_joyNum,
                                 Uint8 i_joyAxis,
                                 Sint16 i_joyAxisValue) {
+  if (i_joyAxisValue > -(GUI_JOYSTICK_MINIMUM_DETECTION) &&
+      i_joyAxisValue < GUI_JOYSTICK_MINIMUM_DETECTION) {
+    return true;
+  }
 
   if (!_RootJoystickAxisMotionEvent(this, i_joyNum, i_joyAxis, i_joyAxisValue)) {
-    if (i_joyAxis % 2 == 0) { // horizontal
-      if (i_joyAxisValue < -(GUI_JOYSTICK_MINIMUM_DETECTION)) {
-        activateLeft();
-        return true;
-      } else if (i_joyAxisValue > GUI_JOYSTICK_MINIMUM_DETECTION) {
-        activateRight();
-        return true;
-      }
-    } else { // vertical
-      if (i_joyAxisValue < -(GUI_JOYSTICK_MINIMUM_DETECTION)) {
-        activateUp();
-        return true;
-      } else if (i_joyAxisValue > GUI_JOYSTICK_MINIMUM_DETECTION) {
-        activateDown();
-        return true;
-      }
+    switch (i_joyAxis) {
+      case SDL_CONTROLLER_AXIS_LEFTX:
+        if (i_joyAxisValue < -(GUI_JOYSTICK_MINIMUM_DETECTION)) {
+          activateLeft();
+          return true;
+        } else if (i_joyAxisValue > GUI_JOYSTICK_MINIMUM_DETECTION) {
+          activateRight();
+          return true;
+        }
+        break;
+      case SDL_CONTROLLER_AXIS_LEFTY:
+        if (i_joyAxisValue < -(GUI_JOYSTICK_MINIMUM_DETECTION)) {
+          activateUp();
+          return true;
+        } else if (i_joyAxisValue > GUI_JOYSTICK_MINIMUM_DETECTION) {
+          activateDown();
+          return true;
+        }
+        break;
     }
   }
   return false;

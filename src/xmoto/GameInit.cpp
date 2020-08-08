@@ -840,6 +840,14 @@ void GameApp::manageEvent(SDL_Event *Event) {
               Event->jaxis.axis,
               Event->jaxis.value));
       break;
+    case SDL_USEREVENT: {
+      if (Event->user.code == SDL_JOYAXISMOTION) {
+        StateMenu *p = reinterpret_cast<StateMenu *>(Event->user.data1);
+        const JoystickEvent &e = p->getJoystickRepeat();
+        p->getGUI()->joystickAxisMotion(e.joyNum, e.joyAxis, e.joyAxisValue);
+      }
+      break;
+    }
 
     case SDL_JOYBUTTONDOWN:
       StateManager::instance()->xmKey(

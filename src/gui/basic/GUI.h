@@ -34,7 +34,7 @@ class RenderSurface;
 #include "helpers/VMath.h"
 #include "include/xm_SDL.h"
 
-#define GUI_JOYSTICK_MINIMUM_DETECTION 3000
+#define GUI_JOYSTICK_MINIMUM_DETECTION 8000
 #define UGLY_MODE_WINDOW_BG MAKE_COLOR(35, 35, 35, 255)
 
 /*===========================================================================
@@ -896,6 +896,7 @@ private:
   void eventUp();
   void eventLeft();
   void eventRight();
+  bool eventJump(int count);
 
   int m_headerHeight;
   int m_headerSubBorderHeight;

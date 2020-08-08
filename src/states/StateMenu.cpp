@@ -71,6 +71,86 @@ bool StateMenu::render() {
   return true;
 }
 
+Uint32 StateMenu::timerCallback(Uint32 interval, void *param) {
+  SDL_Event event;
+  SDL_UserEvent userEvent;
+
+  userEvent.type = SDL_USEREVENT;
+
+  userEvent.code = SDL_JOYAXISMOTION;
+  userEvent.data1 = param;
+
+  event.type = SDL_USEREVENT;
+  event.user = userEvent;
+
+  SDL_PushEvent(&event);
+
+  return JOYSTICK_REPEAT_RATE;
+}
+
+void StateMenu::clearRepeatTimer(SDL_TimerID &timer) {
+  if (timer) {
+    SDL_RemoveTimer(timer);
+    timer = 0;
+  }
+}
+
+void StateMenu::handleJoyAxisRepeat(Uint8 v_joyNum, Uint8 v_joyAxis, Sint16 v_joyAxisValue) {
+  JoyAxisIndex axis;
+
+  switch (v_joyAxis) {
+    case SDL_CONTROLLER_AXIS_LEFTX:        axis = JOYAXIS_LEFTX;        break;
+    case SDL_CONTROLLER_AXIS_LEFTY:        axis = JOYAXIS_LEFTY;        break;
+    case SDL_CONTROLLER_AXIS_RIGHTX:       axis = JOYAXIS_RIGHTX;       break;
+    case SDL_CONTROLLER_AXIS_RIGHTY:       axis = JOYAXIS_RIGHTY;       break;
+    case SDL_CONTROLLER_AXIS_TRIGGERLEFT:  axis = JOYAXIS_TRIGGERLEFT;  break;
+    case SDL_CONTROLLER_AXIS_TRIGGERRIGHT: axis = JOYAXIS_TRIGGERRIGHT; break;
+    default:
+      return;
+  }
+
+  const bool isTrigger = (axis == JOYAXIS_TRIGGERLEFT || axis == JOYAXIS_TRIGGERRIGHT);
+
+  int dir;
+  /*
+   * If the axis value is below the negative deadzone and this is a trigger, treat it
+   * as if the trigger was released (because we want this to have a boolean state)
+   */
+  if (v_joyAxisValue <= -(GUI_JOYSTICK_MINIMUM_DETECTION) && !isTrigger)
+    dir = 0;
+  else if (v_joyAxisValue >= GUI_JOYSTICK_MINIMUM_DETECTION)
+    dir = 1;
+  else {
+    // Only clear the opposite axes
+    joyAxes[axis][0].isHeld = false;
+    joyAxes[axis][1].isHeld = false;
+
+    clearRepeatTimer(joyAxes[axis][0].timer);
+    clearRepeatTimer(joyAxes[axis][1].timer);
+    return;
+  }
+
+  if (!joyAxes[axis][dir].isHeld) {
+    // Clear the timers so they don't keep ghosting. Note though that the `isHeld` state
+    // will only be reset when the corresponding axis is released. This prevents a scenario
+    // where a bogus event is triggered after the latter of 2 simultaneously held axes is released
+    for (auto &axis : joyAxes) {
+      clearRepeatTimer(axis[0].timer);
+      clearRepeatTimer(axis[1].timer);
+    }
+
+    joyAxes[axis][dir].isHeld = true;
+
+    m_GUI->joystickAxisMotion(v_joyNum, v_joyAxis, v_joyAxisValue);
+
+    m_joystickRepeat = { v_joyNum, v_joyAxis, v_joyAxisValue };
+    joyAxes[axis][dir].timer = SDL_AddTimer(JOYSTICK_REPEAT_DELAY, timerCallback, (void *)this);
+  }
+
+  // Clear the timer for the opposite axis
+  clearRepeatTimer(joyAxes[axis][1-dir].timer);
+}
+
 void StateMenu::xmKey(InputEventType i_type, const XMKey &i_xmkey) {
   int nX, nY;
   Uint8 nButton;
@@ -149,7 +229,9 @@ void StateMenu::xmKey(InputEventType i_type, const XMKey &i_xmkey) {
   }
 
   else if (i_xmkey.toJoystickAxisMotion(v_joyNum, v_joyAxis, v_joyAxisValue)) {
-    m_GUI->joystickAxisMotion(v_joyNum, v_joyAxis, v_joyAxisValue);
+    handleJoyAxisRepeat(v_joyNum, v_joyAxis, v_joyAxisValue);
+
+    checkEvents();
   }
 
   GameState::xmKey(i_type, i_xmkey);
