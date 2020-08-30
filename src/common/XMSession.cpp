@@ -123,6 +123,7 @@ void XMSession::setToDefault() {
   m_uploadHighscoreUrl = DEFAULT_UPLOADREPLAY_URL;
   m_screenshotFormat = DEFAULT_SCREENSHOTFORMAT;
   m_notifyAtInit = DEFAULT_NOTIFYATINIT;
+  m_notifyKeyResetAtInit = DEFAULT_NOTIFYKEYRESETATINIT;
   m_webLevelsUrl = DEFAULT_WEBLEVELS_URL;
   m_uploadDbSyncUrl = DEFAULT_UPLOADDBSYNC_URL;
   m_mirrorMode = DEFAULT_MIRRORMODE;
@@ -333,6 +334,8 @@ void XMSession::loadProfile(const std::string &i_id_profile, xmDatabase *pDb) {
     i_id_profile, "AutosaveHighscoreReplays", m_autosaveHighscoreReplays);
   m_notifyAtInit =
     pDb->config_getBool(i_id_profile, "NotifyAtInit", m_notifyAtInit);
+  m_notifyKeyResetAtInit =
+    pDb->config_getBool(i_id_profile, "NotifyKeyResetAtInit", m_notifyKeyResetAtInit);
   m_showMinimap =
     pDb->config_getBool(i_id_profile, "ShowMiniMap", m_showMinimap);
   m_showEngineCounter =
@@ -554,6 +557,7 @@ void XMSession::saveProfile(xmDatabase *pDb) {
   pDb->config_setBool(
     m_profile, "AutosaveHighscoreReplays", m_autosaveHighscoreReplays);
   pDb->config_setBool(m_profile, "NotifyAtInit", m_notifyAtInit);
+  pDb->config_setBool(m_profile, "NotifyKeyResetAtInit", m_notifyKeyResetAtInit);
   pDb->config_setBool(m_profile, "ShowMiniMap", m_showMinimap);
   pDb->config_setBool(m_profile, "ShowEngineCounter", m_showEngineCounter);
   pDb->config_setBool(m_profile, "ContextHelp", m_enableContextHelp);
@@ -1314,6 +1318,15 @@ void XMSession::setNotifyAtInit(bool i_value) {
 
 bool XMSession::notifyAtInit() const {
   return m_notifyAtInit;
+}
+
+void XMSession::setNotifyKeyResetAtInit(bool i_value) {
+  PROPAGATE(XMSession, setNotifyKeyResetAtInit, i_value, bool);
+  m_notifyKeyResetAtInit = i_value;
+}
+
+bool XMSession::notifyKeyResetAtInit() const {
+  return m_notifyKeyResetAtInit;
 }
 
 std::string XMSession::webLevelsUrl() const {

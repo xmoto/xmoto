@@ -298,6 +298,10 @@ UIMsgBoxButton UIMsgBox::getClicked(void) {
         return UI_MSGBOX_OK;
       if (m_pButtons[i]->getCaption() == GAMETEXT_CANCEL)
         return UI_MSGBOX_CANCEL;
+      if (m_pButtons[i]->getCaption() == GAMETEXT_OPTIONS)
+        return UI_MSGBOX_OPTIONS;
+      if (m_pButtons[i]->getCaption() == GAMETEXT_QUIT)
+        return UI_MSGBOX_QUIT;
       if (m_pButtons[i]->getCaption() == GAMETEXT_YES)
         return UI_MSGBOX_YES;
       if (m_pButtons[i]->getCaption() == GAMETEXT_NO)
@@ -342,6 +346,20 @@ void UIMsgBox::makeActiveButton(UIMsgBoxButton i_button) {
 
     if (i_button == UI_MSGBOX_CANCEL) {
       if (m_pButtons[i]->getCaption() == GAMETEXT_CANCEL) {
+        m_pButtons[i]->makeActive();
+        return;
+      }
+    }
+
+    if (i_button == UI_MSGBOX_OPTIONS) {
+      if (m_pButtons[i]->getCaption() == GAMETEXT_OPTIONS) {
+        m_pButtons[i]->makeActive();
+        return;
+      }
+    }
+
+    if (i_button == UI_MSGBOX_QUIT) {
+      if (m_pButtons[i]->getCaption() == GAMETEXT_QUIT) {
         m_pButtons[i]->makeActive();
         return;
       }
@@ -483,6 +501,10 @@ UIMsgBox *UIWindow::msgBox(std::string Text,
     nNumButtons++;
   if (Buttons & UI_MSGBOX_CANCEL)
     nNumButtons++;
+  if (Buttons & UI_MSGBOX_OPTIONS)
+    nNumButtons++;
+  if (Buttons & UI_MSGBOX_QUIT)
+    nNumButtons++;
   if (Buttons & UI_MSGBOX_YES)
     nNumButtons++;
   if (Buttons & UI_MSGBOX_NO)
@@ -588,6 +610,24 @@ UIMsgBox *UIWindow::msgBox(std::string Text,
   if (Buttons & UI_MSGBOX_CANCEL) {
     pButton =
       new UIButton(pMsgBox, nCX, nCY, GAMETEXT_CANCEL, v_buttonWidth, 57);
+    pButton->setFont(getFont());
+    if (v_useCustom == false)
+      pButton->setType(UI_BUTTON_TYPE_SMALL);
+    pMsgBox->addButton(pButton);
+    nCX += v_buttonWidth;
+  }
+  if (Buttons & UI_MSGBOX_OPTIONS) {
+    pButton =
+      new UIButton(pMsgBox, nCX, nCY, GAMETEXT_OPTIONS, v_buttonWidth, 57);
+    pButton->setFont(getFont());
+    if (v_useCustom == false)
+      pButton->setType(UI_BUTTON_TYPE_SMALL);
+    pMsgBox->addButton(pButton);
+    nCX += v_buttonWidth;
+  }
+  if (Buttons & UI_MSGBOX_QUIT) {
+    pButton =
+      new UIButton(pMsgBox, nCX, nCY, GAMETEXT_QUIT, v_buttonWidth, 57);
     pButton->setFont(getFont());
     if (v_useCustom == false)
       pButton->setType(UI_BUTTON_TYPE_SMALL);

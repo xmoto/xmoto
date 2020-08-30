@@ -125,14 +125,16 @@ private:
   UI window
   ===========================================================================*/
 enum UIMsgBoxButton {
-  UI_MSGBOX_NOTHING = 0,
-  UI_MSGBOX_OK = 1,
-  UI_MSGBOX_CANCEL = 2,
-  UI_MSGBOX_YES = 4,
-  UI_MSGBOX_NO = 8,
-  UI_MSGBOX_YES_FOR_ALL = 16,
-  UI_MSGBOX_CUSTOM1 = 32,
-  UI_MSGBOX_CUSTOM2 = 64
+  UI_MSGBOX_NOTHING     = 0,
+  UI_MSGBOX_OK          = (1<<0),
+  UI_MSGBOX_CANCEL      = (1<<1),
+  UI_MSGBOX_OPTIONS     = (1<<2),
+  UI_MSGBOX_QUIT        = (1<<3),
+  UI_MSGBOX_YES         = (1<<4),
+  UI_MSGBOX_NO          = (1<<5),
+  UI_MSGBOX_YES_FOR_ALL = (1<<6),
+  UI_MSGBOX_CUSTOM1     = (1<<7),
+  UI_MSGBOX_CUSTOM2     = (1<<8)
 };
 
 class UIWindow {

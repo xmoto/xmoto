@@ -112,6 +112,7 @@ StateMainMenu::StateMainMenu(bool drawStateBehind, bool updateStatesBehind)
   StateManager::instance()->registerAsObserver("CONFIGURE_WWW_ACCESS", this);
   StateManager::instance()->registerAsObserver("CLIENT_STATUS_CHANGED", this);
   StateManager::instance()->registerAsObserver("CLIENT_MODE_CHANGED", this);
+  StateManager::instance()->registerAsObserver("OPEN_OPTIONS", this);
 
   if (XMSession::instance()->debug() == true) {
     StateManager::instance()->registerAsEmitter("REPLAYS_UPDATED");
@@ -160,6 +161,7 @@ StateMainMenu::~StateMainMenu() {
   StateManager::instance()->unregisterAsObserver("CONFIGURE_WWW_ACCESS", this);
   StateManager::instance()->unregisterAsObserver("CLIENT_STATUS_CHANGED", this);
   StateManager::instance()->unregisterAsObserver("CLIENT_MODE_CHANGED", this);
+  StateManager::instance()->unregisterAsObserver("OPEN_OPTIONS", this);
 }
 
 void StateMainMenu::enter() {
@@ -204,6 +206,15 @@ void StateMainMenu::enter() {
     }
 
   } else {
+    // Prompt to reset the keys if migrating from SDL1.2
+    if (XMSession::instance()->notifyKeyResetAtInit()) {
+      StateMessageBox *v_msgboxState =
+        new StateMessageBox(this, GAMETEXT_NOTIFY_KEYRESET, UI_MSGBOX_OK | UI_MSGBOX_OPTIONS | UI_MSGBOX_QUIT);
+      StateManager::instance()->pushState(v_msgboxState);
+      v_msgboxState->setMsgBxId("RESETKEYS");
+      v_msgboxState->makeActiveButton(UI_MSGBOX_OK);
+    }
+
     if (CheckWwwThread::isNeeded()) {
       if (m_checkWwwThread == NULL) {
         m_checkWwwThread = new CheckWwwThread();
@@ -1838,6 +1849,26 @@ void StateMainMenu::sendFromMessageBox(const std::string &i_id,
     if (i_button == UI_MSGBOX_YES) {
       addCommand("REPLAYS_DELETE");
     }
+  } else if (i_id == "RESETKEYS") {
+    if (i_button == UI_MSGBOX_OK) {
+      // Reset the key binds and save them to the db
+      if (GameApp::instance()->getDrawLib() != NULL) {
+        InputHandler::instance()->setDefaultConfig();
+        InputHandler::instance()->saveConfig(
+          GameApp::instance()->getUserConfig(),
+          xmDatabase::instance("main"),
+          XMSession::instance("file")->profile());
+        XMSession::instance()->setNotifyKeyResetAtInit(false);
+        Logger::LogInfo("Key bindings were reset");
+      }
+    } else if (i_button == UI_MSGBOX_OPTIONS) {
+      StateManager::instance()->sendAsynchronousMessage("OPEN_OPTIONS");
+      XMSession::instance()->setNotifyKeyResetAtInit(false);
+    } else if (i_button == UI_MSGBOX_QUIT) {
+      // Quit
+      m_requestForEnd = true;
+      GameApp::instance()->requestEnd();
+    }
   }
 
   else {
@@ -1997,6 +2028,15 @@ void StateMainMenu::executeOneCommand(std::string cmd, std::string args) {
 
   else if (cmd == "CLIENT_MODE_CHANGED") {
     updateClientStrings();
+  }
+
+  else if (cmd == "OPEN_OPTIONS") {
+    StateOptions *stateOptions = new StateOptions("MAIN:OPTIONS:GENERAL_TAB:TABS:CONTROLS_TAB");
+    StateManager::instance()->pushState(stateOptions);
+
+    UITabView *v_tabView = reinterpret_cast<UITabView *>(
+          stateOptions->getGUI()->getChild("MAIN:TABS:GENERAL_TAB:TABS"));
+    v_tabView->selectChildrenById("CONTROLS_TAB");
   }
 
   else {

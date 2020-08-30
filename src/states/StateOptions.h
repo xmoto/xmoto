@@ -37,6 +37,8 @@ public:
                                   const std::string &i_input);
   virtual void executeOneCommand(std::string cmd, std::string args);
 
+  UIRoot *getGUI() { return m_GUI; }
+
 protected:
   virtual void checkEvents();
 
