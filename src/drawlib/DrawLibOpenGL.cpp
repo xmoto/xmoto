@@ -1049,7 +1049,6 @@ FontGlyph *GLFontManager::getGlyph(const std::string &i_string) {
       }
     }
   }
-  /* */
 
   v_glyph = new GLFontGlyph(i_string, m_glyphsLetters);
   m_glyphsKeys.push_back(i_string);
@@ -1106,6 +1105,8 @@ void GLFontManager::printStringGradOne(DrawLib *pDrawLib,
   unsigned int v_current_linesize;
   unsigned int v_size;
 
+  bool prevNewline = false; // indicates whether the previous char was a newline
+
   int oldTextureId = -1;
   int newTextureId;
 
@@ -1155,7 +1156,7 @@ void GLFontManager::printStringGradOne(DrawLib *pDrawLib,
       i_x +
       (v_longuest_linesize - v_current_linesize) / 2 * (i_perCentered + 1.0);
 
-    /* la taille de la 1ere ligne */
+    /* vertical position of the first line */
     v_y = -i_y + pDrawLib->getRenderSurface()->size().y -
           v_glyph->firstLineDrawHeight();
     v_lineHeight = 0;
@@ -1170,8 +1171,16 @@ void GLFontManager::printStringGradOne(DrawLib *pDrawLib,
               (v_longuest_linesize - v_current_linesize) / 2 *
                 (i_perCentered + 1.0);
         v_y -= v_lineHeight + UTF8_INTERLINE_SPACE;
+        /* check if the previous character was a newline too */
+        if (prevNewline) {
+          v_glyphLetter = m_glyphsLetters[" "];
+          v_lineHeight = v_glyphLetter->realHeight();
+          v_y -= v_lineHeight;
+        }
+        prevNewline = true;
         v_lineHeight = 0;
       } else {
+        prevNewline = false;
         v_glyphLetter = m_glyphsLetters[v_char];
         if (v_glyphLetter != NULL) {
           if (v_glyphLetter->realHeight() > v_lineHeight)
