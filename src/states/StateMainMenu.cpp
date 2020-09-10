@@ -195,6 +195,9 @@ void StateMainMenu::enter() {
         XMSession::instance()->sitekey(), XMSession::instance()->profile()) ==
         false) {
     StateManager::instance()->pushState(new StateEditProfile());
+    // set this flag to off so we won't be falsely prompted
+    // for a key reset the next time the game is launched
+    XMSession::instance()->setNotifyKeyResetAtInit(false);
 
     /* in case there is no profile, we show a message box */
     /* Should we show a notification box? (with important one-time info) */

@@ -202,6 +202,8 @@ public:
   /* if you save several values, use begin and end to make it faster */
   void config_setValue_begin();
   void config_setValue_end();
+  bool config_keyExists(const std::string &i_id_profile,
+                        const std::string &i_key);
   std::string config_getString(const std::string &i_id_profile,
                                const std::string &i_key,
                                const std::string &i_default);

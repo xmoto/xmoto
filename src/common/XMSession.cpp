@@ -334,8 +334,14 @@ void XMSession::loadProfile(const std::string &i_id_profile, xmDatabase *pDb) {
     i_id_profile, "AutosaveHighscoreReplays", m_autosaveHighscoreReplays);
   m_notifyAtInit =
     pDb->config_getBool(i_id_profile, "NotifyAtInit", m_notifyAtInit);
-  m_notifyKeyResetAtInit =
-    pDb->config_getBool(i_id_profile, "NotifyKeyResetAtInit", m_notifyKeyResetAtInit);
+
+  if (!pDb->config_keyExists(i_id_profile, "NotifyKeyResetAtInit"))
+    // this is either an old profile from SDL1.2, or a fresh profile
+    m_notifyKeyResetAtInit = true;
+  else
+    m_notifyKeyResetAtInit =
+      pDb->config_getBool(i_id_profile, "NotifyKeyResetAtInit", m_notifyKeyResetAtInit);
+
   m_showMinimap =
     pDb->config_getBool(i_id_profile, "ShowMiniMap", m_showMinimap);
   m_showEngineCounter =

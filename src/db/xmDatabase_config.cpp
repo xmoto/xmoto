@@ -106,6 +106,13 @@ bool xmDatabase::config_getBool(const std::string &i_id_profile,
   return (v_res == "1") ? true : false;
 }
 
+bool xmDatabase::config_keyExists(const std::string &i_id_profile,
+                                  const std::string &i_key) {
+  unsigned int nrow;
+  config_getValue(i_id_profile, i_key, nrow);
+  return nrow == 1;
+}
+
 int xmDatabase::config_getInteger(const std::string &i_id_profile,
                                   const std::string &i_key,
                                   int i_default) {

@@ -595,8 +595,7 @@ Central place to keep many in-game text strings
   _("Welcome to a new version of X-Moto!\n" \
     "\n" \
     "Due to internal changes, controls must be reset.\n" \
-    "You have the following options:" \
-    "\n" \
+    "You have the following options:\n" \
     "- [OK] to continue (recommended)\n" \
     "- [Options] to adjust your controls \n" \
     "- [Quit] to come back later             \n" \
