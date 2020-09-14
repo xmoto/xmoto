@@ -21,6 +21,8 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #ifndef __STATEMENU_H__
 #define __STATEMENU_H__
 
+#include <array>
+
 #include "GameState.h"
 
 /* These should be pretty reasonable defaults */
