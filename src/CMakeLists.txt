@@ -406,6 +406,21 @@ elseif(APPLE AND BUILD_MACOS_BUNDLE)
   set_property(TARGET xmoto PROPERTY MACOSX_BUNDLE TRUE)
 endif()
 
+if(WIN32)
+  # MXE exports MSYS=1 so we can't use that to
+  # differentiate between it and MSYS2
+  if(DEFINED ENV{MSYSTEM_PREFIX})
+    set(IS_MSYS2 TRUE)
+  else()
+    set(IS_MSYS2 FALSE)
+  endif()
+  message("IS_MSYS2: ${IS_MSYS2}")
+endif()
+
+if(WIN32 AND IS_MSYS2)
+  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -lmingw32")
+endif()
+
 target_include_directories(xmoto
   PRIVATE
 
@@ -444,6 +459,7 @@ target_link_libraries(xmoto PUBLIC
   ${CMAKE_DL_LIBS}
   ${OPENGL_LIBRARIES}
   ${PNG_LIBRARY}
+  $<$<AND:$<PLATFORM_ID:Windows>,$<BOOL:${IS_MSYS2}>>:SDL2main>
   ${SDL2_LIBRARIES}
   ${SDL2_MIXER_LIBRARY}
   ${SDL2_NET_LIBRARY}
@@ -579,15 +595,6 @@ function(win32_run_script _CMD _ARGS _IS_MSYS2)
 endfunction()
 
 if(WIN32)
-  # MXE exports MSYS=1 so we can't use that to
-  # differentiate between it and MSYS2
-  if(DEFINED ENV{MSYSTEM_PREFIX})
-    set(IS_MSYS2 TRUE)
-  else()
-    set(IS_MSYS2 FALSE)
-  endif()
-  message("IS_MSYS2: ${IS_MSYS2}")
-
   if(IS_MSYS2)
     # use msys prefix path as the target
     set_win32_compat_path(DLLCOPY_TARGET $ENV{MSYSTEM_PREFIX})
