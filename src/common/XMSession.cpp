@@ -123,7 +123,7 @@ void XMSession::setToDefault() {
   m_uploadHighscoreUrl = DEFAULT_UPLOADREPLAY_URL;
   m_screenshotFormat = DEFAULT_SCREENSHOTFORMAT;
   m_notifyAtInit = DEFAULT_NOTIFYATINIT;
-  m_notifyKeyResetAtInit = DEFAULT_NOTIFYKEYRESETATINIT;
+  m_notifyKeyCompatUpgrade = DEFAULT_NOTIFYKEYCOMPATUPGRADE;
   m_webLevelsUrl = DEFAULT_WEBLEVELS_URL;
   m_uploadDbSyncUrl = DEFAULT_UPLOADDBSYNC_URL;
   m_mirrorMode = DEFAULT_MIRRORMODE;
@@ -335,12 +335,12 @@ void XMSession::loadProfile(const std::string &i_id_profile, xmDatabase *pDb) {
   m_notifyAtInit =
     pDb->config_getBool(i_id_profile, "NotifyAtInit", m_notifyAtInit);
 
-  if (!pDb->config_keyExists(i_id_profile, "NotifyKeyResetAtInit"))
+  if (!pDb->config_keyExists(i_id_profile, "NotifyKeyCompatUpgrade"))
     // this is either an old profile from SDL1.2, or a fresh profile
-    m_notifyKeyResetAtInit = true;
+    m_notifyKeyCompatUpgrade = true;
   else
-    m_notifyKeyResetAtInit =
-      pDb->config_getBool(i_id_profile, "NotifyKeyResetAtInit", m_notifyKeyResetAtInit);
+    m_notifyKeyCompatUpgrade =
+      pDb->config_getBool(i_id_profile, "NotifyKeyCompatUpgrade", m_notifyKeyCompatUpgrade);
 
   m_showMinimap =
     pDb->config_getBool(i_id_profile, "ShowMiniMap", m_showMinimap);
@@ -563,7 +563,7 @@ void XMSession::saveProfile(xmDatabase *pDb) {
   pDb->config_setBool(
     m_profile, "AutosaveHighscoreReplays", m_autosaveHighscoreReplays);
   pDb->config_setBool(m_profile, "NotifyAtInit", m_notifyAtInit);
-  pDb->config_setBool(m_profile, "NotifyKeyResetAtInit", m_notifyKeyResetAtInit);
+  pDb->config_setBool(m_profile, "NotifyKeyCompatUpgrade", m_notifyKeyCompatUpgrade);
   pDb->config_setBool(m_profile, "ShowMiniMap", m_showMinimap);
   pDb->config_setBool(m_profile, "ShowEngineCounter", m_showEngineCounter);
   pDb->config_setBool(m_profile, "ContextHelp", m_enableContextHelp);
@@ -1326,13 +1326,13 @@ bool XMSession::notifyAtInit() const {
   return m_notifyAtInit;
 }
 
-void XMSession::setNotifyKeyResetAtInit(bool i_value) {
-  PROPAGATE(XMSession, setNotifyKeyResetAtInit, i_value, bool);
-  m_notifyKeyResetAtInit = i_value;
+void XMSession::setNotifyKeyCompatUpgrade(bool i_value) {
+  PROPAGATE(XMSession, setNotifyKeyCompatUpgrade, i_value, bool);
+  m_notifyKeyCompatUpgrade = i_value;
 }
 
-bool XMSession::notifyKeyResetAtInit() const {
-  return m_notifyKeyResetAtInit;
+bool XMSession::notifyKeyCompatUpgrade() const {
+  return m_notifyKeyCompatUpgrade;
 }
 
 std::string XMSession::webLevelsUrl() const {

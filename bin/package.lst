@@ -1082,4 +1082,5 @@ default/weblevels.xml
 
 Rules/classical.rules
 
+compat/sdl12-keytable.txt
 

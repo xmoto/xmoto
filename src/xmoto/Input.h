@@ -27,6 +27,8 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "helpers/Singleton.h"
 #include <string>
 #include <vector>
+#include <array>
+#include <unordered_map>
 
 class xmDatabase;
 class UserConfig;
@@ -160,6 +162,9 @@ public:
                   xmDatabase *pDb,
                   const std::string &i_id_profile);
 
+  void sdl12CompatUpgrade();
+  void sdl12CompatMap(XMKey &key, const std::unordered_map<int32_t, int32_t> &map);
+
   bool isANotGameSetKey(XMKey *i_xmkey) const;
 
   void setPlayerKey(unsigned int INPUT_key, int i_player, XMKey i_value);
@@ -189,9 +194,9 @@ private:
   std::vector<std::string> m_JoysticksNames;
   std::vector<std::string> m_JoysticksIds;
 
-  XMKey m_nScriptActionKeys[INPUT_NB_PLAYERS][MAX_SCRIPT_KEY_HOOKS];
-  IFullKey m_playerKeys[INPUT_NB_PLAYERS][INPUT_NB_PLAYERKEYS];
-  IFullKey m_globalKeys[INPUT_NB_GLOBALKEYS];
+  std::array<std::array<XMKey, MAX_SCRIPT_KEY_HOOKS>, INPUT_NB_PLAYERS> m_nScriptActionKeys;
+  std::array<std::array<IFullKey, INPUT_NB_PLAYERKEYS>, INPUT_NB_PLAYERS> m_playerKeys;
+  std::array<IFullKey, INPUT_NB_GLOBALKEYS> m_globalKeys;
 };
 
 #endif

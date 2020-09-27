@@ -23,10 +23,13 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 #include "Input.h"
 #include "GameText.h"
+#include "common/VFileIO.h"
 #include "db/xmDatabase.h"
 #include "helpers/Log.h"
+#include "helpers/Text.h"
 #include "helpers/VExcept.h"
 #include <sstream>
+#include <utility>
 
 InputHandler::InputHandler() {
   reset();
@@ -135,10 +138,10 @@ void InputHandler::loadConfig(UserConfig *pConfig,
       } catch (InvalidSystemKeyException &e) {
         /* keep default key */
       } catch (Exception &e) {
-        m_playerKeys[i][j].key =
-          XMKey(); // load default key (undefined) to not override the key while
+        // load default key (undefined) to not override the key while
         // undefined keys are not saved to avoid config brake in case
         // you forgot to plug your joystick
+        m_playerKeys[i][j].key = XMKey();
       }
     }
 
@@ -408,6 +411,54 @@ void InputHandler::setDefaultConfig() {
              XMKey(SDLK_DOWN, KMOD_LCTRL),
              GAMETEXT_REPLAYINGABITSLOWER,
              false);
+}
+
+void InputHandler::sdl12CompatMap(XMKey &key, const std::unordered_map<int32_t, int32_t> &map) {
+  // key modifiers are the same between SDL 1.2 and 2.0,
+  // no need to do anything about them
+  auto it = map.find(key.getKeyboardSym());
+
+  if (it != map.end())
+    key = XMKey(it->second, key.getKeyboardMod());
+}
+
+void InputHandler::sdl12CompatUpgrade() {
+  std::string file = "compat/sdl12-keytable.txt";
+  FileHandle *pfh = XMFS::openIFile(FDT_DATA, file);
+  if (!pfh) {
+    std::string err = "Failed to read " + file;
+    LogError(err.c_str());
+    throw new Exception(err);
+  }
+  std::unordered_map<int32_t, int32_t> map;
+
+  std::string line;
+  while (XMFS::readNextLine(pfh, line)) {
+    if (line.empty() || line.rfind("#", 0) == 0)
+      continue;
+
+    std::vector<std::string> tokens = splitStr(line, ' ');
+    if (tokens.size() > 1) {
+      int32_t a = atol(tokens[0].c_str());
+      int32_t b = atol(tokens[1].c_str());
+
+      if (a != SDLK_UNKNOWN && b != SDLK_UNKNOWN)
+        map.insert(std::pair<int32_t, int32_t>(a, b));
+    }
+  }
+
+  XMFS::closeFile(pfh);
+
+  for (auto &keys : m_playerKeys)
+    for (auto &fullkey : keys)
+      sdl12CompatMap(fullkey.key, map);
+
+  for (auto &fullkey : m_globalKeys)
+    sdl12CompatMap(fullkey.key, map);
+
+  for (auto &keys : m_nScriptActionKeys)
+    for (auto &key : keys)
+      sdl12CompatMap(key, map);
 }
 
 /*===========================================================================

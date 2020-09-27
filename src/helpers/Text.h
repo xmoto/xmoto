@@ -22,6 +22,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #define __XMOTO_TEXT_H__
 
 #include <string>
+#include <vector>
 
 std::string txtToLower(const std::string &i_str);
 std::string splitText(const std::string &str, int p_breakLineLength);
@@ -30,5 +31,6 @@ std::string unicode2utf8(unsigned int unicode);
 std::string &replaceAll(std::string &context,
                         const std::string &from,
                         const std::string &to);
+std::vector<std::string> splitStr(const std::string &string, char delim);
 
 #endif
