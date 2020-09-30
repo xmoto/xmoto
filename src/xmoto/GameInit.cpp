@@ -889,6 +889,13 @@ void GameApp::manageEvent(SDL_Event *Event) {
             /* never hit */
             default: assert(false); hasFocus = StateManager::instance()->hasFocus(); break;
           }
+          if (hasFocus) {
+            // Pending keydown events need to be flushed after gaining focus
+            // because SDL2 will send them for keys that were pressed outside the game
+            // (e.g. when alt-tabbing in)
+            SDL_FlushEvents(SDL_KEYDOWN, SDL_KEYDOWN);
+          }
+
           if (!m_hasMouseFocus) {
             StateManager::instance()->changeFocus(hasFocus);
           }
