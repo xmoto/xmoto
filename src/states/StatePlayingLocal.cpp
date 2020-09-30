@@ -160,16 +160,6 @@ void StatePlayingLocal::enterAfterPop() {
 }
 
 bool StatePlayingLocal::update() {
-  if (StateManager::instance()->hasFocus()) {
-    /*
-     * With SDL2, input events come in in the opposite order from SDL1.2
-     * (the order used to be: "focus lost" -> "key released").
-     * The different order on SDL2 causes the key release events to never
-     * be processed properly, and this *should* fix that (even if it's a bit slow)
-     */
-    dealWithActivedKeys();
-  }
-
   if (StatePlaying::update() == false)
     return false;
 

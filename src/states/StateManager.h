@@ -88,6 +88,7 @@ public:
                                const std::string &args = "",
                                const std::string &i_parentId = "");
 
+  GameState *getTopState();
   bool isTopOfTheStates(GameState *i_state);
   int numberOfStates();
 

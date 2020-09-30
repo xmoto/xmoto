@@ -915,12 +915,21 @@ void StateManager::refreshStaticCaptions() {
   //  StateRequestKey::refreshStaticCaptions();
 }
 
-bool StateManager::isTopOfTheStates(GameState *i_state) {
+GameState *StateManager::getTopState() {
   if (m_statesStack.size() == 0) {
-    return false;
+    return NULL;
   }
 
-  return m_statesStack[m_statesStack.size() - 1] == i_state;
+  return m_statesStack[m_statesStack.size() - 1];
+}
+
+bool StateManager::isTopOfTheStates(GameState *i_state) {
+  GameState *state = getTopState();
+
+  if (!state)
+    return false;
+
+  return state == i_state;
 }
 
 int StateManager::numberOfStates() {

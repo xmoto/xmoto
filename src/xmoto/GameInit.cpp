@@ -56,6 +56,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "states/StatePreplayingReplay.h"
 #include "states/StateReplaying.h"
 #include "states/StateWaitServerInstructions.h"
+#include "states/StatePlayingLocal.h"
 
 #include "thread/UpgradeLevelsThread.h"
 
@@ -894,6 +895,17 @@ void GameApp::manageEvent(SDL_Event *Event) {
             // because SDL2 will send them for keys that were pressed outside the game
             // (e.g. when alt-tabbing in)
             SDL_FlushEvents(SDL_KEYDOWN, SDL_KEYDOWN);
+          } else {
+            /*
+             * With SDL2, input events come in in the opposite order from SDL1.2
+             * (the order used to be: "focus lost" -> "key released").
+             * We need to invalidate the keys here so they don't persist after focus is lost
+             */
+            StatePlayingLocal *state = dynamic_cast<StatePlayingLocal *>(
+                StateManager::instance()->getTopState());
+            if (state) {
+              state->dealWithActivedKeys();
+            }
           }
 
           if (!m_hasMouseFocus) {

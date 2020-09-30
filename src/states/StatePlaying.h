@@ -34,10 +34,11 @@ public:
   virtual void executeOneCommand(std::string cmd, std::string args);
   virtual bool renderOverShadow();
 
+  void dealWithActivedKeys(); // apply already pressed keys
+
 protected:
   void handleControllers(InputEventType Type, const XMKey &i_xmkey);
   void handleScriptKeys(InputEventType Type, const XMKey &i_xmkey);
-  void dealWithActivedKeys(); // apply already pressed keys
   void updateWithOptions();
 
   bool m_displayStats;

@@ -38,9 +38,10 @@ public:
 
   virtual void enter();
   virtual void leave() {}
-  virtual void leaveType() {
-  } // you can give a type to states ; if a state is leaved but not replaced by
+  // you can give a type to states; if a state is left but not replaced by
   // a state of the same type, this method is called
+  virtual void leaveType() {}
+
   /* called when a new state is pushed or poped on top of the
      current one */
   virtual void enterAfterPop();
