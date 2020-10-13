@@ -164,6 +164,7 @@ public:
 
   void sdl12CompatUpgrade();
   void sdl12CompatMap(XMKey &key, const std::unordered_map<int32_t, int32_t> &map);
+  bool sdl12CompatIsUpgraded(xmDatabase *pDb, const std::string &i_id_profile) const;
 
   bool isANotGameSetKey(XMKey *i_xmkey) const;
 

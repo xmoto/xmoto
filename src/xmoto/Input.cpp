@@ -124,6 +124,10 @@ void InputHandler::loadConfig(UserConfig *pConfig,
   /* Set defaults */
   setDefaultConfig();
 
+  /* To preserve backward compatibility with SDL1.2,
+   * we copy the keys and prefix them with "_" */
+  const std::string prefix = sdl12CompatIsUpgraded(pDb, i_id_profile) ? "_" : "";
+
   /* Get settings for mode */
   for (unsigned int i = 0; i < INPUT_NB_PLAYERS; i++) {
     std::ostringstream v_n;
@@ -133,7 +137,7 @@ void InputHandler::loadConfig(UserConfig *pConfig,
       try {
         m_playerKeys[i][j].key =
           XMKey(pDb->config_getString(i_id_profile,
-                                      m_playerKeys[i][j].name + v_n.str(),
+                                      prefix + m_playerKeys[i][j].name + v_n.str(),
                                       m_playerKeys[i][j].key.toString()));
       } catch (InvalidSystemKeyException &e) {
         /* keep default key */
@@ -151,7 +155,7 @@ void InputHandler::loadConfig(UserConfig *pConfig,
       v_k << (k);
 
       v_key = pDb->config_getString(
-        i_id_profile, "KeyActionScript" + v_n.str() + "_" + v_k.str(), "");
+        i_id_profile, prefix + "KeyActionScript" + v_n.str() + "_" + v_k.str(), "");
       if (v_key != "") { // don't override the default key if there is nothing
         // in the config
         try {
@@ -169,7 +173,7 @@ void InputHandler::loadConfig(UserConfig *pConfig,
   for (unsigned int i = 0; i < INPUT_NB_GLOBALKEYS; i++) {
     try {
       m_globalKeys[i].key = XMKey(pDb->config_getString(
-        i_id_profile, m_globalKeys[i].name, m_globalKeys[i].key.toString()));
+        i_id_profile, prefix + m_globalKeys[i].name, m_globalKeys[i].key.toString()));
     } catch (InvalidSystemKeyException &e) {
       /* keep default key */
     } catch (Exception &e) {
@@ -461,6 +465,12 @@ void InputHandler::sdl12CompatUpgrade() {
       sdl12CompatMap(key, map);
 }
 
+bool InputHandler::sdl12CompatIsUpgraded(xmDatabase *pDb,
+                                         const std::string &i_id_profile) const {
+  return !pDb->config_getBool(i_id_profile, "NotifyKeyCompatUpgrade", true);
+}
+
+
 /*===========================================================================
 Get key by action...
 ===========================================================================*/
@@ -498,6 +508,8 @@ void InputHandler::saveConfig(UserConfig *pConfig,
                               const std::string &i_id_profile) {
   pDb->config_setValue_begin();
 
+  const std::string prefix = "_";
+
   for (unsigned int i = 0; i < INPUT_NB_PLAYERS; i++) {
     std::ostringstream v_n;
     v_n << (i + 1);
@@ -506,7 +518,7 @@ void InputHandler::saveConfig(UserConfig *pConfig,
     for (unsigned int j = 0; j < INPUT_NB_PLAYERKEYS; j++) {
       if (m_playerKeys[i][j].key.isDefined()) {
         pDb->config_setString(i_id_profile,
-                              m_playerKeys[i][j].name + v_n.str(),
+                              prefix + m_playerKeys[i][j].name + v_n.str(),
                               m_playerKeys[i][j].key.toString());
       }
     }
@@ -518,7 +530,7 @@ void InputHandler::saveConfig(UserConfig *pConfig,
         v_k << (k);
 
         pDb->config_setString(i_id_profile,
-                              "KeyActionScript" + v_n.str() + "_" + v_k.str(),
+                              prefix + "KeyActionScript" + v_n.str() + "_" + v_k.str(),
                               m_nScriptActionKeys[i][k].toString());
       }
     }
@@ -526,7 +538,7 @@ void InputHandler::saveConfig(UserConfig *pConfig,
 
   for (unsigned int i = 0; i < INPUT_NB_GLOBALKEYS; i++) {
     pDb->config_setString(
-      i_id_profile, m_globalKeys[i].name, m_globalKeys[i].key.toString());
+      i_id_profile, prefix + m_globalKeys[i].name, m_globalKeys[i].key.toString());
   }
 
   pDb->config_setValue_end();
