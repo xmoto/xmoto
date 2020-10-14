@@ -10,7 +10,7 @@ set(CPACK_SOURCE_IGNORE_FILES "/\\\\.git/")
 #set(CPACK_PACKAGE_VENDOR "")
 set(CPACK_PACKAGE_CONTACT "https://github.com/xmoto/xmoto")
 
-set(CPACK_PACKAGE_SUMMARY "A challenging 2D motocross platform game")
+set(CPACK_PACKAGE_DESCRIPTION_SUMMARY "A challenging 2D motocross platform game")
 set(CPACK_PACKAGE_DESCRIPTION "\
 X-Moto is a challenging 2D motocross platform game, where physics play \
 an all important role in the gameplay. You need to control your bike to \
