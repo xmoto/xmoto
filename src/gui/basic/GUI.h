@@ -583,7 +583,7 @@ private:
   /* Helpers */
   void _ReEnableSiblings(void);
   std::vector<std::string> findMatches();
-  void showMatch();
+  void showMatch(bool reverse);
 };
 
 /*===========================================================================

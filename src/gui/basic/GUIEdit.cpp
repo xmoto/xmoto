@@ -137,7 +137,10 @@ bool UIEdit::keyDown(int nKey, SDL_Keymod mod, const std::string &i_utf8Char) {
       getRoot()->activateDown();
       return true;
     case SDLK_TAB:
-      getRoot()->activateNext();
+      if (mod & KMOD_SHIFT)
+        getRoot()->activatePrevious();
+      else
+        getRoot()->activateNext();
       return true;
     case SDLK_v:
       if (mod & KMOD_CTRL) {

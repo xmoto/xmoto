@@ -477,7 +477,10 @@ bool UIMsgBox::keyDown(int nKey, SDL_Keymod mod, const std::string &i_utf8Char) 
             // TODO
             break;
           case SDLK_TAB:
-            showMatch();
+            if (mod & KMOD_SHIFT)
+              showMatch(true);
+            else
+              showMatch(false);
             return true;
         }
       }
@@ -732,25 +735,26 @@ void UIMsgBox::addCompletionWord(std::vector<std::string> &list) {
  * completion word function
  */
 
-void UIMsgBox::showMatch() {
+void UIMsgBox::showMatch(bool reverse) {
   int last_word_f_pos = m_TextInput_real.rfind(" ") + 1;
   std::string last_word_f = m_TextInput_fake.substr(last_word_f_pos);
   std::vector<std::string> matches = findMatches();
+
   for (int i = 0, n = matches.size(); i < n; i++) {
     std::string match = matches[i];
+
     if (match.find(last_word_f) == 0) {
-      if (i == (n - 1)) {
-        std::string s;
-        s = m_TextInput_fake.substr(0, last_word_f_pos);
-        s += matches[0];
+      std::string s = m_TextInput_fake.substr(0, last_word_f_pos);
+
+      if ((reverse && i == 0) || (!reverse && i == n-1)) {
+        s += reverse ? matches[n-1] : matches[0];
         m_TextInput_fake = s;
         break;
       } else {
-        std::string s;
-        s = m_TextInput_fake.substr(0, last_word_f_pos);
-        s += matches[i + 1];
+        s += reverse ? matches[i-1] : matches[i+1];
         m_TextInput_fake = s;
       }
+
     }
   }
 }
@@ -767,8 +771,9 @@ std::vector<std::string> UIMsgBox::findMatches() {
       matchesList.push_back(m_completionWords[i]);
     }
   }
-  matchesList.push_back(
-    last_word_normal); // allow to come back before completion
+
+  // allow to come back before completion
+  matchesList.push_back(last_word_normal);
 
   std::vector<std::string> empty;
   empty.push_back("");
@@ -1248,7 +1253,10 @@ bool UIRoot::keyDown(int nKey, SDL_Keymod mod, const std::string &i_utf8Char) {
         activateRight();
         return true;
       case SDLK_TAB:
-        activateNext();
+        if (mod & KMOD_SHIFT)
+          activatePrevious();
+        else
+          activateNext();
         return true;
       case SDLK_BACKSPACE:
         activatePrevious();
