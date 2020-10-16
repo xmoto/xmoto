@@ -23,6 +23,10 @@
 #include "helpers/utf8.h"
 #include "include/xm_SDL.h"
 #include "xmoto/Game.h"
+#include "common/TextEdit.h"
+
+#include <algorithm>
+#include <tuple>
 
 #define UIC_PROMPT "$ "
 #define UIC_CURSOR "_"
@@ -225,10 +229,36 @@ bool UIConsole::keyDown(int nKey, SDL_Keymod mod, const std::string &i_utf8Char)
   }
 
   if (nKey == SDLK_BACKSPACE) {
-    if (m_cursorChar > (int)utf8::utf8_length(UIC_PROMPT)) {
-      m_lines[m_lines.size() - 1] =
-        utf8::utf8_delete(m_lines[m_lines.size() - 1], m_cursorChar);
-      m_cursorChar--;
+    if (mod & KMOD_CTRL) {
+      std::string &line = m_lines[m_lines.size() - 1];
+      size_t promptLength = utf8::utf8_length(UIC_PROMPT);
+      std::tie(line, m_cursorChar) = TextEdit::deleteWordLeft(
+          /* exclude the prompt */
+          utf8::utf8_substring_abs(line, promptLength),
+          /* adjust the cursor by the length of the prompt */
+          m_cursorChar - promptLength);
+
+      m_cursorChar += promptLength;
+      line = UIC_PROMPT + line;
+    } else {
+      if (m_cursorChar > (int)utf8::utf8_length(UIC_PROMPT)) {
+        m_lines[m_lines.size() - 1] =
+          utf8::utf8_delete(m_lines[m_lines.size() - 1], m_cursorChar);
+        m_cursorChar--;
+      }
+    }
+    return true;
+  }
+
+  if (nKey == SDLK_DELETE) {
+    if (mod & KMOD_CTRL) {
+      std::string &line = m_lines[m_lines.size() - 1];
+      std::tie(line, m_cursorChar) = TextEdit::deleteWordRight(line, m_cursorChar);
+    } else {
+      if (m_cursorChar < (int)utf8::utf8_length(m_lines[m_lines.size() - 1])) {
+        m_lines[m_lines.size() - 1] =
+          utf8::utf8_delete(m_lines[m_lines.size() - 1], m_cursorChar + 1);
+      }
     }
     return true;
   }
@@ -255,23 +285,27 @@ bool UIConsole::keyDown(int nKey, SDL_Keymod mod, const std::string &i_utf8Char)
   }
 
   if (nKey == SDLK_LEFT) {
-    if (m_cursorChar > (int)utf8::utf8_length(UIC_PROMPT)) {
-      m_cursorChar--;
+    if (mod & KMOD_CTRL) {
+      m_cursorChar -= TextEdit::jumpWordLeft(m_lines[m_lines.size() - 1], m_cursorChar);
+      // avoid letting the cursor go behind the prompt
+      m_cursorChar = std::max(m_cursorChar, (int)utf8::utf8_length(UIC_PROMPT));
+    } else {
+      if (m_cursorChar > (int)utf8::utf8_length(UIC_PROMPT)) {
+        m_cursorChar--;
+      }
     }
     return true;
   }
 
   if (nKey == SDLK_RIGHT) {
-    if (m_cursorChar < (int)utf8::utf8_length(m_lines[m_lines.size() - 1])) {
-      m_cursorChar++;
-    }
-    return true;
-  }
-
-  if (nKey == SDLK_DELETE) {
-    if (m_cursorChar < (int)utf8::utf8_length(m_lines[m_lines.size() - 1])) {
-      m_lines[m_lines.size() - 1] =
-        utf8::utf8_delete(m_lines[m_lines.size() - 1], m_cursorChar + 1);
+    if (mod & KMOD_CTRL) {
+      m_cursorChar += TextEdit::jumpWordRight(m_lines[m_lines.size() - 1], m_cursorChar);
+      // avoid letting the cursor go past the end
+      m_cursorChar = std::min(m_cursorChar, (int)utf8::utf8_length(m_lines[m_lines.size() - 1]));
+    } else {
+      if (m_cursorChar < (int)utf8::utf8_length(m_lines[m_lines.size() - 1])) {
+        m_cursorChar++;
+      }
     }
     return true;
   }
