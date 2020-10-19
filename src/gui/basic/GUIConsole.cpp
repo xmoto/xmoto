@@ -229,19 +229,13 @@ bool UIConsole::keyDown(int nKey, SDL_Keymod mod, const std::string &i_utf8Char)
   }
 
   if (nKey == SDLK_BACKSPACE) {
+    size_t bound = utf8::utf8_length(UIC_PROMPT);
+
     if (mod & KMOD_CTRL) {
       std::string &line = m_lines[m_lines.size() - 1];
-      size_t promptLength = utf8::utf8_length(UIC_PROMPT);
-      std::tie(line, m_cursorChar) = TextEdit::deleteWordLeft(
-          /* exclude the prompt */
-          utf8::utf8_substring_abs(line, promptLength),
-          /* adjust the cursor by the length of the prompt */
-          m_cursorChar - promptLength);
-
-      m_cursorChar += promptLength;
-      line = UIC_PROMPT + line;
+      std::tie(line, m_cursorChar) = TextEdit::deleteWordLeft(line, m_cursorChar, bound);
     } else {
-      if (m_cursorChar > (int)utf8::utf8_length(UIC_PROMPT)) {
+      if (m_cursorChar > (int)bound) {
         m_lines[m_lines.size() - 1] =
           utf8::utf8_delete(m_lines[m_lines.size() - 1], m_cursorChar);
         m_cursorChar--;
@@ -285,12 +279,12 @@ bool UIConsole::keyDown(int nKey, SDL_Keymod mod, const std::string &i_utf8Char)
   }
 
   if (nKey == SDLK_LEFT) {
+    size_t bound = utf8::utf8_length(UIC_PROMPT);
+
     if (mod & KMOD_CTRL) {
-      m_cursorChar -= TextEdit::jumpWordLeft(m_lines[m_lines.size() - 1], m_cursorChar);
-      // avoid letting the cursor go behind the prompt
-      m_cursorChar = std::max(m_cursorChar, (int)utf8::utf8_length(UIC_PROMPT));
+      m_cursorChar -= TextEdit::jumpWordLeft(m_lines[m_lines.size() - 1], m_cursorChar, bound);
     } else {
-      if (m_cursorChar > (int)utf8::utf8_length(UIC_PROMPT)) {
+      if (m_cursorChar > (int)bound) {
         m_cursorChar--;
       }
     }
@@ -298,12 +292,12 @@ bool UIConsole::keyDown(int nKey, SDL_Keymod mod, const std::string &i_utf8Char)
   }
 
   if (nKey == SDLK_RIGHT) {
+    size_t bound = utf8::utf8_length(m_lines[m_lines.size() - 1]);
+
     if (mod & KMOD_CTRL) {
-      m_cursorChar += TextEdit::jumpWordRight(m_lines[m_lines.size() - 1], m_cursorChar);
-      // avoid letting the cursor go past the end
-      m_cursorChar = std::min(m_cursorChar, (int)utf8::utf8_length(m_lines[m_lines.size() - 1]));
+      m_cursorChar += TextEdit::jumpWordRight(m_lines[m_lines.size() - 1], m_cursorChar, bound);
     } else {
-      if (m_cursorChar < (int)utf8::utf8_length(m_lines[m_lines.size() - 1])) {
+      if (m_cursorChar < (int)bound) {
         m_cursorChar++;
       }
     }

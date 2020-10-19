@@ -12,11 +12,11 @@ public:
   TextEdit();
   ~TextEdit();
 
-  static TextEditOP deleteWordLeft(const std::string &str, size_t cursorPos);
-  static TextEditOP deleteWordRight(const std::string &str, size_t cursorPos);
+  static TextEditOP deleteWordLeft(const std::string &str, size_t cursorPos, size_t bound = 0);
+  static TextEditOP deleteWordRight(const std::string &str, size_t cursorPos, size_t bound = std::string::npos);
 
-  static size_t jumpWordLeft(const std::string &str, size_t cursorPos);
-  static size_t jumpWordRight(const std::string &str, size_t cursorPos);
+  static size_t jumpWordLeft(const std::string &str, size_t cursorPos, size_t bound = 0);
+  static size_t jumpWordRight(const std::string &str, size_t cursorPos, size_t bound = std::string::npos);
 
   static TextEditOP insertAt(const std::string &str, const std::string &add, size_t at);
 };

@@ -3,16 +3,16 @@
 
 /* NOTE: This stuff probably does not work with utf8 */
 
-TextEditOP TextEdit::deleteWordLeft(const std::string &str, size_t cursorPos) {
-  size_t newPos = cursorPos - TextEdit::jumpWordLeft(str, cursorPos);
+TextEditOP TextEdit::deleteWordLeft(const std::string &str, size_t cursorPos, size_t bound) {
+  size_t newPos = cursorPos - TextEdit::jumpWordLeft(str, cursorPos, bound);
 
   std::string newStr = utf8::utf8_substring(str, 0, newPos) +
                        utf8::utf8_substring(str, cursorPos, utf8::utf8_length(str) - cursorPos);
   return std::make_pair(newStr, newPos);
 }
 
-TextEditOP TextEdit::deleteWordRight(const std::string &str, size_t cursorPos) {
-  size_t deleteTo = cursorPos + TextEdit::jumpWordRight(str, cursorPos);
+TextEditOP TextEdit::deleteWordRight(const std::string &str, size_t cursorPos, size_t bound) {
+  size_t deleteTo = cursorPos + TextEdit::jumpWordRight(str, cursorPos, bound);
 
   std::string newStr = utf8::utf8_substring(str, 0, cursorPos) +
                        utf8::utf8_substring(str, deleteTo, utf8::utf8_length(str) - deleteTo);
@@ -21,24 +21,34 @@ TextEditOP TextEdit::deleteWordRight(const std::string &str, size_t cursorPos) {
 }
 
 
-size_t TextEdit::jumpWordLeft(const std::string &str, size_t cursorPos) {
+size_t TextEdit::jumpWordLeft(const std::string &str, size_t cursorPos, size_t bound) {
   size_t wordStart = str.find_last_not_of(" ", cursorPos-1);
+  if (wordStart < bound)
+    return cursorPos - bound;
+
   if (wordStart != std::string::npos) {
     wordStart = str.find_last_of(" ", wordStart);
+
+    if (wordStart < bound)
+      return cursorPos - bound;
   }
 
   if (wordStart == std::string::npos)
-    wordStart = 0;
+    wordStart = bound;
   else
     wordStart = wordStart + 1;
 
   return cursorPos - wordStart;
 }
 
-size_t TextEdit::jumpWordRight(const std::string &str, size_t cursorPos) {
+size_t TextEdit::jumpWordRight(const std::string &str, size_t cursorPos, size_t bound) {
   size_t wordEnd = str.find_first_not_of(" ", cursorPos);
+
   if (wordEnd != std::string::npos) {
     wordEnd = str.find_first_of(" ", wordEnd);
+
+    if (wordEnd > bound)
+      return bound - cursorPos;
   }
 
   if (wordEnd == std::string::npos)
