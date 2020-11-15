@@ -46,6 +46,7 @@ std::vector<std::string> *System::getDisplayModes(int windowed) {
   /* Check is there are any modes available */
   if (sdl_modes == (SDL_Rect **)0) {
     LogWarning("No display modes available.");
+    delete modes;
     throw Exception("getDisplayModes : No modes available.");
   }
 
