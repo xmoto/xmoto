@@ -1024,6 +1024,7 @@ ReplayInfo *Replay::getReplayInfos(const std::string p_ReplayName) {
 
   if (XMFS::readInt_LE(pfh) != 0x12345678) {
     XMFS::closeFile(pfh);
+    delete pRpl;
     return NULL;
   }
 
