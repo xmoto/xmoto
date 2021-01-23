@@ -531,6 +531,7 @@ void DrawLib::drawImage(const Vector2f &a,
                         BlendMode i_blendMode) {
   setTexture(pTexture, i_blendMode);
   drawImageTextureSet(a, b, c, d, Tint, i_coordsReversed);
+  setTexture(NULL, i_blendMode);
 }
 
 void DrawLib::drawImageTextureSet(const Vector2f &a,
