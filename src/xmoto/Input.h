@@ -38,12 +38,13 @@ class Scene;
 struct IFullKey {
   IFullKey();
   IFullKey(const std::string &i_name,
-           const XMKey &i_key,
+           const XMKey &i_defaultKey,
            const std::string i_help,
-           bool i_customisable = true);
+           bool i_customizable = true);
 
   std::string name;
   XMKey key;
+  XMKey defaultKey;
   std::string help;
   bool customizable;
 };
@@ -115,6 +116,32 @@ struct InputScriptKeyHook {
 };
 
 /*===========================================================================
+Controls
+===========================================================================*/
+struct Controls {
+  IFullKey playerKeys[INPUT_NB_PLAYERKEYS];
+  IFullKey scriptActionKeys[MAX_SCRIPT_KEY_HOOKS];
+};
+
+
+/*===========================================================================
+SDL 1.2 compatibility
+===========================================================================*/
+class InputSDL12Compat {
+private:
+  typedef std::unordered_map<int32_t, int32_t> Keytable;
+
+  InputSDL12Compat();
+  ~InputSDL12Compat();
+
+public:
+  static void upgrade();
+  static void mapKey(XMKey &key, const Keytable &map);
+  static bool isUpgraded(xmDatabase *pDb, const std::string &i_id_profile);
+  static void resolveConflicts(const std::vector<IFullKey *> &keys);
+};
+
+/*===========================================================================
 Input handler class
 ===========================================================================*/
 class InputHandler : public Singleton<InputHandler> {
@@ -162,10 +189,6 @@ public:
                   xmDatabase *pDb,
                   const std::string &i_id_profile);
 
-  void sdl12CompatUpgrade();
-  void sdl12CompatMap(XMKey &key, const std::unordered_map<int32_t, int32_t> &map);
-  bool sdl12CompatIsUpgraded(xmDatabase *pDb, const std::string &i_id_profile) const;
-
   bool isANotGameSetKey(XMKey *i_xmkey) const;
 
   void setPlayerKey(unsigned int INPUT_key, int i_player, XMKey i_value);
@@ -195,9 +218,10 @@ private:
   std::vector<std::string> m_JoysticksNames;
   std::vector<std::string> m_JoysticksIds;
 
-  std::array<std::array<XMKey, MAX_SCRIPT_KEY_HOOKS>, INPUT_NB_PLAYERS> m_nScriptActionKeys;
-  std::array<std::array<IFullKey, INPUT_NB_PLAYERKEYS>, INPUT_NB_PLAYERS> m_playerKeys;
-  std::array<IFullKey, INPUT_NB_GLOBALKEYS> m_globalKeys;
+  Controls m_controls[INPUT_NB_PLAYERS];
+  IFullKey m_globalControls[INPUT_NB_GLOBALKEYS];
+
+  friend class InputSDL12Compat;
 };
 
 #endif

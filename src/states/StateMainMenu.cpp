@@ -1856,7 +1856,7 @@ void StateMainMenu::sendFromMessageBox(const std::string &i_id,
 
   else if (i_id == "COMPAT_UPGRADE_KEYS") {
     if (i_button == UI_MSGBOX_OK) {
-      InputHandler::instance()->sdl12CompatUpgrade();
+      InputSDL12Compat::upgrade();
 
       InputHandler::instance()->saveConfig(
         GameApp::instance()->getUserConfig(),

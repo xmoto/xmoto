@@ -52,13 +52,10 @@ enum InputEventType {
 /* define a key to do something (keyboard:a, mouse:left, ...) */
 class XMKey {
 public:
-  /* TODO: Make these named constructors so to void ambiguity? */
-
   XMKey();
   XMKey(SDL_Event &i_event);
   XMKey(const std::string &i_key,
-        bool i_basicMode =
-          false); /* basic mode is to give a simple letter, for scripts key */
+        bool i_basicMode = false); /* basic mode is to give a simple letter, for scripts key */
   XMKey(SDL_Keycode nKey,
         SDL_Keymod mod,
         const std::string &i_utf8Char = ""); // keyboard
@@ -76,6 +73,7 @@ public:
   bool isDefined() const;
 
   unsigned int getRepetition() const;
+  inline bool isBound() const { return m_input != XMK_NONE; }
 
   bool isAnalogic() const;
   float getAnalogicValue() const;

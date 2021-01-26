@@ -594,10 +594,9 @@ Central place to keep many in-game text strings
 #define GAMETEXT_NOTIFY_KEYCOMPATUPGRADE                            \
   _("Welcome to a new version of X-Moto!\n"                         \
     "\n"                                                            \
+    "Note:\n"                                                       \
     "Due to internal changes, your controls will be upgraded.\n"    \
-    "This shouldn't change anything, but if you experience\n"       \
-    "problems or wish to play again on an older version,\n"         \
-    "try re-setting/binding the controls in Options.")
+    "If you experience problems, try rebinding them in Options.\n")
 #define GAMETEXT_NUMLEVELS _("# Levels")
 #define GAMETEXT_OK _("OK")
 #define GAMETEXT_OPEN _("Open")
