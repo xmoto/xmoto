@@ -23,7 +23,7 @@
 	<key>CFBundleVersion</key>
 	<string>${XMOTO_VERSION}</string>
 	<key>NSHumanReadableCopyright</key>
-	<string>© 2005-2020</string>
+	<string>© 2005-2021</string>
 	<key>NSPrincipalClass</key>
 	<string>NSApplication</string>
 </dict>
