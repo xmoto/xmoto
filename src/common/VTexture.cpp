@@ -201,7 +201,7 @@ Texture *TextureManager::createTexture(const std::string &Name,
 #endif
 
   m_nTexSpaceUsage += pTexture->nSize;
-#ifdef ENABLE_SDLGFX
+#ifdef ENABLE_SDL_GFX
 #if SDL_BYTEORDER == SDL_BIG_ENDIAN
   Uint32 rmask = 0xff000000;
   Uint32 gmask = 0x00ff0000;
@@ -256,7 +256,7 @@ void TextureManager::destroyTexture(Texture *pTexture) {
   if (pTexture != NULL) {
     for (unsigned int i = 0; i < m_Textures.size(); i++) {
       if (m_Textures[i] == pTexture) {
-#ifdef ENABLE_SDLGFX
+#ifdef ENABLE_SDL_GFX
         SDL_FreeSurface(pTexture->surface);
 #endif
 #ifdef ENABLE_OPENGL
@@ -266,7 +266,7 @@ void TextureManager::destroyTexture(Texture *pTexture) {
 // keesj:todo when using SDL surface we cannot delete the image data
 // this is a problem.
 // delete [] pc; => it's why i keep pTexture->pcData
-#ifdef ENABLE_SDLGFX
+#ifdef ENABLE_SDL_GFX
         delete[] pTexture->pcData;
 #endif
         m_nTexSpaceUsage -= pTexture->nSize;

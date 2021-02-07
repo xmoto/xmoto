@@ -1,37 +1,35 @@
-{ lib, stdenv, buildPackages, fetchurl, nix-gitignore
+{ lib, stdenv, buildPackages, fetchurl, makeWrapper, nix-gitignore
 , curl, libjpeg, libpng, libxml2, sqlite, zlib
 , enableCmakeNinja ? false
 , enableDev ? false
 , enableGettext ? false
 , enableOpengl ? true, libGL ? null #, libGLU ? null
-, enableSdl ? false, SDL ? null, SDL_gfx ? null, SDL_mixer ? null, SDL_net ? null, SDL_ttf ? null
-, enableSystemBzip2 ? false, bzip2 ? null
-, enableSystemLua ? false, lua ? null
-, enableSystemOde ? false, ode ? null
-, enableSystemXdg ? false, libxdg_basedir ? null
+, enableSdl ? true, SDL ? null, SDL_mixer ? null, SDL_net ? null, SDL_ttf ? null
+, enableSdl-gfx ? false, SDL_gfx ? null
+, enableSystem ? true
+, enableSystemBzip2 ? enableSystem, bzip2 ? null
+, enableSystemLua ? enableSystem, lua ? null
+, enableSystemOde ? enableSystem, ode ? null
+, enableSystemXdg ? enableSystem, libxdg_basedir ? null
 }:
 
 assert enableCmakeNinja -> buildPackages.ninja != null;
 
+# libintl is sometimes null.
 assert enableGettext -> buildPackages.gettext != null;
-assert enableGettext -> buildPackages.libintl != null;
-
-# Can't disable OpenGL yet.
-assert libGL != null;
+# assert enableGettext -> buildPackages.libintl != null;
 
 assert enableOpengl -> libGL != null;
 
 # Can't disable SDL yet.
-assert SDL != null;
-assert SDL_mixer != null;
-assert SDL_net != null;
-assert SDL_ttf != null;
-
+assert enableSdl;
 assert enableSdl -> SDL != null;
-assert enableSdl -> SDL_gfx != null;
 assert enableSdl -> SDL_mixer != null;
 assert enableSdl -> SDL_net != null;
 assert enableSdl -> SDL_ttf != null;
+
+assert enableSdl-gfx -> enableSdl;
+assert enableSdl-gfx -> SDL_gfx != null;
 
 assert enableSystemBzip2 -> bzip2 != null;
 assert enableSystemLua -> lua != null;
@@ -53,6 +51,7 @@ stdenv.mkDerivation rec {
 
   nativeBuildInputs = [
     buildPackages.cmake
+    makeWrapper
   ] ++ optionals enableCmakeNinja [
     buildPackages.ninja
   ] ++ optionals enableGettext [
@@ -67,22 +66,16 @@ stdenv.mkDerivation rec {
     libxml2
     sqlite
     zlib
-  ] ++ [
+  ] ++  optionals enableOpengl [
     libGL
-  ] ++ optionals enableOpengl [
-    # libGL
-  ] ++ [
+  ] ++ optionals enableSdl ([
     SDL
     SDL_mixer
     SDL_net
     SDL_ttf
-  ] ++ optionals enableSdl [
-    # SDL
+  ] ++ optionals enableSdl-gfx [
     SDL_gfx
-    # SDL_mixer
-    # SDL_net
-    # SDL_ttf
-  ] ++ optionals enableSystemBzip2 [
+  ]) ++ optionals enableSystemBzip2 [
     bzip2
   ] ++ optionals enableSystemLua [
     lua
@@ -96,21 +89,37 @@ stdenv.mkDerivation rec {
     (cmakeOption "ALLOW_DEV" enableDev)
     (cmakeOption "USE_GETTEXT" enableGettext)
     (cmakeOption "USE_OPENGL" enableOpengl)
-    (cmakeOption "USE_SDLGFX" enableSdl)
-    (cmakeOption "PREFER_SYSTEM_BZip2" enableSystemBzip2)
-    (cmakeOption "PREFER_SYSTEM_Lua" enableSystemLua)
-    (cmakeOption "PREFER_SYSTEM_ODE" enableSystemOde)
-    (cmakeOption "PREFER_SYSTEM_XDG" enableSystemXdg)
+    (cmakeOption "USE_SDL" enableSdl)
+    (cmakeOption "USE_SDL_gfx" enableSdl-gfx)
+    (cmakeOption "USE_SYSTEM" enableSystem)
+    (cmakeOption "PREFER_SYSTEM" false)
+    (cmakeOption "USE_SYSTEM_BZip2" enableSystemBzip2)
+    (cmakeOption "USE_SYSTEM_Lua" enableSystemLua)
+    (cmakeOption "USE_SYSTEM_ODE" enableSystemOde)
+    (cmakeOption "USE_SYSTEM_XDG" enableSystemXdg)
   ];
+
+  preFixup = ''
+    wrapProgram "$out/bin/xmoto" \
+      --suffix XDG_DATA_DIRS ':' "$out/share" \
+      #
+  '';
 
   meta = with lib; {
     description =
-      "A challenging 2D motocross platform game, where physics play an important role";
+      "A challenging 2D motocross platform game";
     longDescription = ''
-      X-Moto is a challenging 2D motocross platform game, where physics plays an all important role in the gameplay.
-      You need to control your bike to its limits, if you want to have a chance to finish the most difficult challenges.
+      X-Moto is a challenging 2D motocross platform game, where physics play
+      an all important role in the gameplay. You need to control your bike to
+      its limit, if you want to have a chance finishing the more difficult of
+      the challenges.
+
+      First you'll try just to complete the levels, while later you'll compete
+      with yourself and others, racing against the clock.
     '';
-    homepage = "https://xmoto.tuxfamily.org";
+    homepage = "https://xmoto.tuxfamily.org/";
+    downloadPage = "https://github.com/xmoto/xmoto/releases";
+    changelog = "https://xmoto.tuxfamily.org/dev/ChangeLog";
     maintainers = with maintainers; [ bb010g raskin pSub ];
     platforms = platforms.all;
     license = licenses.gpl2Plus;

@@ -9,7 +9,7 @@ Build-Depends: debhelper (>= 5.0.0), dpkg-dev (>= 1.13.19), autotools-dev,
  libode-dev, liblua5.1-0-dev, libcurl4-gnutls-dev, libbz2-dev, libsqlite3-dev,
  libxdg-basedir-dev, libxml2-dev
 Standards-Version: 3.9.1
-Homepage: http://xmoto.tuxfamily.org/
+Homepage: https://xmoto.tuxfamily.org/
 
 Package: xmoto
 Architecture: any

@@ -4,25 +4,93 @@ dist: bionic
 matrix:
   include:
     - os: linux
-      dist: bionic
-      install: ".travis/linux/deps.sh"
+      dist: bionic # 18.04 LTS
       script: ".travis/linux/build.sh"
+      addons:
+        apt:
+          update: true
+          packages:
+          - curl
+          - libbz2-dev
+          - libcurl3-openssl-dev
+          - libgl1-mesa-dev
+          - libglu1-mesa-dev
+          - libjpeg-dev
+          - liblua5.1-0-dev
+          - libpng-dev
+          - libsdl-mixer1.2-dev
+          - libsdl-net1.2-dev
+          - libsdl-ttf2.0-dev
+          - libsdl1.2-dev
+          - libsqlite3-dev
+          - libxdg-basedir-dev
+          - libxml2-dev
+          - ninja-build
+          - rpm
+          - zlib1g-dev
+      before_install:
+      - ( shopt dotglob; sudo rm -rf /usr/local/cmake/* )
+      - >-
+          curl --retry 2 --retry-delay 30 'https://cmake.org/files/v3.13/cmake-3.13.4-Linux-x86_64.tar.gz' |
+          sudo tar -xz -C /usr/local/cmake --strip-components 1
 
     - os: osx
       osx_image: xcode10.1 # =10.13/high sierra
-      install: ".travis/macos/deps.sh"
       script: ".travis/macos/build.sh"
+      addons:
+        homebrew:
+          update: true
+          packages:
+            - bzip2
+            - cmake
+            - curl
+            - gettext
+            - jpeg
+            - libpng
+            - libxml2
+            - ninja
+            - sdl
+            - sdl_mixer
+            - sdl_net
+            - sdl_ttf
+            - sqlite3
+            - zlib
       cache:
         directories:
           - $HOME/Library/Caches/Homebrew
       before_cache:
         - brew cleanup
 
-    - os: linux
-      dist: bionic
-      name: "Linux MXE"
-      install: ".travis/linux-mxe/deps.sh"
+    - name: "Linux MXE"
+      os: linux
+      dist: bionic # 18.04 LTS
       script: ".travis/linux-mxe/build.sh"
+      env:
+      - MXE_PATH="/usr/lib/mxe"
+      - MXE_HOST="x86_64-pc-linux-gnu"
+      - MXE_TARGET="i686-w64-mingw32.shared"
+      - PATH="$MXE_PATH/usr/bin:$PATH"
+      - MXE_HOST_PFX="$MXE_PATH/usr/$MXE_HOST/bin/$MXE_TARGET"
+      - MXE_CROSS_PFX="$MXE_PATH/usr/bin/$MXE_TARGET"
+      - WINEARCH="win32"
+      # add the MXE DLLs to Wine's path
+      - WINEPATH="$MXE_PATH/usr/$MXE_TARGET/bin${WINEPATH:+:$WINEPATH}"
+      before_install:
+      - sudo git clone "https://github.com/mxe/mxe" "$MXE_PATH"
+      - (cd "$MXE_PATH" && sudo make MXE_TARGETS="$MXE_TARGET"
+          download-{bzip2,cmake,curl,gcc,gettext,jpeg,libpng,libxml2,lzma,nsis,pkgconf,sdl,sdl_mixer,sdl_net,sdl_ttf,smpeg2,sqlite,zlib})
+      addons:
+        apt:
+          update: true
+          sources:
+          # for xvfb
+          - sourceline: 'deb http://archive.ubuntu.com/ubuntu bionic universe'
+          - sourceline: 'deb http://archive.ubuntu.com/ubuntu bionic-updates universe'
+          packages:
+          - ninja-build
+          - wine-stable
+          - wine32
+          - xvfb
 
 deploy:
   provider: releases

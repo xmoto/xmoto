@@ -1,16 +1,26 @@
+include(CMakeDependentOption)
+
 option(STATIC_BUILD "Build a static executable" OFF)
 option(USE_OPENGL "Build with OpenGL for graphics" ON)
-option(USE_SDLGFX "Build with SDL for graphics" OFF)
+option(USE_SDL "Build with SDL" ON)
+CMAKE_DEPENDENT_OPTION(USE_SDL_gfx "Build with SDL for graphics" OFF "USE_SDL" OFF)
 option(USE_GETTEXT "Build with Gettext for internationalization" ON)
-option(PREFER_SYSTEM_BZip2 "Prefer system BZip2" ON)
-option(PREFER_SYSTEM_Lua "Prefer system Lua" ON)
-option(PREFER_SYSTEM_ODE "Prefer system ODE" ON)
-option(PREFER_SYSTEM_XDG "Prefer system XDG" ON)
+option(USE_SYSTEM "Build with system libraries" OFF)
+mark_as_advanced(USE_SYSTEM)
+CMAKE_DEPENDENT_OPTION(PREFER_SYSTEM "Prefer to build with system libraries" ON "NOT USE_SYSTEM" OFF)
+CMAKE_DEPENDENT_OPTION(USE_SYSTEM_BZip2 "Build with system BZip2" ON "USE_SYSTEM" OFF)
+CMAKE_DEPENDENT_OPTION(PREFER_SYSTEM_BZip2 "Prefer to build with system BZip2" ON "PREFER_SYSTEM" OFF)
+CMAKE_DEPENDENT_OPTION(USE_SYSTEM_Lua "Build with system Lua" ON "USE_SYSTEM" OFF)
+CMAKE_DEPENDENT_OPTION(PREFER_SYSTEM_Lua "Prefer to build with system Lua" ON "PREFER_SYSTEM" OFF)
+CMAKE_DEPENDENT_OPTION(USE_SYSTEM_ODE "Build with system ODE" ON "USE_SYSTEM" OFF)
+CMAKE_DEPENDENT_OPTION(PREFER_SYSTEM_ODE "Prefer to build with system ODE" ON "PREFER_SYSTEM" OFF)
+CMAKE_DEPENDENT_OPTION(USE_SYSTEM_XDG "Build with system XDG basedir" ON "USE_SYSTEM" OFF)
+CMAKE_DEPENDENT_OPTION(PREFER_SYSTEM_XDG "Prefer to build with system XDG basedir" ON "PREFER_SYSTEM" OFF)
 option(ALLOW_DEV "Enable some development/debug features" OFF)
 option(BUILD_MACOS_BUNDLE "Build xmoto as a macOS Bundle" OFF)
 
 if(CMAKE_GENERATOR MATCHES "Ninja")
-  message("-- Using Ninja, try to colorize")
+  message("-- Using ${CMAKE_GENERATOR}, try to colorize")
   check_cxx_compiler_flag(-fdiagnostics-color FLAG_CXX_DIAGNOSTICS_COLOR)
   if(FLAG_CXX_DIAGNOSTICS_COLOR)
     add_compile_options("-fdiagnostics-color")
@@ -19,351 +29,139 @@ else()
   message("-- Using " ${CMAKE_GENERATOR})
 endif()
 
-# find dependencies
-find_package(BZip2)
-set(USE_SYSTEM_BZip2 $<AND:$<BOOL:${PREFER_SYSTEM_BZip2}>,$<BOOL:${BZIP2_FOUND}>,$<NOT:$<BOOL:${WIN32}>>>)
+add_executable(xmoto)
 
-find_package(CURL REQUIRED)
-if(USE_GETTEXT)
-  find_package(Gettext REQUIRED)
-  find_package(Intl REQUIRED)
+# Find dependencies
+
+if(USE_SYSTEM_BZip2 AND NOT WIN32)
+  find_package(BZip2 REQUIRED)
+elseif(PREFER_SYSTEM_BZip2 AND NOT WIN32)
+  find_package(BZip2)
 endif()
+if(TARGET BZip2::BZip2)
+  set(BZip2 BZip2::BZip2)
+else()
+  add_subdirectory("${PROJECT_SOURCE_DIR}/vendor/bzip2" bzip2 EXCLUDE_FROM_ALL)
+  set(BZip2 bzip2)
+endif()
+add_subdirectory("${PROJECT_SOURCE_DIR}/vendor/chipmunk" chipmunk EXCLUDE_FROM_ALL)
+set(Chipmunk chipmunk)
+find_package(CURL REQUIRED)
+target_compile_definitions(xmoto PUBLIC $<$<BOOL:${STATIC_BUILD}>:CURL_STATICLIB>)
+
+if(USE_GETTEXT)
+  find_package(Gettext REQUIRED) # GNU Gettext tools
+  find_package(Intl REQUIRED) # Gettext libintl library
+  if(Intl_FOUND AND NOT TARGET Gettext::Intl)
+    add_library(Gettext::Intl INTERFACE IMPORTED)
+    set_target_properties(Gettext::Intl PROPERTIES
+      INTERFACE_INCLUDE_DIRECTORIES "${Intl_INCLUDE_DIRS}"
+      INTERFACE_LINK_LIBRARIES "${Intl_LIBRARIES}"
+    )
+  endif()
+endif()
+
 find_package(JPEG REQUIRED)
-
-find_package(LibLZMA)
+if(STATIC_BUILD)
+  find_package(LibLZMA)
+endif()
 find_package(LibXml2 REQUIRED)
+target_compile_definitions(xmoto PUBLIC $<$<BOOL:${STATIC_BUILD}>:LIBXML_STATIC>)
 
-find_package(ODE)
-set(USE_SYSTEM_ODE $<AND:$<BOOL:${PREFER_SYSTEM_ODE}>,$<BOOL:${ODE_FOUND}>>)
+if(USE_SYSTEM_Lua AND NOT WIN32)
+  find_package(Lua REQUIRED)
+elseif(PREFER_SYSTEM_Lua AND NOT WIN32)
+  find_package(Lua)
+endif()
+include(FindLuaTargets)
+if(TARGET Lua::Lua)
+  set(Lua Lua::Lua)
+else()
+  add_subdirectory("${PROJECT_SOURCE_DIR}/vendor/lua" lua EXCLUDE_FROM_ALL)
+  set(Lua lua)
+endif()
+if(NOT LUA_VERSION_STRING VERSION_LESS "5.2" AND LUA_VERSION_STRING VERSION_LESS "5.3")
+  set_property(TARGET "${Lua}" APPEND PROPERTY COMPILE_DEFINITIONS "LUA_COMPAT_ALL")
+  set_property(TARGET "${Lua}" APPEND PROPERTY INTERFACE_COMPILE_DEFINITIONS "LUA_COMPAT_ALL")
+  # target_compile_definitions("${Lua}" PUBLIC "LUA_COMPAT_ALL")
+elseif(LUA_VERSION_STRING VERSION_GREATER_EQUAL "5.3")
+  set_property(TARGET "${Lua}" APPEND PROPERTY COMPILE_DEFINITIONS "LUA_COMPAT_5_1")
+  set_property(TARGET "${Lua}" APPEND PROPERTY INTERFACE_COMPILE_DEFINITIONS "LUA_COMPAT_5_1")
+  # target_compile_definitions("${Lua}" PUBLIC "LUA_COMPAT_5_1")
+endif()
+
+add_subdirectory("${PROJECT_SOURCE_DIR}/vendor/md5sum" md5sum EXCLUDE_FROM_ALL)
+set(Md5sum md5sum)
+if(USE_SYSTEM_ODE)
+  find_package(ODE REQUIRED)
+elseif(PREFER_SYSTEM_ODE)
+  find_package(ODE)
+endif()
+if(TARGET ODE::ODE)
+  set(ODE ODE::ODE)
+else()
+  add_subdirectory("${PROJECT_SOURCE_DIR}/vendor/libccd" libccd EXCLUDE_FROM_ALL)
+  set(LibCcd libccd)
+  add_subdirectory("${PROJECT_SOURCE_DIR}/vendor/ode" ode EXCLUDE_FROM_ALL)
+  set(ODE ode)
+endif()
 if(USE_OPENGL)
-  find_package(OpenGL REQUIRED)
+  find_package(OpenGL REQUIRED COMPONENTS OpenGL)
+  add_subdirectory("${PROJECT_SOURCE_DIR}/vendor/glad" glad EXCLUDE_FROM_ALL)
+  set(Glad glad)
 endif()
 find_package(PNG REQUIRED)
 
-find_package(Lua)
-set(USE_SYSTEM_Lua $<AND:$<BOOL:${PREFER_SYSTEM_Lua}>,$<BOOL:${LUA_FOUND}>,$<NOT:$<BOOL:${WIN32}>>>)
-if (NOT LUA_VERSION_STRING VERSION_LESS 5.2 AND LUA_VERSION_STRING VERSION_LESS 5.3)
-    add_definitions("-DLUA_COMPAT_ALL")
-elseif (LUA_VERSION_STRING VERSION_GREATER_EQUAL "5.3")
-    add_definitions("-DLUA_COMPAT_5_1")
-endif()
-
 # Can't disable yet
-if(ON OR USE_SDLGFX)
+if(USE_SDL)
   find_package(SDL REQUIRED)
+  if(USE_SDL_gfx)
+    find_package(SDL_gfx REQUIRED)
+  endif()
   find_package(SDL_mixer REQUIRED)
   find_package(SDL_net REQUIRED)
   find_package(SDL_ttf REQUIRED)
+  include(FindSDLTargets)
+else()
+  message(FATAL_ERROR "SDL must be used.")
+  if(USE_SDL_gfx)
+    message(FATAL_ERROR "SDL_gfx must be used with SDL.")
+  endif()
 endif()
 
-find_package(SQLITE3 REQUIRED)
-
-find_package(XDG)
-set(USE_SYSTEM_XDG $<AND:$<BOOL:${PREFER_SYSTEM_XDG}>,$<BOOL:${XDG_FOUND}>>)
-
+find_package(SQLite3 REQUIRED)
+if(USE_SYSTEM_XDG)
+  find_package(XDG REQUIRED)
+elseif(PREFER_SYSTEM_XDG)
+  find_package(XDG)
+endif()
+if(TARGET XDG::Basedir)
+  set(XDG_Basedir XDG::Basedir)
+else()
+  add_subdirectory("${PROJECT_SOURCE_DIR}/vendor/xdgbasedir" xdgbasedir EXCLUDE_FROM_ALL)
+  set(XDG_Basedir xdgbasedir)
+endif()
 find_package(ZLIB REQUIRED)
 
-# sources
+# Sources
 
-add_subdirectory("${PROJECT_SOURCE_DIR}/vendor/bzip2" bzip2)
-add_subdirectory("${PROJECT_SOURCE_DIR}/vendor/libccd" libccd)
-add_subdirectory("${PROJECT_SOURCE_DIR}/vendor/chipmunk" chipmunk)
-add_subdirectory("${PROJECT_SOURCE_DIR}/vendor/lua" lua)
-add_subdirectory("${PROJECT_SOURCE_DIR}/vendor/md5sum" md5sum)
-add_subdirectory("${PROJECT_SOURCE_DIR}/vendor/ode" ode)
-add_subdirectory("${PROJECT_SOURCE_DIR}/vendor/xdgbasedir" xdgbasedir)
-add_subdirectory("${PROJECT_SOURCE_DIR}/vendor/glad" glad)
+include("${CMAKE_CURRENT_SOURCE_DIR}/common/CMakeSources.cmake")
+include("${CMAKE_CURRENT_SOURCE_DIR}/db/CMakeSources.cmake")
+include("${CMAKE_CURRENT_SOURCE_DIR}/drawlib/CMakeSources.cmake")
+include("${CMAKE_CURRENT_SOURCE_DIR}/gui/CMakeSources.cmake")
+include("${CMAKE_CURRENT_SOURCE_DIR}/helpers/CMakeSources.cmake")
+include("${CMAKE_CURRENT_SOURCE_DIR}/image/CMakeSources.cmake")
+include("${CMAKE_CURRENT_SOURCE_DIR}/net/CMakeSources.cmake")
+include("${CMAKE_CURRENT_SOURCE_DIR}/states/CMakeSources.cmake")
+include("${CMAKE_CURRENT_SOURCE_DIR}/thread/CMakeSources.cmake")
+include("${CMAKE_CURRENT_SOURCE_DIR}/include/CMakeSources.cmake")
+include("${CMAKE_CURRENT_SOURCE_DIR}/xmoto/CMakeSources.cmake")
+include("${CMAKE_CURRENT_SOURCE_DIR}/xmscene/CMakeSources.cmake")
 
-set(common_src
-  common/BuildConfig.h
-  common/CRCHash.cpp
-  common/CRCHash.h
-  common/CameraAnimation.cpp
-  common/CameraAnimation.h
-  common/DBuffer.cpp
-  common/DBuffer.h
-  common/Image.cpp
-  common/Image.h
-  common/Languages.h
-  common/Locales.cpp
-  common/Locales.h
-  common/Packager.cpp
-  common/Packager.h
-  common/PolyDraw.cpp
-  common/PolyDraw.h
-  common/Theme.cpp
-  common/Theme.h
-  common/VBezier.cpp
-  common/VBezier.h
-  common/VCommon.h
-  common/VFileIO.cpp
-  common/VFileIO.h
-  common/VFileIO_types.h
-  common/VTexture.cpp
-  common/VTexture.h
-  common/VXml.cpp
-  common/VXml.h
-  common/WWW.cpp
-  common/WWW.h
-  common/WWWAppInterface.h
-  common/XMArgs.cpp
-  common/XMArgs.h
-  common/XMBuild.cpp
-  common/XMBuild.h
-  common/XMBuild_info.h
-  common/XMSession.cpp
-  common/XMSession.h
-  common/XMSession_default.cpp
-  common/XMSession_default.h
-  common/XMotoLoadLevelsInterface.h
-  common/XMotoLoadReplaysInterface.h
-  common/svn_version.cpp
-  common/svn_version.h
-)
-
-set(db_src
-  db/xmDatabase.cpp db/xmDatabase.h
-  db/xmDatabaseUpdateInterface.h
-  db/xmDatabase_config.cpp
-  db/xmDatabase_fixes.cpp
-  db/xmDatabase_levels.cpp
-  db/xmDatabase_profiles.cpp
-  db/xmDatabase_replays.cpp
-  db/xmDatabase_srv.cpp
-  db/xmDatabase_stats.cpp
-  db/xmDatabase_sync.cpp
-  db/xmDatabase_themes.cpp
-  db/xmDatabase_votes.cpp
-  db/xmDatabase_web.cpp
-)
-
-set(drawlib_src
-  drawlib/DrawLib.cpp drawlib/DrawLib.h
-)
-if(USE_OPENGL)
-  list(APPEND drawlib_src
-    drawlib/DrawLibOpenGL.cpp drawlib/DrawLibOpenGL.h
-  )
-endif()
-if(USE_SDLGFX)
-  list(APPEND drawlib_src
-    drawlib/DrawLibSDLgfx.cpp drawlib/DrawLibSDLgfx.h
-  )
-endif()
-
-set(gui_src
-  gui/basic/GUI.cpp gui/basic/GUI.h
-  gui/basic/GUIButton.cpp
-  gui/basic/GUIButtonDrawn.cpp
-  gui/basic/GUIConsole.cpp gui/basic/GUIConsole.h
-  gui/basic/GUIEdit.cpp
-  gui/basic/GUIFrame.cpp
-  gui/basic/GUIList.cpp
-  gui/basic/GUIStatic.cpp
-  gui/basic/GUITabView.cpp
-
-  gui/specific/GUIXMoto.cpp gui/specific/GUIXMoto.h
-)
-
-set(helpers_src
-  helpers/CmdArgumentParser.cpp helpers/CmdArgumentParser.h
-  helpers/Color.h
-  helpers/Environment.cpp helpers/Environment.h
-  helpers/FileCompression.cpp helpers/FileCompression.h
-  helpers/HighPrecisionTimer.h
-  helpers/Log.cpp helpers/Log.h
-  helpers/MultiSingleton.h
-  helpers/Random.cpp helpers/Random.h
-  helpers/RenderSurface.cpp helpers/RenderSurface.h
-  helpers/Singleton.h
-  helpers/SwapEndian.cpp helpers/SwapEndian.h
-  helpers/System.cpp helpers/System.h
-  helpers/TFunctor.h
-  helpers/Text.cpp helpers/Text.h
-  helpers/VExcept.h
-  helpers/VMath.cpp helpers/VMath.h
-  helpers/iqsort.h
-  helpers/utf8.cpp helpers/utf8.h
-)
-
-set(image_src
-  image/tim.cpp image/tim.h
-  image/tim_io_stdio.cpp
-  image/tim_jpeg.cpp
-  image/tim_memory_crt.cpp
-  image/tim_png.cpp
-)
-
-set(net_src
-  net/ActionReader.cpp net/ActionReader.h
-  net/BasicStructures.h
-  net/NetActions.cpp net/NetActions.h
-  net/NetClient.cpp net/NetClient.h
-  net/NetServer.cpp net/NetServer.h
-  net/ServerRules.cpp net/ServerRules.h
-  net/VirtualNetLevelsList.cpp net/VirtualNetLevelsList.h
-  net/extSDL_net.cpp net/extSDL_net.h
-
-  net/helpers/Net.cpp net/helpers/Net.h
-
-  net/thread/ServerThread.cpp net/thread/ServerThread.h
-)
-
-set(states_src
-  states/AttractMode.cpp states/AttractMode.h
-  states/GameState.cpp states/GameState.h
-  states/StateCheckWww.cpp states/StateCheckWww.h
-  states/StateCreditsMode.cpp states/StateCreditsMode.h
-  states/StateDeadJust.cpp states/StateDeadJust.h
-  states/StateDeadMenu.cpp states/StateDeadMenu.h
-  states/StateEditProfile.cpp states/StateEditProfile.h
-  states/StateEditWebConfig.cpp states/StateEditWebConfig.h
-  states/StateFinished.cpp states/StateFinished.h
-  states/StateHelp.cpp states/StateHelp.h
-  states/StateLevelInfoViewer.cpp states/StateLevelInfoViewer.h
-  states/StateLevelPackViewer.cpp states/StateLevelPackViewer.h
-  states/StateMainMenu.cpp states/StateMainMenu.h
-  states/StateManager.cpp states/StateManager.h
-  states/StateMenu.cpp states/StateMenu.h
-  states/StateMessageBox.cpp states/StateMessageBox.h
-  states/StateMessageBoxReceiver.h
-  states/StateMultiUpdate.cpp states/StateMultiUpdate.h
-  states/StateOptions.cpp states/StateOptions.h
-  states/StatePause.cpp states/StatePause.h
-  states/StatePlaying.cpp states/StatePlaying.h
-  states/StatePlayingLocal.cpp states/StatePlayingLocal.h
-  states/StatePlayingNet.cpp states/StatePlayingNet.h
-  states/StatePreplaying.cpp states/StatePreplaying.h
-  states/StatePreplayingCredits.cpp states/StatePreplayingCredits.h
-  states/StatePreplayingGame.cpp states/StatePreplayingGame.h
-  states/StatePreplayingNet.cpp states/StatePreplayingNet.h
-  states/StatePreplayingReplay.cpp states/StatePreplayingReplay.h
-  states/StateReplaying.cpp states/StateReplaying.h
-  states/StateRequestKey.cpp states/StateRequestKey.h
-  states/StateScene.cpp states/StateScene.h
-  states/StateSendReport.cpp states/StateSendReport.h
-  states/StateSendVote.cpp states/StateSendVote.h
-  states/StateServerConsole.cpp states/StateServerConsole.h
-  states/StateSync.cpp states/StateSync.h
-  states/StateUpdate.cpp states/StateUpdate.h
-  states/StateUpdateDb.cpp states/StateUpdateDb.h
-  states/StateUpdateRoomsList.cpp states/StateUpdateRoomsList.h
-  states/StateUpdateTheme.cpp states/StateUpdateTheme.h
-  states/StateUpdateThemesList.cpp states/StateUpdateThemesList.h
-  states/StateUpgradeLevels.cpp states/StateUpgradeLevels.h
-  states/StateUploadAllHighscores.cpp states/StateUploadAllHighscores.h
-  states/StateUploadHighscore.cpp states/StateUploadHighscore.h
-  states/StateViewHighscore.cpp states/StateViewHighscore.h
-  states/StateVote.cpp states/StateVote.h
-  states/StateWaitServerInstructions.cpp states/StateWaitServerInstructions.h
-  states/StateWaiting.cpp states/StateWaiting.h
-)
-
-set(thread_src
-  thread/CheckWwwThread.cpp thread/CheckWwwThread.h
-  thread/DownloadReplaysThread.cpp thread/DownloadReplaysThread.h
-  thread/LevelsPacksCountUpdateThread.cpp thread/LevelsPacksCountUpdateThread.h
-  thread/SendReportThread.cpp thread/SendReportThread.h
-  thread/SendVoteThread.cpp thread/SendVoteThread.h
-  thread/SyncThread.cpp thread/SyncThread.h
-  thread/UpdateDbThread.cpp thread/UpdateDbThread.h
-  thread/UpdateRoomsListThread.cpp thread/UpdateRoomsListThread.h
-  thread/UpdateThemeThread.cpp thread/UpdateThemeThread.h
-  thread/UpdateThemesListThread.cpp thread/UpdateThemesListThread.h
-  thread/UpgradeLevelsThread.cpp thread/UpgradeLevelsThread.h
-  thread/UploadAllHighscoresThread.cpp thread/UploadAllHighscoresThread.h
-  thread/UploadHighscoreThread.cpp thread/UploadHighscoreThread.h
-  thread/XMThread.cpp thread/XMThread.h
-  thread/XMThreadStats.cpp thread/XMThreadStats.h
-  thread/XMThreads.cpp thread/XMThreads.h
-)
-
-set(xmincludes_src
-  include/xm_OpenGL.h
-  include/xm_SDL.h
-  include/xm_SDL_mixer.h
-  include/xm_SDL_net.h
-  include/xm_SDL_ttf.h
-  include/xm_endian.h
-  include/xm_hashmap.h
-)
-
-set(xmoto_src
-  xmoto/BSP.cpp xmoto/BSP.h
-  xmoto/Collision.cpp xmoto/Collision.h
-  xmoto/Credits.cpp xmoto/Credits.h
-  xmoto/GUIBestTimes.cpp
-  xmoto/Game.cpp xmoto/Game.h
-  xmoto/GameEvents.cpp xmoto/GameEvents.h
-  xmoto/GameInit.cpp xmoto/GameText.h
-  xmoto/GeomsManager.cpp xmoto/GeomsManager.h
-  xmoto/Input.cpp xmoto/Input.h
-  xmoto/LevelsManager.cpp xmoto/LevelsManager.h
-  xmoto/LevelsText.h
-  xmoto/LuaLibBase.cpp xmoto/LuaLibBase.h
-  xmoto/LuaLibGame.cpp xmoto/LuaLibGame.h
-  xmoto/PhysSettings.h
-  xmoto/Renderer.cpp xmoto/Renderer.h
-  xmoto/RendererFBO.cpp
-  xmoto/Replay.cpp xmoto/Replay.h
-  xmoto/ScriptDynamicObjects.cpp xmoto/ScriptDynamicObjects.h
-  xmoto/SomersaultCounter.cpp xmoto/SomersaultCounter.h
-  xmoto/Sound.cpp xmoto/Sound.h
-  xmoto/SysMessage.cpp xmoto/SysMessage.h
-  xmoto/Trainer.cpp xmoto/Trainer.h
-  xmoto/Universe.cpp xmoto/Universe.h
-  xmoto/UserConfig.cpp xmoto/UserConfig.h
-  xmoto/VideoRecorder.cpp xmoto/VideoRecorder.h
-  xmoto/VirtualLevelsList.cpp xmoto/VirtualLevelsList.h
-  xmoto/XMDemo.cpp xmoto/XMDemo.h
-  xmoto/XMKey.cpp xmoto/XMKey.h
-  xmoto/sqlqueries.h
-)
-
-set(xmscene_src
-  xmscene/BasicSceneStructs.cpp
-  xmscene/BasicSceneStructs.h
-  xmscene/Bike.cpp
-  xmscene/Bike.h
-  xmscene/BikeAnchors.cpp
-  xmscene/BikeAnchors.h
-  xmscene/BikeController.cpp
-  xmscene/BikeController.h
-  xmscene/BikeGhost.cpp
-  xmscene/BikeGhost.h
-  xmscene/BikeParameters.cpp
-  xmscene/BikeParameters.h
-  xmscene/BikePlayer.cpp
-  xmscene/BikePlayer.h
-  xmscene/Block.cpp
-  xmscene/Block.h
-  xmscene/Camera.cpp
-  xmscene/Camera.h
-  xmscene/ChipmunkWorld.cpp
-  xmscene/ChipmunkWorld.h
-  xmscene/Entity.cpp
-  xmscene/Entity.h
-  xmscene/GhostTrail.cpp
-  xmscene/GhostTrail.h
-  xmscene/Level.cpp
-  xmscene/Level.h
-  xmscene/PhysicsSettings.cpp
-  xmscene/PhysicsSettings.h
-  xmscene/Scene.cpp
-  xmscene/Scene.h
-  xmscene/ScriptTimer.cpp
-  xmscene/ScriptTimer.h
-  xmscene/Serializer.cpp
-  xmscene/SkyApparence.cpp
-  xmscene/SkyApparence.h
-  xmscene/Zone.cpp
-  xmscene/Zone.h
-)
-
-set(XMOTO_MACOS_ICON ${PROJECT_SOURCE_DIR}/extra/X-Moto.icns)
+set(XMOTO_MACOS_ICON "${PROJECT_SOURCE_DIR}/extra/X-Moto.icns")
 
 set_source_files_properties(
-  ${XMOTO_MACOS_ICON} PROPERTIES
+  "${XMOTO_MACOS_ICON}" PROPERTIES
   MACOSX_PACKAGE_LOCATION Resources
 )
 
@@ -373,22 +171,9 @@ set_source_files_properties(
   #set(CMAKE_EXE_LINKER_FLAGS "-static")
 #endif()
 
-add_executable(xmoto
-  ${common_src}
-  ${db_src}
-  ${drawlib_src}
-  ${gui_src}
-  ${helpers_src}
-  ${image_src}
-  ${include_src}
-  ${net_src}
-  ${states_src}
-  ${thread_src}
-  ${xmincludes_src}
-  ${xmoto_src}
-  ${xmscene_src}
-  $<$<PLATFORM_ID:Windows>:${PROJECT_SOURCE_DIR}/extra/xmoto.rc>
-  $<$<PLATFORM_ID:Darwin>:${XMOTO_MACOS_ICON}>
+target_sources(xmoto PRIVATE
+  "$<$<PLATFORM_ID:Windows>:${PROJECT_SOURCE_DIR}/extra/xmoto.rc>"
+  "$<$<PLATFORM_ID:Darwin>:${XMOTO_MACOS_ICON}>"
 )
 
 if(NOT APPLE AND BUILD_MACOS_BUNDLE)
@@ -397,26 +182,46 @@ elseif(APPLE AND BUILD_MACOS_BUNDLE)
   set_property(TARGET xmoto PROPERTY MACOSX_BUNDLE TRUE)
 endif()
 
-target_include_directories(xmoto
-  PRIVATE
+target_link_libraries(xmoto PUBLIC "${BZip2}")
+target_link_libraries(xmoto PUBLIC "${Chipmunk}")
+target_link_libraries(xmoto PUBLIC CURL::libcurl)
+if(USE_GETTEXT)
+  target_link_libraries(xmoto PUBLIC Gettext::Intl)
+endif()
+target_link_libraries(xmoto PUBLIC JPEG::JPEG)
+if(STATIC_BUILD AND TARGET LibLZMA::LibLZMA)
+  target_link_libraries(xmoto PUBLIC LibLZMA::LibLZMA)
+endif()
+target_link_libraries(xmoto PUBLIC LibXml2::LibXml2)
+target_link_libraries(xmoto PUBLIC "${Lua}")
+target_link_libraries(xmoto PUBLIC "${Md5sum}")
+target_link_libraries(xmoto PUBLIC "${ODE}")
+if(USE_OPENGL)
+  target_link_libraries(xmoto PUBLIC OpenGL::GL)
+  target_link_libraries(xmoto PUBLIC OpenGL::GLU)
+  target_link_libraries(xmoto PUBLIC "${Glad}")
+endif()
+target_link_libraries(xmoto PUBLIC PNG::PNG)
+if(USE_SDL)
+  target_link_libraries(xmoto PUBLIC SDL::SDL)
+  if(USE_SDL_gfx)
+    target_link_libraries(xmoto PUBLIC SDL::SDL_gfx)
+  endif()
+  target_link_libraries(xmoto PUBLIC SDL::SDL_mixer)
+  target_link_libraries(xmoto PUBLIC SDL::SDL_net)
+  target_link_libraries(xmoto PUBLIC SDL::SDL_ttf)
+endif()
+target_link_libraries(xmoto PUBLIC SQLite::SQLite3)
+target_link_libraries(xmoto PUBLIC "${XDG_Basedir}")
+target_link_libraries(xmoto PUBLIC ZLIB::ZLIB)
 
+target_include_directories(xmoto PRIVATE
   "${PROJECT_SOURCE_DIR}/src"
-  "${LIBXML2_INCLUDE_DIR}"
-  "${SDL_INCLUDE_DIR}"
-  "${SDL_MIXER_INCLUDE_DIRS}"
-  "${SDL_NET_INCLUDE_DIRS}"
-  "${SDL_TTF_INCLUDE_DIRS}"
-  "$<${USE_SYSTEM_Lua}:${LUA_INCLUDE_DIR}>"
-  "$<$<NOT:${USE_SYSTEM_Lua}>:${PROJECT_SOURCE_DIR}/vendor/lua/lua>"
 )
 
 target_link_libraries(xmoto PUBLIC
   $<$<PLATFORM_ID:Windows>:userenv>
 
-  "$<${USE_SYSTEM_BZip2}:${BZIP2_LIBRARIES}>"
-  "$<$<NOT:${USE_SYSTEM_BZip2}>:bzip2>"
-  chipmunk
-  ${CURL_LIBRARIES}
     $<$<BOOL:${STATIC_BUILD}>:gnutls>
       #$<$<BOOL:${STATIC_BUILD}>:idn>
       #$<$<BOOL:${STATIC_BUILD}>:unistring>
@@ -426,27 +231,6 @@ target_link_libraries(xmoto PUBLIC
       $<$<BOOL:${STATIC_BUILD}>:gcrypt>
       $<$<BOOL:${STATIC_BUILD}>:gpg-error>
     $<$<BOOL:${STATIC_BUILD}>:wldap32>
-  ${Intl_LIBRARIES}
-  ${JPEG_LIBRARIES}
-  ${LIBXML2_LIBRARIES}
-    "$<$<BOOL:${STATIC_BUILD}>:${LIBLZMA_LIBRARIES}>"
-  "$<${USE_SYSTEM_Lua}:${LUA_LIBRARIES}>"
-  $<$<NOT:${USE_SYSTEM_Lua}>:lua>
-  md5sum
-  $<${USE_SYSTEM_ODE}:${ODE_LIBRARY}>
-  $<$<NOT:${USE_SYSTEM_ODE}>:ode>
-  glad
-  ${CMAKE_DL_LIBS}
-  ${OPENGL_LIBRARIES}
-  ${PNG_LIBRARY}
-  ${SDL_LIBRARY}
-  ${SDL_MIXER_LIBRARIES}
-  ${SDL_NET_LIBRARIES}
-  ${SDL_TTF_LIBRARIES}
-  ${SQLITE3_LIBRARIES}
-  $<${USE_SYSTEM_XDG}:${XDG_LIBRARY}>
-  $<$<NOT:${USE_SYSTEM_XDG}>:xdgbasedir>
-  ${ZLIB_LIBRARIES}
 )
 
 set_property(TARGET xmoto PROPERTY CXX_STANDARD 11)
@@ -471,13 +255,12 @@ if(USE_SYSTEM_Lua)
 endif()
 
 target_compile_definitions(xmoto PUBLIC USE_OPENGL=$<BOOL:${USE_OPENGL}>)
-target_compile_definitions(xmoto PUBLIC USE_SDLGFX=$<BOOL:${USE_SDLGFX}>)
+target_compile_definitions(xmoto PUBLIC USE_SDL=$<BOOL:${USE_SDL}>)
+target_compile_definitions(xmoto PUBLIC USE_SDL_gfx=$<BOOL:${USE_SDL_gfx}>)
 target_compile_definitions(xmoto PUBLIC USE_GETTEXT=$<BOOL:${USE_GETTEXT}>)
 target_compile_definitions(xmoto PUBLIC ALLOW_DEV=$<BOOL:${ALLOW_DEV}>)
 target_compile_definitions(xmoto PUBLIC BUILD_MACOS_BUNDLE=$<BOOL:${BUILD_MACOS_BUNDLE}>)
 
-target_compile_definitions(xmoto PUBLIC $<$<BOOL:${STATIC_BUILD}>:CURL_STATICLIB>)
-target_compile_definitions(xmoto PUBLIC $<$<BOOL:${STATIC_BUILD}>:LIBXML_STATIC>)
 
 target_compile_definitions(xmoto PUBLIC SVN_REV=\"git\")
 
@@ -560,7 +343,7 @@ function(set_win32_compat_path COMPAT REAL)
 endfunction()
 
 function(win32_run_script _CMD _ARGS _IS_MSYS2)
-  if (IS_MSYS2)
+  if(IS_MSYS2)
     # msys2's cmake is a native win32 program, and it can't run bash scripts directly
     install(CODE "execute_process(COMMAND bash -l -c '${_CMD} ${_ARGS}' \n\
       RESULT_VARIABLE ret ERROR_VARIABLE err)")
@@ -637,7 +420,7 @@ if(WIN32)
     FILES_MATCHING PATTERN "*.dll"
   )
 
-  if (CMAKE_BUILD_TYPE STREQUAL "Release")
+  if(CMAKE_BUILD_TYPE STREQUAL "Release")
     # strip the dlls
     set(STRIP_DLLS_CMD "${WIN32_COMPAT_SOURCE_DIR}/tools/win32_strip_dlls.sh")
     string(CONCAT
@@ -654,22 +437,24 @@ elseif(NOT BUILD_MACOS_BUNDLE)
 endif()
 
 message("BZip2     libraries: ${BZIP2_LIBRARIES}")
-message("Curl      libraries: ${CURL_LIBRARIES}")
+message("libcurl   libraries: ${CURL_LIBRARIES}")
+message("Intl   include dirs: ${Intl_INCLUDE_DIRS}")
 message("Intl      libraries: ${Intl_LIBRARIES}")
-message("Jpeg      libraries: ${JPEG_LIBRARIES}")
-message("LibXml2   libraries: ${LIBXML2_LIBRARIES}")
+message("JPEG      libraries: ${JPEG_LIBRARIES}")
 message("LibLZMA   libraries: ${LIBLZMA_LIBRARIES}")
+message("LibXml2   libraries: ${LIBXML2_LIBRARIES}")
 message("Lua       libraries: ${LUA_LIBRARIES}")
-message("Ode       libraries: ${ODE_LIBRARY}")
+message("ODE       libraries: ${ODE_LIBRARY}")
 message("OpenGL    libraries: ${OPENGL_LIBRARIES}")
-message("Png       libraries: ${PNG_LIBRARY}")
+message("PNG       libraries: ${PNG_LIBRARIES}")
 message("SDL       libraries: ${SDL_LIBRARY}")
+message("SDL_gfx   libraries: ${SDL_GFX_LIBRARIES}")
 message("SDL_mixer libraries: ${SDL_MIXER_LIBRARIES}")
 message("SDL_net   libraries: ${SDL_NET_LIBRARIES}")
 message("SDL_ttf   libraries: ${SDL_TTF_LIBRARIES}")
-message("Sqlite3   libraries: ${SQLITE3_LIBRARIES}")
-message("Xdg       libraries: ${XDG_LIBRARY}")
-message("Zlib      libraries: ${ZLIB_LIBRARIES}")
+message("SQLite3   libraries: ${SQLite3_LIBRARIES}")
+message("XDG       libraries: ${XDG_LIBRARY}")
+message("ZLIB      libraries: ${ZLIB_LIBRARIES}")
 message("")
 
 message("Installation path: ${CMAKE_INSTALL_PREFIX}")

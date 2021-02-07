@@ -13,7 +13,6 @@ add_library(bzip2 STATIC
   huffman.c
   randtable.c
 )
-target_include_directories(bzip2
-  PUBLIC
+target_include_directories(bzip2 PUBLIC
   "$<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}>"
 )

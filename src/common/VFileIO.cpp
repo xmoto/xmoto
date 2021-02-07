@@ -1313,7 +1313,7 @@ void XMFS::init(const std::string &AppDir,
   for (char const *const *c_dir = xdgDataDirectories(m_xdgHd); *c_dir != NULL;
        c_dir++) {
     std::string dir = std::string(*c_dir);
-    if (isDir(dir + "xmoto")) {
+    if (isDir(dir + "/xmoto")) {
       /* Got a system-wide installation to fall back to! */
       m_SystemDataDir = dir;
       m_bGotSystemDataDir = true;

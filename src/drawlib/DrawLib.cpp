@@ -41,7 +41,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "DrawLibOpenGL.h"
 #endif
 
-#ifdef ENABLE_SDLGFX
+#ifdef ENABLE_SDL_GFX
 #include "DrawLibSDLgfx.h"
 #endif
 
@@ -56,8 +56,8 @@ DrawLib *DrawLib::DrawLibFromName(std::string i_drawLibName) {
     return new DrawLibOpenGL();
   }
 #endif
-#ifdef ENABLE_SDLGFX
-  if (i_drawLibName == "SDLGFX") {
+#ifdef ENABLE_SDL_GFX
+  if (i_drawLibName == "SDL_GFX") {
     m_backend = backend_SdlGFX;
     return new DrawLibSDLgfx();
   }
@@ -68,7 +68,7 @@ DrawLib *DrawLib::DrawLibFromName(std::string i_drawLibName) {
   m_backend = backend_OpenGl;
   return new DrawLibOpenGL();
 #endif
-#ifdef ENABLE_SDLGFX
+#ifdef ENABLE_SDL_GFX
   m_backend = backend_SdlGFX;
   return new DrawLibSDLgfx();
 #endif

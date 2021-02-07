@@ -27,4 +27,4 @@ add a rendering engine selection to configure.in
 opengl (USE_OPENGL)
 sdl_gfx plain sdl_gfx (USE_SDL_GFX)
 perhaps sdl_gfx_with_textures
-( hopefully SDL_fgx 2.1.14 if the changes are accepted by the SDL_gfx maintainer) USE_SDL_GFX_TEXTURES??
+( hopefully SDL_gfx 2.1.14 if the changes are accepted by the SDL_gfx maintainer) USE_SDL_GFX_TEXTURES??

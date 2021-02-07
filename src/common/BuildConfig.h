@@ -25,11 +25,10 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 Build configuration
 =============================================================================*/
 
-/* Rendering engine configuration. xmoto currently supports two rendering
- * engines
- * one is openGl based and the other one is based on SDL_gfx. Here we define
- * ENABLE_OPENGL , ENABLE_SDLGFX for easy use in
- * the code.
+/* Rendering engine configuration.
+ * xmoto currently supports two rendering engines:
+ *   OpenGL-based and SDL_gfx-based.
+ * Here we define ENABLE_OPENGL and ENABLE_SDL_GFX for easy use in the code.
  */
 #ifndef USE_OPENGL
 #define USE_OPENGL 1
@@ -38,11 +37,11 @@ Build configuration
 #define ENABLE_OPENGL
 #endif
 
-#ifndef USE_SDLGFX
-#define USE_SDLGFX 0
+#ifndef USE_SDL_gfx
+#define USE_SDL_gfx 0
 #endif
-#if USE_SDLGFX == 1
-#define ENABLE_SDLGFX
+#if USE_SDL_gfx == 1
+#define ENABLE_SDL_GFX
 #endif
 
 #ifndef ALLOW_DEV

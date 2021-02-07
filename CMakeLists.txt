@@ -1,4 +1,5 @@
-cmake_minimum_required(VERSION 3.7 FATAL_ERROR)
+# Match the current Debian stable's CMake version.
+cmake_minimum_required(VERSION 3.13.4 FATAL_ERROR) # Debian 10
 project(xmoto C CXX)
 
 list(APPEND CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/CMake")
@@ -6,6 +7,11 @@ list(APPEND CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/CMake")
 include(CheckCXXCompilerFlag)
 include(CheckPrototypeDefinition)
 include(CheckSymbolExists)
+
+function(target_sources_relative ARG_TARGET)
+  list(TRANSFORM ARGN REPLACE "^(\\.+)/" "${CMAKE_CURRENT_LIST_DIR}/\\1/")
+  target_sources("${ARG_TARGET}" ${ARGN})
+endfunction()
 
 add_subdirectory(src)
 

@@ -22,6 +22,8 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #define __DRAWLIBSDLGFX_H__
 
 #include "DrawLib.h"
+#include "../include/xm_SDL_gfx.h"
+#include <map>
 class PolyDraw;
 
 class DrawLibSDLgfx : public DrawLib {
@@ -40,7 +42,6 @@ public:
 
   // texture coordinate
   virtual void glTexCoord(float x, float y);
-  virtual void screenProjVertex(float *x, float *y);
 
   virtual void setColor(Color color);
   /**

@@ -3,8 +3,8 @@
 set -ex
 
 mkdir build && cd build
-cmake -DCMAKE_BUILD_TYPE=Release \
-      -DBUILD_MACOS_BUNDLE=ON -G Ninja ..
+cmake -D BUILD_MACOS_BUNDLE=ON \
+      -D CMAKE_BUILD_TYPE=Release -G Ninja ..
 ninja
 
 # Homebrew on Catalina (10.15) sets inconsistent permissions on dylibs
@@ -14,4 +14,3 @@ sudo \
 
 mkdir artifacts
 mv xmoto-*.dmg artifacts/
-
