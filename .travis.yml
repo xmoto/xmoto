@@ -12,11 +12,6 @@ matrix:
       osx_image: xcode10.1 # =10.13/high sierra
       install: ".travis/macos/deps.sh"
       script: ".travis/macos/build.sh"
-      cache:
-        directories:
-          - $HOME/Library/Caches/Homebrew
-      before_cache:
-        - brew cleanup
 
     - os: linux
       dist: bionic

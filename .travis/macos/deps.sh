@@ -2,7 +2,8 @@
 
 set -ex
 
-brew update
+export HOMEBREW_NO_AUTO_UPDATE=1
+export HOMEBREW_NO_ANALYTICS=1
 
 # packages to be checked for before installing them
 for pkg in cmake ninja jpeg libpng \
