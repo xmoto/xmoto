@@ -14,3 +14,6 @@ done
 # install the rest of the packages
 brew install gettext sdl sdl_mixer sdl_net sdl_ttf
 
+brew unlink gettext
+brew link --force gettext
+
