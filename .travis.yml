@@ -7,22 +7,20 @@ matrix:
       dist: bionic
       install: ".travis/linux/deps.sh"
       script: ".travis/linux/build.sh"
+      cache: ccache
 
     - os: osx
       osx_image: xcode10.1 # =10.13/high sierra
       install: ".travis/macos/deps.sh"
       script: ".travis/macos/build.sh"
-      cache:
-        directories:
-          - $HOME/Library/Caches/Homebrew
-      before_cache:
-        - brew cleanup
+      cache: ccache
 
     - os: linux
       dist: bionic
       name: "Linux MXE"
       install: ".travis/linux-mxe/deps.sh"
       script: ".travis/linux-mxe/build.sh"
+      cache: ccache
 
 deploy:
   provider: releases

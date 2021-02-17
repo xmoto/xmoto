@@ -2,6 +2,8 @@
 
 set -ex
 
+export PATH="/usr/local/opt/ccache/libexec:$PATH"
+
 mkdir build && cd build
 cmake -DCMAKE_BUILD_TYPE=Release \
       -DBUILD_MACOS_BUNDLE=ON -G Ninja ..
