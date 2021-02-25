@@ -930,13 +930,15 @@ void LevelsManager::reloadExternalLevels(
   i_db->levels_add_end();
 }
 
-void LevelsManager::addExternalLevel(std::string i_levelFile,
+std::string LevelsManager::addExternalLevel(std::string i_levelFile,
                                      xmDatabase *i_db,
                                      bool i_loadMainLayerOnly) {
+  std::string id = i_levelFile;
   Level *v_level = new Level();
   try {
     v_level->setFileName(i_levelFile);
     v_level->loadReducedFromFile(i_loadMainLayerOnly);
+    id = v_level->Id();
 
     // Check for ID conflict
     if (doesLevelExist(v_level->Id(), i_db)) {
@@ -957,6 +959,7 @@ void LevelsManager::addExternalLevel(std::string i_levelFile,
     LogWarning("Unable to add external level (%s)", e.getMsg().c_str());
   }
   delete v_level;
+  return id;
 }
 
 void LevelsManager::reloadLevelsFromLvl(

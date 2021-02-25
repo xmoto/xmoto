@@ -376,6 +376,8 @@ void DrawLibOpenGL::init(unsigned int nDispWidth,
   }
 #endif
 
+  SDL_EventState(SDL_DROPFILE, SDL_ENABLE);
+
   /* Create an OpenGL context */
   SDL_GLContext m_glContext = SDL_GL_CreateContext(m_window);
 

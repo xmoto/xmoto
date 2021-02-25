@@ -818,6 +818,12 @@ void StateManager::xmKey(InputEventType i_type, const XMKey &i_xmkey) {
   (m_statesStack.back())->xmKey(i_type, i_xmkey);
 }
 
+void StateManager::fileDrop(const std::string &path) {
+  if (m_statesStack.size() == 0)
+    return;
+  (m_statesStack.back())->fileDrop(path);
+}
+
 void StateManager::changeFocus(bool i_hasFocus) {
   m_hasFocus = i_hasFocus;
 }

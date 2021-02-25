@@ -57,6 +57,8 @@ public:
   /* input */
   virtual void xmKey(InputEventType i_type, const XMKey &i_xmkey);
 
+  virtual void fileDrop(const std::string &path) {};
+
   bool isHide() { return m_isHide; }
   void setHide(bool isHide) { m_isHide = isHide; }
 

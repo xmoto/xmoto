@@ -60,6 +60,8 @@ public:
   // input
   void xmKey(InputEventType i_type, const XMKey &i_xmkey);
 
+  void fileDrop(const std::string &path);
+
   void changeFocus(bool i_hasFocus);
   void changeVisibility(bool i_visible);
   void setInvalidated(bool i_isInvalidated) { m_isInvalidated = i_isInvalidated; }

@@ -519,29 +519,8 @@ void GameApp::run_load(int nNumArgs, char **ppcArgs) {
     m_PlaySpecificReplay = v_xmArgs.getOpt_replay_file();
   }
   if (v_xmArgs.isOptDemo()) {
-    /* demo : download the level and the replay
-       load the level as external,
-       play the replay
-     */
     try {
-      m_xmdemo = new XMDemo(v_xmArgs.getOpt_demo_file());
-      LogInfo("Loading demo file %s\n", v_xmArgs.getOpt_demo_file().c_str());
-
-      _UpdateLoadingScreen(GAMETEXT_DLLEVEL);
-      m_xmdemo->getLevel(XMSession::instance()->proxySettings());
-      _UpdateLoadingScreen(GAMETEXT_DLREPLAY);
-      m_xmdemo->getReplay(XMSession::instance()->proxySettings());
-
-      try {
-        LevelsManager::instance()->addExternalLevel(
-          m_xmdemo->levelFile(),
-          xmDatabase::instance("main"),
-          v_xmArgs.isOptServerOnly());
-      } catch (Exception &e) {
-        LogError("Can't add level %s as external level",
-                 m_xmdemo->levelFile().c_str());
-      }
-      m_PlaySpecificReplay = m_xmdemo->replayFile();
+      m_PlaySpecificReplay = loadDemoReplay(v_xmArgs.getOpt_demo_file());
     } catch (Exception &e) {
       LogError("Unable to load the demo file");
     }
@@ -686,31 +665,24 @@ void GameApp::run_load(int nNumArgs, char **ppcArgs) {
     /* What to do? */
     if (m_PlaySpecificLevelFile != "") {
       try {
-        LevelsManager::instance()->addExternalLevel(
+        m_PlaySpecificLevelId = LevelsManager::instance()->addExternalLevel(
           m_PlaySpecificLevelFile,
           xmDatabase::instance("main"),
           v_xmArgs.isOptServerOnly());
-        m_PlaySpecificLevelId = LevelsManager::instance()->LevelByFileName(
-          m_PlaySpecificLevelFile, xmDatabase::instance("main"));
+        if (m_PlaySpecificLevelId.empty()) {
+          m_PlaySpecificLevelId = LevelsManager::instance()->LevelByFileName(
+            m_PlaySpecificLevelFile, xmDatabase::instance("main"));
+        }
       } catch (Exception &e) {
         m_PlaySpecificLevelId = m_PlaySpecificLevelFile;
       }
     }
     if ((m_PlaySpecificLevelId != "")) {
       /* ======= PLAY SPECIFIC LEVEL ======= */
-
-      if (XMSession::instance()->clientGhostMode() == false &&
-          NetClient::instance()->isConnected()) {
-        StateManager::instance()->pushState(new StateWaitServerInstructions());
-      } else {
-        StateManager::instance()->pushState(
-          new StatePreplayingGame(m_PlaySpecificLevelId, false));
-      }
-      LogInfo("Playing as '%s'...", XMSession::instance()->profile().c_str());
+      playLevel(m_PlaySpecificLevelId);
     } else if (m_PlaySpecificReplay != "") {
       /* ======= PLAY SPECIFIC REPLAY ======= */
-      StateManager::instance()->pushState(
-        new StatePreplayingReplay(m_PlaySpecificReplay, false));
+      playReplay(m_PlaySpecificReplay);
     } else {
       /* display what must be displayed */
       StateManager::instance()->pushState(new StateMainMenu());
@@ -952,6 +924,14 @@ void GameApp::manageEvent(SDL_Event *Event) {
               m_hasKeyboardFocus ? "yes" : "no",
               m_hasMouseFocus ? "yes" : "no"
             );
+      break;
+    }
+    case SDL_DROPFILE: {
+      char *file = Event->drop.file;
+      std::string path(file);
+      SDL_free(file);
+      StateManager::instance()->fileDrop(path);
+
       break;
     }
   }

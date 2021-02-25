@@ -138,6 +138,10 @@ public:
                          std::string *io_url,
                          bool *o_isAccessible);
 
+  void playLevel(const std::string &levelId);
+  void playReplay(const std::string &replayId);
+  std::string loadDemoReplay(const std::string &demoFile);
+
   void addLevelToFavorite(const std::string &i_levelId);
 
   // list played

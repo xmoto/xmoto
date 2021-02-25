@@ -33,6 +33,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "StateUploadHighscore.h"
 #include "StateViewHighscore.h"
 #include "StateWaitServerInstructions.h"
+#include "common/VFileIO.h"
 #include "common/XMSession.h"
 #include "drawlib/DrawLib.h"
 #include "gui/specific/GUIXMoto.h"
@@ -825,6 +826,34 @@ void StateMainMenu::xmKey(InputEventType i_type, const XMKey &i_xmkey) {
 
   else {
     StateMenu::xmKey(i_type, i_xmkey);
+  }
+}
+
+void StateMainMenu::fileDrop(const std::string &path) {
+  std::string ext = XMFS::getFileExtension(path);
+  std::string levelId;
+
+  if (ext == "lvl") {
+    try {
+      levelId = LevelsManager::instance()->addExternalLevel(
+          path, xmDatabase::instance("main"), false);
+      if (levelId.empty())
+        levelId = LevelsManager::instance()->LevelByFileName(
+            path, xmDatabase::instance("main"));
+    } catch (Exception &e) {
+      levelId = path;
+    }
+
+    GameApp::instance()->playLevel(levelId);
+  } else if (ext == "rpl") {
+    GameApp::instance()->playReplay(path);
+  } else if (ext == "dmo") {
+    try {
+      std::string demoReplay = GameApp::instance()->loadDemoReplay(path);
+      GameApp::instance()->playReplay(demoReplay);
+    } catch (Exception &e) {
+      LogError("Unable to load the demo file");
+    }
   }
 }
 
