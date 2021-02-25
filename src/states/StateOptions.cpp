@@ -34,6 +34,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "helpers/Log.h"
 #include "helpers/System.h"
 #include "helpers/Text.h"
+#include "helpers/VExcept.h"
 #include "net/NetActions.h"
 #include "net/NetServer.h"
 #include "xmoto/Game.h"
@@ -807,6 +808,18 @@ void StateOptions::checkEvents() {
   //  v_button->setClicked(false);
   //  XMSession::instance()->setDbsynchronizeOnQuit(v_button->getChecked());
   //}
+
+  v_button = reinterpret_cast<UIButton *>(
+      m_GUI->getChild("MAIN:TABS:GENERAL_TAB:TABS:INFOS_TAB:CLEARLEVELCACHE_BUTTON"));
+  if (v_button->isClicked()) {
+    v_button->setClicked(false);
+
+    StateMessageBox *v_msgboxState = new StateMessageBox(
+      this, GAMETEXT_CONFIRMCLEARLEVELCACHE, UI_MSGBOX_YES | UI_MSGBOX_NO);
+    StateManager::instance()->pushState(v_msgboxState);
+    v_msgboxState->setMsgBxId("CLEARLEVELCACHE");
+    v_msgboxState->makeActiveButton(UI_MSGBOX_NO);
+  }
 
   // language
   v_list = reinterpret_cast<UIList *>(
@@ -1622,7 +1635,9 @@ void StateOptions::makeWindowOptions_infos_line(UIWindow *i_parent,
 }
 
 UIWindow *StateOptions::makeWindowOptions_infos(UIWindow *i_parent) {
+  UIButton *v_button;
   UIWindow *v_window;
+  DrawLib *drawlib = GameApp::instance()->getDrawLib();
   std::ostringstream str_net, str_db;
 
   v_window = new UIWindow(i_parent,
@@ -1655,6 +1670,17 @@ UIWindow *StateOptions::makeWindowOptions_infos(UIWindow *i_parent) {
   p += 20;
   str_net << XM_NET_PROTOCOL_VERSION;
   makeWindowOptions_infos_line(v_window, "xmNet version", str_net.str(), p);
+
+  v_button = new UIButton(v_window,
+      20,
+      v_window->getPosition().nHeight - 68,
+      GAMETEXT_CLEARLEVELCACHE,
+      207,
+      57);
+  v_button->setID("CLEARLEVELCACHE_BUTTON");
+  v_button->setFont(drawlib->getFontSmall());
+  v_button->setType(UI_BUTTON_TYPE_LARGE);
+  v_button->setContextHelp(CONTEXTHELP_CLEARLEVELCACHE);
 
   return v_window;
 }
@@ -3086,6 +3112,19 @@ void StateOptions::sendFromMessageBox(const std::string &i_id,
       InputHandler::instance()->setDefaultConfig();
       XMSession::instance()->setToDefault();
       updateOptions();
+    }
+  }
+
+  else if (i_id == "CLEARLEVELCACHE") {
+    if (i_button == UI_MSGBOX_YES) {
+      try {
+        LevelsManager::cleanCache();
+        SysMessage::instance()->displayInformation(GAMETEXT_LEVELCACHECLEARED);
+      } catch (Exception &e) {
+        std::string msg = "Failed to clear level cache: " + e.getMsg();
+        LogError("%s", msg.c_str());
+        SysMessage::instance()->displayError(msg);
+      }
     }
   }
 

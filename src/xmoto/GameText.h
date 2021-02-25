@@ -1056,6 +1056,12 @@ Central place to keep many in-game text strings
 #define GAMETEXT_SWITCHTRACKINGSHOTMODE _("Switch trackingshot mode")
 #define GAMETEXT_SWITCHREDERGHOSTTRAIL _("Switch ghosttrail rendering")
 
+#define GAMETEXT_CLEARLEVELCACHE _("Clear level cache")
+#define GAMETEXT_LEVELCACHECLEARED _("Level cache cleared")
+#define GAMETEXT_CONFIRMCLEARLEVELCACHE \
+  _("Are you sure you want to clear the level cache?")
+#define CONTEXTHELP_CLEARLEVELCACHE _("Clear level cache")
+
 #define CONTEXTHELP_NOIDEA _("You don't want to vote")
 #define CONTEXTHELP_DBEGINNER _("Really easy")
 #define CONTEXTHELP_DMEDIUM _("No technical difficulty")
