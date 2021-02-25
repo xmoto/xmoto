@@ -307,6 +307,8 @@ void XMArguments::parse(int i_argc, char **i_argv) {
     } else if (v_opt == "--buildQueries") { // hidden option to control website
       // from the game ; keep undocumented
       m_opt_buildQueries = true;
+    } else if (v_opt.rfind("-psn_", 0) == 0) {
+      /* macOS sometimes passes a "Process Serial Number" (psn) to applications. Ignore. */
     } else {
       /* check if the parameter is a file */
       v_arg = i_argv[i];
