@@ -591,12 +591,6 @@ Central place to keep many in-game text strings
     "\n"                                                            \
     "Also visit http://xmoto.tuxfamily.org to make sure you've\n"   \
     "got the latest version.")
-#define GAMETEXT_NOTIFY_KEYCOMPATUPGRADE                            \
-  _("Welcome to a new version of X-Moto!\n"                         \
-    "\n"                                                            \
-    "Note:\n"                                                       \
-    "Due to internal changes, your controls will be upgraded.\n"    \
-    "If you experience problems, try rebinding them in Options.\n")
 #define GAMETEXT_NUMLEVELS _("# Levels")
 #define GAMETEXT_OK _("OK")
 #define GAMETEXT_OPEN _("Open")

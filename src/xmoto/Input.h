@@ -189,6 +189,8 @@ public:
                   xmDatabase *pDb,
                   const std::string &i_id_profile);
 
+  void keyCompatUpgrade();
+
   bool isANotGameSetKey(XMKey *i_xmkey) const;
 
   void setPlayerKey(unsigned int INPUT_key, int i_player, XMKey i_value);

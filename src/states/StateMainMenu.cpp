@@ -196,9 +196,7 @@ void StateMainMenu::enter() {
         XMSession::instance()->sitekey(), XMSession::instance()->profile()) ==
         false) {
     StateManager::instance()->pushState(new StateEditProfile());
-    // set this flag to off so we won't be falsely prompted
-    // for a key reset the next time the game is launched
-    XMSession::instance()->setNotifyKeyCompatUpgrade(false);
+    XMSession::instance()->setKeyCompatUpgrade(false);
 
     /* in case there is no profile, we show a message box */
     /* Should we show a notification box? (with important one-time info) */
@@ -210,13 +208,9 @@ void StateMainMenu::enter() {
     }
 
   } else {
-    // Prompt to reset the keys if migrating from SDL1.2
-    if (XMSession::instance()->notifyKeyCompatUpgrade()) {
-      StateMessageBox *v_msgboxState =
-        new StateMessageBox(this, GAMETEXT_NOTIFY_KEYCOMPATUPGRADE, UI_MSGBOX_OK);
-      StateManager::instance()->pushState(v_msgboxState);
-      v_msgboxState->setMsgBxId("COMPAT_UPGRADE_KEYS");
-      v_msgboxState->makeActiveButton(UI_MSGBOX_OK);
+    // Reset key binds if migrating from an SDL1.2 profile
+    if (XMSession::instance()->keyCompatUpgrade()) {
+      InputHandler::instance()->keyCompatUpgrade();
     }
 
     if (CheckWwwThread::isNeeded()) {
@@ -1880,20 +1874,6 @@ void StateMainMenu::sendFromMessageBox(const std::string &i_id,
   else if (i_id == "REPLAYS_DELETE") {
     if (i_button == UI_MSGBOX_YES) {
       addCommand("REPLAYS_DELETE");
-    }
-  }
-
-  else if (i_id == "COMPAT_UPGRADE_KEYS") {
-    if (i_button == UI_MSGBOX_OK) {
-      InputSDL12Compat::upgrade();
-
-      InputHandler::instance()->saveConfig(
-        GameApp::instance()->getUserConfig(),
-        xmDatabase::instance("main"),
-        XMSession::instance("file")->profile());
-
-      XMSession::instance()->setNotifyKeyCompatUpgrade(false);
-      Logger::LogInfo("Key bindings were upgraded");
     }
   }
 

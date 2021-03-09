@@ -22,8 +22,10 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  *  Input handler
  */
 #include "Input.h"
+#include "Game.h"
 #include "GameText.h"
 #include "common/VFileIO.h"
+#include "common/XMSession.h"
 #include "db/xmDatabase.h"
 #include "helpers/Log.h"
 #include "helpers/Text.h"
@@ -412,7 +414,20 @@ void InputSDL12Compat::upgrade() {
 }
 
 bool InputSDL12Compat::isUpgraded(xmDatabase *pDb, const std::string &i_id_profile) {
-  return !pDb->config_getBool(i_id_profile, "NotifyKeyCompatUpgrade", true);
+  return !pDb->config_getBool(i_id_profile, "KeyCompatUpgrade", true);
+}
+
+void InputHandler::keyCompatUpgrade() {
+  InputSDL12Compat::upgrade();
+
+  InputHandler::instance()->saveConfig(
+    GameApp::instance()->getUserConfig(),
+    xmDatabase::instance("main"),
+    XMSession::instance("file")->profile());
+
+  XMSession::instance()->setKeyCompatUpgrade(false);
+
+  Logger::LogInfo("Key bindings upgraded");
 }
 
 /*===========================================================================
