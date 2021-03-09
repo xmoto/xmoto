@@ -1824,55 +1824,60 @@ void GameRenderer::_RenderSprites(Scene *i_scene,
   }
 }
 
+/*
+ *  For a given entity, return the sprite name and AnimationSprite
+ */
+
+void GameRenderer::_GetSpriteDetails(Scene *scene,
+                                     Entity *entity,
+                                     AnimationSprite* &spriteReference) {
+  AnimationSprite *sprite = nullptr;
+  switch (entity->Speciality()) {
+    case ET_KILL:
+      sprite = (AnimationSprite *)scene->getLevelSrc()->wreckerSprite();
+      break;
+    case ET_MAKEWIN:
+      sprite = (AnimationSprite *)scene->getLevelSrc()->flowerSprite();
+      break;
+    case ET_ISTOTAKE:
+      sprite =
+        (AnimationSprite *)scene->getLevelSrc()->strawberrySprite();
+      break;
+    case ET_CHECKPOINT: {
+      Checkpoint *checkpoint = (Checkpoint *)entity;
+      if (checkpoint->isActivated()) {
+        sprite =
+          (AnimationSprite *)scene->getLevelSrc()->checkpointSpriteUp();
+      } else {
+        sprite =
+          (AnimationSprite *)scene->getLevelSrc()->checkpointSpriteDown();
+      }
+    } break;
+    default:
+      break;
+  }
+
+  if (sprite == nullptr) {
+    sprite = (AnimationSprite *)entity->getSprite();
+  }
+
+  spriteReference = sprite;
+}
+
 /*===========================================================================
 Render a sprite
 ===========================================================================*/
-void GameRenderer::_RenderSprite(Scene *i_scene,
-                                 Entity *pEntity,
-                                 float i_sizeMult) {
-  AnimationSprite *v_sprite = NULL;
+void GameRenderer::_RenderSprite(Scene *i_scene, Entity *pEntity, float i_sizeMult) {
+  AnimationSprite *v_sprite = nullptr;
   float v_centerX = 0.0f;
   float v_centerY = 0.0f;
   float v_width = 0.0f;
   float v_height = 0.0f;
-  std::string v_spriteName = "";
 
-  if (XMSession::instance()->ugly() == false) {
-    switch (pEntity->Speciality()) {
-      case ET_KILL:
-        v_spriteName = i_scene->getLevelSrc()->SpriteForWecker();
-        v_sprite = (AnimationSprite *)i_scene->getLevelSrc()->wreckerSprite();
-        break;
-      case ET_MAKEWIN:
-        v_spriteName = i_scene->getLevelSrc()->SpriteForFlower();
-        v_sprite = (AnimationSprite *)i_scene->getLevelSrc()->flowerSprite();
-        break;
-      case ET_ISTOTAKE:
-        v_spriteName = i_scene->getLevelSrc()->SpriteForStrawberry();
-        v_sprite =
-          (AnimationSprite *)i_scene->getLevelSrc()->strawberrySprite();
-        break;
-      case ET_CHECKPOINT: {
-        Checkpoint *v_checkpoint = (Checkpoint *)pEntity;
-        if (v_checkpoint->isActivated()) {
-          v_spriteName = i_scene->getLevelSrc()->SpriteForCheckpointUp();
-          v_sprite =
-            (AnimationSprite *)i_scene->getLevelSrc()->checkpointSpriteUp();
-        } else {
-          v_spriteName = i_scene->getLevelSrc()->SpriteForCheckpointDown();
-          v_sprite =
-            (AnimationSprite *)i_scene->getLevelSrc()->checkpointSpriteDown();
-        }
-      }
-      default:
-        v_spriteName = pEntity->SpriteName();
-    }
+  _GetSpriteDetails(i_scene, pEntity, v_sprite);
 
-    if (v_sprite == NULL) {
-      v_sprite = (AnimationSprite *)pEntity->getSprite();
-    }
-
-    if (v_sprite != NULL) {
+  if (!XMSession::instance()->ugly()) {
+    if (v_sprite != nullptr) {
       v_centerX = v_sprite->getCenterX();
       v_centerY = v_sprite->getCenterY();
 
@@ -1894,7 +1899,7 @@ void GameRenderer::_RenderSprite(Scene *i_scene,
       v_height *= i_sizeMult;
     }
 
-    if (v_sprite != NULL) {
+    if (v_sprite != nullptr) {
       /* Draw it */
       Vector2f p[4];
 
