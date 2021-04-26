@@ -157,7 +157,7 @@ void Camera::initCamera() {
 void Camera::setUseTrailCam(bool i_value) {
   m_useTrailCam = i_value;
 
-  if (m_useTrailCam == false && m_trailAvailable) {
+  if (m_useTrailCam == false && m_catchTrail && m_trailAvailable) {
     m_catchTrail = false;
     initCameraPosition();
   }
