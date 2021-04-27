@@ -1490,8 +1490,8 @@ msgid "Level '%s' required by replay!"
 msgstr "Herhaling heeft level '%s'"
 
 #: src/xmoto/GameText.h:359
-msgid "Level Info..."
-msgstr "Level informatie..."
+msgid "Level Info"
+msgstr "Level informatie"
 
 #: src/xmoto/GameText.h:360
 msgid "Level Name"

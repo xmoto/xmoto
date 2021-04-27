@@ -1516,8 +1516,8 @@ msgid "Level '%s' required by replay!"
 msgstr "Lygis '%s' reikalauja pakartojimo!"
 
 #: src/xmoto/GameText.h:359
-msgid "Level Info..."
-msgstr "Lygio info..."
+msgid "Level Info"
+msgstr "Lygio info"
 
 #: src/xmoto/GameText.h:360
 msgid "Level Name"

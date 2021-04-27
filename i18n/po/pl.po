@@ -1490,8 +1490,8 @@ msgid "Level '%s' required by replay!"
 msgstr "Poziom '%s' jest wymagany przez powtórkę"
 
 #: src/xmoto/GameText.h:359
-msgid "Level Info..."
-msgstr "Informacje o poziomie..."
+msgid "Level Info"
+msgstr "Informacje o poziomie"
 
 #: src/xmoto/GameText.h:360
 msgid "Level Name"

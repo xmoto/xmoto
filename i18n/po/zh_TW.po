@@ -1478,8 +1478,8 @@ msgid "Level '%s' required by replay!"
 msgstr "關卡'%s' 會被重播 !"
 
 #: src/xmoto/GameText.h:359
-msgid "Level Info..."
-msgstr "關卡資訊..."
+msgid "Level Info"
+msgstr "關卡資訊"
 
 #: src/xmoto/GameText.h:360
 msgid "Level Name"

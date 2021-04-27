@@ -1496,8 +1496,8 @@ msgid "Level '%s' required by replay!"
 msgstr "Bana '%s' behövs för repris!"
 
 #: src/xmoto/GameText.h:359
-msgid "Level Info..."
-msgstr "Information om banan..."
+msgid "Level Info"
+msgstr "Information om banan"
 
 #: src/xmoto/GameText.h:360
 msgid "Level Name"

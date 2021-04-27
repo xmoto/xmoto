@@ -511,7 +511,7 @@ Central place to keep many in-game text strings
 #define GAMETEXT_LEVEL_DELETED_FROM_FAVORITE _("Deleted from favorites")
 #define GAMETEXT_LEVEL_ADDED_TO_BLACKLIST _("Added to blacklist")
 #define GAMETEXT_LEVEL_DELETED_FROM_BLACKLIST _("Deleted from blacklist")
-#define GAMETEXT_LEVELINFO _("Level Info...")
+#define GAMETEXT_LEVELINFO _("Level Info")
 #define GAMETEXT_LEVELNAME _("Level Name")
 #define GAMETEXT_LEVELCANNOTBELOADED _("Level '%s' cannot be loaded")
 #define GAMETEXT_LEVELLOADINGFAILURE \

@@ -1508,8 +1508,8 @@ msgid "Level '%s' required by replay!"
 msgstr "Pre prehranie záznamu potrebujete level '%s'"
 
 #: src/xmoto/GameText.h:359
-msgid "Level Info..."
-msgstr "Info o leveli..."
+msgid "Level Info"
+msgstr "Info o leveli"
 
 #: src/xmoto/GameText.h:360
 msgid "Level Name"

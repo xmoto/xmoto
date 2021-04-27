@@ -1496,8 +1496,8 @@ msgid "Level '%s' required by replay!"
 msgstr "Toistovideo vaatii kentän '%s'!"
 
 #: src/xmoto/GameText.h:359
-msgid "Level Info..."
-msgstr "Kentän tiedot..."
+msgid "Level Info"
+msgstr "Kentän tiedot"
 
 #: src/xmoto/GameText.h:360
 msgid "Level Name"

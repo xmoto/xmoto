@@ -1500,8 +1500,8 @@ msgid "Level '%s' required by replay!"
 msgstr "Bölüm '%s' tekrar oynatım tarafından ihtiyaç duyuluyor!"
 
 #: src/xmoto/GameText.h:359
-msgid "Level Info..."
-msgstr "Bölüm bilgisi..."
+msgid "Level Info"
+msgstr "Bölüm bilgisi"
 
 #: src/xmoto/GameText.h:360
 msgid "Level Name"

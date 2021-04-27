@@ -1498,8 +1498,8 @@ msgid "Level '%s' required by replay!"
 msgstr "Il livello '%s' è richiesto dal replay!"
 
 #: src/xmoto/GameText.h:359
-msgid "Level Info..."
-msgstr "Informazioni sul livello..."
+msgid "Level Info"
+msgstr "Informazioni sul livello"
 
 #: src/xmoto/GameText.h:360
 msgid "Level Name"
