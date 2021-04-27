@@ -320,6 +320,12 @@ void InputHandler::setDefaultConfig() {
   m_globalControls[INPUT_REPLAYINGABITFASTER] = IFullKey("KeyReplayingABitFaster", XMKey(SDLK_UP, KMOD_LCTRL), GAMETEXT_REPLAYINGABITFASTER, false);
   m_globalControls[INPUT_REPLAYINGSLOWER] = IFullKey("KeyReplayingSlower", XMKey(SDLK_DOWN, KMOD_NONE), GAMETEXT_REPLAYINGSLOWER, false);
   m_globalControls[INPUT_REPLAYINGABITSLOWER] = IFullKey("KeyReplayingABitSlower", XMKey(SDLK_DOWN, KMOD_LCTRL), GAMETEXT_REPLAYINGABITSLOWER, false);
+
+  for (int player = 0; player < INPUT_NB_PLAYERS; ++player) {
+    for (auto &f : InputHandler::instance()->m_controls[player].scriptActionKeys) {
+      f.key = XMKey();
+    }
+  }
 }
 
 void InputSDL12Compat::resolveConflicts(const std::vector<IFullKey *> &keys) {
