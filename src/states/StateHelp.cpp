@@ -160,6 +160,9 @@ void StateHelp::createGUI() {
           ->getGlobalKey(INPUT_SCREENSHOT)
           ->toFancyString(),
         InputHandler::instance()
+          ->getGlobalKey(INPUT_LEVELINFO)
+          ->toFancyString(),
+        InputHandler::instance()
           ->getGlobalKey(INPUT_SWITCHFPS)
           ->toFancyString(),
         InputHandler::instance()

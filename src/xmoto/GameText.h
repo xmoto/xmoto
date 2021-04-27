@@ -411,6 +411,7 @@ Central place to keep many in-game text strings
                                        next_level_KEY,                         \
                                        switch_wwwaccess_KEY,                   \
                                        screenshot_KEY,                         \
+                                       levelinfo_KEY,                          \
                                        fps_KEY,                                \
                                        switch_uglymode_KEY,                    \
                                        switch_player_KEY,                      \
@@ -480,7 +481,9 @@ Central place to keep many in-game text strings
     switch_gfx_mode_KEY + " - " +                                              \
     std::string(_("Toggle theme and ugly over mode")) + "\n"                   \
                                                         "  " +                 \
-    screenshot_KEY + " - " + std::string(_("Take a screenshot")) + "\n"
+    screenshot_KEY + " - " + std::string(_("Take a screenshot")) + "\n"        \
+                                                                   "  " +      \
+    levelinfo_KEY + " - " + std::string(_("Show level info")) + "\n"
 
 #define GAMETEXT_HIDEGHOSTS _("Hide ghosts")
 #define GAMETEXT_HIGH _("High")

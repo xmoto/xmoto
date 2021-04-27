@@ -22,6 +22,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "StateDeadJust.h"
 #include "StateDeadMenu.h"
 #include "StateFinished.h"
+#include "StateLevelInfoViewer.h"
 #include "StateMessageBox.h"
 #include "StatePause.h"
 #include "common/CameraAnimation.h"
@@ -342,6 +343,15 @@ void StatePlayingLocal::xmKey(InputEventType i_type, const XMKey &i_xmkey) {
     }
     if (v_isCheckpoint) {
       StateScene::playToCheckpoint();
+    }
+  }
+
+  else if (i_type == INPUT_DOWN &&
+      i_xmkey == (*InputHandler::instance()->getGlobalKey(INPUT_LEVELINFO))) {
+    if (!isLockedScene()) {
+      m_displayStats = true;
+      StateManager::instance()->pushState(new StateLevelInfoViewer(
+            m_universe->getScenes()[0]->getLevelSrc()->Id(), true, false));
     }
   }
 

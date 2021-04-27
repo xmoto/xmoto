@@ -19,6 +19,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 =============================================================================*/
 
 #include "StateReplaying.h"
+#include "StateLevelInfoViewer.h"
 #include "StateMessageBox.h"
 #include "StatePreplayingReplay.h"
 #include "StateViewHighscore.h"
@@ -333,6 +334,12 @@ void StateReplaying::xmKey(InputEventType i_type, const XMKey &i_xmkey) {
     }
   }
 #endif
+
+  else if (i_type == INPUT_DOWN &&
+      i_xmkey == (*InputHandler::instance()->getGlobalKey(INPUT_LEVELINFO))) {
+    StateManager::instance()->pushState(new StateLevelInfoViewer(
+          m_universe->getScenes()[0]->getLevelSrc()->Id(), true, false));
+  }
 
   else {
     StateScene::xmKey(i_type, i_xmkey);

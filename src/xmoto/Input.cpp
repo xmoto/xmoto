@@ -298,6 +298,7 @@ void InputHandler::setDefaultConfig() {
   m_globalControls[INPUT_PREVIOUSLEVEL] = IFullKey("KeyPreviousLevel", XMKey(SDLK_PAGEDOWN, KMOD_NONE), GAMETEXT_PREVIOUSLEVEL);
   m_globalControls[INPUT_SWITCHRENDERGHOSTTRAIL] = IFullKey("KeySwitchRenderGhosttrail", XMKey(SDLK_g, KMOD_LCTRL), GAMETEXT_SWITCHREDERGHOSTTRAIL);
   m_globalControls[INPUT_SCREENSHOT] = IFullKey("KeyScreenshot", XMKey(SDLK_F12, KMOD_NONE), GAMETEXT_SCREENSHOT);
+  m_globalControls[INPUT_LEVELINFO] = IFullKey("KeyLevelInfo", XMKey(), GAMETEXT_LEVELINFO);
   m_globalControls[INPUT_SWITCHWWWACCESS] = IFullKey("KeySwitchWWWAccess", XMKey(SDLK_F8, KMOD_NONE), GAMETEXT_SWITCHWWWACCESS);
   m_globalControls[INPUT_SWITCHFPS] = IFullKey("KeySwitchFPS", XMKey(SDLK_F7, KMOD_NONE), GAMETEXT_SWITCHFPS);
   m_globalControls[INPUT_SWITCHGFXQUALITYMODE] = IFullKey("KeySwitchGFXQualityMode", XMKey(SDLK_F10, KMOD_NONE), GAMETEXT_SWITCHGFXQUALITYMODE);
