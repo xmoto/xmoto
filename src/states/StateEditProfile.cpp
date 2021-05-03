@@ -64,6 +64,12 @@ void StateEditProfile::updateOptions() {
     v_button->setChecked(true);
     v_button->enableWindow(false);
   }
+
+  UIButton *pCloseButton = reinterpret_cast<UIButton *>(
+    m_sGUI->getChild("EDITPROFILE_FRAME:CLOSE_BUTTON"));
+  if (XMSession::instance()->profile() != "") {
+    pCloseButton->enableWindow(true);
+  }
 }
 
 void StateEditProfile::checkEvents() {
@@ -311,6 +317,10 @@ void StateEditProfile::createProfileList() {
       pUseButton->enableWindow(true);
       pDeleteButton->enableWindow(true);
       pCloseButton->enableWindow(true);
+    }
+
+    if (XMSession::instance()->profile() == "") {
+      pCloseButton->enableWindow(false);
     }
   }
 }
