@@ -124,8 +124,7 @@ StateScene::~StateScene() {
   StateManager::instance()->unregisterAsObserver("INTERPOLATION_CHANGED", this);
   StateManager::instance()->unregisterAsObserver("MIRRORMODE_CHANGED", this);
   StateManager::instance()->unregisterAsObserver("REPLAY_DOWNLOADED", this);
-  StateManager::instance()->unregisterAsObserver("REPLAY_FAILEDTODOWNLOAD",
-                                                 this);
+  StateManager::instance()->unregisterAsObserver("REPLAY_FAILEDTODOWNLOAD", this);
   StateManager::instance()->unregisterAsObserver("CHANGE_TRAILCAM", this);
 
   if (m_cameraAnim != NULL) {
@@ -1237,6 +1236,10 @@ void StateScene::playLevelMusic() {
 void StateScene::playToCheckpoint() {
   if (m_universe == NULL) {
     return;
+  }
+
+  if (m_cameraAnim) {
+    m_cameraAnim->resetSizeMultipliers();
   }
 
   m_universe->deleteCurrentReplay(); // delete the replay when using checkpoints

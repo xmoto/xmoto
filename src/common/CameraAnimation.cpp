@@ -43,7 +43,7 @@ CameraAnimation::CameraAnimation(Camera *i_camera,
   m_screen = i_screen;
   m_renderer = i_renderer;
   m_motoGame = i_motoGame;
-  m_I_cameraZoom = 1.0;
+  m_initialCameraZoom = 1.0;
   m_startTime = 0.0;
   m_allowNextStep = false;
 }
@@ -55,37 +55,41 @@ float CameraAnimation::startTime() const {
 }
 
 const Vector2f &CameraAnimation::initialPosition() const {
-  return m_I_cameraPosition;
+  return m_initialCameraPosition;
 }
 
 float CameraAnimation::initialZoom() const {
-  return m_I_cameraZoom;
+  return m_initialCameraZoom;
 }
 
 void CameraAnimation::init() {
   m_step = 0;
-  m_I_cameraZoom = m_camera->getCurrentZoom();
-  m_I_cameraPosition =
+  m_initialCameraZoom = m_camera->getCurrentZoom();
+  m_initialCameraPosition =
     Vector2f(m_camera->getCameraPositionX(), m_camera->getCameraPositionY());
   m_startTime = GameApp::getXMTime();
   m_allowNextStep = false;
-  m_I_entitiesToTakeZoom = m_renderer->SizeMultOfEntitiesToTake();
-  m_I_entitiesWhichMakeWin = m_renderer->SizeMultOfEntitiesWhichMakeWin();
+  m_initialEntitiesToTakeZoom = m_renderer->SizeMultOfEntitiesToTake();
+  m_initialEntitiesWhichMakeWin = m_renderer->SizeMultOfEntitiesWhichMakeWin();
 }
 
 void CameraAnimation::uninit() {
-  m_camera->setAbsoluteZoom(m_I_cameraZoom);
-  m_camera->setCameraPosition(m_I_cameraPosition.x, m_I_cameraPosition.y);
-  m_renderer->setSizeMultOfEntitiesToTake(m_I_entitiesToTakeZoom);
-  m_renderer->setSizeMultOfEntitiesWhichMakeWin(m_I_entitiesWhichMakeWin);
+  m_camera->setAbsoluteZoom(m_initialCameraZoom);
+  m_camera->setCameraPosition(m_initialCameraPosition.x, m_initialCameraPosition.y);
+  resetSizeMultipliers();
+}
+
+void CameraAnimation::resetSizeMultipliers() {
+  m_renderer->setSizeMultOfEntitiesToTake(m_initialEntitiesToTakeZoom);
+  m_renderer->setSizeMultOfEntitiesWhichMakeWin(m_initialEntitiesWhichMakeWin);
 }
 
 float CameraAnimation::initialEntitiesToTakeZoom() {
-  return m_I_entitiesToTakeZoom;
+  return m_initialEntitiesToTakeZoom;
 }
 
 float CameraAnimation::initialEntitiesWhichMakeWinZoom() {
-  return m_I_entitiesWhichMakeWin;
+  return m_initialEntitiesWhichMakeWin;
 }
 
 bool CameraAnimation::step() {
