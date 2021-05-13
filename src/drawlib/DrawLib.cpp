@@ -412,6 +412,8 @@ void DrawLib::drawCircle(const Vector2f &Center,
     setBlendMode(BLEND_MODE_NONE);
 }
 
+void DrawLib::setCameraDimensionality(CameraDimension dimension) {}
+
 void DrawLib::setRenderSurface(RenderSurface *renderSurf, bool i_own) {
   if (m_renderSurf != renderSurf && m_ownsRenderSurface)
     delete m_renderSurf;
