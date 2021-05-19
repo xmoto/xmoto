@@ -103,6 +103,9 @@ void StateServerConsole::createGUIIfNeeded() {
   m_console->addCompletionCommand("lsplayers");
   m_console->addCompletionCommand("lsscores");
   m_console->addCompletionCommand("lsbans");
+  m_console->addCompletionCommand("mute");
+  m_console->addCompletionCommand("unmute");
+  m_console->addCompletionCommand("kick");
   m_console->addCompletionCommand("ban");
   m_console->addCompletionCommand("unban");
   m_console->addCompletionCommand("lsadmins");

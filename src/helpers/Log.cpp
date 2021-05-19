@@ -37,13 +37,20 @@ void Logger::init(const std::string &i_logFile) {
 
   m_verbose = false;
 
-  if (XMFS::fileExists(FDT_CACHE, v_logPath)) {
-    XMFS::deleteFile(FDT_CACHE, v_logPath);
+  int tryNum = 1;
+  while (XMFS::fileExists(FDT_CACHE, v_logPath)) {
+    try {
+      XMFS::deleteFile(FDT_CACHE, v_logPath);
+    } catch (Exception e){
+      if (tryNum > 3) break;
+      v_logPath += std::to_string(tryNum);
+      tryNum++;
+    }
   }
 
   m_fd = fopen(v_logPath.c_str(), "w");
   if (m_fd == NULL) {
-    throw Exception("Unable to open log file");
+    throw Exception("Unable to open log file: " + v_logPath);
   }
 
   m_isInitialized = true;

@@ -81,6 +81,7 @@ NetSClient::NetSClient(unsigned int i_id,
   m_protocolVersion = -1; // not set
   m_udpRemoteIP.host = INADDR_NONE;
   m_udpRemoteIP.port = 0;
+  m_isMuted = false;
 
   // last ping information
   m_lastPing.id = -1;
@@ -103,6 +104,14 @@ void NetSClient::setAdminConnected(bool i_value) {
 
 std::string NetSClient::adminLoginName() const {
   return m_adminLoginName;
+}
+
+bool NetSClient::isMuted() const {
+  return m_isMuted;
+}
+
+void NetSClient::setMuted(bool i_value){
+  m_isMuted = i_value;
 }
 
 unsigned int NetSClient::id() const {
@@ -1428,6 +1437,16 @@ bool ServerThread::manageAction(NetAction *i_netAction, unsigned int i_client) {
 
     case TNA_chatMessage: /* old message format, convert into the new one */
     {
+      if (m_clients[i_client]->isMuted()) {
+        std::ostringstream v_str;
+        v_str << "You're muted...";
+        try {
+          sendMsgToClient(i_client, v_str.str());
+        } catch (Exception &e) {
+        }
+        break;
+      }
+      
       // retrieve message
       std::string v_msg = ((NA_chatMessage *)i_netAction)->getMessage();
       std::vector<int> v_pp;
@@ -1441,6 +1460,16 @@ bool ServerThread::manageAction(NetAction *i_netAction, unsigned int i_client) {
     } break;
 
     case TNA_chatMessagePP: {
+      if (m_clients[i_client]->isMuted()) {
+        std::ostringstream v_str;
+        v_str << "You're muted...";
+        try {
+          sendMsgToClient(i_client, v_str.str());
+        } catch (Exception &e) {
+        }
+        break;
+      }
+
       NA_chatMessagePP *na = ((NA_chatMessagePP *)i_netAction);
       NA_chatMessage na_old =
         NA_chatMessage(((NA_chatMessagePP *)i_netAction)->getMessage(), "");
@@ -1688,6 +1717,9 @@ void ServerThread::manageSrvCmd(unsigned int i_client,
       v_answer += "lsplayers: list connected players\n";
       v_answer += "lsscores: give scores of players in slave mode\n";
       v_answer += "lsbans: list banned players\n";
+      v_answer += "mute <id player>: mute player <id player>\n";
+      v_answer += "unmute <id player>: unmute player <id player>\n";
+      v_answer += "kick <id player>: kick player <id player>\n";
 
       std::ostringstream v_n;
       v_n << XM_SERVER_DEFAULT_BAN_NBDAYS;
@@ -2109,6 +2141,45 @@ void ServerThread::manageSrvCmd(unsigned int i_client,
       }
     }
 
+  } else if (v_args[0] == "mute"){
+    if (v_args.size() != 2) {
+      v_answer += "mute: invalid arguments\n";
+    } else {
+       try {
+        unsigned int v_nclient = getClientById(atoi(v_args[1].c_str()));
+        m_clients[v_nclient]->setMuted(true);
+        v_answer += "Player " + m_clients[v_nclient]->name() + " has been muted!\n";
+      } catch (Exception &e) {
+        v_answer += "unable to mute player\n";
+        v_answer += e.getMsg() + "\n";
+      }
+    } 
+  } else if (v_args[0] == "unmute"){
+    if (v_args.size() != 2) {
+      v_answer += "mute: invalid arguments\n";
+    } else {
+       try {
+        unsigned int v_nclient = getClientById(atoi(v_args[1].c_str()));
+        m_clients[v_nclient]->setMuted(false);
+        v_answer += "Player " + m_clients[v_nclient]->name() + " has been unmuted!\n";
+      } catch (Exception &e) {
+        v_answer += "unable to unmute player\n";
+        v_answer += e.getMsg() + "\n";
+      }
+    } 
+  } else if (v_args[0] == "kick"){
+    if (v_args.size() != 2) {
+      v_answer += "mute: invalid arguments\n";
+    } else {
+       try {
+        unsigned int v_nclient = getClientById(atoi(v_args[1].c_str()));
+        m_clientMarkToBeRemoved.push_back(v_nclient);
+        v_answer += "Player " + m_clients[v_nclient]->name() + " has been kicked!\n";
+      } catch (Exception &e) {
+        v_answer += "unable to kick player\n";
+        v_answer += e.getMsg() + "\n";
+      }
+    } 
   } else {
     v_answer = "Unknown command : \"" + v_args[0] +
                "\"\nType help to get more information\n";

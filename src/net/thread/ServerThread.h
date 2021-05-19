@@ -97,6 +97,9 @@ public:
   void setAdminConnected(bool i_value);
   std::string adminLoginName() const;
 
+  bool isMuted() const;
+  void setMuted(bool i_value);
+
   int lastGhostFrameTime() const;
   void setLastGhostFrameTime(int v_time);
 
@@ -124,6 +127,7 @@ private:
   int m_lastInactivTimeAlert;
   int m_points;
   bool m_isAdminConnected;
+  bool m_isMuted;
   std::string m_adminLoginName; // because you can change your name later, so
   // this is your name at the moment you login
   int m_lastGhostFrameTime;
