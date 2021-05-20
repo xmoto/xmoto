@@ -16,7 +16,7 @@ matrix:
       install: ".travis/macos/deps.sh"
       script:
         - build-wrapper-macosx-x86 --out-dir bw-output .travis/macos/build.sh
-        - sonar-scanner -Dsonar.cfamily.build-wrapper-output=bw-output > /dev/null
+        - sonar-scanner -Dsonar.cfamily.build-wrapper-output=bw-output &> /dev/null
       cache: ccache
 
     - os: linux
