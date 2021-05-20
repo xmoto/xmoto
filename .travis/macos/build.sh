@@ -11,7 +11,8 @@ ninja
 
 # Homebrew on Catalina (10.15) sets inconsistent permissions on dylibs
 # and CMake happily copies them as is, and then chokes on its own brilliance.
-cpack -G DragNDrop
+sudo \
+  cpack -G DragNDrop
 
 mkdir artifacts
 mv xmoto-*.dmg artifacts/
