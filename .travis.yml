@@ -16,9 +16,8 @@ matrix:
       install: ".travis/macos/deps.sh"
       script:
         - build-wrapper-macosx-x86 --out-dir bw-output .travis/macos/build.sh
-        - sonar-scanner -Dsonar.cfamily.build-wrapper-output=bw-output | grep "^WARN"
-        - echo 'hi'
-        - sleep 30
+        - sonar-scanner -Dsonar.cfamily.build-wrapper-output=bw-output &> /dev/null
+        - watch -n 30 echo hi
       cache: ccache
 
     - os: linux
