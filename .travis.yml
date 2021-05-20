@@ -15,8 +15,7 @@ matrix:
       osx_image: xcode10.1 # =10.13/high sierra
       install: ".travis/macos/deps.sh"
       script:
-        - build-wrapper-macosx-x86 --out-dir bw-output .travis/macos/build.sh
-        - sonar-scanner -Dsonar.cfamily.build-wrapper-output=bw-output
+        - .travis/macos/build.sh
       cache: ccache
 
     - os: linux
@@ -24,8 +23,7 @@ matrix:
       name: "Linux MXE"
       install: ".travis/linux-mxe/deps.sh"
       script:
-        - build-wrapper-linux-x86-64 --out-dir bw-output .travis/linux-mxe/build.sh
-        - sonar-scanner -Dsonar.cfamily.build-wrapper-output=bw-output
+        - .travis/linux-mxe/build.sh
       cache: ccache
 
 deploy:
