@@ -151,7 +151,7 @@ const char *DBuffer::convertOutputToInput(void) {
         m_nSize += m_nPartSize;
     }
 
-    m_pcData = new char[m_nSize];
+    std::vector<char> m_pcData = std::vector<char>(m_nSize);
     int k = 0;
     for (unsigned int i = 0; i < m_Parts.size(); i++) {
       int w;
@@ -159,7 +159,7 @@ const char *DBuffer::convertOutputToInput(void) {
         w = m_Parts[i]->nPtr;
       else
         w = m_nPartSize;
-      memcpy(&m_pcData[k], m_Parts[i]->pcBuffer, w);
+      std::copy_n(&m_Parts[i]->pcBuffer, w, m_pcData.begin() + k);
       k += w;
     }
 
@@ -168,7 +168,7 @@ const char *DBuffer::convertOutputToInput(void) {
     m_nReadPtr = 0;
     m_bOwnData = true;
 
-    return (const char *)m_pcData;
+    return (const char *)m_pcData.data();
   }
   return NULL;
 }
