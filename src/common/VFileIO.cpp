@@ -133,7 +133,7 @@ bool str_match_wildcard(char *pcMWildcard,
                         bool CaseSensitive) {
   int nPos = 0;
   bool PrevIsWildcard = false;
-  char c1[256], c2[256];
+  char c1[256+1], c2[256+1];
   char *pcWildcard, *pcString;
 
   if (CaseSensitive) {
@@ -141,7 +141,11 @@ bool str_match_wildcard(char *pcMWildcard,
     pcString = pcMString;
   } else {
     strncpy(c1, pcMWildcard, sizeof(c1));
+    c1[sizeof(c1)-1] = '\0';
+
     strncpy(c2, pcMString, sizeof(c2));
+    c2[sizeof(c2)-1] = '\0';
+
     strlwr(c1);
     strlwr(c2);
     pcWildcard = c1;
@@ -847,12 +851,12 @@ void XMFS::writeLine(FileHandle *pfh, const std::string &Line) {
 }
 
 void XMFS::writeLineF(FileHandle *pfh, char *pcFmt, ...) {
-  char cBuf[2048], cBuf2[2048];
+  char cBuf[2048], cBuf2[2048+1];
   va_list List;
   va_start(List, pcFmt);
-  vsnprintf(cBuf, 2048, pcFmt, List);
+  vsnprintf(cBuf, sizeof(cBuf), pcFmt, List);
   va_end(List);
-  snprintf(cBuf2, 2048, "%s\n", cBuf);
+  snprintf(cBuf2, sizeof(cBuf2), "%s\n", cBuf);
   if (!writeBuf(pfh, cBuf2, strlen(cBuf2)))
     _ThrowFileError(pfh, "writeLineF -> failed");
 }
