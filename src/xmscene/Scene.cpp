@@ -1888,8 +1888,8 @@ void Scene::playToCheckpoint() {
 
   for (unsigned int i = 0; i < Players().size(); i++) {
     setPlayerPosition(i,
-                      m_checkpoint->InitialPosition().x,
-                      m_checkpoint->InitialPosition().y,
+                      m_checkpoint->DynamicPosition().x,
+                      m_checkpoint->DynamicPosition().y,
                       m_checkpoint->getDirection() == DD_RIGHT);
     getCamera()->initCamera();
   }
