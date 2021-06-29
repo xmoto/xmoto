@@ -26,14 +26,6 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include <string>
 
 /*===========================================================================
-  Lazy stuff
-===========================================================================*/
-#define color_t Color /* TODO: search and replace instead ;) */
-#define _Assert(x)
-#define String std::string
-#define CError Exception
-
-/*===========================================================================
   Image class definition
   ===========================================================================*/
 typedef struct _image_info_t { int nWidth, nHeight; } image_info_t;
@@ -50,14 +42,14 @@ public:
   /* Methods: main */
   void createEmpty(unsigned int nWidth, unsigned int nHeight);
   void freeMemory(void);
-  void loadFile(String FileName, bool bThumbnail = false);
-  void saveFile(String FileName);
-  bool checkFile(String FileName, image_info_t *pInfo);
+  void loadFile(const std::string &FileName, bool bThumbnail = false);
+  void saveFile(const std::string &FileName);
+  bool checkFile(const std::string &FileName, image_info_t *pInfo);
   void resample(unsigned int nWidth, unsigned int nHeight);
 
   /* Methods: alpha stuff */
   void forceAlpha(int nAlpha);
-  void stripAlpha(color_t Background);
+  void stripAlpha(Color Background);
   void mergeAlpha(char *pcAlphaMap);
 
   /* Methods: temporary conversions */
@@ -71,11 +63,11 @@ public:
                  unsigned int y1,
                  unsigned int x2,
                  unsigned int y2,
-                 color_t _Color);
+                 Color _Color);
   void insertImage(unsigned int x, unsigned int y, Img *pInsert);
 
   /* Data interface */
-  color_t *getPixels(void) { return m_pPixels; }
+  Color *getPixels(void) { return m_pPixels; }
   unsigned int getWidth(void) { return m_nWidth; }
   unsigned int getHeight(void) { return m_nHeight; }
   bool isAlpha(void) { return m_bAlpha; }
@@ -83,7 +75,7 @@ public:
 
 private:
   unsigned int m_nWidth, m_nHeight; /* Size of image */
-  color_t *m_pPixels; /* RGBA pixel data */
+  Color *m_pPixels; /* RGBA pixel data */
   bool m_bAlpha; /* true: pixel data contains non-255
                     alpha values */
 
@@ -94,19 +86,19 @@ private:
 
   /* Helper methods for image resampling, stolen from one of my earlier
      C projects :) */
-  color_t _Linterp_scanline(color_t *pScan,
+  Color _Linterp_scanline(Color *pScan,
                             unsigned int nSrcLen,
                             unsigned int nDestLen,
                             int s);
-  color_t _Aa_avg_scanline(color_t *pScan, unsigned int x1, unsigned int x2);
-  color_t _Resample_scanline(color_t *pScan,
+  Color _Aa_avg_scanline(Color *pScan, unsigned int x1, unsigned int x2);
+  Color _Resample_scanline(Color *pScan,
                              unsigned int nScanLen,
                              unsigned int nDestLen,
                              int nx);
-  void _Resample(color_t *pSrc,
+  void _Resample(Color *pSrc,
                  unsigned int nSrcWidth,
                  unsigned int nSrcHeight,
-                 color_t *pDest,
+                 Color *pDest,
                  unsigned int nDestWidth,
                  unsigned int nDestHeight);
 };
