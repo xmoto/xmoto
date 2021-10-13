@@ -127,6 +127,15 @@ Block::~Block() {
   }
   m_vertices.clear();
 
+  /* delete shapes */
+  for (unsigned int i = 0; i < m_shapes.size(); i++) {
+    cpShapeFree(m_shapes[i]);
+  }
+  m_shapes.clear();
+
+  /* free body */
+  cpBodyFree(mBody);
+
   /* delete convex blocks */
   for (unsigned int i = 0; i < m_convexBlocks.size(); i++) {
     delete m_convexBlocks[i];
@@ -370,6 +379,7 @@ int Block::loadToPlay(CollisionSystem *io_collisionSystem,
         seg->u = m_friction;
         seg->e = m_elasticity;
         cpSpaceAddStaticShape(i_chipmunkWorld->getSpace(), seg);
+        m_shapes.push_back(seg);
       }
     }
 
@@ -511,6 +521,8 @@ int Block::loadToPlay(CollisionSystem *io_collisionSystem,
         }
 
         cpSpaceAddShape(i_chipmunkWorld->getSpace(), m_shape);
+        m_shapes.push_back(m_shape);
+        free(myVerts);
       } else {
         // create body vertices for chipmunk constructors
         for (unsigned int i = 0; i < Vertices().size(); i++) {
@@ -533,6 +545,7 @@ int Block::loadToPlay(CollisionSystem *io_collisionSystem,
 
         // go through calculated BSP polys, adding one or more shape to the
         if (i_loadBSP) {
+          m_shapes.reserve(v_BSPPolys->size());
           for (unsigned int i = 0; i < v_BSPPolys->size(); i++) {
             unsigned int size =
               2 * sizeof(cpVect) * (*v_BSPPolys)[i]->Vertices().size();
@@ -557,6 +570,7 @@ int Block::loadToPlay(CollisionSystem *io_collisionSystem,
             }
 
             cpSpaceAddShape(i_chipmunkWorld->getSpace(), m_shape);
+            m_shapes.push_back(m_shape);
 
             // free the temporary vertices array
             free(myVerts);
@@ -592,6 +606,16 @@ void Block::addPoly(BSPPoly *i_poly,
 }
 
 void Block::unloadToPlay() {
+  /* delete shapes */
+  for (unsigned int i = 0; i < m_shapes.size(); i++) {
+    cpShapeFree(m_shapes[i]);
+  }
+  m_shapes.clear();
+
+  /* free body */
+  cpBodyFree(mBody);
+  mBody = nullptr;
+
   for (unsigned int i = 0; i < m_convexBlocks.size(); i++) {
     delete m_convexBlocks[i];
   }

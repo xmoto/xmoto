@@ -396,6 +396,7 @@ void Replay::openReplay_3(FileHandle *pfh, bool bDisplayInformation) {
   if (nNumChunks == 0) {
     _FreeReplay();
     LogWarning("try to open a replay with no chunk");
+    free(v_pcData);
     throw Exception("Replay with no chunk !");
   }
 
@@ -442,6 +443,7 @@ void Replay::openReplay_3(FileHandle *pfh, bool bDisplayInformation) {
         .states.push_back(s);
     }
   }
+  free(v_pcData);
 }
 
 void Replay::openReplay_1(FileHandle *pfh,
