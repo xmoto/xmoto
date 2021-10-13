@@ -255,7 +255,7 @@ void XMFS::_FindFilesRecursive(const std::string &DirX,
                                std::vector<std::string> &List) {
 /* Windows? */
 #ifdef WIN32
-  long fh;
+  intptr_t fh;
   struct _finddata_t fd;
 
   std::string Dir = DirX;
@@ -350,7 +350,7 @@ std::vector<std::string> XMFS::findPhysFiles(FileDataType i_fdt,
     if (bRecurse) {
       _FindFilesRecursive(UDirToSearch, Wildcard, Result);
     } else {
-      long fh;
+      intptr_t fh;
       struct _finddata_t fd;
 
       if ((fh = _findfirst((UDirToSearch + Wildcard).c_str(), &fd)) != -1L) {
@@ -368,7 +368,7 @@ std::vector<std::string> XMFS::findPhysFiles(FileDataType i_fdt,
     if (bRecurse) {
       _FindFilesRecursive(DataDirToSearch, Wildcard, Result);
     } else {
-      long fh;
+      intptr_t fh;
       struct _finddata_t fd;
 
       if ((fh = _findfirst((DataDirToSearch + Wildcard).c_str(), &fd)) != -1L) {
