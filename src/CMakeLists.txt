@@ -307,6 +307,7 @@ set(xmoto_src
   xmoto/GameInit.cpp xmoto/GameText.h
   xmoto/GeomsManager.cpp xmoto/GeomsManager.h
   xmoto/Input.cpp xmoto/Input.h
+  xmoto/InputLegacy.cpp xmoto/InputLegacy.h
   xmoto/LevelsManager.cpp xmoto/LevelsManager.h
   xmoto/LevelsText.h
   xmoto/LuaLibBase.cpp xmoto/LuaLibBase.h

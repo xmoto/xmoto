@@ -34,6 +34,7 @@ class xmDatabase;
 class UserConfig;
 class Universe;
 class Scene;
+class InputSDL12Compat;
 
 struct IFullKey {
   IFullKey();
@@ -122,24 +123,6 @@ Controls
 struct Controls {
   IFullKey playerKeys[INPUT_NB_PLAYERKEYS];
   IFullKey scriptActionKeys[MAX_SCRIPT_KEY_HOOKS];
-};
-
-
-/*===========================================================================
-SDL 1.2 compatibility
-===========================================================================*/
-class InputSDL12Compat {
-private:
-  typedef std::unordered_map<int32_t, int32_t> Keytable;
-
-  InputSDL12Compat();
-  ~InputSDL12Compat();
-
-public:
-  static void upgrade();
-  static void mapKey(XMKey &key, const Keytable &map);
-  static bool isUpgraded(xmDatabase *pDb, const std::string &i_id_profile);
-  static void resolveConflicts(const std::vector<IFullKey *> &keys);
 };
 
 /*===========================================================================
