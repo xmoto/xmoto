@@ -32,7 +32,7 @@ StateMenu::StateMenu(bool drawStateBehind, bool updateStatesBehind)
   m_GUI = NULL;
   m_showCursor = true;
 
-  m_renderFps = 30; // is enouh for menus
+  m_renderFps = XMSession::instance()->maxRenderFps();
   m_updateFps = 30;
 }
 
