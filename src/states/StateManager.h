@@ -111,6 +111,8 @@ public:
 
   DownloadReplaysThread *getReplayDownloaderThread();
 
+  void setCursorVisible(bool visible);
+
 private:
   GameState *popState();
 

@@ -634,24 +634,15 @@ void StateManager::render() {
           CURSOR_MOVE_SHOWTIME;
 
       if (XMSession::instance()->ugly()) {
-        if (m_mustCursorBeDisplayed) {
-          if (m_isCursorVisible == false) {
-            SDL_ShowCursor(SDL_ENABLE);
-            m_isCursorVisible = true;
-          }
-        } else {
-          if (m_isCursorVisible) {
-            SDL_ShowCursor(SDL_DISABLE);
-            m_isCursorVisible = false;
-          }
-        }
+        setCursorVisible(m_mustCursorBeDisplayed);
       } else {
-        if (m_mustCursorBeDisplayed) {
-          drawCursor();
-        }
-        if (m_isCursorVisible) {
-          SDL_ShowCursor(SDL_DISABLE); // hide the cursor to show the texture
-          m_isCursorVisible = false;
+        if (XMSession::instance()->useThemeCursor()) {
+          if (m_mustCursorBeDisplayed) {
+            drawCursor();
+          }
+          setCursorVisible(false); // hide the cursor to show the texture
+        } else {
+          setCursorVisible(m_mustCursorBeDisplayed);
         }
       }
     }
@@ -792,6 +783,9 @@ void StateManager::drawStack() {
 
 void StateManager::drawCursor() {
   Sprite *pSprite;
+
+  if (!XMSession::instance()->useThemeCursor())
+    return;
 
   if (m_cursor == NULL) {
     /* load cursor */
@@ -1148,4 +1142,12 @@ XMThreadStats *StateManager::getDbStatsThread() {
 
 DownloadReplaysThread *StateManager::getReplayDownloaderThread() {
   return m_drt;
+}
+
+void StateManager::setCursorVisible(bool visible) {
+  if (m_isCursorVisible == visible)
+    return;
+
+  m_isCursorVisible = visible;
+  SDL_ShowCursor(visible ? SDL_ENABLE : SDL_DISABLE);
 }

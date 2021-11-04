@@ -56,6 +56,7 @@ Central place to keep many in-game text strings
 #define GAMETEXT_AUTOMATIC _("Automatic")
 #define GAMETEXT_AUTOSAVEREPLAYS _("Automatic saving of replays")
 #define GAMETEXT_SHOWANIMATIONS _("Disable Animations")
+#define GAMETEXT_USETHEMECURSOR _("Use theme cursor")
 #define GAMETEXT_SHOWGAMEINFORMATIONINCONSOLE \
   _("Show game information in the console")
 #define GAMETEXT_AUTOZOOM _("Auto zoom")
@@ -933,6 +934,8 @@ Central place to keep many in-game text strings
   _("If you make a highscore it will automatically be saved as a replay")
 #define CONTEXTHELP_SHOWANIMATIONS \
   _("Disable block animations (if X-Moto runs slowly)")
+#define CONTEXTHELP_USETHEMECURSOR \
+  _("Whether to show the theme cursor or the system cursor")
 #define CONTEXTHELP_VIEWTHEHIGHSCORE \
   _("View the replay of the room's highscore")
 

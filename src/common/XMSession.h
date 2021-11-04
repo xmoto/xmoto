@@ -120,6 +120,8 @@ public:
   void setResolutionHeight(int i_value);
   void setBpp(int i_value);
   void setWindowed(bool i_value);
+  bool useThemeCursor() const;
+  void setUseThemeCursor(bool i_value);
   bool glExts() const;
   bool glVOBS() const;
   std::string drawlib() const;
@@ -340,6 +342,7 @@ private:
   int m_bpp;
   int m_maxRenderFps;
   bool m_windowed;
+  bool m_useThemeCursor;
   bool m_glExts;
   bool m_glVOBS;
   std::string m_drawlib;

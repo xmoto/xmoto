@@ -53,6 +53,7 @@ void XMSession::setToDefault() {
   m_bpp = DEFAULT_BPP;
   m_maxRenderFps = DEFAULT_MAXRENDERFPS;
   m_windowed = DEFAULT_WINDOWED;
+  m_useThemeCursor = DEFAULT_USETHEMECURSOR;
   m_glExts = DEFAULT_GLEXTS;
   m_glVOBS = DEFAULT_GLVOBS;
   m_drawlib = DEFAULT_DRAWLIB;
@@ -289,6 +290,7 @@ void XMSession::load(UserConfig *m_Config) {
   m_maxRenderFps = m_Config->getInteger("DisplayMaxRenderFPS");
   m_windowed = m_Config->getBool("DisplayWindowed");
   m_drawlib = m_Config->getString("DrawLib");
+  m_useThemeCursor = m_Config->getBool("UseThemeCursor");
 
   m_screenshotFormat = m_Config->getString("ScreenshotFormat");
   m_storeReplays = m_Config->getBool("StoreReplays");
@@ -524,6 +526,7 @@ void XMSession::save(UserConfig *v_config, xmDatabase *pDb) {
   v_config->setInteger("DisplayBPP", m_bpp);
   v_config->setInteger("DisplayMaxRenderFPS", m_maxRenderFps);
   v_config->setBool("DisplayWindowed", m_windowed);
+  v_config->setBool("UseThemeCursor", m_useThemeCursor);
 
   v_config->setString("WebThemesURL", m_webThemesURL);
   v_config->setString("WebThemesURLBase", m_webThemesURLBase);
@@ -701,6 +704,15 @@ void XMSession::setBpp(int i_value) {
 void XMSession::setWindowed(bool i_value) {
   PROPAGATE(XMSession, setWindowed, i_value, bool);
   m_windowed = i_value;
+}
+
+bool XMSession::useThemeCursor() const {
+  return m_useThemeCursor;
+}
+
+void XMSession::setUseThemeCursor(bool i_value) {
+  PROPAGATE(XMSession, setUseThemeCursor, i_value, bool);
+  m_useThemeCursor = i_value;
 }
 
 bool XMSession::glExts() const {
@@ -1659,6 +1671,7 @@ void XMSession::createDefaultConfig(UserConfig *v_config) {
   v_config->createVar("DisplayWindowed", "true");
   v_config->createVar("DisplayMaxRenderFPS", "50");
   v_config->createVar("DrawLib", DEFAULT_DRAWLIB);
+  v_config->createVar("UseThemeCursor", "true");
 
   /* option not easy to change (not in the options tab) ; keep them here */
   v_config->createVar("DefaultProfile", DEFAULT_PROFILE);
