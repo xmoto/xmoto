@@ -67,7 +67,10 @@ void StateEditProfile::updateOptions() {
 
   UIButton *pCloseButton = reinterpret_cast<UIButton *>(
     m_sGUI->getChild("EDITPROFILE_FRAME:CLOSE_BUTTON"));
-  if (XMSession::instance()->profile() != "") {
+
+  UIList *list = reinterpret_cast<UIList *>(
+    m_sGUI->getChild("EDITPROFILE_FRAME:PROFILE_LIST"));
+  if (list->getEntries().size() > 0 && XMSession::instance()->profile() != "") {
     pCloseButton->enableWindow(true);
   }
 }
