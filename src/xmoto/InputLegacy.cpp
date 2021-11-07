@@ -13,7 +13,10 @@ void InputSDL12Compat::resolveConflicts(const std::vector<IFullKey *> &keys) {
         if (i == j)
           continue;
 
-        if (keys[i]->key == keys[j]->key) {
+        if (!keys[i]->customizable || !keys[j]->customizable)
+          continue;
+
+        if (keys[i]->key == keys[j]->key && keys[i]->key.isBound()) {
           keys[i]->key = keys[i]->defaultKey;
           keys[j]->key = keys[j]->defaultKey;
           done = false;
@@ -52,17 +55,14 @@ void InputSDL12Compat::upgrade() {
   std::vector<IFullKey *> keys;
 
   for (auto &f : InputHandler::instance()->m_globalControls) {
-    if (f.customizable)
-      keys.push_back(&f);
+    keys.push_back(&f);
   }
   for (int player = 0; player < INPUT_NB_PLAYERS; ++player) {
     for (auto &f : InputHandler::instance()->m_controls[player].playerKeys) {
-      if (f.customizable)
-        keys.push_back(&f);
+      keys.push_back(&f);
     }
     for (auto &f : InputHandler::instance()->m_controls[player].scriptActionKeys) {
-      if (f.customizable)
-        keys.push_back(&f);
+      keys.push_back(&f);
     }
   }
 
