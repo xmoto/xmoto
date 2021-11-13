@@ -404,6 +404,7 @@ target_include_directories(xmoto
   "${PROJECT_SOURCE_DIR}/src"
   "${CURL_INCLUDE_DIR}"
   "${LIBXML2_INCLUDE_DIR}"
+  "${Intl_INCLUDE_DIRS}"
   "${SDL_INCLUDE_DIR}"
   "${SDL_MIXER_INCLUDE_DIRS}"
   "${SDL_NET_INCLUDE_DIRS}"
