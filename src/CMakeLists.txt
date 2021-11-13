@@ -402,6 +402,7 @@ target_include_directories(xmoto
   PRIVATE
 
   "${PROJECT_SOURCE_DIR}/src"
+  "${CURL_INCLUDE_DIR}"
   "${LIBXML2_INCLUDE_DIR}"
   "${SDL_INCLUDE_DIR}"
   "${SDL_MIXER_INCLUDE_DIRS}"
