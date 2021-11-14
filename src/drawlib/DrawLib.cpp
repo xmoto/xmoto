@@ -79,7 +79,6 @@ DrawLib *DrawLib::DrawLibFromName(std::string i_drawLibName) {
 
 void DrawLib::init(unsigned int nDispWidth,
                    unsigned int nDispHeight,
-                   unsigned int nDispBPP,
                    bool bWindowed) {
   m_initialized = true;
 }
@@ -102,7 +101,6 @@ void DrawLib::checkFontPrerequites() {
 DrawLib::DrawLib() {
   m_nDispWidth = 800;
   m_nDispHeight = 600;
-  m_nDispBPP = 32;
   m_bWindowed = true;
   m_bNoGraphics = false;
   m_bDontUseGLExtensions = false;
@@ -445,14 +443,6 @@ void DrawLib::setDispHeight(unsigned int height) {
 
 unsigned int DrawLib::getDispHeight(void) {
   return m_nDispHeight;
-}
-
-void DrawLib::setDispBPP(unsigned int bpp) {
-  m_nDispBPP = bpp;
-}
-
-unsigned int DrawLib::getDispBPP(void) {
-  return m_nDispBPP;
 }
 
 void DrawLib::setWindowed(bool windowed) {

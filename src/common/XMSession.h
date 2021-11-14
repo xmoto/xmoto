@@ -113,12 +113,10 @@ public:
   bool useGraphics() const;
   int resolutionWidth() const;
   int resolutionHeight() const;
-  int bpp() const;
   int maxRenderFps() const;
   bool windowed() const;
   void setResolutionWidth(int i_value);
   void setResolutionHeight(int i_value);
-  void setBpp(int i_value);
   void setWindowed(bool i_value);
   bool useThemeCursor() const;
   void setUseThemeCursor(bool i_value);
@@ -339,7 +337,7 @@ private:
   bool m_verbose;
   int m_resolutionWidth;
   int m_resolutionHeight;
-  int m_bpp;
+  int m_bpp; // kept for backward compatibility
   int m_maxRenderFps;
   bool m_windowed;
   bool m_useThemeCursor;

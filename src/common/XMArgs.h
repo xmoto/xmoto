@@ -40,8 +40,6 @@ public:
   bool isOptRes() const;
   int getOpt_res_dispWidth() const;
   int getOpt_res_dispHeight() const;
-  bool isOptBpp() const;
-  int getOpt_bpp_value() const;
   bool isOptWindowed() const;
   bool isOptFs() const;
   bool isOptNoExts() const;
@@ -118,8 +116,6 @@ private:
   bool m_opt_res;
   int m_res_dispWidth;
   int m_res_dispHeight;
-  bool m_opt_bpp;
-  int m_bpp_value;
   bool m_opt_fs;
   bool m_opt_win;
   bool m_opt_noexts;

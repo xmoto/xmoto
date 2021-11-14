@@ -130,7 +130,6 @@ public:
   static bool isInitialized();
   virtual void init(unsigned int nDispWidth,
                     unsigned int nDispHeight,
-                    unsigned int nDispBPP,
                     bool bWindowed);
 
   virtual void unInit() = 0;
@@ -139,8 +138,6 @@ public:
   unsigned int getDispWidth();
   void setDispHeight(unsigned int height);
   unsigned int getDispHeight(void);
-  void setDispBPP(unsigned int bpp);
-  unsigned int getDispBPP();
   void setWindowed(bool windowed);
   bool getWindowed(void);
   void setNoGraphics(bool disable_graphics);
@@ -303,7 +300,7 @@ public:
   Camera *getMenuCamera();
 
 protected:
-  unsigned int m_nDispWidth, m_nDispHeight, m_nDispBPP; /* Screen stuff */
+  unsigned int m_nDispWidth, m_nDispHeight; /* Screen stuff */
   unsigned int m_nLScissorX, m_nLScissorY, m_nLScissorW, m_nLScissorH;
 
   FontManager *m_fontSmall;

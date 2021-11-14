@@ -244,22 +244,6 @@ void StateOptions::checkEvents() {
   }
 
   // video tab
-  v_button = reinterpret_cast<UIButton *>(
-    m_GUI->getChild("MAIN:TABS:GENERAL_TAB:TABS:VIDEO_TAB:16BPP"));
-  if (v_button->isClicked()) {
-    v_button->setClicked(false);
-    XMSession::instance()->setBpp(16);
-    SysMessage::instance()->displayInformation(GAMETEXT_OPTION_NEED_TO_RESTART);
-  }
-  v_button = reinterpret_cast<UIButton *>(
-    m_GUI->getChild("MAIN:TABS:GENERAL_TAB:TABS:VIDEO_TAB:32BPP"));
-
-  if (v_button->isClicked()) {
-    v_button->setClicked(false);
-    XMSession::instance()->setBpp(32);
-    SysMessage::instance()->displayInformation(GAMETEXT_OPTION_NEED_TO_RESTART);
-  }
-
   v_list = reinterpret_cast<UIList *>(
     m_GUI->getChild("MAIN:TABS:GENERAL_TAB:TABS:VIDEO_TAB:RESOLUTIONS_LIST"));
   if (v_list->isClicked()) {
@@ -1158,36 +1142,12 @@ UIWindow *StateOptions::makeWindowOptions_video(UIWindow *i_parent) {
   v_window->setID("VIDEO_TAB");
   v_window->showWindow(false);
 
-  v_button = new UIButton(v_window,
-                          5,
-                          5,
-                          GAMETEXT_16BPP,
-                          (v_window->getPosition().nWidth - 40) / 2,
-                          28);
-  v_button->setType(UI_BUTTON_TYPE_RADIO);
-  v_button->setID("16BPP");
-  v_button->setFont(drawlib->getFontSmall());
-  v_button->setGroup(20023);
-  v_button->setContextHelp(CONTEXTHELP_HIGHCOLOR);
-
-  v_button = new UIButton(v_window,
-                          5 + (v_window->getPosition().nWidth - 40) / 2,
-                          5,
-                          GAMETEXT_32BPP,
-                          (v_window->getPosition().nWidth - 40) / 2,
-                          28);
-  v_button->setType(UI_BUTTON_TYPE_RADIO);
-  v_button->setID("32BPP");
-  v_button->setFont(drawlib->getFontSmall());
-  v_button->setGroup(20023);
-  v_button->setContextHelp(CONTEXTHELP_TRUECOLOR);
-
   v_list = new UIList(v_window,
                       5,
-                      43,
+                      5,
                       "",
                       v_window->getPosition().nWidth - 10,
-                      v_window->getPosition().nHeight - 43 - 10 - 140);
+                      v_window->getPosition().nHeight - 5 - 10 - 140);
   v_list->setID("RESOLUTIONS_LIST");
   v_list->setFont(drawlib->getFontSmall());
   v_list->addColumn(
@@ -2343,13 +2303,6 @@ void StateOptions::updateOptions() {
   updateTrailCamOptions();
 
   // video
-  v_button = reinterpret_cast<UIButton *>(
-    m_GUI->getChild("MAIN:TABS:GENERAL_TAB:TABS:VIDEO_TAB:16BPP"));
-  v_button->setChecked(XMSession::instance()->bpp() == 16);
-  v_button = reinterpret_cast<UIButton *>(
-    m_GUI->getChild("MAIN:TABS:GENERAL_TAB:TABS:VIDEO_TAB:32BPP"));
-  v_button->setChecked(XMSession::instance()->bpp() == 32);
-
   v_button = reinterpret_cast<UIButton *>(
     m_GUI->getChild("MAIN:TABS:GENERAL_TAB:TABS:VIDEO_TAB:WINDOWED"));
   v_button->setChecked(XMSession::instance()->windowed());

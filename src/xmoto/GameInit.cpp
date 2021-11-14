@@ -368,24 +368,20 @@ void GameApp::run_load(int nNumArgs, char **ppcArgs) {
     drawLib->setDontUseGLExtensions(XMSession::instance()->glExts() == false);
     drawLib->setDontUseGLVOBS(XMSession::instance()->glVOBS() == false);
 
-    LogInfo("Wanted resolution: %ix%i (%i bpp)",
+    LogInfo("Wanted resolution: %ix%i",
             XMSession::instance()->resolutionWidth(),
-            XMSession::instance()->resolutionHeight(),
-            XMSession::instance()->bpp());
+            XMSession::instance()->resolutionHeight());
     drawLib->init(XMSession::instance()->resolutionWidth(),
                   XMSession::instance()->resolutionHeight(),
-                  XMSession::instance()->bpp(),
                   XMSession::instance()->windowed());
     /* drawlib can change the final resolution if it fails, then, reinit session
      * one's */
     XMSession::instance()->setResolutionWidth(drawLib->getDispWidth());
     XMSession::instance()->setResolutionHeight(drawLib->getDispHeight());
-    XMSession::instance()->setBpp(drawLib->getDispBPP());
     XMSession::instance()->setWindowed(drawLib->getWindowed());
-    LogInfo("Resolution: %ix%i (%i bpp)",
+    LogInfo("Resolution: %ix%i",
             XMSession::instance()->resolutionWidth(),
-            XMSession::instance()->resolutionHeight(),
-            XMSession::instance()->bpp());
+            XMSession::instance()->resolutionHeight());
 
     /* set initial focus state */
     uint32_t wflags = SDL_GetWindowFlags(GameApp::instance()->getDrawLib()->getWindow());

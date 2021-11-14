@@ -34,8 +34,6 @@ XMArguments::XMArguments() {
   m_opt_res = false;
   m_res_dispWidth = 0;
   m_res_dispHeight = 0;
-  m_opt_bpp = false;
-  m_bpp_value = 0;
   m_opt_fs = false;
   m_opt_win = false;
   m_opt_noexts = false;
@@ -129,13 +127,6 @@ void XMArguments::parse(int i_argc, char **i_argv) {
         throw SyntaxError("missing resolution");
       }
       sscanf(i_argv[i + 1], "%ix%i", &m_res_dispWidth, &m_res_dispHeight);
-      i++;
-    } else if (v_opt == "--bpp") {
-      m_opt_bpp = true;
-      if (i + 1 >= i_argc) {
-        throw SyntaxError("missing bit depth");
-      }
-      m_bpp_value = atoi(i_argv[i + 1]);
       i++;
     } else if (v_opt == "-win" || v_opt == "--windowed") {
       m_opt_win = true;
@@ -400,14 +391,6 @@ int XMArguments::getOpt_res_dispWidth() const {
 
 int XMArguments::getOpt_res_dispHeight() const {
   return m_res_dispHeight;
-}
-
-bool XMArguments::isOptBpp() const {
-  return m_opt_bpp;
-}
-
-int XMArguments::getOpt_bpp_value() const {
-  return m_bpp_value;
 }
 
 bool XMArguments::isOptWindowed() const {
@@ -677,7 +660,6 @@ void XMArguments::help(const std::string &i_cmd) {
   printf("\t--nosound\n\t\tDisable sound at startup.\n");
   printf("\t-res, --resolution WIDTHxHEIGHT\n\t\tSpecifies display resolution "
          "to use.\n");
-  printf("\t--bpp BITS\n\t\tTry to use this display color bit depth.\n");
   printf("\t-fs, --fullscreen\n\t\tForces fullscreen mode.\n");
   printf("\t-win, --windowed\n\t\tForces windowed mode.\n");
   printf("\t-v, --verbose\n\t\tBe verbose.\n");

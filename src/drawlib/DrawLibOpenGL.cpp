@@ -272,14 +272,12 @@ void DrawLibOpenGL::setLineWidth(float width) {
 #include <cassert>
 void DrawLibOpenGL::init(unsigned int nDispWidth,
                          unsigned int nDispHeight,
-                         unsigned int nDispBPP,
                          bool bWindowed) {
-  DrawLib::init(nDispWidth, nDispHeight, nDispBPP, bWindowed);
+  DrawLib::init(nDispWidth, nDispHeight, bWindowed);
 
   /* Set suggestions */
   m_nDispWidth = nDispWidth;
   m_nDispHeight = nDispHeight;
-  m_nDispBPP = nDispBPP;
   m_bWindowed = bWindowed;
 
   /* Get some video info */
@@ -309,12 +307,6 @@ void DrawLibOpenGL::init(unsigned int nDispWidth,
     modes[modeIndex] = mode;
   }
 
-  /* Determine target bit depth */
-  if (m_bWindowed == true) {
-    /* In windowed mode we can't tinker with the bit-depth */
-    //m_nDispBPP = pVidInfo->vfmt->BitsPerPixel;
-  }
-
   /* Setup GL stuff */
   /* 2005-10-05 ... note that we no longer ask for explicit settings... it's
      better to do it per auto */
@@ -331,32 +323,20 @@ void DrawLibOpenGL::init(unsigned int nDispWidth,
           SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED,
           m_nDispWidth, m_nDispHeight, nFlags)) == NULL) {
     LogWarning(
-      "Tried to set video mode %ix%i @ %i-bit, but SDL failed (%s)\n"
-      "                Now SDL will try determining a proper mode itself.",
+      "Tried with a resolution of %ix%i, but SDL failed (%s)",
       m_nDispWidth,
       m_nDispHeight,
-      m_nDispBPP,
       SDL_GetError());
-    m_nDispBPP = 0;
 
-    /* Hmm, try letting it decide the BPP automatically */
-    // TODO: This call should be removed as it's exactly the same as the previous one.
-    // Not sure if SDL2 lets you screw around with the BPP anyway
+    m_nDispWidth = 800;
+    m_nDispHeight = 600;
+    m_bWindowed = true;
+    LogWarning("Trying %ix%i in windowed mode", m_nDispWidth, m_nDispHeight);
+
     if ((m_window = SDL_CreateWindow(title.c_str(),
             SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED,
-            m_nDispWidth, m_nDispHeight, nFlags)) == NULL) {
-      /* Still no luck */
-      LogWarning("Still no luck, now we'll try 800x600 in a window.");
-      m_nDispWidth = 800;
-      m_nDispHeight = 600;
-      m_nDispBPP = 0;
-      m_bWindowed = true;
-
-      if ((m_window = SDL_CreateWindow(title.c_str(),
-              SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED,
-              800, 600, SDL_WINDOW_SHOWN | SDL_WINDOW_OPENGL)) == NULL) {
-        throw Exception("SDL_CreateWindow: " + std::string(SDL_GetError()));
-      }
+            800, 600, SDL_WINDOW_SHOWN | SDL_WINDOW_OPENGL)) == NULL) {
+      throw Exception("SDL_CreateWindow: " + std::string(SDL_GetError()));
     }
   }
 
@@ -386,8 +366,6 @@ void DrawLibOpenGL::init(unsigned int nDispWidth,
   pVidInfo = SDL_GetVideoInfo();
   if (pVidInfo == NULL)
     throw Exception("(2) SDL_GetVideoInfo : " + std::string(SDL_GetError()));
-
-  m_nDispBPP = pVidInfo->vfmt->BitsPerPixel;
   */
 
   if (!gladLoadGLLoader((GLADloadproc)SDL_GL_GetProcAddress)) {

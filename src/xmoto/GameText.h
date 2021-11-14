@@ -34,9 +34,7 @@ Central place to keep many in-game text strings
 
 #define GAMETEXT_11KHZ _("11 kHz")
 #define GAMETEXT_16BIT _("16-bit")
-#define GAMETEXT_16BPP _("16 bits per pixel")
 #define GAMETEXT_22KHZ _("22 kHz")
-#define GAMETEXT_32BPP _("32 bits per pixel")
 #define GAMETEXT_44KHZ _("44 kHz")
 #define GAMETEXT_8BIT _("8-bit")
 #define GAMETEXT_ABORT _("Quit level")
@@ -854,8 +852,6 @@ Central place to keep many in-game text strings
 #define CONTEXTHELP_PERMANENTCONSOLE _("Make console messages not disappear")
 #define CONTEXTHELP_ALLOWWEBFORMS \
   _("Allow X-Moto to ask you your mind about levels")
-#define CONTEXTHELP_HIGHCOLOR _("Enable high-color graphics")
-#define CONTEXTHELP_TRUECOLOR _("Enable true-color graphics")
 #define CONTEXTHELP_RESOLUTION _("Select graphics resolution")
 #define CONTEXTHELP_RUN_IN_WINDOW _("Run the game in a window")
 #define CONTEXTHELP_LOW_MENU _("Not so fancy menu graphics")

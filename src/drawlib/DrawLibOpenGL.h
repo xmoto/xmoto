@@ -31,7 +31,6 @@ public:
 
   virtual void init(unsigned int nDispWidth,
                     unsigned int nDispHeight,
-                    unsigned int nDispBPP,
                     bool bWindowed);
   virtual void unInit();
 

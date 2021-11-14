@@ -50,7 +50,6 @@ void XMSession::setToDefault() {
   m_verbose = DEFAULT_VERBOSE;
   m_resolutionWidth = DEFAULT_RESOLUTION_WIDTH;
   m_resolutionHeight = DEFAULT_RESOLUTION_HEIGHT;
-  m_bpp = DEFAULT_BPP;
   m_maxRenderFps = DEFAULT_MAXRENDERFPS;
   m_windowed = DEFAULT_WINDOWED;
   m_useThemeCursor = DEFAULT_USETHEMECURSOR;
@@ -165,10 +164,6 @@ void XMSession::load(const XMArguments *i_xmargs) {
   if (i_xmargs->isOptRes()) {
     m_resolutionWidth = i_xmargs->getOpt_res_dispWidth();
     m_resolutionHeight = i_xmargs->getOpt_res_dispHeight();
-  }
-
-  if (i_xmargs->isOptBpp()) {
-    m_bpp = i_xmargs->getOpt_bpp_value();
   }
 
   if (i_xmargs->isOptWindowed()) {
@@ -674,10 +669,6 @@ int XMSession::resolutionHeight() const {
   return m_resolutionHeight;
 }
 
-int XMSession::bpp() const {
-  return m_bpp;
-}
-
 int XMSession::maxRenderFps() const {
   return m_maxRenderFps;
 }
@@ -694,11 +685,6 @@ void XMSession::setResolutionWidth(int i_value) {
 void XMSession::setResolutionHeight(int i_value) {
   PROPAGATE(XMSession, setResolutionHeight, i_value, int);
   m_resolutionHeight = i_value;
-}
-
-void XMSession::setBpp(int i_value) {
-  PROPAGATE(XMSession, setBpp, i_value, int);
-  m_bpp = i_value;
 }
 
 void XMSession::setWindowed(bool i_value) {
