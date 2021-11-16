@@ -24,11 +24,13 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "GUI.h"
 #include "drawlib/DrawLib.h"
 #include "helpers/utf8.h"
+#include "helpers/VMath.h"
 #include "xmoto/Game.h"
 #include "xmoto/Sound.h"
 #include <sstream>
 
 #define GUILIST_SCROLL_SIZE 10
+#define GUILIST_JUMP_COUNT 10
 
 int UIList::HeaderHeight() {
   return m_headerHeight;
@@ -906,20 +908,18 @@ void UIList::eventRight() {
 }
 
 bool UIList::eventJump(int count) {
+  return eventJumpAbs(m_nVisibleSelected + count);
+}
+
+bool UIList::eventJumpAbs(int index) {
   int last = (int)(m_Entries.size() - m_filteredItems - 1);
-  int newPos = m_nVisibleSelected + count;
+  if (index < 0)
+    index = last + index + 1;
+  index = clamp(index, 0, last);
 
-  if (newPos <= 0) {
-    setVisibleSelected(0);
-    return true;
-  } else if (newPos >= last) {
-    setVisibleSelected(last);
-    return true;
-  }
+  setVisibleSelected(index);
 
-  setVisibleSelected(newPos);
-
-  return false;
+  return index == 0 || index == last;
 }
 
 /*===========================================================================
@@ -937,11 +937,19 @@ bool UIList::keyDown(int nKey, SDL_Keymod mod, const std::string &i_utf8Char) {
       eventDown();
       return true;
     case SDLK_PAGEUP:
-      if (eventJump(-10))
+      if (eventJump(-GUILIST_JUMP_COUNT))
         break;
       return true;
     case SDLK_PAGEDOWN:
-      if (eventJump(10))
+      if (eventJump(GUILIST_JUMP_COUNT))
+        break;
+      return true;
+    case SDLK_HOME:
+      if (eventJumpAbs(0))
+        break;
+      return true;
+    case SDLK_END:
+      if (eventJumpAbs(-1))
         break;
       return true;
 
@@ -1018,11 +1026,11 @@ bool UIList::joystickAxisMotion(Uint8 i_joyNum,
     }
 
     case SDL_CONTROLLER_AXIS_TRIGGERLEFT:
-      if (!eventJump(-10))
+      if (!eventJump(-GUILIST_JUMP_COUNT))
         return true;
       break;
     case SDL_CONTROLLER_AXIS_TRIGGERRIGHT:
-      if (!eventJump(10))
+      if (!eventJump(GUILIST_JUMP_COUNT))
         return true;
       break;
   }

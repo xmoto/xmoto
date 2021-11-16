@@ -899,6 +899,7 @@ private:
   void eventLeft();
   void eventRight();
   bool eventJump(int count);
+  bool eventJumpAbs(int index);
 
   int m_headerHeight;
   int m_headerSubBorderHeight;

@@ -25,6 +25,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "common/VCommon.h"
 #include <math.h>
 #include <stdlib.h> // for rand
+#include <algorithm>
 
 /*===========================================================================
   Vectors
@@ -33,6 +34,11 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #define PI 3.14159265f
 #define rad2deg(x) ((x)*57.295779524)
 #define deg2rad(x) ((x)*0.017453292)
+
+template<typename T>
+constexpr T clamp(T v, T min, T max) {
+  return std::min(std::max(v, min), max);
+}
 
 template<typename _T>
 class Vector2 {
