@@ -292,7 +292,7 @@ void DrawLib::DrawFilledCircle(unsigned int nSteps,
   }
   setColor(CircleColor);
   for (unsigned int i = 0; i < nSteps; i++) {
-    float r = (PI * 2.0f * (float)i) / (float)nSteps;
+    float r = (M_PI * 2.0f * (float)i) / (float)nSteps;
     glVertex(Vector2f(C.x + fRadius * sinf(r), C.y + fRadius * cosf(r)));
   }
   endDraw();
@@ -318,10 +318,10 @@ void DrawLib::DrawLine(Vector2f &i_p1,
   // calculate!
   p1 = Vector2f(i_p1.x + cos(ang) * -i_thickness1 / 2,
                 i_p1.y + sin(ang) * -i_thickness1 / 2);
-  p2 = Vector2f(i_p1.x + cos(ang + PI * 2) * i_thickness1 / 2,
-                i_p1.y + sin(ang + PI * 2) * i_thickness1 / 2);
-  p3 = Vector2f(i_p2.x + cos(ang + PI * 2) * i_thickness2 / 2,
-                i_p2.y + sin(ang + PI * 2) * i_thickness2 / 2);
+  p2 = Vector2f(i_p1.x + cos(ang + M_PI * 2) * i_thickness1 / 2,
+                i_p1.y + sin(ang + M_PI * 2) * i_thickness1 / 2);
+  p3 = Vector2f(i_p2.x + cos(ang + M_PI * 2) * i_thickness2 / 2,
+                i_p2.y + sin(ang + M_PI * 2) * i_thickness2 / 2);
   p4 = Vector2f(i_p2.x + cos(ang) * -i_thickness2 / 2,
                 i_p2.y + sin(ang) * -i_thickness2 / 2);
   // DRAW!
@@ -376,7 +376,7 @@ void DrawLib::drawCircle(const Vector2f &Center,
       setBlendMode(BLEND_MODE_A);
     setColor(Back);
     for (int i = 0; i < nSteps; i++) {
-      float rads = (PI * 2.0f * (float)i) / (float)nSteps;
+      float rads = (M_PI * 2.0f * (float)i) / (float)nSteps;
       glVertexSP(Center.x + fRadius * sin(rads),
                  Center.y + fRadius * cos(rads));
     }
@@ -386,8 +386,8 @@ void DrawLib::drawCircle(const Vector2f &Center,
   /* Draw circle border */
   if (fBorder > 0.0f && GET_ALPHA(Front) > 0) {
     for (int i = 0; i < nSteps; i++) {
-      float rads1 = (PI * 2.0f * (float)i) / (float)nSteps;
-      float rads2 = (PI * 2.0f * (float)(i + 1)) / (float)nSteps;
+      float rads1 = (M_PI * 2.0f * (float)i) / (float)nSteps;
+      float rads2 = (M_PI * 2.0f * (float)(i + 1)) / (float)nSteps;
 
       startDraw(DRAW_MODE_POLYGON);
       if (bAlpha)

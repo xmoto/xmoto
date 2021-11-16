@@ -23,19 +23,9 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #ifdef ENABLE_SDLGFX
 
 #include <string.h>
+#include <algorithm>
 
 #include "PolyDraw.h"
-
-#if defined(MIN)
-#undef MIN
-#endif
-#define MIN(a, b) ((a) < (b) ? (a) : (b))
-
-#if defined(MAX)
-#undef MAX
-#endif
-#define MAX(a, b) ((a) > (b) ? (a) : (b))
-
 #include "SDL_gfxPrimitives.h"
 
 PolyDraw::PolyDraw(SDL_Surface *pBuf) {
@@ -211,8 +201,8 @@ void PolyDraw::render(int *pnScreenVerts,
 
   /* At this point we know everything we need about the edges - now for the
      time consuming part: rendering of the individual pixels */
-  int nStartY = MAX(nTopY, 0);
-  int nEndY = MIN(nBottomY, m_pBuf->h - 1);
+  int nStartY = std::max(nTopY, 0);
+  int nEndY = std::min(nBottomY, m_pBuf->h - 1);
 
   /* This loop works with all pixel sizes */
   for (int y = nStartY; y <= nEndY; y++) {
@@ -263,7 +253,7 @@ void PolyDraw::_LerpEdge(int y1,
        3 divides and the 3 multiplications */
 
     /* Linear interpolation along a polygon edge */
-    for (int y = MAX(y1, 0); y <= MIN(y2, m_pBuf->h - 1); y++) {
+    for (int y = std::max(y1, 0); y <= std::min(y2, m_pBuf->h - 1); y++) {
       EdgeValue *pV = &pEdgeBuf[y];
 
       int i = y - y1;
@@ -300,7 +290,7 @@ void PolyDraw::_RenderHLine(int y,
   /* Determine pointer to beginning of line in target buffer */
   char *pc =
     &((char *)m_pBuf->pixels)[y * m_pBuf->pitch +
-                              MAX(0, pLeft->x) * m_pBuf->format->BytesPerPixel];
+                              std::max(0, pLeft->x) * m_pBuf->format->BytesPerPixel];
 
   int nXRange = pRight->x - pLeft->x;
   int nURange = pRight->u - pLeft->u;
@@ -321,8 +311,8 @@ void PolyDraw::_RenderHLine(int y,
   if (nXRange > 0) {
     /* Linear interpolation of texture coordinates over a horizontal line of a
      * polygon */
-    int nStartX = MAX(pLeft->x, 0);
-    int nEndX = MIN(pRight->x, m_pBuf->w - 1);
+    int nStartX = std::max(pLeft->x, 0);
+    int nEndX = std::min(pRight->x, m_pBuf->w - 1);
 
     /* Fixed-point slope of u and v interpolations */
     int nUSlope = (nURange << 8) / nXRange;

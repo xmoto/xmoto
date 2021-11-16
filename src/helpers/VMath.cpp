@@ -26,10 +26,6 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
 #define BIG_VALUE 99999999.0f
 
-#define MIN(x, y) ((x) < (y) ? (x) : (y))
-#define MAX(x, y) ((x) > (y) ? (x) : (y))
-#define ABS(x) ((x) > 0.0 ? (x) : -(x))
-
 /*===========================================================================
   Simple Interpolation
   ===========================================================================*/
@@ -73,7 +69,7 @@ bool BoundingCircle::circleTouch(const Vector2f &Cp, const float Cr) {
 bool BoundingCircle::pointTouch(const Vector2f &point) {
   float diffX = point.x - m_center.x;
   float diffY = point.y - m_center.y;
-  return (ABS(diffX) < m_radius) && (ABS(diffY) < m_radius);
+  return (std::fabs(diffX) < m_radius) && (std::fabs(diffY) < m_radius);
 }
 
 void BoundingCircle::translate(const float x, const float y) {
@@ -101,7 +97,7 @@ void BoundingCircle::calculateBoundingCircle() {
   float tx = (m_xmax - m_xmin) / 2.0;
   float ty = (m_ymax - m_ymin) / 2.0;
 
-  float radius = tx + ty - MIN(tx, ty) / 2.0;
+  float radius = tx + ty - std::min(tx, ty) / 2.0;
 
   init(center, radius);
 }

@@ -31,9 +31,11 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
   Vectors
   ===========================================================================*/
 #define VECTOR_COMPARE_EPSILON 0.001f
-#define PI 3.14159265f
-#define rad2deg(x) ((x)*57.295779524)
-#define deg2rad(x) ((x)*0.017453292)
+
+template<typename T>
+constexpr double rad2deg(T x) { return x * (180.0/M_PI); }
+template<typename T>
+constexpr double deg2rad(T x) { return x * (M_PI/180.0); }
 
 template<typename T>
 constexpr T clamp(T v, T min, T max) {
@@ -166,7 +168,7 @@ public:
   }
 
   inline void rotateXY(_T deg) {
-    _T rads = deg * ((_T)PI / 180.0f);
+    _T rads = deg * ((_T)M_PI / 180.0f);
     _T xx = x * cos(rads) + y * sin(rads);
     y = y * cos(rads) + x * sin(rads);
     x = xx;
@@ -176,7 +178,7 @@ public:
    * @return the angle in degrees
    **/
   inline _T angle() {
-    _T v = atan2(y, x) * 180 / PI;
+    _T v = atan2(y, x) * 180.0 / M_PI;
     return v;
   }
 
@@ -326,7 +328,7 @@ public:
   }
 
   inline void rotateXYZ(_T xrotate, _T yrotate, _T zrotate) {
-    _T pohf = (_T)PI / 180.0f;
+    _T pohf = (_T)M_PI / 180.0f;
     _T tempx = x * cos(yrotate * pohf) - z * sin(yrotate * pohf);
     _T tempz = x * sin(yrotate * pohf) + z * cos(yrotate * pohf);
     z = tempz * cos(xrotate * pohf) - y * sin(xrotate * pohf);
