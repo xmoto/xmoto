@@ -104,6 +104,7 @@ void StateEditProfile::checkEvents() {
       v_ccButton = reinterpret_cast<UIButton *>(
         m_GUI->getChild("EDITPROFILE_FRAME:CHILDRENCOMPLIANT"));
       XMSession::instance()->setToDefault();
+      XMSession::instance()->load(GameApp::instance()->getUserConfig());
       XMSession::instance()->loadProfile(pEntry->Text[0],
                                          xmDatabase::instance("main"));
       XMSession::instance()->setChildrenCompliant(v_ccButton->getChecked());
