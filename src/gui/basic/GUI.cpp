@@ -36,8 +36,6 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "include/xm_OpenGL.h"
 #endif
 
-#include <tuple> // for std::tie
-
 DrawLib *UIWindow::m_drawLib = NULL;
 
 void UIWindow::setDrawLib(DrawLib *i_drawLib) {
@@ -1305,42 +1303,29 @@ bool UIRoot::_RootKeyEvent(UIWindow *pWindow, UIRootKeyEvent Event) {
     }
 
     return b;
-  } else {
-    return false;
   }
 
-  /* Ok */
-  return true; // never reached
+  return false;
 }
 
-bool UIRoot::joystickAxisMotion(Uint8 i_joyNum,
-                                Uint8 i_joyAxis,
-                                Sint16 i_joyAxisValue) {
-  if (i_joyAxisValue > -(GUI_JOYSTICK_MINIMUM_DETECTION) &&
-      i_joyAxisValue < GUI_JOYSTICK_MINIMUM_DETECTION) {
+bool UIRoot::joystickAxisMotion(JoyAxisEvent event) {
+  if (isAxisInsideDeadzone(event.axis, event.axisValue))
     return true;
-  }
 
-  if (!_RootJoystickAxisMotionEvent(this, i_joyNum, i_joyAxis, i_joyAxisValue)) {
-    switch (i_joyAxis) {
+  if (!_RootJoystickAxisMotionEvent(this, event)) {
+    switch (event.axis) {
       case SDL_CONTROLLER_AXIS_LEFTX:
-        if (i_joyAxisValue < -(GUI_JOYSTICK_MINIMUM_DETECTION)) {
+        if (event.axisValue < -INPUT_JOYSTICK_DEADZONE_MENU)
           activateLeft();
-          return true;
-        } else if (i_joyAxisValue > GUI_JOYSTICK_MINIMUM_DETECTION) {
+        else
           activateRight();
-          return true;
-        }
-        break;
+        return true;
       case SDL_CONTROLLER_AXIS_LEFTY:
-        if (i_joyAxisValue < -(GUI_JOYSTICK_MINIMUM_DETECTION)) {
+        if (event.axisValue < -INPUT_JOYSTICK_DEADZONE_MENU)
           activateUp();
-          return true;
-        } else if (i_joyAxisValue > GUI_JOYSTICK_MINIMUM_DETECTION) {
+        else
           activateDown();
-          return true;
-        }
-        break;
+        return true;
     }
   }
   return false;
@@ -1366,10 +1351,7 @@ bool UIRoot::joystickButtonDown(Uint8 i_joyNum, Uint8 i_joyButton) {
   return false;
 }
 
-bool UIRoot::_RootJoystickAxisMotionEvent(UIWindow *pWindow,
-                                          Uint8 i_joyNum,
-                                          Uint8 i_joyAxis,
-                                          Sint16 i_joyAxisValue) {
+bool UIRoot::_RootJoystickAxisMotionEvent(UIWindow *pWindow, JoyAxisEvent event) {
   /* Hidden or disabled? */
   if (pWindow->isHidden() || pWindow->isDisabled())
     return false;
@@ -1377,18 +1359,16 @@ bool UIRoot::_RootJoystickAxisMotionEvent(UIWindow *pWindow,
   /* First try if any children want it */
   for (unsigned int i = 0; i < pWindow->getChildren().size(); i++) {
     if (_RootJoystickAxisMotionEvent(
-          pWindow->getChildren()[i], i_joyNum, i_joyAxis, i_joyAxisValue))
+          pWindow->getChildren()[i], event))
       return true;
   }
 
   /* Try this */
   if (pWindow != this && pWindow->isActive()) {
-    return pWindow->joystickAxisMotion(i_joyNum, i_joyAxis, i_joyAxisValue);
-  } else
-    return false;
+    return pWindow->joystickAxisMotion(event);
+  }
 
-  /* Ok */
-  return true;
+  return false;
 }
 
 bool UIRoot::_RootJoystickButtonDownEvent(UIWindow *pWindow,

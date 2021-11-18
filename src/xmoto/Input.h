@@ -161,12 +161,14 @@ public:
   std::string *getJoyId(Uint8 i_joynum);
   Uint8 getJoyNum(const std::string &i_name);
   std::string *getJoyIdByStrId(const std::string &i_name);
-  SDL_Joystick *getJoyById(std::string *i_id);
+  SDL_GameController *getJoyById(std::string *i_id);
   InputEventType joystickAxisSens(Sint16 m_joyAxisValue);
   void recheckJoysticks();
+  void loadJoystickMappings();
   std::vector<std::string> &getJoysticksNames();
   bool areJoysticksEnabled() const;
   void enableJoysticks(bool i_value);
+  Uint8 getNumJoysticks() const { return m_Joysticks.size(); }
 
   void setDefaultConfig();
   void saveConfig(UserConfig *pConfig,
@@ -200,7 +202,7 @@ private:
   int m_nNumScriptKeyHooks;
   InputScriptKeyHook m_ScriptKeyHooks[MAX_SCRIPT_KEY_HOOKS];
 
-  std::vector<SDL_Joystick *> m_Joysticks;
+  std::vector<SDL_GameController *> m_Joysticks;
   std::vector<std::string> m_JoysticksNames;
   std::vector<std::string> m_JoysticksIds;
 

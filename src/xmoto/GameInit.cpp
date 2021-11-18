@@ -698,18 +698,6 @@ void GameApp::run_load(int nNumArgs, char **ppcArgs) {
   LogInfo("UserInit ended at %.3f", GameApp::getXMTime());
 }
 
-const char* sdlEventEnumTable(uint32_t event) {
-  switch (event) {
-    case SDL_WINDOWEVENT_ENTER:        return "SDL_WINDOWEVENT_ENTER";
-    case SDL_WINDOWEVENT_LEAVE:        return "SDL_WINDOWEVENT_LEAVE";
-    case SDL_WINDOWEVENT_FOCUS_GAINED: return "SDL_WINDOWEVENT_FOCUS_GAINED";
-    case SDL_WINDOWEVENT_FOCUS_LOST:   return "SDL_WINDOWEVENT_FOCUS_LOST";
-    case SDL_KEYDOWN:                  return "SDL_KEYDOWN";
-    case SDL_KEYUP:                    return "SDL_KEYUP";
-    default:                           return "UNKNOWN";
-  }
-}
-
 void GameApp::manageEvent(SDL_Event *Event) {
   static int nLastMouseClickX = -100, nLastMouseClickY = -100;
   static int nLastMouseClickButton = -100;
@@ -731,7 +719,7 @@ void GameApp::manageEvent(SDL_Event *Event) {
     }
   }
 
-  SDL_StartTextInput();
+  //SDL_StartTextInput();
 
   /* What event? */
   switch (Event->type) {
@@ -802,34 +790,34 @@ void GameApp::manageEvent(SDL_Event *Event) {
     case SDL_MOUSEWHEEL:
       StateManager::instance()->xmKey(INPUT_SCROLL, XMKey(*Event));
       break;
-    case SDL_JOYAXISMOTION:
+    case SDL_CONTROLLERAXISMOTION:
       StateManager::instance()->xmKey(
-        InputHandler::instance()->joystickAxisSens(Event->jaxis.value),
-        XMKey(InputHandler::instance()->getJoyId(Event->jbutton.which),
-              Event->jaxis.axis,
-              Event->jaxis.value));
+        InputHandler::instance()->joystickAxisSens(Event->caxis.value),
+        XMKey(InputHandler::instance()->getJoyId(Event->cbutton.which),
+              Event->caxis.axis,
+              Event->caxis.value));
       break;
     case SDL_USEREVENT: {
-      if (Event->user.code == SDL_JOYAXISMOTION) {
-        StateMenu *p = reinterpret_cast<StateMenu *>(Event->user.data1);
-        const JoystickEvent &e = p->getJoystickRepeat();
-        p->getGUI()->joystickAxisMotion(e.joyNum, e.joyAxis, e.joyAxisValue);
+      if (Event->user.code == SDL_CONTROLLERAXISMOTION) {
+        StateMenu *state = reinterpret_cast<StateMenu *>(Event->user.data1);
+        const auto &event = state->getJoystickRepeat();
+        state->getGUI()->joystickAxisMotion(event);
       }
       break;
     }
 
-    case SDL_JOYBUTTONDOWN:
+    case SDL_CONTROLLERBUTTONDOWN:
       StateManager::instance()->xmKey(
         INPUT_DOWN,
-        XMKey(InputHandler::instance()->getJoyId(Event->jbutton.which),
-              Event->jbutton.button));
+        XMKey(InputHandler::instance()->getJoyId(Event->cbutton.which),
+              Event->cbutton.button));
       break;
 
-    case SDL_JOYBUTTONUP:
+    case SDL_CONTROLLERBUTTONUP:
       StateManager::instance()->xmKey(
         INPUT_UP,
-        XMKey(InputHandler::instance()->getJoyId(Event->jbutton.which),
-              Event->jbutton.button));
+        XMKey(InputHandler::instance()->getJoyId(Event->cbutton.which),
+              Event->cbutton.button));
       break;
 
     case SDL_WINDOWEVENT: {
@@ -880,7 +868,6 @@ void GameApp::manageEvent(SDL_Event *Event) {
             StateManager::instance()->changeFocus(hasFocus);
           }
           m_hasKeyboardFocus = hasFocus;
-          printf("%s\n", sdlEventEnumTable(Event->window.event));
 
           if (!hasFocus) {
             const uint8_t* keys = SDL_GetKeyboardState(NULL);

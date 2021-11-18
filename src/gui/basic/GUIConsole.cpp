@@ -26,7 +26,7 @@
 #include "common/TextEdit.h"
 
 #include <algorithm>
-#include <tuple>
+#include <tuple> // std::tie
 
 #define UIC_PROMPT "$ "
 #define UIC_CURSOR "_"

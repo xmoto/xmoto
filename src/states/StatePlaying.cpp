@@ -105,9 +105,9 @@ void StatePlaying::handleControllers(InputEventType Type,
           if ((*InputHandler::instance()->getPlayerKey(INPUT_DRIVE, p)) ==
               i_xmkey) {
             /* Start driving */
-            if (i_xmkey.isAnalogic()) {
+            if (i_xmkey.isAnalog()) {
               v_biker->getControler()->setThrottle(
-                fabs(i_xmkey.getAnalogicValue()));
+                fabs(i_xmkey.getAnalogValue()));
             } else {
               v_biker->getControler()->setThrottle(1.0f);
             }
@@ -126,9 +126,9 @@ void StatePlaying::handleControllers(InputEventType Type,
                  i_xmkey &&
                XMSession::instance()->mirrorMode())) {
             /* Pull back */
-            if (i_xmkey.isAnalogic()) {
+            if (i_xmkey.isAnalog()) {
               v_biker->getControler()->setPull(
-                fabs(i_xmkey.getAnalogicValue()));
+                fabs(i_xmkey.getAnalogValue()));
             } else {
               v_biker->getControler()->setPull(1.0f);
             }
@@ -141,9 +141,9 @@ void StatePlaying::handleControllers(InputEventType Type,
                  i_xmkey &&
                XMSession::instance()->mirrorMode())) {
             /* Push forward */
-            if (i_xmkey.isAnalogic()) {
+            if (i_xmkey.isAnalog()) {
               v_biker->getControler()->setPull(
-                -fabs(i_xmkey.getAnalogicValue()));
+                -fabs(i_xmkey.getAnalogValue()));
             } else {
               v_biker->getControler()->setPull(-1.0f);
             }

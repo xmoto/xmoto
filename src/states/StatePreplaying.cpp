@@ -329,7 +329,7 @@ bool StatePreplaying::render() {
 void StatePreplaying::xmKey(InputEventType i_type, const XMKey &i_xmkey) {
   StateScene::xmKey(i_type, i_xmkey);
 
-  if (i_type == INPUT_DOWN && !i_xmkey.isDirectionnel()) {
+  if (i_type == INPUT_DOWN && !i_xmkey.isDirectional()) {
     // don't allow down key so that xmoto -l 1 works with the animation at
     // startup : some pad give events at startup about their status
     m_playAnimation = false;

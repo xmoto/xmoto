@@ -25,7 +25,14 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "gui/basic/GUI.h"
 #include "helpers/Log.h"
 #include "xmoto/Game.h"
+#include "xmoto/Input.h"
 #include "xmscene/Camera.h"
+#include <stdint.h>
+#include <cstdlib>
+#include <utility>
+
+static const uint32_t JOYSTICK_REPEAT_DELAY_MS = 500;
+static const float JOYSTICK_REPEAT_RATE_HZ = 1000 / 33.0f;
 
 StateMenu::StateMenu(bool drawStateBehind, bool updateStatesBehind)
   : GameState(drawStateBehind, updateStatesBehind) {
@@ -34,6 +41,10 @@ StateMenu::StateMenu(bool drawStateBehind, bool updateStatesBehind)
 
   m_renderFps = XMSession::instance()->maxRenderFps();
   m_updateFps = 30;
+
+  for (Uint8 i = 0; i < InputHandler::instance()->getNumJoysticks(); i++) {
+    m_joyAxes.push_back(JoyAxes());
+  }
 }
 
 StateMenu::~StateMenu() {}
@@ -48,6 +59,8 @@ void StateMenu::leave() {}
 void StateMenu::enterAfterPop() {
   GameState::enterAfterPop();
   m_GUI->enableWindow(true);
+
+  resetJoyAxes();
 }
 
 void StateMenu::leaveAfterPush() {
@@ -71,13 +84,13 @@ bool StateMenu::render() {
   return true;
 }
 
-Uint32 StateMenu::timerCallback(Uint32 interval, void *param) {
+Uint32 StateMenu::repeatTimerCallback(Uint32 interval, void *param) {
   SDL_Event event;
   SDL_UserEvent userEvent;
 
   userEvent.type = SDL_USEREVENT;
 
-  userEvent.code = SDL_JOYAXISMOTION;
+  userEvent.code = SDL_CONTROLLERAXISMOTION;
   userEvent.data1 = param;
 
   event.type = SDL_USEREVENT;
@@ -85,7 +98,19 @@ Uint32 StateMenu::timerCallback(Uint32 interval, void *param) {
 
   SDL_PushEvent(&event);
 
-  return JOYSTICK_REPEAT_RATE;
+  return JOYSTICK_REPEAT_RATE_HZ;
+}
+
+void StateMenu::resetJoyAxis(JoyAxis &axis) {
+  clearRepeatTimer(axis.repeatTimer);
+  axis.isHeld = false;
+  axis.dir = 0;
+}
+
+void StateMenu::resetJoyAxes() {
+  for (auto &axes : m_joyAxes)
+    for (auto &axis : axes)
+      resetJoyAxis(axis);
 }
 
 void StateMenu::clearRepeatTimer(SDL_TimerID &timer) {
@@ -95,69 +120,45 @@ void StateMenu::clearRepeatTimer(SDL_TimerID &timer) {
   }
 }
 
-void StateMenu::handleJoyAxisRepeat(Uint8 v_joyNum, Uint8 v_joyAxis, Sint16 v_joyAxisValue) {
-  JoyAxisIndex axis;
+void StateMenu::handleJoyAxis(JoyAxisEvent event) {
+  if (event.axis == (Uint8)SDL_CONTROLLER_AXIS_INVALID)
+    return;
 
-  switch (v_joyAxis) {
-    case SDL_CONTROLLER_AXIS_LEFTX:        axis = JOYAXIS_LEFTX;        break;
-    case SDL_CONTROLLER_AXIS_LEFTY:        axis = JOYAXIS_LEFTY;        break;
-    case SDL_CONTROLLER_AXIS_RIGHTX:       axis = JOYAXIS_RIGHTX;       break;
-    case SDL_CONTROLLER_AXIS_RIGHTY:       axis = JOYAXIS_RIGHTY;       break;
-    case SDL_CONTROLLER_AXIS_TRIGGERLEFT:  axis = JOYAXIS_TRIGGERLEFT;  break;
-    case SDL_CONTROLLER_AXIS_TRIGGERRIGHT: axis = JOYAXIS_TRIGGERRIGHT; break;
-    default:
-      return;
-  }
+  auto &axis = getAxesByJoyIndex(event.joystickNum)[event.axis];
 
-  const bool isTrigger = (axis == JOYAXIS_TRIGGERLEFT || axis == JOYAXIS_TRIGGERRIGHT);
+  std::string *joyId = InputHandler::instance()->getJoyId(event.joystickNum);
+  SDL_GameController *joystick = InputHandler::instance()->getJoyById(joyId);
 
-  int dir;
-  /*
-   * If the axis value is below the negative deadzone and this is a trigger, treat it
-   * as if the trigger was released (because we want this to have a boolean state)
-   */
-  if (v_joyAxisValue <= -(GUI_JOYSTICK_MINIMUM_DETECTION) && !isTrigger)
-    dir = 0;
-  else if (v_joyAxisValue >= GUI_JOYSTICK_MINIMUM_DETECTION)
-    dir = 1;
-  else {
-    // Only clear the opposite axes
-    joyAxes[axis][0].isHeld = false;
-    joyAxes[axis][1].isHeld = false;
-
-    clearRepeatTimer(joyAxes[axis][0].timer);
-    clearRepeatTimer(joyAxes[axis][1].timer);
+  if (isAxisInsideDeadzone(event.axis, event.axisValue)) {
+    axis.lastDir = axis.dir;
+    resetJoyAxis(axis);
     return;
   }
 
-  if (!joyAxes[axis][dir].isHeld) {
-    // Clear the timers so they don't keep ghosting. Note though that the `isHeld` state
-    // will only be reset when the corresponding axis is released. This prevents a scenario
-    // where a bogus event is triggered after the latter of 2 simultaneously held axes is released
-    for (auto &axis : joyAxes) {
-      clearRepeatTimer(axis[0].timer);
-      clearRepeatTimer(axis[1].timer);
-    }
+  int8_t dir = (0 < event.axisValue) - (event.axisValue < 0);
+  bool dirSame = dir != 0 && std::abs(dir) == std::abs(axis.lastDir);
 
-    joyAxes[axis][dir].isHeld = true;
+  if (dirSame || !axis.isHeld) {
+    for (auto &axes : m_joyAxes)
+      for (auto &axis : axes)
+        clearRepeatTimer(axis.repeatTimer);
 
-    m_GUI->joystickAxisMotion(v_joyNum, v_joyAxis, v_joyAxisValue);
+    axis.isHeld = true;
+    axis.repeatTimer = SDL_AddTimer(JOYSTICK_REPEAT_DELAY_MS,
+        repeatTimerCallback, static_cast<void *>(this));
+    axis.lastDir = axis.dir;
+    axis.dir = dir;
 
-    m_joystickRepeat = { v_joyNum, v_joyAxis, v_joyAxisValue };
-    joyAxes[axis][dir].timer = SDL_AddTimer(JOYSTICK_REPEAT_DELAY, timerCallback, (void *)this);
+    m_joystickRepeat = event;
+    m_GUI->joystickAxisMotion(event);
   }
-
-  // Clear the timer for the opposite axis
-  clearRepeatTimer(joyAxes[axis][1-dir].timer);
 }
 
 void StateMenu::xmKey(InputEventType i_type, const XMKey &i_xmkey) {
   int nX, nY;
   Uint8 nButton;
   Sint32 wheelX, wheelY;
-  Uint8 v_joyNum;
-  Uint8 v_joyAxis;
-  Sint16 v_joyAxisValue;
+  JoyAxisEvent axisEvent;
   Uint8 v_joyButton;
   SDL_Keycode v_nKey;
   SDL_Keymod v_mod;
@@ -223,13 +224,13 @@ void StateMenu::xmKey(InputEventType i_type, const XMKey &i_xmkey) {
   }
 
   else if (i_type == INPUT_DOWN &&
-           i_xmkey.toJoystickButton(v_joyNum, v_joyButton)) {
-    m_GUI->joystickButtonDown(v_joyNum, v_joyButton);
+           i_xmkey.toJoystickButton(axisEvent.joystickNum, v_joyButton)) {
+    m_GUI->joystickButtonDown(axisEvent.joystickNum, v_joyButton);
     checkEvents();
   }
 
-  else if (i_xmkey.toJoystickAxisMotion(v_joyNum, v_joyAxis, v_joyAxisValue)) {
-    handleJoyAxisRepeat(v_joyNum, v_joyAxis, v_joyAxisValue);
+  else if (i_xmkey.toJoystickAxisMotion(axisEvent)) {
+    handleJoyAxis(axisEvent);
 
     checkEvents();
   }

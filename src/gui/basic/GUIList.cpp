@@ -911,9 +911,9 @@ bool UIList::eventJump(int count) {
   return eventJumpAbs(m_nVisibleSelected + count);
 }
 
-bool UIList::eventJumpAbs(int index) {
+bool UIList::eventJumpAbs(int index, bool allowNegative) {
   int last = (int)(m_Entries.size() - m_filteredItems - 1);
-  if (index < 0)
+  if (allowNegative && index < 0)
     index = last + index + 1;
   index = clamp(index, 0, last);
 
@@ -945,11 +945,11 @@ bool UIList::keyDown(int nKey, SDL_Keymod mod, const std::string &i_utf8Char) {
         break;
       return true;
     case SDLK_HOME:
-      if (eventJumpAbs(0))
+      if (eventJumpAbs(0, true))
         break;
       return true;
     case SDLK_END:
-      if (eventJumpAbs(-1))
+      if (eventJumpAbs(-1, true))
         break;
       return true;
 
@@ -1001,24 +1001,22 @@ bool UIList::keyDown(int nKey, SDL_Keymod mod, const std::string &i_utf8Char) {
   return false;
 }
 
-bool UIList::joystickAxisMotion(Uint8 i_joyNum,
-                                Uint8 i_joyAxis,
-                                Sint16 i_joyAxisValue) {
-  switch (i_joyAxis) {
+bool UIList::joystickAxisMotion(JoyAxisEvent event) {
+  switch (event.axis) {
     case SDL_CONTROLLER_AXIS_LEFTX:
-      if (i_joyAxisValue <= -(GUI_JOYSTICK_MINIMUM_DETECTION)) {
+      if (event.axisValue <= -INPUT_JOYSTICK_DEADZONE_MENU) {
         eventLeft();
         return true;
-      } else if (i_joyAxisValue >= GUI_JOYSTICK_MINIMUM_DETECTION) {
+      } else if (event.axisValue >= INPUT_JOYSTICK_DEADZONE_MENU) {
         eventRight();
         return true;
       }
       break;
     case SDL_CONTROLLER_AXIS_LEFTY: {
-      if (i_joyAxisValue <= -(GUI_JOYSTICK_MINIMUM_DETECTION)) {
+      if (event.axisValue <= -INPUT_JOYSTICK_DEADZONE_MENU) {
         eventUp();
         return true;
-      } else if (i_joyAxisValue >= GUI_JOYSTICK_MINIMUM_DETECTION) {
+      } else if (event.axisValue >= INPUT_JOYSTICK_DEADZONE_MENU) {
         eventDown();
         return true;
       }

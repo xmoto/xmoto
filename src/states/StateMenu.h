@@ -22,39 +22,12 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #define __STATEMENU_H__
 
 #include <array>
+#include "include/xm_SDL.h"
 
 #include "GameState.h"
 
-/* These should be pretty reasonable defaults */
-#define JOYSTICK_REPEAT_DELAY 500 // 500 ms
-#define JOYSTICK_REPEAT_RATE (1000 / 33) // 33 times/second
-
 class UIRoot;
 class GameApp;
-
-struct JoystickEvent {
-  Uint8 joyNum;
-  Uint8 joyAxis;
-  Sint16 joyAxisValue;
-};
-
-struct JoystickRepeatInfo {
-  bool isHeld;
-  SDL_TimerID timer;
-};
-
-enum JoyAxisIndex {
-  JOYAXIS_LEFTX = 0,
-  JOYAXIS_LEFTY,
-
-  JOYAXIS_RIGHTX,
-  JOYAXIS_RIGHTY,
-
-  JOYAXIS_TRIGGERLEFT,
-  JOYAXIS_TRIGGERRIGHT,
-
-  NUM_JOYAXES
-};
 
 class StateMenu : public GameState {
 public:
@@ -73,18 +46,23 @@ public:
   /* input */
   virtual void xmKey(InputEventType i_type, const XMKey &i_xmkey);
 
-  void handleJoyAxisRepeat(Uint8 v_joyNum, Uint8 v_joyAxis, Sint16 v_joyAxisValue);
+  void handleJoyAxis(JoyAxisEvent event);
   void clearRepeatTimer(SDL_TimerID &timer);
 
   UIRoot *getGUI() const { return m_GUI; }
-  JoystickEvent getJoystickRepeat() const { return m_joystickRepeat; }
+  JoyAxisEvent getJoystickRepeat() const { return m_joystickRepeat; }
 
-  static Uint32 timerCallback(Uint32 interval, void *param);
+  static Uint32 repeatTimerCallback(Uint32 interval, void *param);
+
+  void resetJoyAxis(JoyAxis &axis);
+  void resetJoyAxes();
 
 private:
-  // the inner array has 2 values for indicating the direction; 0 is negative, 1 is positive
-  std::array<std::array<JoystickRepeatInfo, 2>, NUM_JOYAXES> joyAxes;
-  JoystickEvent m_joystickRepeat;
+  using JoyAxes = std::array<JoyAxis, SDL_CONTROLLER_AXIS_MAX>;
+  std::vector<JoyAxes> m_joyAxes;
+  JoyAxisEvent m_joystickRepeat;
+
+  JoyAxes &getAxesByJoyIndex(uint8_t index) { return m_joyAxes[index]; }
 
 protected:
   virtual void checkEvents() = 0;

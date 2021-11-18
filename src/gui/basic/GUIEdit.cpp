@@ -27,7 +27,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "xmoto/Game.h"
 #include "common/TextEdit.h"
 
-#include <tuple> // for std::tie
+#include <tuple> // std::tie
 
 /*===========================================================================
 Painting
@@ -242,9 +242,7 @@ bool UIEdit::textInput(int nKey, SDL_Keymod mod, const std::string &i_utf8Char) 
   }
 }
 
-bool UIEdit::joystickAxisMotion(Uint8 i_joyNum,
-                                Uint8 i_joyAxis,
-                                Sint16 i_joyAxisValue) {
+bool UIEdit::joystickAxisMotion(JoyAxisEvent event) {
   return false;
 }
 

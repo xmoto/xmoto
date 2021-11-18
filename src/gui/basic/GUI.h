@@ -33,8 +33,8 @@ class RenderSurface;
 #include "common/Theme.h"
 #include "helpers/VMath.h"
 #include "include/xm_SDL.h"
+#include "xmoto/XMKey.h"
 
-#define GUI_JOYSTICK_MINIMUM_DETECTION 8000
 #define UGLY_MODE_WINDOW_BG MAKE_COLOR(35, 35, 35, 255)
 
 /*===========================================================================
@@ -189,9 +189,7 @@ public:
   virtual bool textInput(int nKey, SDL_Keymod mod, const std::string &i_utf8Char) {
     return false;
   }
-  virtual bool joystickAxisMotion(Uint8 i_joyNum,
-                                  Uint8 i_joyAxis,
-                                  Sint16 i_joyAxisValue) {
+  virtual bool joystickAxisMotion(JoyAxisEvent event) {
     return false;
   }
   virtual bool joystickButtonDown(Uint8 i_joyNum, Uint8 i_joyButton) {
@@ -381,9 +379,7 @@ public:
   virtual void paint(void);
   virtual bool keyDown(int nKey, SDL_Keymod mod, const std::string &i_utf8Char);
   virtual bool textInput(int nKey, SDL_Keymod mod, const std::string &i_utf8Char);
-  virtual bool joystickAxisMotion(Uint8 i_joyNum,
-                                  Uint8 i_joyAxis,
-                                  Sint16 i_joyAxisValue);
+  virtual bool joystickAxisMotion(JoyAxisEvent event);
   virtual bool joystickButtonDown(Uint8 i_joyNum, Uint8 i_joyButton);
 
   virtual bool offerActivation(void) { return true; }
@@ -793,9 +789,7 @@ public:
   virtual void mouseHover(int x, int y);
   virtual bool offerActivation(void);
   virtual bool keyDown(int nKey, SDL_Keymod mod, const std::string &i_utf8Char);
-  virtual bool joystickAxisMotion(Uint8 i_joyNum,
-                                  Uint8 i_joyAxis,
-                                  Sint16 i_joyAxisValue);
+  virtual bool joystickAxisMotion(JoyAxisEvent event);
   virtual bool joystickButtonDown(Uint8 i_joyNum, Uint8 i_joyButton);
   virtual std::string subContextHelp(int x, int y);
 
@@ -899,7 +893,7 @@ private:
   void eventLeft();
   void eventRight();
   bool eventJump(int count);
-  bool eventJumpAbs(int index);
+  bool eventJumpAbs(int index, bool allowNegative = false);
 
   int m_headerHeight;
   int m_headerSubBorderHeight;
@@ -1028,9 +1022,7 @@ public:
   virtual bool keyDown(int nKey, SDL_Keymod mod, const std::string &i_utf8Char);
   virtual bool keyUp(int nKey, SDL_Keymod mod, const std::string &i_utf8Char);
   virtual bool textInput(int nKey, SDL_Keymod mod, const std::string &i_utf8Char);
-  virtual bool joystickAxisMotion(Uint8 i_joyNum,
-                                  Uint8 i_joyAxis,
-                                  Sint16 i_joyAxisValue);
+  virtual bool joystickAxisMotion(JoyAxisEvent event);
   virtual bool joystickButtonDown(Uint8 i_joyNum, Uint8 i_joyButton);
 
   void deactivate(UIWindow *pWindow);
@@ -1058,13 +1050,8 @@ private:
   /* Helpers */
   bool _RootKeyEvent(UIWindow *pWindow, UIRootKeyEvent Event);
 
-  bool _RootJoystickAxisMotionEvent(UIWindow *pWindow,
-                                    Uint8 i_joyNum,
-                                    Uint8 i_joyAxis,
-                                    Sint16 i_joyAxisValue);
-  bool _RootJoystickButtonDownEvent(UIWindow *pWindow,
-                                    Uint8 i_joyNum,
-                                    Uint8 i_joyButton);
+  bool _RootJoystickAxisMotionEvent(UIWindow *pWindow, JoyAxisEvent event);
+  bool _RootJoystickButtonDownEvent(UIWindow *pWindow, Uint8 i_joyNum, Uint8 i_joyButton);
 
   bool _RootMouseEvent(UIWindow *pWindow, UIRootMouseEvent Event);
   void _RootPaint(int x, int y, UIWindow *pWindow, UIRect *pRect);

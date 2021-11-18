@@ -21,8 +21,30 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #ifndef __XMKEY_H__
 #define __XMKEY_H__
 
-#define INPUT_JOYSTICK_MINIMUM_DETECTION 8000 // deadzone
-#define INPUT_JOYSTICK_MAXIMUM_VALUE 32760
+#include "include/xm_SDL.h"
+#include <string>
+#include <stdint.h>
+
+static const int32_t INPUT_JOYSTICK_MAX_VALUE = 32760;
+static const int32_t INPUT_JOYSTICK_DEADZONE_BASE = INPUT_JOYSTICK_MAX_VALUE / 4;
+static const int32_t INPUT_JOYSTICK_DEADZONE_MENU = INPUT_JOYSTICK_MAX_VALUE / 2;
+
+struct JoyAxisEvent {
+  Uint8 joystickNum;
+  Uint8 axis;
+  Sint16 axisValue;
+};
+
+struct JoyAxis {
+  bool isHeld;
+  SDL_TimerID repeatTimer;
+  int8_t dir;
+  int8_t lastDir;
+};
+
+bool isAxisTrigger(Uint8 axis);
+bool isAxisInsideDeadzone(Uint8 axis, Sint16 value);
+int32_t getAxisDeadzone(Uint8 axis);
 
 enum XMKey_input {
   XMK_NONE,
@@ -45,9 +67,6 @@ enum InputEventType {
   INPUT_SCROLL,
   INPUT_TEXT,
 };
-
-#include "include/xm_SDL.h"
-#include <string>
 
 /* define a key to do something (keyboard:a, mouse:left, ...) */
 class XMKey {
@@ -75,18 +94,16 @@ public:
   unsigned int getRepetition() const;
   inline bool isBound() const { return m_input != XMK_NONE; }
 
-  bool isAnalogic() const;
-  float getAnalogicValue() const;
-  bool isDirectionnel() const;
+  bool isAnalog() const;
+  float getAnalogValue() const;
+  bool isDirectional() const;
   XMKey_direction getDirection() const;
 
   bool toKeyboard(SDL_Keycode &nKey, SDL_Keymod &o_mod, std::string &o_utf8Char) const;
   bool toMouse(int &nX, int &nY, Uint8 &nButton) const;
   bool toMouseWheel(int &nX, int &nY, Sint32 &wheelX, Sint32 &wheelY) const;
   bool toJoystickButton(Uint8 &o_joyNum, Uint8 &o_joyButton) const;
-  bool toJoystickAxisMotion(Uint8 &o_joyNum,
-                            Uint8 &o_joyAxis,
-                            Sint16 &o_joyAxisValue) const;
+  bool toJoystickAxisMotion(JoyAxisEvent &event) const;
 
   inline SDL_Keycode getKeyboardSym() const { return m_keyboard_sym; }
   inline SDL_Keymod  getKeyboardMod() const { return m_keyboard_mod; }
