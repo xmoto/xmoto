@@ -49,6 +49,3 @@ CTestTestfile.cmake
 
 /[Bb]uild*/
 
-## Nix
-
-/result*
