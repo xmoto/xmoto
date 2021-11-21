@@ -31,7 +31,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "net/NetClient.h"
 #include "xmoto/Game.h"
 #include "xmoto/GameText.h"
-#include "xmoto/Input.h"
+#include "xmoto/input/Input.h"
 #include "xmoto/Renderer.h"
 #include "xmoto/Sound.h"
 #include "xmoto/SysMessage.h"

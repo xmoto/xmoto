@@ -23,14 +23,14 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 #include "Input.h"
 #include "InputLegacy.h"
-#include "Game.h"
-#include "GameText.h"
 #include "common/VFileIO.h"
 #include "common/XMSession.h"
 #include "db/xmDatabase.h"
 #include "helpers/Log.h"
 #include "helpers/Text.h"
 #include "helpers/VExcept.h"
+#include "xmoto/Game.h"
+#include "xmoto/GameText.h"
 #include <sstream>
 #include <utility>
 

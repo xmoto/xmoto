@@ -25,7 +25,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "helpers/RenderSurface.h"
 #include "helpers/Singleton.h"
 #include "include/xm_SDL.h"
-#include "xmoto/XMKey.h"
+#include "xmoto/input/XMKey.h"
 #include <map>
 #include <string>
 #include <vector>

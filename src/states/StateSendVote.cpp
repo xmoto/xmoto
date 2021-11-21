@@ -21,7 +21,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "StateSendVote.h"
 #include "common/XMSession.h"
 #include "thread/SendVoteThread.h"
-#include "xmoto/Input.h"
+#include "xmoto/input/Input.h"
 
 StateSendVote::StateSendVote(const std::string &i_idlevel,
                              const std::string &i_difficulty_value,

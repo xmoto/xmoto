@@ -306,8 +306,6 @@ set(xmoto_src
   xmoto/GameEvents.cpp xmoto/GameEvents.h
   xmoto/GameInit.cpp xmoto/GameText.h
   xmoto/GeomsManager.cpp xmoto/GeomsManager.h
-  xmoto/Input.cpp xmoto/Input.h
-  xmoto/InputLegacy.cpp xmoto/InputLegacy.h
   xmoto/LevelsManager.cpp xmoto/LevelsManager.h
   xmoto/LevelsText.h
   xmoto/LuaLibBase.cpp xmoto/LuaLibBase.h
@@ -326,8 +324,13 @@ set(xmoto_src
   xmoto/VideoRecorder.cpp xmoto/VideoRecorder.h
   xmoto/VirtualLevelsList.cpp xmoto/VirtualLevelsList.h
   xmoto/XMDemo.cpp xmoto/XMDemo.h
-  xmoto/XMKey.cpp xmoto/XMKey.h
   xmoto/sqlqueries.h
+)
+
+set(xmoto_input_src
+  xmoto/input/Input.cpp xmoto/input/Input.h
+  xmoto/input/InputLegacy.cpp xmoto/input/InputLegacy.h
+  xmoto/input/XMKey.cpp xmoto/input/XMKey.h
 )
 
 set(xmscene_src
@@ -396,6 +399,7 @@ add_executable(xmoto
   ${thread_src}
   ${xmincludes_src}
   ${xmoto_src}
+  ${xmoto_input_src}
   ${xmscene_src}
   $<$<PLATFORM_ID:Windows>:${PROJECT_SOURCE_DIR}/extra/xmoto.rc>
   $<$<PLATFORM_ID:Darwin>:${XMOTO_MACOS_ICON}>

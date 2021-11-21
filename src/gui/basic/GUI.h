@@ -33,7 +33,7 @@ class RenderSurface;
 #include "common/Theme.h"
 #include "helpers/VMath.h"
 #include "include/xm_SDL.h"
-#include "xmoto/XMKey.h"
+#include "xmoto/input/XMKey.h"
 
 #define UGLY_MODE_WINDOW_BG MAKE_COLOR(35, 35, 35, 255)
 

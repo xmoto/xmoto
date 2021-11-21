@@ -25,7 +25,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "gui/basic/GUI.h"
 #include "helpers/Log.h"
 #include "xmoto/Game.h"
-#include "xmoto/Input.h"
+#include "xmoto/input/Input.h"
 #include "xmscene/Camera.h"
 #include <stdint.h>
 #include <cstdlib>

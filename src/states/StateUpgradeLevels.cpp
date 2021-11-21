@@ -26,7 +26,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "helpers/Log.h"
 #include "thread/UpgradeLevelsThread.h"
 #include "xmoto/GameText.h"
-#include "xmoto/Input.h"
+#include "xmoto/input/Input.h"
 
 #define UPGRADE_LEVELS_NB_PROPOSAL 20
 

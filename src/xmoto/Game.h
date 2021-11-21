@@ -21,7 +21,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #ifndef __GAME_H__
 #define __GAME_H__
 
-#include "Input.h"
+#include "input/Input.h"
 #include "LevelsManager.h"
 #include "common/VCommon.h"
 #include "common/WWW.h"

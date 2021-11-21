@@ -18,11 +18,11 @@ along with XMOTO; if not, write to the Free Software
 Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 =============================================================================*/
 
-#include "XMKey.h"
-#include "Game.h"
-#include "GameText.h"
 #include "Input.h"
+#include "XMKey.h"
 #include "helpers/VExcept.h"
+#include "xmoto/Game.h"
+#include "xmoto/GameText.h"
 #include <sstream>
 
 bool isAxisTrigger(Uint8 axis) {

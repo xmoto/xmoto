@@ -23,7 +23,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
 #include "StateMessageBoxReceiver.h"
 #include "helpers/RenderSurface.h"
-#include "xmoto/XMKey.h"
+#include "xmoto/input/XMKey.h"
 #include <queue>
 #include <string>
 #include <utility>

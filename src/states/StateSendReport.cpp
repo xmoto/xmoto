@@ -21,7 +21,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "StateSendReport.h"
 #include "common/XMSession.h"
 #include "thread/SendReportThread.h"
-#include "xmoto/Input.h"
+#include "xmoto/input/Input.h"
 
 StateSendReport::StateSendReport(const std::string &i_author,
                                  const std::string &i_msg,
