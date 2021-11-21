@@ -164,7 +164,7 @@ void StatePreplaying::enter() {
       false, m_universe->getScenes()[0]->getGravity());
 
     // reset handler, set mirror mode
-    InputHandler::instance()->reset();
+    Input::instance()->reset();
     for (unsigned int j = 0; j < m_universe->getScenes().size(); j++) {
       for (unsigned int i = 0; i < m_universe->getScenes()[j]->Cameras().size();
            i++) {

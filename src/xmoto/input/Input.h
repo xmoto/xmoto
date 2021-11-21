@@ -128,12 +128,12 @@ struct Controls {
 /*===========================================================================
 Input handler class
 ===========================================================================*/
-class InputHandler : public Singleton<InputHandler> {
-  friend class Singleton<InputHandler>;
+class Input : public Singleton<Input> {
+  friend class Singleton<Input>;
 
 private:
-  InputHandler();
-  ~InputHandler() {}
+  Input();
+  ~Input() {}
 
 public:
   /* Methods */

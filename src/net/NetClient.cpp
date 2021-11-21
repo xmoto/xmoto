@@ -257,7 +257,7 @@ void NetClient::connect(const std::string &i_server, int i_port) {
   snprintf(buf,
            512,
            GAMETEXT_PRESSCTRLCTOCHAT,
-           InputHandler::instance()
+           Input::instance()
              ->getGlobalKey(INPUT_CHAT)
              ->toFancyString()
              .c_str());

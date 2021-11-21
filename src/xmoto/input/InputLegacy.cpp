@@ -54,14 +54,14 @@ void InputSDL12Compat::upgrade() {
 
   std::vector<IFullKey *> keys;
 
-  for (auto &f : InputHandler::instance()->m_globalControls) {
+  for (auto &f : Input::instance()->m_globalControls) {
     keys.push_back(&f);
   }
   for (int player = 0; player < INPUT_NB_PLAYERS; ++player) {
-    for (auto &f : InputHandler::instance()->m_controls[player].playerKeys) {
+    for (auto &f : Input::instance()->m_controls[player].playerKeys) {
       keys.push_back(&f);
     }
-    for (auto &f : InputHandler::instance()->m_controls[player].scriptActionKeys) {
+    for (auto &f : Input::instance()->m_controls[player].scriptActionKeys) {
       keys.push_back(&f);
     }
   }

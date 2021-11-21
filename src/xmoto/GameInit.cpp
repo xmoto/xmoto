@@ -422,7 +422,7 @@ void GameApp::run_load(int nNumArgs, char **ppcArgs) {
 
   // network requires the input information (to display the chat command)
   if (v_useGraphics) {
-    InputHandler::instance()->init(m_userConfig,
+    Input::instance()->init(m_userConfig,
                                    pDb,
                                    XMSession::instance()->profile(),
                                    XMSession::instance()->enableJoysticks());
@@ -792,8 +792,8 @@ void GameApp::manageEvent(SDL_Event *Event) {
       break;
     case SDL_CONTROLLERAXISMOTION:
       StateManager::instance()->xmKey(
-        InputHandler::instance()->joystickAxisSens(Event->caxis.value),
-        XMKey(InputHandler::instance()->getJoyId(Event->cbutton.which),
+        Input::instance()->joystickAxisSens(Event->caxis.value),
+        XMKey(Input::instance()->getJoyId(Event->cbutton.which),
               Event->caxis.axis,
               Event->caxis.value));
       break;
@@ -809,14 +809,14 @@ void GameApp::manageEvent(SDL_Event *Event) {
     case SDL_CONTROLLERBUTTONDOWN:
       StateManager::instance()->xmKey(
         INPUT_DOWN,
-        XMKey(InputHandler::instance()->getJoyId(Event->cbutton.which),
+        XMKey(Input::instance()->getJoyId(Event->cbutton.which),
               Event->cbutton.button));
       break;
 
     case SDL_CONTROLLERBUTTONUP:
       StateManager::instance()->xmKey(
         INPUT_UP,
-        XMKey(InputHandler::instance()->getJoyId(Event->cbutton.which),
+        XMKey(Input::instance()->getJoyId(Event->cbutton.which),
               Event->cbutton.button));
       break;
 
@@ -871,18 +871,18 @@ void GameApp::manageEvent(SDL_Event *Event) {
 
           if (!hasFocus) {
             const uint8_t* keys = SDL_GetKeyboardState(NULL);
-            bool b = InputHandler::instance()->getPlayerKey(INPUT_DRIVE, 0)->isPressed(keys, 0);
+            bool b = Input::instance()->getPlayerKey(INPUT_DRIVE, 0)->isPressed(keys, 0);
 
 #if 0
             // invalidate all pressed keys
             {
               for (unsigned int player = 0; player < INPUT_NB_PLAYERS; ++player) {
                 for (unsigned int i = 0; i < INPUT_NB_PLAYERKEYS; ++i) {
-                  StateManager::instance()->xmKey(INPUT_UP, *InputHandler::instance()->getPlayerKey(i, player));
+                  StateManager::instance()->xmKey(INPUT_UP, *Input::instance()->getPlayerKey(i, player));
                 }
               }
               for (unsigned int i = 0; i < INPUT_NB_GLOBALKEYS; ++i) {
-                StateManager::instance()->xmKey(INPUT_UP, *InputHandler::instance()->getGlobalKey(i));
+                StateManager::instance()->xmKey(INPUT_UP, *Input::instance()->getGlobalKey(i));
               }
             }
 #endif
@@ -1042,8 +1042,8 @@ void GameApp::run_unload() {
     delete m_pWebLevels;
   }
 
-  if (InputHandler::instance() != NULL) {
-    InputHandler::instance()
+  if (Input::instance() != NULL) {
+    Input::instance()
       ->uninit(); // uinit the input, but you can still save the config
   }
 
@@ -1073,7 +1073,7 @@ void GameApp::run_unload() {
   if (drawLib != NULL) { /* save config only if drawLib was initialized */
     XMSession::instance("file")->save(m_userConfig,
                                       xmDatabase::instance("main"));
-    InputHandler::instance()->saveConfig(
+    Input::instance()->saveConfig(
       m_userConfig,
       xmDatabase::instance("main"),
       XMSession::instance("file")->profile());
@@ -1088,7 +1088,7 @@ void GameApp::run_unload() {
     drawLib->unInit();
   }
 
-  InputHandler::destroy();
+  Input::destroy();
   LevelsManager::destroy();
   GeomsManager::destroy();
   Theme::destroy();

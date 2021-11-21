@@ -210,7 +210,7 @@ void StateMainMenu::enter() {
   } else {
     // Reset key binds if migrating from an SDL1.2 profile
     if (XMSession::instance()->keyCompatUpgrade()) {
-      InputHandler::instance()->keyCompatUpgrade();
+      Input::instance()->keyCompatUpgrade();
     }
 
     if (CheckWwwThread::isNeeded()) {
@@ -763,13 +763,13 @@ void StateMainMenu::xmKey(InputEventType i_type, const XMKey &i_xmkey) {
   UILevelList *v_list;
 
   if (i_type == INPUT_DOWN &&
-      i_xmkey == (*InputHandler::instance()->getGlobalKey(INPUT_HELP))) {
+      i_xmkey == (*Input::instance()->getGlobalKey(INPUT_HELP))) {
     StateManager::instance()->pushState(new StateHelp());
   }
 
   else if (i_type == INPUT_DOWN &&
            i_xmkey ==
-             (*InputHandler::instance()->getGlobalKey(INPUT_SWITCHFAVORITE))) {
+             (*Input::instance()->getGlobalKey(INPUT_SWITCHFAVORITE))) {
     /* switch favorites */
     v_newLevelsList = (UILevelList *)m_GUI->getChild(
       "MAIN:FRAME_LEVELS:TABS:NEWLEVELS_TAB:NEWLEVELS_LIST");

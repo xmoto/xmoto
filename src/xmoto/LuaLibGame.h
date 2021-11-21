@@ -25,7 +25,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include <string>
 
 class Scene;
-class InputHandler;
+class Input;
 
 class LuaLibGame : public LuaLibBase {
 public:
@@ -41,9 +41,9 @@ protected:
 
 private:
   Scene *m_pScene;
-  InputHandler *m_pActiveInputHandler;
+  Input *m_pActiveInput;
 
-  static InputHandler *m_exec_activeInputHandler;
+  static Input *m_exec_activeInput;
   static Scene *m_exec_world;
   static luaL_Reg m_gameFuncs[];
 

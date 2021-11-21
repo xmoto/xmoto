@@ -215,7 +215,7 @@ bool StatePlayingLocal::update() {
 
 void StatePlayingLocal::xmKey(InputEventType i_type, const XMKey &i_xmkey) {
   if (i_type == INPUT_DOWN &&
-      (i_xmkey == (*InputHandler::instance()->getGlobalKey(INPUT_PLAYINGPAUSE)) ||
+      (i_xmkey == (*Input::instance()->getGlobalKey(INPUT_PLAYINGPAUSE)) ||
        i_xmkey.getJoyButton() == SDL_CONTROLLER_BUTTON_START)) {
     if (isLockedScene() == false) {
       /* Escape pauses */
@@ -331,7 +331,7 @@ void StatePlayingLocal::xmKey(InputEventType i_type, const XMKey &i_xmkey) {
 #endif
 
   else if (i_type == INPUT_DOWN &&
-           i_xmkey == (*InputHandler::instance()->getGlobalKey(
+           i_xmkey == (*Input::instance()->getGlobalKey(
                         INPUT_RESTARTCHECKPOINT))) {
 
     bool v_isCheckpoint = false;
@@ -347,7 +347,7 @@ void StatePlayingLocal::xmKey(InputEventType i_type, const XMKey &i_xmkey) {
   }
 
   else if (i_type == INPUT_DOWN &&
-      i_xmkey == (*InputHandler::instance()->getGlobalKey(INPUT_LEVELINFO))) {
+      i_xmkey == (*Input::instance()->getGlobalKey(INPUT_LEVELINFO))) {
     if (!isLockedScene()) {
       m_displayStats = true;
       StateManager::instance()->pushState(new StateLevelInfoViewer(

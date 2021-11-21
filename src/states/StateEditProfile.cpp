@@ -95,7 +95,7 @@ void StateEditProfile::checkEvents() {
 
       /* save previous profile before loading the previous one */
       XMSession::instance()->saveProfile(xmDatabase::instance("main"));
-      InputHandler::instance()->saveConfig(GameApp::instance()->getUserConfig(),
+      Input::instance()->saveConfig(GameApp::instance()->getUserConfig(),
                                            xmDatabase::instance("main"),
                                            XMSession::instance()->profile());
 

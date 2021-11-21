@@ -34,26 +34,26 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include <sstream>
 #include <utility>
 
-InputHandler::InputHandler() {
+Input::Input() {
   reset();
 }
 
-void InputHandler::reset() {
+void Input::reset() {
   resetScriptKeyHooks();
 }
 
-bool InputHandler::areJoysticksEnabled() const {
+bool Input::areJoysticksEnabled() const {
   return SDL_GameControllerEventState(SDL_QUERY) == SDL_ENABLE;
 }
 
-void InputHandler::enableJoysticks(bool i_value) {
+void Input::enableJoysticks(bool i_value) {
   SDL_GameControllerEventState(i_value ? SDL_ENABLE : SDL_IGNORE);
 }
 
 /*===========================================================================
 Init/uninit
 ===========================================================================*/
-void InputHandler::init(UserConfig *pConfig,
+void Input::init(UserConfig *pConfig,
                         xmDatabase *pDb,
                         const std::string &i_id_profile,
                         bool i_enableJoysticks) {
@@ -69,7 +69,7 @@ void InputHandler::init(UserConfig *pConfig,
   loadConfig(pConfig, pDb, i_id_profile);
 }
 
-void InputHandler::uninit(void) {
+void Input::uninit(void) {
   /* Close all joysticks */
   for (unsigned int i = 0; i < m_Joysticks.size(); i++) {
     SDL_GameControllerClose(m_Joysticks[i]);
@@ -96,7 +96,7 @@ void InputHandler::uninit(void) {
  *         neg  dead-zone  pos
  *
  */
-float InputHandler::joyRawToFloat(float raw,
+float Input::joyRawToFloat(float raw,
                                   float neg,
                                   float deadzone_neg,
                                   float deadzone_pos,
@@ -121,7 +121,7 @@ float InputHandler::joyRawToFloat(float raw,
 /*===========================================================================
 Read configuration
 ===========================================================================*/
-void InputHandler::loadConfig(UserConfig *pConfig,
+void Input::loadConfig(UserConfig *pConfig,
                               xmDatabase *pDb,
                               const std::string &i_id_profile) {
   std::string v_key;
@@ -191,7 +191,7 @@ void InputHandler::loadConfig(UserConfig *pConfig,
 /*===========================================================================
 Add script key hook
 ===========================================================================*/
-void InputHandler::addScriptKeyHook(Scene *pGame,
+void Input::addScriptKeyHook(Scene *pGame,
                                     const std::string &keyName,
                                     const std::string &FuncName) {
   if (m_nNumScriptKeyHooks < MAX_SCRIPT_KEY_HOOKS) {
@@ -207,24 +207,24 @@ void InputHandler::addScriptKeyHook(Scene *pGame,
   }
 }
 
-int InputHandler::getNumScriptKeyHooks() const {
+int Input::getNumScriptKeyHooks() const {
   return m_nNumScriptKeyHooks;
 }
 
-InputScriptKeyHook InputHandler::getScriptKeyHooks(int i) const {
+InputScriptKeyHook Input::getScriptKeyHooks(int i) const {
   return m_ScriptKeyHooks[i];
 }
 
-XMKey InputHandler::getScriptActionKeys(int i_player,
+XMKey Input::getScriptActionKeys(int i_player,
                                         int i_actionScript) const {
   return m_controls[i_player].scriptActionKeys[i_actionScript].key;
 }
 
-std::string *InputHandler::getJoyId(Uint8 i_joynum) {
+std::string *Input::getJoyId(Uint8 i_joynum) {
   return &(m_JoysticksIds[i_joynum]);
 }
 
-Uint8 InputHandler::getJoyNum(const std::string &i_name) {
+Uint8 Input::getJoyNum(const std::string &i_name) {
   for (unsigned int i = 0; i < m_JoysticksIds.size(); i++) {
     if (m_JoysticksIds[i] == i_name) {
       return i;
@@ -233,7 +233,7 @@ Uint8 InputHandler::getJoyNum(const std::string &i_name) {
   throw Exception("Invalid joystick name");
 }
 
-std::string *InputHandler::getJoyIdByStrId(const std::string &i_name) {
+std::string *Input::getJoyIdByStrId(const std::string &i_name) {
   for (unsigned int i = 0; i < m_JoysticksIds.size(); i++) {
     if (m_JoysticksIds[i] == i_name) {
       return &(m_JoysticksIds[i]);
@@ -242,7 +242,7 @@ std::string *InputHandler::getJoyIdByStrId(const std::string &i_name) {
   throw Exception("Invalid joystick name");
 }
 
-SDL_GameController *InputHandler::getJoyById(std::string *i_id) {
+SDL_GameController *Input::getJoyById(std::string *i_id) {
   for (unsigned int i = 0; i < m_JoysticksIds.size(); i++) {
     if (&(m_JoysticksIds[i]) == i_id) {
       return m_Joysticks[i];
@@ -251,14 +251,14 @@ SDL_GameController *InputHandler::getJoyById(std::string *i_id) {
   throw Exception("Invalid joystick id");
 }
 
-InputEventType InputHandler::joystickAxisSens(Sint16 m_joyAxisValue) {
+InputEventType Input::joystickAxisSens(Sint16 m_joyAxisValue) {
   return abs(m_joyAxisValue) < INPUT_JOYSTICK_DEADZONE_BASE ? INPUT_UP : INPUT_DOWN;
 }
 
 /*===========================================================================
 Set totally default configuration - useful for when something goes wrong
 ===========================================================================*/
-void InputHandler::setDefaultConfig() {
+void Input::setDefaultConfig() {
   m_controls[0].playerKeys[INPUT_DRIVE] = IFullKey("KeyDrive", XMKey(SDLK_UP, KMOD_NONE), GAMETEXT_DRIVE);
   m_controls[0].playerKeys[INPUT_BRAKE] = IFullKey("KeyBrake", XMKey(SDLK_DOWN, KMOD_NONE), GAMETEXT_BRAKE);
   m_controls[0].playerKeys[INPUT_FLIPLEFT] = IFullKey("KeyFlipLeft", XMKey(SDLK_LEFT, KMOD_NONE), GAMETEXT_FLIPLEFT);
@@ -325,16 +325,16 @@ void InputHandler::setDefaultConfig() {
   m_globalControls[INPUT_REPLAYINGABITSLOWER] = IFullKey("KeyReplayingABitSlower", XMKey(SDLK_DOWN, KMOD_LCTRL), GAMETEXT_REPLAYINGABITSLOWER, false);
 
   for (int player = 0; player < INPUT_NB_PLAYERS; ++player) {
-    for (auto &f : InputHandler::instance()->m_controls[player].scriptActionKeys) {
+    for (auto &f : Input::instance()->m_controls[player].scriptActionKeys) {
       f.key = XMKey();
     }
   }
 }
 
-void InputHandler::keyCompatUpgrade() {
+void Input::keyCompatUpgrade() {
   InputSDL12Compat::upgrade();
 
-  InputHandler::instance()->saveConfig(
+  Input::instance()->saveConfig(
     GameApp::instance()->getUserConfig(),
     xmDatabase::instance("main"),
     XMSession::instance("file")->profile());
@@ -348,7 +348,7 @@ void InputHandler::keyCompatUpgrade() {
 Get key by action...
 ===========================================================================*/
 
-std::string InputHandler::getKeyByAction(const std::string &Action,
+std::string Input::getKeyByAction(const std::string &Action,
                                          bool i_tech) {
   for (unsigned int i = 0; i < INPUT_NB_PLAYERS; i++) {
     std::ostringstream v_n;
@@ -376,7 +376,7 @@ std::string InputHandler::getKeyByAction(const std::string &Action,
   return "?";
 }
 
-void InputHandler::saveConfig(UserConfig *pConfig,
+void Input::saveConfig(UserConfig *pConfig,
                               xmDatabase *pDb,
                               const std::string &i_id_profile) {
   pDb->config_setValue_begin();
@@ -418,47 +418,47 @@ void InputHandler::saveConfig(UserConfig *pConfig,
   pDb->config_setValue_end();
 }
 
-void InputHandler::setSCRIPTACTION(int i_player, int i_action, XMKey i_value) {
+void Input::setSCRIPTACTION(int i_player, int i_action, XMKey i_value) {
   m_controls[i_player].scriptActionKeys[i_action].key = i_value;
 }
 
-XMKey InputHandler::getSCRIPTACTION(int i_player, int i_action) const {
+XMKey Input::getSCRIPTACTION(int i_player, int i_action) const {
   return m_controls[i_player].scriptActionKeys[i_action].key;
 }
 
-void InputHandler::setGlobalKey(unsigned int INPUT_key, XMKey i_value) {
+void Input::setGlobalKey(unsigned int INPUT_key, XMKey i_value) {
   m_globalControls[INPUT_key].key = i_value;
 }
 
-const XMKey *InputHandler::getGlobalKey(unsigned int INPUT_key) const {
+const XMKey *Input::getGlobalKey(unsigned int INPUT_key) const {
   return &(m_globalControls[INPUT_key].key);
 }
 
-std::string InputHandler::getGlobalKeyHelp(unsigned int INPUT_key) const {
+std::string Input::getGlobalKeyHelp(unsigned int INPUT_key) const {
   return m_globalControls[INPUT_key].help;
 }
 
-bool InputHandler::getGlobalKeyCustomizable(unsigned int INPUT_key) const {
+bool Input::getGlobalKeyCustomizable(unsigned int INPUT_key) const {
   return m_globalControls[INPUT_key].customizable;
 }
 
-void InputHandler::setPlayerKey(unsigned int INPUT_key,
+void Input::setPlayerKey(unsigned int INPUT_key,
                                 int i_player,
                                 XMKey i_value) {
   m_controls[i_player].playerKeys[INPUT_key].key = i_value;
 }
 
-const XMKey *InputHandler::getPlayerKey(unsigned int INPUT_key,
+const XMKey *Input::getPlayerKey(unsigned int INPUT_key,
                                         int i_player) const {
   return &(m_controls[i_player].playerKeys[INPUT_key].key);
 }
 
-std::string InputHandler::getPlayerKeyHelp(unsigned int INPUT_key,
+std::string Input::getPlayerKeyHelp(unsigned int INPUT_key,
                                            int i_player) const {
   return m_controls[i_player].playerKeys[INPUT_key].help;
 }
 
-bool InputHandler::isANotGameSetKey(XMKey *i_xmkey) const {
+bool Input::isANotGameSetKey(XMKey *i_xmkey) const {
   for (unsigned int i = 0; i < INPUT_NB_PLAYERS; i++) {
     for (unsigned int j = 0; j < INPUT_NB_PLAYERKEYS; j++) {
       if ((*getPlayerKey(j, i)) == *i_xmkey) {
@@ -474,7 +474,7 @@ bool InputHandler::isANotGameSetKey(XMKey *i_xmkey) const {
   return true;
 }
 
-void InputHandler::recheckJoysticks() {
+void Input::recheckJoysticks() {
   std::string v_joyName, v_joyId;
   int n;
   bool v_continueToOpen = true;
@@ -540,7 +540,7 @@ void InputHandler::recheckJoysticks() {
   }
 }
 
-void InputHandler::loadJoystickMappings() {
+void Input::loadJoystickMappings() {
   const char *mappingFile = "gamecontrollerdb.txt";
   FileHandle *file = XMFS::openIFile(FDT_DATA, mappingFile);
   if (!file) {
@@ -559,7 +559,7 @@ void InputHandler::loadJoystickMappings() {
   XMFS::closeFile(file);
 }
 
-std::vector<std::string> &InputHandler::getJoysticksNames() {
+std::vector<std::string> &Input::getJoysticksNames() {
   return m_JoysticksNames;
 }
 

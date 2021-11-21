@@ -74,14 +74,14 @@ XMKey::XMKey(SDL_Event &i_event) {
 
     case SDL_CONTROLLERAXISMOTION:
       m_input = XMK_JOYSTICKAXIS;
-      m_joyId = InputHandler::instance()->getJoyId(i_event.caxis.which);
+      m_joyId = Input::instance()->getJoyId(i_event.caxis.which);
       m_joyAxis = i_event.caxis.axis;
       m_joyAxisValue = i_event.caxis.value;
       break;
 
     case SDL_CONTROLLERBUTTONDOWN:
       m_input = XMK_JOYSTICKBUTTON;
-      m_joyId = InputHandler::instance()->getJoyId(i_event.cbutton.which);
+      m_joyId = Input::instance()->getJoyId(i_event.cbutton.which);
       m_joyButton = i_event.cbutton.button;
       break;
 
@@ -190,7 +190,7 @@ XMKey::XMKey(const std::string &i_key, bool i_basicMode) {
     m_joyAxisValue = (Sint16)atoi(v_current.c_str());
 
     // get the joyid
-    m_joyId = InputHandler::instance()->getJoyIdByStrId(v_rest);
+    m_joyId = Input::instance()->getJoyIdByStrId(v_rest);
   } else if (v_current == "J") { // joystick button
     m_input = XMK_JOYSTICKBUTTON;
 
@@ -201,7 +201,7 @@ XMKey::XMKey(const std::string &i_key, bool i_basicMode) {
     v_current = v_rest.substr(0, pos);
     v_rest = v_rest.substr(pos + 1, v_rest.length() - pos - 1);
 
-    m_joyId = InputHandler::instance()->getJoyIdByStrId(v_rest);
+    m_joyId = Input::instance()->getJoyIdByStrId(v_rest);
     m_joyButton = (Uint8)atoi(v_current.c_str());
   } else {
     throw InvalidSystemKeyException();
@@ -221,7 +221,7 @@ bool XMKey::isAnalog() const {
 }
 
 float XMKey::getAnalogValue() const {
-  return InputHandler::joyRawToFloat(m_joyAxisValue,
+  return Input::joyRawToFloat(m_joyAxisValue,
                                      -(float)INPUT_JOYSTICK_MAX_VALUE,
                                      -(float)INPUT_JOYSTICK_DEADZONE_BASE,
                                       (float)INPUT_JOYSTICK_DEADZONE_BASE,
@@ -463,7 +463,7 @@ bool XMKey::isPressed(const Uint8 *i_keystate, Uint8 i_mousestate) const {
 
   if (m_input == XMK_JOYSTICKAXIS) {
     Sint16 v_axisValue = SDL_GameControllerGetAxis(
-      InputHandler::instance()->getJoyById(m_joyId), (SDL_GameControllerAxis)m_joyAxis);
+      Input::instance()->getJoyById(m_joyId), (SDL_GameControllerAxis)m_joyAxis);
     return ((v_axisValue > INPUT_JOYSTICK_DEADZONE_BASE &&
              m_joyAxisValue > INPUT_JOYSTICK_DEADZONE_BASE) ||
             (v_axisValue < -(INPUT_JOYSTICK_DEADZONE_BASE) &&
@@ -471,7 +471,7 @@ bool XMKey::isPressed(const Uint8 *i_keystate, Uint8 i_mousestate) const {
   }
 
   if (m_input == XMK_JOYSTICKBUTTON) {
-    return SDL_GameControllerGetButton(InputHandler::instance()->getJoyById(m_joyId),
+    return SDL_GameControllerGetButton(Input::instance()->getJoyById(m_joyId),
                                  (SDL_GameControllerButton)m_joyButton) == 1;
   }
 
@@ -522,7 +522,7 @@ bool XMKey::toJoystickButton(Uint8 &o_joyNum, Uint8 &o_joyButton) const {
   }
 
   // takes potentially time. could be better by storing the joy id
-  o_joyNum = InputHandler::instance()->getJoyNum(*m_joyId);
+  o_joyNum = Input::instance()->getJoyNum(*m_joyId);
 
   o_joyButton = m_joyButton;
 
@@ -535,7 +535,7 @@ bool XMKey::toJoystickAxisMotion(JoyAxisEvent &event) const {
   }
 
   // takes potentially time. could be better by storing the joy id
-  event.joystickNum = InputHandler::instance()->getJoyNum(*m_joyId);
+  event.joystickNum = Input::instance()->getJoyNum(*m_joyId);
 
   event.axis = m_joyAxis;
   event.axisValue = m_joyAxisValue;

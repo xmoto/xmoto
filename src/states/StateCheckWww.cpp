@@ -40,7 +40,7 @@ void StateCheckWww::callAfterThreadFinished(int threadResult) {
 
 void StateCheckWww::xmKey(InputEventType i_type, const XMKey &i_xmkey) {
   if (i_type == INPUT_DOWN &&
-      i_xmkey == (*InputHandler::instance()->getGlobalKey(INPUT_KILLPROCESS))) {
+      i_xmkey == (*Input::instance()->getGlobalKey(INPUT_KILLPROCESS))) {
     if (m_threadStarted == true) {
       m_pThread->safeKill();
     }

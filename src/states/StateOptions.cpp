@@ -491,7 +491,7 @@ void StateOptions::checkEvents() {
     v_button->setClicked(false);
 
     XMSession::instance()->setEnableJoysticks(v_button->getChecked());
-    InputHandler::instance()->enableJoysticks(
+    Input::instance()->enableJoysticks(
       XMSession::instance()->enableJoysticks());
   }
 
@@ -2711,11 +2711,11 @@ void StateOptions::updateControlsList() {
   UIListEntry *p;
 
   for (unsigned int i = 0; i < INPUT_NB_GLOBALKEYS; i++) {
-    if (InputHandler::instance()->getGlobalKeyCustomizable(i)) {
-      p = pList->addEntry(InputHandler::instance()->getGlobalKeyHelp(i));
+    if (Input::instance()->getGlobalKeyCustomizable(i)) {
+      p = pList->addEntry(Input::instance()->getGlobalKeyHelp(i));
       p->Text.push_back(
-        InputHandler::instance()->getGlobalKey(i)->toFancyString());
-      p->Text.push_back(InputHandler::instance()->getGlobalKey(i)->toString());
+        Input::instance()->getGlobalKey(i)->toFancyString());
+      p->Text.push_back(Input::instance()->getGlobalKey(i)->toString());
     }
   }
 
@@ -2732,11 +2732,11 @@ void StateOptions::updateControlsList() {
 
     // player keys
     for (unsigned int j = 0; j < INPUT_NB_PLAYERKEYS; j++) {
-      p = pList->addEntry(InputHandler::instance()->getPlayerKeyHelp(j, i));
+      p = pList->addEntry(Input::instance()->getPlayerKeyHelp(j, i));
       p->Text.push_back(
-        InputHandler::instance()->getPlayerKey(j, i)->toFancyString());
+        Input::instance()->getPlayerKey(j, i)->toFancyString());
       p->Text.push_back(
-        InputHandler::instance()->getPlayerKey(j, i)->toString());
+        Input::instance()->getPlayerKey(j, i)->toString());
     }
 
     // player script keys
@@ -2746,9 +2746,9 @@ void StateOptions::updateControlsList() {
 
       p = pList->addEntry(GAMETEXT_SCRIPTACTION + std::string(" ") + v_k.str());
       p->Text.push_back(
-        InputHandler::instance()->getSCRIPTACTION(i, k).toFancyString());
+        Input::instance()->getSCRIPTACTION(i, k).toFancyString());
       p->Text.push_back(
-        InputHandler::instance()->getSCRIPTACTION(i, k).toString());
+        Input::instance()->getSCRIPTACTION(i, k).toString());
     }
   }
 }
@@ -2935,7 +2935,7 @@ void StateOptions::updateJoysticksStrings() {
   v_someText = reinterpret_cast<UIStatic *>(
     m_GUI->getChild("MAIN:TABS:GENERAL_TAB:TABS:CONTROLS_TAB:PLAYER_TABS:"
                     "CONTROLS_TAB_GENERAL:STATIC_JOYSTICK_FOUND"));
-  unsigned int v_nbJoy = InputHandler::instance()->getJoysticksNames().size();
+  unsigned int v_nbJoy = Input::instance()->getJoysticksNames().size();
 
   if (v_nbJoy == 0) {
     v_someText->setCaption(GAMETEXT_NOJOYSTICKFOUND);
@@ -2943,7 +2943,7 @@ void StateOptions::updateJoysticksStrings() {
     char buf[256];
     snprintf(buf, 256, GAMETEXT_JOYSTICKSFOUND(v_nbJoy), v_nbJoy);
     v_someText->setCaption(buf + std::string(" : ") +
-                           InputHandler::instance()->getJoysticksNames()[0]);
+                           Input::instance()->getJoysticksNames()[0]);
   } else {
     char buf[256];
     snprintf(buf, 256, GAMETEXT_JOYSTICKSFOUND(v_nbJoy), v_nbJoy);
@@ -3084,7 +3084,7 @@ void StateOptions::sendFromMessageBox(const std::string &i_id,
                                       const std::string &i_input) {
   if (i_id == "RESETSTODEFAULTS") {
     if (i_button == UI_MSGBOX_YES) {
-      InputHandler::instance()->setDefaultConfig();
+      Input::instance()->setDefaultConfig();
       XMSession::instance()->setToDefault();
       updateOptions();
     }
@@ -3117,8 +3117,8 @@ void StateOptions::setInputKey(const std::string &i_strKey,
     // player keys
     for (unsigned int j = 0; j < INPUT_NB_PLAYERKEYS; j++) {
       if (i_strKey ==
-          InputHandler::instance()->getPlayerKeyHelp(j, i) + v_n.str()) {
-        InputHandler::instance()->setPlayerKey(j, i, XMKey(i_key));
+          Input::instance()->getPlayerKeyHelp(j, i) + v_n.str()) {
+        Input::instance()->setPlayerKey(j, i, XMKey(i_key));
       }
     }
 
@@ -3127,14 +3127,14 @@ void StateOptions::setInputKey(const std::string &i_strKey,
       std::ostringstream v_k;
       v_k << (k + 1);
       if (i_strKey == GAMETEXT_SCRIPTACTION + v_n.str() + " " + v_k.str()) {
-        InputHandler::instance()->setSCRIPTACTION(i, k, XMKey(i_key));
+        Input::instance()->setSCRIPTACTION(i, k, XMKey(i_key));
       }
     }
   }
 
   for (unsigned int i = 0; i < INPUT_NB_GLOBALKEYS; i++) {
-    if (i_strKey == InputHandler::instance()->getGlobalKeyHelp(i)) {
-      InputHandler::instance()->setGlobalKey(i, XMKey(i_key));
+    if (i_strKey == Input::instance()->getGlobalKeyHelp(i)) {
+      Input::instance()->setGlobalKey(i, XMKey(i_key));
     }
   }
 }

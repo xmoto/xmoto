@@ -38,7 +38,7 @@ StateUpdateThemesList::~StateUpdateThemesList() {
 
 void StateUpdateThemesList::xmKey(InputEventType i_type, const XMKey &i_xmkey) {
   if (i_type == INPUT_DOWN &&
-      i_xmkey == (*InputHandler::instance()->getGlobalKey(INPUT_KILLPROCESS))) {
+      i_xmkey == (*Input::instance()->getGlobalKey(INPUT_KILLPROCESS))) {
     m_pThread->safeKill();
   }
 }

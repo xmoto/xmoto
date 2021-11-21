@@ -85,13 +85,13 @@ void StateDeadJust::xmKey(InputEventType i_type, const XMKey &i_xmkey) {
 
   else if (i_type == INPUT_DOWN &&
            i_xmkey ==
-             (*InputHandler::instance()->getGlobalKey(INPUT_RESTARTLEVEL))) {
+             (*Input::instance()->getGlobalKey(INPUT_RESTARTLEVEL))) {
     /* retart immediatly the level */
     restartLevel();
   }
 
   else if (i_type == INPUT_DOWN &&
-           i_xmkey == (*InputHandler::instance()->getGlobalKey(
+           i_xmkey == (*Input::instance()->getGlobalKey(
                         INPUT_RESTARTCHECKPOINT))) {
     toCheckpointBeeingDead();
   }

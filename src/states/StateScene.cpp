@@ -355,7 +355,7 @@ void StateScene::xmKey(InputEventType i_type, const XMKey &i_xmkey) {
   GameApp *pGame = GameApp::instance();
 
   if (i_xmkey ==
-      (*InputHandler::instance()->getGlobalKey(INPUT_LEVELWATCHING))) {
+      (*Input::instance()->getGlobalKey(INPUT_LEVELWATCHING))) {
     if (i_type == INPUT_UP) {
       if (m_cameraAnim != NULL) {
         if (autoZoom() && m_cameraAnim->allowNextStep()) {
@@ -371,7 +371,7 @@ void StateScene::xmKey(InputEventType i_type, const XMKey &i_xmkey) {
 
   else if (i_type == INPUT_DOWN &&
            i_xmkey ==
-             (*InputHandler::instance()->getGlobalKey(INPUT_SWITCHSAFEMODE))) {
+             (*Input::instance()->getGlobalKey(INPUT_SWITCHSAFEMODE))) {
     bool bSafemodeNotActive = !XMSession::instance()->isSafemodeActive();
 
     XMSession::instance()->setSafemodeActive(bSafemodeNotActive);
@@ -382,21 +382,21 @@ void StateScene::xmKey(InputEventType i_type, const XMKey &i_xmkey) {
 
   else if (i_type == INPUT_DOWN &&
            i_xmkey ==
-             (*InputHandler::instance()->getGlobalKey(INPUT_RESTARTLEVEL))) {
+             (*Input::instance()->getGlobalKey(INPUT_RESTARTLEVEL))) {
     if (!XMSession::instance()->isSafemodeActive())
       restartLevel();
   }
 
   else if (i_type == INPUT_DOWN &&
            i_xmkey ==
-             (*InputHandler::instance()->getGlobalKey(INPUT_SWITCHPLAYER))) {
+             (*Input::instance()->getGlobalKey(INPUT_SWITCHPLAYER))) {
     if (m_universe != NULL) {
       m_universe->switchFollowCamera();
     }
   }
 
   else if (i_type == INPUT_DOWN &&
-           i_xmkey == (*InputHandler::instance()->getGlobalKey(
+           i_xmkey == (*Input::instance()->getGlobalKey(
                         INPUT_SWITCHTRACKINGSHOTMODE))) {
     if (m_universe != NULL && m_renderer != NULL) {
       m_trackingShotMode = !m_trackingShotMode;
@@ -440,7 +440,7 @@ void StateScene::xmKey(InputEventType i_type, const XMKey &i_xmkey) {
 
   else if (i_type == INPUT_DOWN &&
            i_xmkey ==
-             (*InputHandler::instance()->getGlobalKey(INPUT_SWITCHFAVORITE))) {
+             (*Input::instance()->getGlobalKey(INPUT_SWITCHFAVORITE))) {
     if (m_universe != NULL) {
       if (m_universe->getScenes().size() > 0) { // just add the first world
         pGame->switchLevelToFavorite(
@@ -452,7 +452,7 @@ void StateScene::xmKey(InputEventType i_type, const XMKey &i_xmkey) {
 
   else if (i_type == INPUT_DOWN &&
            i_xmkey ==
-             (*InputHandler::instance()->getGlobalKey(INPUT_SWITCHBLACKLIST))) {
+             (*Input::instance()->getGlobalKey(INPUT_SWITCHBLACKLIST))) {
     if (m_universe != NULL) {
       if (m_universe->getScenes().size() >
           0) { // just blacklist the first world
@@ -466,20 +466,20 @@ void StateScene::xmKey(InputEventType i_type, const XMKey &i_xmkey) {
 
   else if (i_type == INPUT_DOWN &&
            i_xmkey ==
-             (*InputHandler::instance()->getGlobalKey(INPUT_NEXTLEVEL))) {
+             (*Input::instance()->getGlobalKey(INPUT_NEXTLEVEL))) {
     if (!XMSession::instance()->isSafemodeActive())
       nextLevel();
   }
 
   else if (i_type == INPUT_DOWN &&
            i_xmkey ==
-             (*InputHandler::instance()->getGlobalKey(INPUT_PREVIOUSLEVEL))) {
+             (*Input::instance()->getGlobalKey(INPUT_PREVIOUSLEVEL))) {
     if (!XMSession::instance()->isSafemodeActive())
       nextLevel(false);
   }
 
   else if (i_type == INPUT_DOWN &&
-           i_xmkey == (*InputHandler::instance()->getGlobalKey(
+           i_xmkey == (*Input::instance()->getGlobalKey(
                         INPUT_SWITCHHIGHSCOREINFORMATION))) {
     if (m_renderer != NULL) {
       if (XMSession::instance()->showHighscoreInGame() == false) {
@@ -499,7 +499,7 @@ void StateScene::xmKey(InputEventType i_type, const XMKey &i_xmkey) {
   }
 
   else if (i_type == INPUT_DOWN &&
-           i_xmkey == (*InputHandler::instance()->getGlobalKey(
+           i_xmkey == (*Input::instance()->getGlobalKey(
                         INPUT_SWITCHRENDERGHOSTTRAIL))) {
     // toogle
     XMSession::instance()->setRenderGhostTrail(
@@ -773,7 +773,7 @@ void StateScene::closePlaying() {
     m_universe = NULL;
   }
 
-  InputHandler::instance()->resetScriptKeyHooks();
+  Input::instance()->resetScriptKeyHooks();
 }
 
 bool StateScene::isLockedScene() const {

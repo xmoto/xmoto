@@ -42,7 +42,7 @@ StateMenu::StateMenu(bool drawStateBehind, bool updateStatesBehind)
   m_renderFps = XMSession::instance()->maxRenderFps();
   m_updateFps = 30;
 
-  for (Uint8 i = 0; i < InputHandler::instance()->getNumJoysticks(); i++) {
+  for (Uint8 i = 0; i < Input::instance()->getNumJoysticks(); i++) {
     m_joyAxes.push_back(JoyAxes());
   }
 }
@@ -126,8 +126,8 @@ void StateMenu::handleJoyAxis(JoyAxisEvent event) {
 
   auto &axis = getAxesByJoyIndex(event.joystickNum)[event.axis];
 
-  std::string *joyId = InputHandler::instance()->getJoyId(event.joystickNum);
-  SDL_GameController *joystick = InputHandler::instance()->getJoyById(joyId);
+  std::string *joyId = Input::instance()->getJoyId(event.joystickNum);
+  SDL_GameController *joystick = Input::instance()->getJoyById(joyId);
 
   if (isAxisInsideDeadzone(event.axis, event.axisValue)) {
     axis.lastDir = axis.dir;
@@ -166,7 +166,7 @@ void StateMenu::xmKey(InputEventType i_type, const XMKey &i_xmkey) {
 
   if (i_type == INPUT_DOWN &&
       i_xmkey ==
-        (*InputHandler::instance()->getGlobalKey(INPUT_RELOADFILESTODB))) {
+        (*Input::instance()->getGlobalKey(INPUT_RELOADFILESTODB))) {
     StateManager::instance()->pushState(new StateUpdateDb());
   }
 

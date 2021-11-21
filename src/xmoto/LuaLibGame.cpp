@@ -107,19 +107,19 @@ luaL_Reg LuaLibGame::m_gameFuncs[] = {
 };
 
 Scene *LuaLibGame::m_exec_world = NULL;
-InputHandler *LuaLibGame::m_exec_activeInputHandler = NULL;
+Input *LuaLibGame::m_exec_activeInput = NULL;
 
 LuaLibGame::LuaLibGame(Scene *i_pScene)
   : LuaLibBase("Game", m_gameFuncs) {
   m_pScene = i_pScene;
-  m_pActiveInputHandler = InputHandler::instance();
+  m_pActiveInput = Input::instance();
 }
 
 LuaLibGame::~LuaLibGame() {}
 
 void LuaLibGame::setInstance() {
   m_exec_world = m_pScene;
-  m_exec_activeInputHandler = m_pActiveInputHandler;
+  m_exec_activeInput = m_pActiveInput;
 }
 
 /*===========================================================================
@@ -374,9 +374,9 @@ int LuaLibGame::L_Game_SetEntityPos(lua_State *pL) {
 int LuaLibGame::L_Game_SetKeyHook(lua_State *pL) {
   /* no event for this */
 
-  if (m_exec_activeInputHandler != NULL) {
+  if (m_exec_activeInput != NULL) {
     try {
-      m_exec_activeInputHandler->addScriptKeyHook(
+      m_exec_activeInput->addScriptKeyHook(
         m_exec_world, luaL_checkstring(pL, 1), luaL_checkstring(pL, 2));
     } catch (Exception &e) {
       std::string v_key = luaL_checkstring(pL, 1);
@@ -392,10 +392,10 @@ int LuaLibGame::L_Game_SetKeyHook(lua_State *pL) {
 int LuaLibGame::L_Game_GetKeyByAction(lua_State *pL) {
   /* no event for this */
 
-  if (m_exec_activeInputHandler != NULL) {
+  if (m_exec_activeInput != NULL) {
     lua_pushstring(
       pL,
-      m_exec_activeInputHandler->getKeyByAction(luaL_checkstring(pL, 1))
+      m_exec_activeInput->getKeyByAction(luaL_checkstring(pL, 1))
         .c_str());
     return 1;
   }
@@ -405,10 +405,10 @@ int LuaLibGame::L_Game_GetKeyByAction(lua_State *pL) {
 int LuaLibGame::L_Game_GetKeyByActionTech(lua_State *pL) {
   /* no event for this */
 
-  if (m_exec_activeInputHandler != NULL) {
+  if (m_exec_activeInput != NULL) {
     lua_pushstring(
       pL,
-      m_exec_activeInputHandler->getKeyByAction(luaL_checkstring(pL, 1), true)
+      m_exec_activeInput->getKeyByAction(luaL_checkstring(pL, 1), true)
         .c_str());
     return 1;
   }

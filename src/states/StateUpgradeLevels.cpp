@@ -142,7 +142,7 @@ void StateUpgradeLevels::xmKey(InputEventType i_type, const XMKey &i_xmkey) {
 
   else if (i_type == INPUT_DOWN &&
            i_xmkey ==
-             (*InputHandler::instance()->getGlobalKey(INPUT_KILLPROCESS))) {
+             (*Input::instance()->getGlobalKey(INPUT_KILLPROCESS))) {
     if (m_threadStarted == true) {
       m_pThread->safeKill();
     }
