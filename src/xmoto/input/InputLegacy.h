@@ -9,7 +9,7 @@
 #include "XMKey.h"
 
 // Maps keycodes from SDL 1.2 to 2.0. Unchanged values are omitted
-static const int32_t SDL12_KEYTABLE[][2] = {
+static const std::unordered_map<int32_t, int32_t> SDL12_KEYTABLE = {
   {  12, 1073741980 },
   {  19, 1073741896 },
   { 256, 1073741922 },
@@ -75,14 +75,12 @@ static const int32_t SDL12_KEYTABLE[][2] = {
 
 class InputSDL12Compat {
 private:
-  typedef std::unordered_map<int32_t, int32_t> Keytable;
-
   InputSDL12Compat();
   ~InputSDL12Compat();
 
 public:
   static void upgrade();
-  static void mapKey(XMKey &key, const Keytable &map);
+  static void mapKey(XMKey &key);
   static bool isUpgraded(xmDatabase *pDb, const std::string &i_id_profile);
   static void resolveConflicts(const std::vector<IFullKey *> &keys);
 };

@@ -26,8 +26,8 @@ void InputSDL12Compat::resolveConflicts(const std::vector<IFullKey *> &keys) {
   } while (!done);
 }
 
-void InputSDL12Compat::mapKey(XMKey &key, const Keytable &map) {
-  auto it = map.find(key.getKeyboardSym());
+void InputSDL12Compat::mapKey(XMKey &key) {
+  auto it = SDL12_KEYTABLE.find(key.getKeyboardSym());
 
   SDL_Keycode keycode = key.getKeyboardSym();
   /* handle SDL1.2 "world keys" (SDLK_WORLD_0..SDLK_WORLD_95) */
@@ -36,7 +36,7 @@ void InputSDL12Compat::mapKey(XMKey &key, const Keytable &map) {
     return;
   }
 
-  if (it != map.end()) {
+  if (it != SDL12_KEYTABLE.end()) {
     // key modifiers are the same between SDL 1.2 and 2.0,
     // no need to do anything about them
     key = XMKey(it->second, key.getKeyboardMod());
@@ -44,14 +44,6 @@ void InputSDL12Compat::mapKey(XMKey &key, const Keytable &map) {
 }
 
 void InputSDL12Compat::upgrade() {
-  size_t size = sizeof(SDL12_KEYTABLE)/sizeof(*SDL12_KEYTABLE);
-  Keytable map;
-  map.reserve(size);
-  for (size_t i = 0; i < size; ++i) {
-    auto &p = SDL12_KEYTABLE[i];
-    map.insert(std::pair<int32_t, int32_t>(p[0], p[1]));
-  }
-
   std::vector<IFullKey *> keys;
 
   for (auto &f : Input::instance()->m_globalControls) {
@@ -67,7 +59,7 @@ void InputSDL12Compat::upgrade() {
   }
 
   for (auto &f : keys)
-    mapKey(f->key, map);
+    mapKey(f->key);
 
   resolveConflicts(keys);
 }
