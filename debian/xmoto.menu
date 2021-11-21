@@ -1,2 +1,0 @@
-?package(xmoto):needs="X11" section="Games/Action"\
-  title="xmoto" command="/usr/games/xmoto"
