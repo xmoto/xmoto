@@ -26,6 +26,3 @@ the challenges.\
 
 include(cpack/macos.cmake)
 include(cpack/win32.cmake)
-
-include(cpack/debian.cmake)
-include(cpack/rpm.cmake)
