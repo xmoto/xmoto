@@ -495,12 +495,6 @@ else()
     DEFAULT_ASIAN_TTF_FILE=\"/usr/share/fonts/truetype/arphic/bkai00mp.ttf\")
 endif()
 
-set(CPACK_RPM_EXCLUDE_FROM_AUTO_FILELIST_ADDITION
-  "/usr/share/applications"
-  "/usr/share/pixmaps"
-  "/usr/share/locale"
-)
-
 # Handle localization
 # Based on Dolphin Emulator's Source/Core/DolphinWX/CMakeLists.txt (831ae6a)
 if(USE_GETTEXT AND GETTEXT_MSGMERGE_EXECUTABLE AND GETTEXT_MSGFMT_EXECUTABLE)
@@ -525,15 +519,6 @@ if(USE_GETTEXT AND GETTEXT_MSGMERGE_EXECUTABLE AND GETTEXT_MSGFMT_EXECUTABLE)
       )
     else()
       install(FILES "${mo}" DESTINATION share/locale/${lang}/LC_MESSAGES)
-
-      # work around a problem where cpack thinks it's a good
-      # idea to throw in the parent directories of files in
-      # the rpm that will be installed in the filesystem...
-      set(CPACK_RPM_EXCLUDE_FROM_AUTO_FILELIST_ADDITION
-        ${CPACK_RPM_EXCLUDE_FROM_AUTO_FILELIST_ADDITION}
-        "/usr/share/locale/${lang}"
-        "/usr/share/locale/${lang}/LC_MESSAGES"
-      )
     endif()
 
     add_custom_command(OUTPUT "${mo}"
@@ -544,12 +529,6 @@ if(USE_GETTEXT AND GETTEXT_MSGMERGE_EXECUTABLE AND GETTEXT_MSGFMT_EXECUTABLE)
     )
   endforeach()
 endif()
-
-# make this visible to its parent (and therefore to cpack/)
-set(CPACK_RPM_EXCLUDE_FROM_AUTO_FILELIST_ADDITION
-  ${CPACK_RPM_EXCLUDE_FROM_AUTO_FILELIST_ADDITION}
-  PARENT_SCOPE
-)
 
 #target_compile_options(xmoto PRIVATE -Wall)
 #target_compile_options(xmoto PRIVATE -Werror)
