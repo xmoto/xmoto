@@ -46,23 +46,7 @@ public:
   /* input */
   virtual void xmKey(InputEventType i_type, const XMKey &i_xmkey);
 
-  void handleJoyAxis(JoyAxisEvent event);
-  void clearRepeatTimer(SDL_TimerID &timer);
-
   UIRoot *getGUI() const { return m_GUI; }
-  JoyAxisEvent getJoystickRepeat() const { return m_joystickRepeat; }
-
-  static Uint32 repeatTimerCallback(Uint32 interval, void *param);
-
-  void resetJoyAxis(JoyAxis &axis);
-  void resetJoyAxes();
-
-private:
-  using JoyAxes = std::array<JoyAxis, SDL_CONTROLLER_AXIS_MAX>;
-  std::vector<JoyAxes> m_joyAxes;
-  JoyAxisEvent m_joystickRepeat;
-
-  JoyAxes &getAxesByJoyIndex(uint8_t index) { return m_joyAxes[index]; }
 
 protected:
   virtual void checkEvents() = 0;

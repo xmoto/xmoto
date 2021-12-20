@@ -2935,7 +2935,7 @@ void StateOptions::updateJoysticksStrings() {
   v_someText = reinterpret_cast<UIStatic *>(
     m_GUI->getChild("MAIN:TABS:GENERAL_TAB:TABS:CONTROLS_TAB:PLAYER_TABS:"
                     "CONTROLS_TAB_GENERAL:STATIC_JOYSTICK_FOUND"));
-  unsigned int v_nbJoy = Input::instance()->getJoysticksNames().size();
+  unsigned int v_nbJoy = Input::instance()->getJoysticks().size();
 
   if (v_nbJoy == 0) {
     v_someText->setCaption(GAMETEXT_NOJOYSTICKFOUND);
@@ -2943,7 +2943,7 @@ void StateOptions::updateJoysticksStrings() {
     char buf[256];
     snprintf(buf, 256, GAMETEXT_JOYSTICKSFOUND(v_nbJoy), v_nbJoy);
     v_someText->setCaption(buf + std::string(" : ") +
-                           Input::instance()->getJoysticksNames()[0]);
+                           Input::instance()->getJoysticks()[0].name);
   } else {
     char buf[256];
     snprintf(buf, 256, GAMETEXT_JOYSTICKSFOUND(v_nbJoy), v_nbJoy);

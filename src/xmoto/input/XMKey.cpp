@@ -19,21 +19,12 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 =============================================================================*/
 
 #include "Input.h"
+#include "Joystick.h"
 #include "XMKey.h"
 #include "helpers/VExcept.h"
 #include "xmoto/Game.h"
 #include "xmoto/GameText.h"
 #include <sstream>
-
-bool isAxisTrigger(Uint8 axis) {
-  return axis == SDL_CONTROLLER_AXIS_TRIGGERLEFT
-      || axis == SDL_CONTROLLER_AXIS_TRIGGERRIGHT;
-}
-
-bool isAxisInsideDeadzone(Uint8 axis, Sint16 value) {
-  int32_t deadzone = INPUT_JOYSTICK_DEADZONE_MENU;
-  return std::abs(value) < deadzone;
-}
 
 XMKey::XMKey() {
   m_input = XMK_NONE;
@@ -74,14 +65,14 @@ XMKey::XMKey(SDL_Event &i_event) {
 
     case SDL_CONTROLLERAXISMOTION:
       m_input = XMK_JOYSTICKAXIS;
-      m_joyId = Input::instance()->getJoyId(i_event.caxis.which);
+      m_joystick = Input::instance()->getJoyById(i_event.caxis.which);
       m_joyAxis = i_event.caxis.axis;
       m_joyAxisValue = i_event.caxis.value;
       break;
 
     case SDL_CONTROLLERBUTTONDOWN:
       m_input = XMK_JOYSTICKBUTTON;
-      m_joyId = Input::instance()->getJoyId(i_event.cbutton.which);
+      m_joystick = Input::instance()->getJoyById(i_event.cbutton.which);
       m_joyButton = i_event.cbutton.button;
       break;
 
@@ -100,16 +91,16 @@ XMKey::XMKey(SDL_Keycode nKey, SDL_Keymod mod, const std::string &i_utf8Char) {
   m_repetition = 1;
 }
 
-XMKey::XMKey(std::string *i_joyId, Uint8 i_joyButton) {
+XMKey::XMKey(Joystick *joystick, Uint8 i_joyButton) {
   m_input = XMK_JOYSTICKBUTTON;
-  m_joyId = i_joyId;
+  m_joystick = joystick;
   m_joyButton = i_joyButton;
   m_repetition = 1;
 }
 
-XMKey::XMKey(std::string *i_joyId, Uint8 i_joyAxis, Sint16 i_joyAxisValue) {
+XMKey::XMKey(Joystick *joystick, Uint8 i_joyAxis, Sint16 i_joyAxisValue) {
   m_input = XMK_JOYSTICKAXIS;
-  m_joyId = i_joyId;
+  m_joystick = joystick;
   m_joyAxis = i_joyAxis;
   m_joyAxisValue = i_joyAxisValue;
   m_joyButton = SDL_CONTROLLER_BUTTON_INVALID;
@@ -159,14 +150,14 @@ XMKey::XMKey(const std::string &i_key, bool i_basicMode) {
     v_current = v_rest.substr(0, pos);
     v_rest = v_rest.substr(pos + 1, v_rest.length() - pos - 1);
 
-    m_keyboard_sym = (SDL_Keycode)atoi(v_current.c_str());
-    m_keyboard_mod = (SDL_Keymod)(((SDL_Keymod)atoi(v_rest.c_str())) &
+    m_keyboard_sym = (SDL_Keycode)std::strtoul(v_current.c_str(), nullptr, 0);
+    m_keyboard_mod = (SDL_Keymod)(((SDL_Keymod)std::strtoul(v_rest.c_str(), nullptr, 0)) &
                               (KMOD_CTRL | KMOD_SHIFT | KMOD_ALT |
                                KMOD_GUI)); // only allow these modifiers
 
   } else if (v_current == "M") { // mouse button
     m_input = XMK_MOUSEBUTTON;
-    m_mouseButton_button = (Uint8)atoi(v_rest.c_str());
+    m_mouseButton_button = (Uint8)std::strtoul(v_rest.c_str(), nullptr, 0);
 
   } else if (v_current == "A") { // joystick axis
     m_input = XMK_JOYSTICKAXIS;
@@ -178,7 +169,7 @@ XMKey::XMKey(const std::string &i_key, bool i_basicMode) {
     }
     v_current = v_rest.substr(0, pos);
     v_rest = v_rest.substr(pos + 1, v_rest.length() - pos - 1);
-    m_joyAxis = (Uint8)atoi(v_current.c_str());
+    m_joyAxis = (Uint8)std::strtoul(v_current.c_str(), nullptr, 0);
 
     // get the axis value
     pos = v_rest.find(":", 0);
@@ -187,10 +178,10 @@ XMKey::XMKey(const std::string &i_key, bool i_basicMode) {
     }
     v_current = v_rest.substr(0, pos);
     v_rest = v_rest.substr(pos + 1, v_rest.length() - pos - 1);
-    m_joyAxisValue = (Sint16)atoi(v_current.c_str());
+    m_joyAxisValue = (Sint16)std::strtol(v_current.c_str(), nullptr, 0);
 
-    // get the joyid
-    m_joyId = Input::instance()->getJoyIdByStrId(v_rest);
+    SDL_JoystickID id = (SDL_JoystickID)std::strtoul(v_rest.c_str(), nullptr, 0);
+    m_joystick = Input::instance()->getJoyById(id);
   } else if (v_current == "J") { // joystick button
     m_input = XMK_JOYSTICKBUTTON;
 
@@ -201,50 +192,30 @@ XMKey::XMKey(const std::string &i_key, bool i_basicMode) {
     v_current = v_rest.substr(0, pos);
     v_rest = v_rest.substr(pos + 1, v_rest.length() - pos - 1);
 
-    m_joyId = Input::instance()->getJoyIdByStrId(v_rest);
-    m_joyButton = (Uint8)atoi(v_current.c_str());
+    SDL_JoystickID id = (SDL_JoystickID)std::strtoul(v_rest.c_str(), nullptr, 0);
+    m_joystick = Input::instance()->getJoyById(id);
+    m_joyButton = (Uint8)std::strtoul(v_current.c_str(), nullptr, 0);
   } else {
     throw InvalidSystemKeyException();
   }
 }
 
-bool XMKey::isDefined() const {
-  return m_input != XMK_NONE;
-}
-
-unsigned int XMKey::getRepetition() const {
-  return m_repetition;
-}
-
-bool XMKey::isAnalog() const {
-  return m_input == XMK_JOYSTICKAXIS;
-}
-
 float XMKey::getAnalogValue() const {
-  return Input::joyRawToFloat(m_joyAxisValue,
-                                     -(float)INPUT_JOYSTICK_MAX_VALUE,
-                                     -(float)INPUT_JOYSTICK_DEADZONE_BASE,
-                                      (float)INPUT_JOYSTICK_DEADZONE_BASE,
-                                      (float)INPUT_JOYSTICK_MAX_VALUE);
-}
-
-bool XMKey::isDirectional() const {
-  return m_input == XMK_JOYSTICKAXIS;
+  return JoystickInput::joyRawToFloat(m_joyAxisValue,
+     (float)JOYSTICK_DEADZONE_BASE,
+     (float)JOYSTICK_MAX_VALUE);
 }
 
 XMKey_direction XMKey::getDirection() const {
-  if (m_joyAxis % 2 == 0) { // horizontal
-    if (m_joyAxisValue < -(INPUT_JOYSTICK_DEADZONE_BASE)) {
-      return XMKD_LEFT;
-    } else if (m_joyAxisValue > INPUT_JOYSTICK_DEADZONE_BASE) {
-      return XMKD_RIGHT;
-    }
-  } else { // vertical
-    if (m_joyAxisValue < -(INPUT_JOYSTICK_DEADZONE_BASE)) {
-      return XMKD_UP;
-    } else if (m_joyAxisValue > INPUT_JOYSTICK_DEADZONE_BASE) {
-      return XMKD_DOWN;
-    }
+  if (JoystickInput::axisInside(m_joyAxisValue, JOYSTICK_DEADZONE_BASE))
+    return XMKD_NODIRECTION;
+
+  JoyDir dir = JoystickInput::getJoyAxisDir(m_joyAxisValue);
+
+  if (m_joyAxis % 2 == 0) {
+    return (dir < 0) ? XMKD_LEFT : XMKD_RIGHT;
+  } else {
+    return (dir < 0) ? XMKD_UP : XMKD_DOWN;
   }
 
   return XMKD_NODIRECTION;
@@ -264,12 +235,9 @@ bool XMKey::operator==(const XMKey &i_other) const {
   }
 
   if (m_input == XMK_KEYBOARD) {
+    int mods = KMOD_CTRL | KMOD_SHIFT | KMOD_ALT | KMOD_GUI;
     return m_keyboard_sym == i_other.m_keyboard_sym &&
-           ((m_keyboard_mod &
-             (KMOD_CTRL | KMOD_SHIFT | KMOD_ALT | KMOD_GUI)) ==
-            (i_other.m_keyboard_mod &
-             (KMOD_CTRL | KMOD_SHIFT | KMOD_ALT |
-              KMOD_GUI))); // only allow these modifiers
+      ((m_keyboard_mod & mods) == (i_other.m_keyboard_mod & mods));
   }
 
   if (m_input == XMK_MOUSEBUTTON) {
@@ -277,22 +245,12 @@ bool XMKey::operator==(const XMKey &i_other) const {
   }
 
   if (m_input == XMK_JOYSTICKAXIS) {
-    // for m_joyId, pointer instead of strings can be compared safely while
-    // strings are required only when reading config
-    return m_joyId == i_other.m_joyId && m_joyAxis == i_other.m_joyAxis &&
-           !(
-             // axes are not on the same side if the value are on the opposite
-             // sides
-             (m_joyAxisValue > INPUT_JOYSTICK_DEADZONE_BASE &&
-              i_other.m_joyAxisValue < -(INPUT_JOYSTICK_DEADZONE_BASE)) ||
-             (m_joyAxisValue < -(INPUT_JOYSTICK_DEADZONE_BASE) &&
-              i_other.m_joyAxisValue > INPUT_JOYSTICK_DEADZONE_BASE));
+    return (*m_joystick == *i_other.m_joystick) && m_joyAxis == i_other.m_joyAxis
+      && !JoystickInput::axesOppose(m_joyAxis, i_other.m_joyAxis, JOYSTICK_DEADZONE_BASE);
   }
 
   if (m_input == XMK_JOYSTICKBUTTON) {
-    // for m_joyId, pointer instead of strings can be compared safely while
-    // strings are required only when reading config
-    return m_joyId == i_other.m_joyId && m_joyButton == i_other.m_joyButton;
+    return (*m_joystick == *i_other.m_joystick) && m_joyButton == i_other.m_joyButton;
   }
 
   return false;
@@ -311,15 +269,13 @@ std::string XMKey::toString() const {
       break;
 
     case XMK_JOYSTICKAXIS:
-      // put the joyid at the end while it can contain any char
       v_res << "A:"
             << ((int)m_joyAxis) << ":" << ((int)m_joyAxisValue) << ":"
-            << *m_joyId;
+            << m_joystick->id;
       break;
 
     case XMK_JOYSTICKBUTTON:
-      // put the joyid at the end while it can contain any char
-      v_res << "J:" << ((int)m_joyButton) << ":" << *m_joyId;
+      v_res << "J:" << ((int)m_joyButton) << ":" << m_joystick->id;
       break;
 
     case XMK_NONE:
@@ -408,40 +364,46 @@ std::string XMKey::toFancyString() const {
         v_button = v_button_tmp;
     }
     v_res << "[" << GAMETEXT_MOUSE << "] " << v_button;
-  } else if (m_input == XMK_JOYSTICKAXIS) {
-    std::string v_direction;
-    char v_axis_tmp[256];
-    snprintf(v_axis_tmp, 256, GAMETEXT_JOYSTICK_AXIS, m_joyAxis);
+  } else if (m_input == XMK_JOYSTICKAXIS || m_input == XMK_JOYSTICKBUTTON) {
+    int playerIndex = SDL_GameControllerGetPlayerIndex(m_joystick->handle);
+    v_res << "[" << GAMETEXT_JOYSTICK << "] "
+          << m_joystick->name << " - player " << playerIndex << " - ";
 
-    if (isDirectional()) {
-      v_direction = " - ";
-      switch (getDirection()) {
-        case XMKD_LEFT:
-          v_direction += GAMETEXT_JOYSTICK_DIRECTION_LEFT;
-          break;
-        case XMKD_RIGHT:
-          v_direction += GAMETEXT_JOYSTICK_DIRECTION_RIGHT;
-          break;
-        case XMKD_UP:
-          v_direction += GAMETEXT_JOYSTICK_DIRECTION_UP;
-          break;
-        case XMKD_DOWN:
-          v_direction += GAMETEXT_JOYSTICK_DIRECTION_DOWN;
-          break;
-        case XMKD_NODIRECTION:
-          v_direction += GAMETEXT_JOYSTICK_DIRECTION_NONE;
+    if (m_input == XMK_JOYSTICKAXIS) {
+      std::string v_direction;
+      char v_axis_tmp[256];
+      snprintf(v_axis_tmp, 256, GAMETEXT_JOYSTICK_AXIS, m_joyAxis);
+
+      if (isDirectional()) {
+        v_direction = " - ";
+        switch (getDirection()) {
+          case XMKD_LEFT:
+            v_direction += GAMETEXT_JOYSTICK_DIRECTION_LEFT;
+            break;
+          case XMKD_RIGHT:
+            v_direction += GAMETEXT_JOYSTICK_DIRECTION_RIGHT;
+            break;
+          case XMKD_UP:
+            v_direction += GAMETEXT_JOYSTICK_DIRECTION_UP;
+            break;
+          case XMKD_DOWN:
+            v_direction += GAMETEXT_JOYSTICK_DIRECTION_DOWN;
+            break;
+          case XMKD_NODIRECTION:
+            v_direction += GAMETEXT_JOYSTICK_DIRECTION_NONE;
+        }
       }
-    }
-    v_res << "[" << GAMETEXT_JOYSTICK << "] " << *m_joyId << " - " << v_axis_tmp
-          << v_direction;
 
-  } else if (m_input == XMK_JOYSTICKBUTTON) {
-    char v_button[256];
-    snprintf(v_button,
-             256,
-             GAMETEXT_JOYSTICK_BUTTON,
-             m_joyButton + 1); // +1 because it starts at 0
-    v_res << "[" << GAMETEXT_JOYSTICK << "] " << *m_joyId << " - " << v_button;
+      v_res << v_axis_tmp << v_direction;
+    } else {
+      char v_button[256];
+      snprintf(v_button,
+               256,
+               GAMETEXT_JOYSTICK_BUTTON,
+               m_joyButton + 1); // +1 because it starts at 0
+
+      v_res << v_button;
+    }
   } else if (m_input == XMK_NONE) {
     v_res << GAMETEXT_UNDEFINED;
   }
@@ -463,15 +425,13 @@ bool XMKey::isPressed(const Uint8 *i_keystate, Uint8 i_mousestate) const {
 
   if (m_input == XMK_JOYSTICKAXIS) {
     Sint16 v_axisValue = SDL_GameControllerGetAxis(
-      Input::instance()->getJoyById(m_joyId), (SDL_GameControllerAxis)m_joyAxis);
-    return ((v_axisValue > INPUT_JOYSTICK_DEADZONE_BASE &&
-             m_joyAxisValue > INPUT_JOYSTICK_DEADZONE_BASE) ||
-            (v_axisValue < -(INPUT_JOYSTICK_DEADZONE_BASE) &&
-             m_joyAxisValue < -(INPUT_JOYSTICK_DEADZONE_BASE)));
+        m_joystick->handle, (SDL_GameControllerAxis)m_joyAxis);
+
+    return JoystickInput::axesMatch(v_axisValue, m_joyAxisValue, JOYSTICK_DEADZONE_BASE);
   }
 
   if (m_input == XMK_JOYSTICKBUTTON) {
-    return SDL_GameControllerGetButton(Input::instance()->getJoyById(m_joyId),
+    return SDL_GameControllerGetButton(m_joystick->handle,
                                  (SDL_GameControllerButton)m_joyButton) == 1;
   }
 
@@ -521,9 +481,7 @@ bool XMKey::toJoystickButton(Uint8 &o_joyNum, Uint8 &o_joyButton) const {
     return false;
   }
 
-  // takes potentially time. could be better by storing the joy id
-  o_joyNum = Input::instance()->getJoyNum(*m_joyId);
-
+  o_joyNum = Input::instance()->getJoyNum(*m_joystick);
   o_joyButton = m_joyButton;
 
   return true;
@@ -534,9 +492,7 @@ bool XMKey::toJoystickAxisMotion(JoyAxisEvent &event) const {
     return false;
   }
 
-  // takes potentially time. could be better by storing the joy id
-  event.joystickNum = Input::instance()->getJoyNum(*m_joyId);
-
+  event.joystickNum = Input::instance()->getJoyNum(*m_joystick);
   event.axis = m_joyAxis;
   event.axisValue = m_joyAxisValue;
 

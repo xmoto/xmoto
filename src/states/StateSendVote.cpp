@@ -35,8 +35,7 @@ StateSendVote::StateSendVote(const std::string &i_idlevel,
     i_quality_value,
     XMSession::instance()->adminMode(),
     XMSession::instance()->adminMode() ? XMSession::instance()->profile() : "",
-    XMSession::instance()->adminMode() ? XMSession::instance()->wwwPassword()
-                                       : "");
+    XMSession::instance()->adminMode() ? XMSession::instance()->wwwPassword() : "");
   m_name = "StateSendVote";
 
   m_messageOnSuccess = true;

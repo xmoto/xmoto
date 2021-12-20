@@ -67,55 +67,18 @@ void Input::init(UserConfig *pConfig,
   /* Open all joysticks */
   recheckJoysticks();
   loadConfig(pConfig, pDb, i_id_profile);
+
+  JoystickInput::instance()->init(m_joysticks.size());
 }
 
 void Input::uninit(void) {
   /* Close all joysticks */
-  for (unsigned int i = 0; i < m_Joysticks.size(); i++) {
-    SDL_GameControllerClose(m_Joysticks[i]);
+  for (unsigned int i = 0; i < m_joysticks.size(); i++) {
+    SDL_GameControllerClose(m_joysticks[i].handle);
   }
 
   /* No more joysticking */
   SDL_QuitSubSystem(SDL_INIT_GAMECONTROLLER);
-}
-
-/**
- * converts a raw joystick axis value to a float, according to specified minimum
- * and maximum values, as well as the deadzone.
- *
- *                 (+)      ____
- *           result |      /|
- *                  |     / |
- *                  |    /  |
- *  (-)________ ____|___/___|____(+)
- *             /|   |   |   |    input
- *            / |   |   |   |
- *           /  |   |   |   |
- *     _____/   |   |   |   |
- *          |   |  (-)  |   |
- *         neg  dead-zone  pos
- *
- */
-float Input::joyRawToFloat(float raw,
-                                  float neg,
-                                  float deadzone_neg,
-                                  float deadzone_pos,
-                                  float pos) {
-  if (neg > pos) {
-    std::swap(neg, pos);
-    std::swap(deadzone_neg, deadzone_pos);
-  }
-
-  if (raw > pos)
-    return +1.0f;
-  if (raw > deadzone_pos)
-    return +((raw - deadzone_pos) / (pos - deadzone_pos));
-  if (raw < neg)
-    return -1.0f;
-  if (raw < deadzone_neg)
-    return -((raw - deadzone_neg) / (neg - deadzone_neg));
-
-  return 0.0f;
 }
 
 /*===========================================================================
@@ -215,44 +178,32 @@ InputScriptKeyHook Input::getScriptKeyHooks(int i) const {
   return m_ScriptKeyHooks[i];
 }
 
-XMKey Input::getScriptActionKeys(int i_player,
-                                        int i_actionScript) const {
+XMKey Input::getScriptActionKeys(int i_player, int i_actionScript) const {
   return m_controls[i_player].scriptActionKeys[i_actionScript].key;
 }
 
-std::string *Input::getJoyId(Uint8 i_joynum) {
-  return &(m_JoysticksIds[i_joynum]);
-}
-
-Uint8 Input::getJoyNum(const std::string &i_name) {
-  for (unsigned int i = 0; i < m_JoysticksIds.size(); i++) {
-    if (m_JoysticksIds[i] == i_name) {
+SDL_JoystickID Input::getJoyNum(const Joystick &joystick) const {
+  for (unsigned int i = 0; i < m_joysticks.size(); i++) {
+    if (m_joysticks[i].id == joystick.id) {
       return i;
     }
   }
   throw Exception("Invalid joystick name");
 }
 
-std::string *Input::getJoyIdByStrId(const std::string &i_name) {
-  for (unsigned int i = 0; i < m_JoysticksIds.size(); i++) {
-    if (m_JoysticksIds[i] == i_name) {
-      return &(m_JoysticksIds[i]);
-    }
-  }
-  throw Exception("Invalid joystick name");
-}
-
-SDL_GameController *Input::getJoyById(std::string *i_id) {
-  for (unsigned int i = 0; i < m_JoysticksIds.size(); i++) {
-    if (&(m_JoysticksIds[i]) == i_id) {
-      return m_Joysticks[i];
+Joystick *Input::getJoyById(SDL_JoystickID id) {
+  for (unsigned int i = 0; i < m_joysticks.size(); i++) {
+    if (m_joysticks[i].id == id) {
+      return &m_joysticks[i];
     }
   }
   throw Exception("Invalid joystick id");
 }
 
-InputEventType Input::joystickAxisSens(Sint16 m_joyAxisValue) {
-  return abs(m_joyAxisValue) < INPUT_JOYSTICK_DEADZONE_BASE ? INPUT_UP : INPUT_DOWN;
+
+InputEventType Input::joystickAxisSens(int16_t m_joyAxisValue) {
+  return JoystickInput::instance()->axisInside(m_joyAxisValue,
+      JOYSTICK_DEADZONE_BASE) ? INPUT_UP : INPUT_DOWN;
 }
 
 /*===========================================================================
@@ -475,19 +426,17 @@ bool Input::isANotGameSetKey(XMKey *i_xmkey) const {
 }
 
 void Input::recheckJoysticks() {
-  std::string v_joyName, v_joyId;
+  std::string joyName, joyId;
   int n;
-  bool v_continueToOpen = true;
-  SDL_GameController *v_joystick;
+  bool continueToOpen = true;
+  SDL_GameController *joystick;
 
-  m_Joysticks.clear();
-  m_JoysticksNames.clear();
-  m_JoysticksIds.clear();
+  m_joysticks.clear();
 
   std::vector<std::string> incompatible;
 
   for (int i = 0; i < SDL_NumJoysticks(); i++) {
-    if (!v_continueToOpen)
+    if (!continueToOpen)
       continue;
 
     if (!SDL_IsGameController(i)) {
@@ -496,28 +445,27 @@ void Input::recheckJoysticks() {
       continue;
     }
 
-    if ((v_joystick = SDL_GameControllerOpen(i)) != NULL) {
-      std::ostringstream v_id;
+    if ((joystick = SDL_GameControllerOpen(i)) != NULL) {
+      std::ostringstream id;
       n = 0;
-      v_joyName = SDL_GameControllerName(v_joystick);
+      joyName = SDL_GameControllerName(joystick);
+      SDL_JoystickID joyNum = SDL_JoystickInstanceID(SDL_GameControllerGetJoystick(joystick));
 
       // check if there is an other joystick with the same name
-      for (unsigned int j = 0; j < m_Joysticks.size(); j++) {
-        if (m_JoysticksNames[j] == v_joyName) {
+      for (unsigned int j = 0; j < m_joysticks.size(); j++) {
+        if (m_joysticks[j].name == joyName) {
           n++;
         }
       }
 
       if (n > 0) {
-        v_id << " " << (n + 1); // +1 to get an id name starting at 1
+        id << " " << (n + 1); // +1 to get an id name starting at 1
       }
-      v_joyId = v_joyName + v_id.str();
-      m_Joysticks.push_back(v_joystick);
-      m_JoysticksNames.push_back(v_joyName);
-      m_JoysticksIds.push_back(v_joyId);
+      joyId = joyName + id.str();
+      m_joysticks.push_back(Joystick{ joystick, joyName, joyNum });
 
-      LogInfo("Joystick found [%s], id is [%s]", v_joyName.c_str(), v_joyId.c_str());
-      char *mapping = SDL_GameControllerMapping(v_joystick);
+      LogInfo("Joystick found [%s], id is [%s]", joyName.c_str(), joyId.c_str());
+      char *mapping = SDL_GameControllerMapping(joystick);
       if (mapping) {
         LogDebug("Mapping: %s", mapping);
         SDL_free(mapping);
@@ -525,10 +473,9 @@ void Input::recheckJoysticks() {
         LogDebug("No mapping available: %s", SDL_GetError());
       }
     } else {
-      // don't continue to open joystick to keep m_Joysticks[joystick.num] working
-      v_continueToOpen = false;
-      LogWarning("Failed to open joystick [%s], abort to open other joysticks",
-                 v_joyName.c_str());
+      // don't continue to open joystick to keep m_joysticks[joystick.num] working
+      continueToOpen = false;
+      LogWarning("Failed to open joystick [%s], abort to open other joysticks", joyName.c_str());
     }
   }
 
@@ -559,8 +506,21 @@ void Input::loadJoystickMappings() {
   XMFS::closeFile(file);
 }
 
-std::vector<std::string> &Input::getJoysticksNames() {
-  return m_JoysticksNames;
+InputEventType Input::eventState(uint32_t type) {
+  switch (type) {
+    case SDL_CONTROLLERBUTTONDOWN: /* fall through */
+    case SDL_KEYDOWN:              /* fall through */
+    case SDL_MOUSEBUTTONDOWN:      /* fall through */
+      return INPUT_DOWN;
+
+    case SDL_CONTROLLERBUTTONUP: /* fall through */
+    case SDL_KEYUP:              /* fall through */
+    case SDL_MOUSEBUTTONUP:      /* fall through */
+      return INPUT_UP;
+
+    default:
+      return INPUT_INVALID;
+  }
 }
 
 IFullKey::IFullKey(const std::string &i_name,

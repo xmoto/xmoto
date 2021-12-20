@@ -26,6 +26,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "helpers/utf8.h"
 #include "helpers/VMath.h"
 #include "xmoto/Game.h"
+#include "xmoto/input/Joystick.h"
 #include "xmoto/Sound.h"
 #include <sstream>
 
@@ -1002,25 +1003,24 @@ bool UIList::keyDown(int nKey, SDL_Keymod mod, const std::string &i_utf8Char) {
 }
 
 bool UIList::joystickAxisMotion(JoyAxisEvent event) {
+  if (JoystickInput::axisInside(event.axisValue, JOYSTICK_DEADZONE_MENU))
+    return false;
+
+  JoyDir dir = JoystickInput::getJoyAxisDir(event.axisValue);
+
   switch (event.axis) {
     case SDL_CONTROLLER_AXIS_LEFTX:
-      if (event.axisValue <= -INPUT_JOYSTICK_DEADZONE_MENU) {
+      if (dir < 0)
         eventLeft();
-        return true;
-      } else if (event.axisValue >= INPUT_JOYSTICK_DEADZONE_MENU) {
+      else
         eventRight();
-        return true;
-      }
-      break;
+      return true;
     case SDL_CONTROLLER_AXIS_LEFTY: {
-      if (event.axisValue <= -INPUT_JOYSTICK_DEADZONE_MENU) {
+      if (dir < 0)
         eventUp();
-        return true;
-      } else if (event.axisValue >= INPUT_JOYSTICK_DEADZONE_MENU) {
+      else
         eventDown();
-        return true;
-      }
-      break;
+      return true;
     }
 
     case SDL_CONTROLLER_AXIS_TRIGGERLEFT:

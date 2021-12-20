@@ -158,17 +158,17 @@ public:
   XMKey getScriptActionKeys(int i_player, int i_actionScript) const;
 
   std::string getKeyByAction(const std::string &Action, bool i_tech = false);
-  std::string *getJoyId(Uint8 i_joynum);
-  Uint8 getJoyNum(const std::string &i_name);
-  std::string *getJoyIdByStrId(const std::string &i_name);
-  SDL_GameController *getJoyById(std::string *i_id);
-  InputEventType joystickAxisSens(Sint16 m_joyAxisValue);
+
+  Joystick *getJoyById(SDL_JoystickID num);
+  SDL_JoystickID getJoyNum(const Joystick &joystick) const;
+
+  std::vector<Joystick> &getJoysticks() { return m_joysticks; }
+
+  InputEventType joystickAxisSens(int16_t m_joyAxisValue);
   void recheckJoysticks();
   void loadJoystickMappings();
-  std::vector<std::string> &getJoysticksNames();
   bool areJoysticksEnabled() const;
   void enableJoysticks(bool i_value);
-  Uint8 getNumJoysticks() const { return m_Joysticks.size(); }
 
   void setDefaultConfig();
   void saveConfig(UserConfig *pConfig,
@@ -191,20 +191,14 @@ public:
   std::string getGlobalKeyHelp(unsigned int INPUT_key) const;
   bool getGlobalKeyCustomizable(unsigned int INPUT_key) const;
 
-  static float joyRawToFloat(float raw,
-                             float neg,
-                             float deadzone_neg,
-                             float deadzone_pos,
-                             float pos);
+  static InputEventType eventState(uint32_t type);
 
 private:
   /* Data */
   int m_nNumScriptKeyHooks;
   InputScriptKeyHook m_ScriptKeyHooks[MAX_SCRIPT_KEY_HOOKS];
 
-  std::vector<SDL_GameController *> m_Joysticks;
-  std::vector<std::string> m_JoysticksNames;
-  std::vector<std::string> m_JoysticksIds;
+  std::vector<Joystick> m_joysticks;
 
   Controls m_controls[INPUT_NB_PLAYERS];
   IFullKey m_globalControls[INPUT_NB_GLOBALKEYS];

@@ -42,6 +42,11 @@ constexpr T clamp(T v, T min, T max) {
   return std::min(std::max(v, min), max);
 }
 
+template<typename T>
+constexpr int signum(T n) {
+  return ((T)0 < n) - (n < (T)0);
+}
+
 template<typename _T>
 class Vector2 {
 public:

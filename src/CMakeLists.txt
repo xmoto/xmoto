@@ -330,6 +330,7 @@ set(xmoto_src
 set(xmoto_input_src
   xmoto/input/Input.cpp xmoto/input/Input.h
   xmoto/input/InputLegacy.cpp xmoto/input/InputLegacy.h
+  xmoto/input/Joystick.cpp xmoto/input/Joystick.h
   xmoto/input/XMKey.cpp xmoto/input/XMKey.h
 )
 

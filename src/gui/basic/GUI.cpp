@@ -31,6 +31,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "helpers/VMath.h"
 #include "xmoto/Game.h"
 #include "xmoto/GameText.h"
+#include "xmoto/input/Joystick.h"
 
 #ifdef ENABLE_OPENGL
 #include "include/xm_OpenGL.h"
@@ -1309,25 +1310,29 @@ bool UIRoot::_RootKeyEvent(UIWindow *pWindow, UIRootKeyEvent Event) {
 }
 
 bool UIRoot::joystickAxisMotion(JoyAxisEvent event) {
-  if (isAxisInsideDeadzone(event.axis, event.axisValue))
-    return true;
+  if (JoystickInput::axisInside(event.axisValue, JOYSTICK_DEADZONE_MENU))
+    return false;
 
-  if (!_RootJoystickAxisMotionEvent(this, event)) {
-    switch (event.axis) {
-      case SDL_CONTROLLER_AXIS_LEFTX:
-        if (event.axisValue < -INPUT_JOYSTICK_DEADZONE_MENU)
-          activateLeft();
-        else
-          activateRight();
-        return true;
-      case SDL_CONTROLLER_AXIS_LEFTY:
-        if (event.axisValue < -INPUT_JOYSTICK_DEADZONE_MENU)
-          activateUp();
-        else
-          activateDown();
-        return true;
-    }
+  if (_RootJoystickAxisMotionEvent(this, event))
+    return false;
+
+  JoyDir dir = JoystickInput::getJoyAxisDir(event.axisValue);
+
+  switch (event.axis) {
+    case SDL_CONTROLLER_AXIS_LEFTX:
+      if (dir < 0)
+        activateLeft();
+      else
+        activateRight();
+      return true;
+    case SDL_CONTROLLER_AXIS_LEFTY:
+      if (dir < 0)
+        activateUp();
+      else
+        activateDown();
+      return true;
   }
+
   return false;
 }
 

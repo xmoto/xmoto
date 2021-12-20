@@ -26,13 +26,11 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "helpers/Log.h"
 #include "xmoto/Game.h"
 #include "xmoto/input/Input.h"
+#include "xmoto/input/Joystick.h"
 #include "xmscene/Camera.h"
 #include <stdint.h>
 #include <cstdlib>
 #include <utility>
-
-static const uint32_t JOYSTICK_REPEAT_DELAY_MS = 500;
-static const float JOYSTICK_REPEAT_RATE_HZ = 1000 / 33.0f;
 
 StateMenu::StateMenu(bool drawStateBehind, bool updateStatesBehind)
   : GameState(drawStateBehind, updateStatesBehind) {
@@ -41,10 +39,6 @@ StateMenu::StateMenu(bool drawStateBehind, bool updateStatesBehind)
 
   m_renderFps = XMSession::instance()->maxRenderFps();
   m_updateFps = 30;
-
-  for (Uint8 i = 0; i < Input::instance()->getNumJoysticks(); i++) {
-    m_joyAxes.push_back(JoyAxes());
-  }
 }
 
 StateMenu::~StateMenu() {}
@@ -60,7 +54,7 @@ void StateMenu::enterAfterPop() {
   GameState::enterAfterPop();
   m_GUI->enableWindow(true);
 
-  resetJoyAxes();
+  JoystickInput::instance()->resetJoyAxes();
 }
 
 void StateMenu::leaveAfterPush() {
@@ -82,76 +76,6 @@ bool StateMenu::render() {
   pDrawlib->getMenuCamera()->setCamera2d();
   m_GUI->paint();
   return true;
-}
-
-Uint32 StateMenu::repeatTimerCallback(Uint32 interval, void *param) {
-  SDL_Event event;
-  SDL_UserEvent userEvent;
-
-  userEvent.type = SDL_USEREVENT;
-
-  userEvent.code = SDL_CONTROLLERAXISMOTION;
-  userEvent.data1 = param;
-
-  event.type = SDL_USEREVENT;
-  event.user = userEvent;
-
-  SDL_PushEvent(&event);
-
-  return JOYSTICK_REPEAT_RATE_HZ;
-}
-
-void StateMenu::resetJoyAxis(JoyAxis &axis) {
-  clearRepeatTimer(axis.repeatTimer);
-  axis.isHeld = false;
-  axis.dir = 0;
-}
-
-void StateMenu::resetJoyAxes() {
-  for (auto &axes : m_joyAxes)
-    for (auto &axis : axes)
-      resetJoyAxis(axis);
-}
-
-void StateMenu::clearRepeatTimer(SDL_TimerID &timer) {
-  if (timer) {
-    SDL_RemoveTimer(timer);
-    timer = 0;
-  }
-}
-
-void StateMenu::handleJoyAxis(JoyAxisEvent event) {
-  if (event.axis == (Uint8)SDL_CONTROLLER_AXIS_INVALID)
-    return;
-
-  auto &axis = getAxesByJoyIndex(event.joystickNum)[event.axis];
-
-  std::string *joyId = Input::instance()->getJoyId(event.joystickNum);
-  SDL_GameController *joystick = Input::instance()->getJoyById(joyId);
-
-  if (isAxisInsideDeadzone(event.axis, event.axisValue)) {
-    axis.lastDir = axis.dir;
-    resetJoyAxis(axis);
-    return;
-  }
-
-  int8_t dir = (0 < event.axisValue) - (event.axisValue < 0);
-  bool dirSame = dir != 0 && std::abs(dir) == std::abs(axis.lastDir);
-
-  if (dirSame || !axis.isHeld) {
-    for (auto &axes : m_joyAxes)
-      for (auto &axis : axes)
-        clearRepeatTimer(axis.repeatTimer);
-
-    axis.isHeld = true;
-    axis.repeatTimer = SDL_AddTimer(JOYSTICK_REPEAT_DELAY_MS,
-        repeatTimerCallback, static_cast<void *>(this));
-    axis.lastDir = axis.dir;
-    axis.dir = dir;
-
-    m_joystickRepeat = event;
-    m_GUI->joystickAxisMotion(event);
-  }
 }
 
 void StateMenu::xmKey(InputEventType i_type, const XMKey &i_xmkey) {
@@ -230,7 +154,8 @@ void StateMenu::xmKey(InputEventType i_type, const XMKey &i_xmkey) {
   }
 
   else if (i_xmkey.toJoystickAxisMotion(axisEvent)) {
-    handleJoyAxis(axisEvent);
+    if (JoystickInput::instance()->joyAxisRepeat(axisEvent))
+      m_GUI->joystickAxisMotion(axisEvent);
 
     checkEvents();
   }

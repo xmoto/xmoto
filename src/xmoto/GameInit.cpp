@@ -25,6 +25,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "Game.h"
 #include "GameText.h"
 #include "input/Input.h"
+#include "input/Joystick.h"
 #include "PhysSettings.h"
 #include "Sound.h"
 #include "common/VFileIO.h"
@@ -707,21 +708,21 @@ void GameApp::manageEvent(SDL_Event *Event) {
 
   if (Event->type == SDL_KEYDOWN || Event->type == SDL_KEYUP) {
     /* ignore modifier-only key presses */
-    if (Event->key.keysym.sym == SDLK_RSHIFT ||
-        Event->key.keysym.sym == SDLK_LSHIFT ||
-        Event->key.keysym.sym == SDLK_RCTRL ||
-        Event->key.keysym.sym == SDLK_LCTRL ||
-        Event->key.keysym.sym == SDLK_RALT ||
-        Event->key.keysym.sym == SDLK_LALT ||
-        Event->key.keysym.sym == SDLK_RGUI ||
-        Event->key.keysym.sym == SDLK_LGUI) {
-      return;
+    switch (Event->key.keysym.sym) {
+      case SDLK_RSHIFT:
+      case SDLK_LSHIFT:
+      case SDLK_RCTRL:
+      case SDLK_LCTRL:
+      case SDLK_RALT:
+      case SDLK_LALT:
+      case SDLK_RGUI:
+      case SDLK_LGUI:
+        return;
     }
   }
 
-  //SDL_StartTextInput();
+  SDL_StartTextInput();
 
-  /* What event? */
   switch (Event->type) {
     case SDL_TEXTINPUT:
       utf8Char = Event->text.text;
@@ -793,36 +794,35 @@ void GameApp::manageEvent(SDL_Event *Event) {
     case SDL_CONTROLLERAXISMOTION:
       StateManager::instance()->xmKey(
         Input::instance()->joystickAxisSens(Event->caxis.value),
-        XMKey(Input::instance()->getJoyId(Event->cbutton.which),
+        XMKey(Input::instance()->getJoyById(Event->cbutton.which),
               Event->caxis.axis,
               Event->caxis.value));
       break;
     case SDL_USEREVENT: {
       if (Event->user.code == SDL_CONTROLLERAXISMOTION) {
-        StateMenu *state = reinterpret_cast<StateMenu *>(Event->user.data1);
-        const auto &event = state->getJoystickRepeat();
-        state->getGUI()->joystickAxisMotion(event);
+        const auto &event = *(static_cast<JoyAxisEvent *>(Event->user.data1));
+        StateMenu *state = dynamic_cast<StateMenu *>(
+            StateManager::instance()->getTopState());
+        if (state) {
+          state->getGUI()->joystickAxisMotion(event);
+        }
       }
       break;
     }
 
-    case SDL_CONTROLLERBUTTONDOWN:
-      StateManager::instance()->xmKey(
-        INPUT_DOWN,
-        XMKey(Input::instance()->getJoyId(Event->cbutton.which),
-              Event->cbutton.button));
-      break;
-
+    case SDL_CONTROLLERBUTTONDOWN: {
     case SDL_CONTROLLERBUTTONUP:
-      StateManager::instance()->xmKey(
-        INPUT_UP,
-        XMKey(Input::instance()->getJoyId(Event->cbutton.which),
-              Event->cbutton.button));
+      InputEventType type = Input::eventState(Event->type);
+      XMKey key = XMKey(
+          Input::instance()->getJoyById(Event->cbutton.which),
+          Event->cbutton.button);
+      StateManager::instance()->xmKey(type, key);
       break;
+    }
 
     case SDL_WINDOWEVENT: {
       switch (Event->window.event) {
-        case SDL_WINDOWEVENT_ENTER: /* fall through */
+        case SDL_WINDOWEVENT_ENTER:
         case SDL_WINDOWEVENT_LEAVE: {
           bool hasFocus = false;
           switch (Event->window.event) {
@@ -890,7 +890,7 @@ void GameApp::manageEvent(SDL_Event *Event) {
 
           break;
         }
-        case SDL_WINDOWEVENT_EXPOSED: /* fall through */
+        case SDL_WINDOWEVENT_EXPOSED:
           StateManager::instance()->setInvalidated(true);
           break;
         case SDL_WINDOWEVENT_SHOWN:
