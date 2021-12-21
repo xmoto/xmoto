@@ -64,14 +64,16 @@ public:
   bool operator==(const XMKey &i_other) const;
   std::string toString() const;
   std::string toFancyString() const;
+  static const char *modKeyString(SDL_Keymod modKey);
+  bool isModKeyDown(SDL_Keymod modKey) const;
   bool isPressed(const Uint8 *i_keystate, Uint8 i_mousestate) const;
 
-  inline bool isDefined() const { return m_input != XMK_NONE; }
+  inline bool isDefined() const { return m_type != XMK_NONE; }
 
   inline unsigned int getRepetition() const { return m_repetition; }
 
-  inline bool isAnalog() const { return m_input == XMK_JOYSTICKAXIS; }
-  inline bool isDirectional() const { return m_input == XMK_JOYSTICKAXIS; };
+  inline bool isAnalog() const { return m_type == XMK_JOYSTICKAXIS; }
+  inline bool isDirectional() const { return m_type == XMK_JOYSTICKAXIS; };
   float getAnalogValue() const;
   XMKey_direction getDirection() const;
 
@@ -87,7 +89,7 @@ public:
   inline Uint8 getJoyButton() const { return m_joyButton; }
 
 private:
-  XMKey_input m_input;
+  XMKey_input m_type;
   SDL_Keycode m_keyboard_sym;
   SDL_Keymod m_keyboard_mod;
   std::string m_keyboard_utf8Char;

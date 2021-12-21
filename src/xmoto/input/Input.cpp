@@ -302,27 +302,28 @@ Get key by action...
 std::string Input::getKeyByAction(const std::string &Action,
                                          bool i_tech) {
   for (unsigned int i = 0; i < INPUT_NB_PLAYERS; i++) {
-    std::ostringstream v_n;
+    std::string n;
 
-    if (i != 0) { // nothing for player 0
-      v_n << " " << (i + 1);
-    }
+    if (i != 0) // nothing for player 0
+      n = " " + std::to_string(i + 1);
 
-    if (Action == "Drive" + v_n.str())
-      return i_tech ? m_controls[i].playerKeys[INPUT_DRIVE].key.toString()
-                    : m_controls[i].playerKeys[INPUT_DRIVE].key.toFancyString();
-    if (Action == "Brake" + v_n.str())
-      return i_tech ? m_controls[i].playerKeys[INPUT_BRAKE].key.toString()
-                    : m_controls[i].playerKeys[INPUT_BRAKE].key.toFancyString();
-    if (Action == "PullBack" + v_n.str())
-      return i_tech ? m_controls[i].playerKeys[INPUT_FLIPLEFT].key.toString()
-                    : m_controls[i].playerKeys[INPUT_FLIPLEFT].key.toFancyString();
-    if (Action == "PushForward" + v_n.str())
-      return i_tech ? m_controls[i].playerKeys[INPUT_FLIPRIGHT].key.toString()
-                    : m_controls[i].playerKeys[INPUT_FLIPRIGHT].key.toFancyString();
-    if (Action == "ChangeDir" + v_n.str())
-      return i_tech ? m_controls[i].playerKeys[INPUT_CHANGEDIR].key.toString()
-                    : m_controls[i].playerKeys[INPUT_CHANGEDIR].key.toFancyString();
+    INPUT_PLAYERKEYS pkey;
+
+    if (Action == "Drive" + n)
+      pkey = INPUT_DRIVE;
+    else if (Action == "Brake" + n)
+      pkey = INPUT_BRAKE;
+    else if (Action == "PullBack" + n)
+      pkey = INPUT_FLIPLEFT;
+    else if (Action == "PushForward" + n)
+      pkey = INPUT_FLIPRIGHT;
+    else if (Action == "ChangeDir" + n)
+      pkey = INPUT_CHANGEDIR;
+    else
+      continue;
+
+    auto &key = m_controls[i].playerKeys[pkey].key;
+    return i_tech ? key.toString() : key.toFancyString();
   }
   return "?";
 }

@@ -21,8 +21,6 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #ifndef __INPUT_H__
 #define __INPUT_H__
 
-#define INPUT_NB_PLAYERS 4
-
 #include "XMKey.h"
 #include "helpers/Singleton.h"
 #include <string>
@@ -35,6 +33,9 @@ class UserConfig;
 class Universe;
 class Scene;
 class InputSDL12Compat;
+
+static const int INPUT_NB_PLAYERS = 4;
+static const int MAX_SCRIPT_KEY_HOOKS = 16;
 
 struct IFullKey {
   IFullKey();
@@ -109,8 +110,6 @@ enum INPUT_PLAYERKEYS {
 /*===========================================================================
 Script hooks
 ===========================================================================*/
-#define MAX_SCRIPT_KEY_HOOKS 16
-
 struct InputScriptKeyHook {
   XMKey nKey; /* Hooked key */
   std::string FuncName; /* Script function to invoke */
