@@ -870,8 +870,9 @@ void GameApp::manageEvent(SDL_Event *Event) {
           m_hasKeyboardFocus = hasFocus;
 
           if (!hasFocus) {
-            const uint8_t* keys = SDL_GetKeyboardState(NULL);
-            bool b = Input::instance()->getPlayerKey(INPUT_DRIVE, 0)->isPressed(keys, 0);
+            int numkeys = 0;
+            const uint8_t* keys = SDL_GetKeyboardState(&numkeys);
+            bool b = Input::instance()->getPlayerKey(INPUT_DRIVE, 0)->isPressed(keys, 0, numkeys);
 
 #if 0
             // invalidate all pressed keys

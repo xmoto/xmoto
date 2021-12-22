@@ -66,7 +66,7 @@ public:
   std::string toFancyString() const;
   static const char *modKeyString(SDL_Keymod modKey);
   bool isModKeyDown(SDL_Keymod modKey) const;
-  bool isPressed(const Uint8 *i_keystate, Uint8 i_mousestate) const;
+  bool isPressed(const Uint8 *i_keystate, Uint8 i_mousestate, int numkeys) const;
 
   inline bool isDefined() const { return m_type != XMK_NONE; }
 

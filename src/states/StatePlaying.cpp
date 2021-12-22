@@ -262,7 +262,7 @@ void StatePlaying::dealWithActivedKeys() {
 
       if (Input::instance()
             ->getPlayerKey(INPUT_DRIVE, p)
-            ->isPressed(v_keystate, v_mousestate)) {
+            ->isPressed(v_keystate, v_mousestate, numkeys)) {
         /* Start driving */
         v_biker->getControler()->setThrottle(1.0f);
       } else {
@@ -271,7 +271,7 @@ void StatePlaying::dealWithActivedKeys() {
 
       if (Input::instance()
             ->getPlayerKey(INPUT_BRAKE, p)
-            ->isPressed(v_keystate, v_mousestate)) {
+            ->isPressed(v_keystate, v_mousestate, numkeys)) {
         /* Brake */
         v_biker->getControler()->setBreak(1.0f);
       } else {
@@ -281,11 +281,11 @@ void StatePlaying::dealWithActivedKeys() {
       // pull
       if ((Input::instance()
              ->getPlayerKey(INPUT_FLIPLEFT, p)
-             ->isPressed(v_keystate, v_mousestate) &&
+             ->isPressed(v_keystate, v_mousestate, numkeys) &&
            XMSession::instance()->mirrorMode() == false) ||
           (Input::instance()
              ->getPlayerKey(INPUT_FLIPRIGHT, p)
-             ->isPressed(v_keystate, v_mousestate) &&
+             ->isPressed(v_keystate, v_mousestate, numkeys) &&
            XMSession::instance()->mirrorMode())) {
         /* Pull back */
         v_biker->getControler()->setPull(1.0f);
@@ -293,11 +293,11 @@ void StatePlaying::dealWithActivedKeys() {
         // push // must be in pull else block to not set pull to 0
         if ((Input::instance()
                ->getPlayerKey(INPUT_FLIPRIGHT, p)
-               ->isPressed(v_keystate, v_mousestate) &&
+               ->isPressed(v_keystate, v_mousestate, numkeys) &&
              XMSession::instance()->mirrorMode() == false) ||
             (Input::instance()
                ->getPlayerKey(INPUT_FLIPLEFT, p)
-               ->isPressed(v_keystate, v_mousestate) &&
+               ->isPressed(v_keystate, v_mousestate, numkeys) &&
              XMSession::instance()->mirrorMode())) {
           /* Push forward */
           v_biker->getControler()->setPull(-1.0f);
@@ -308,7 +308,7 @@ void StatePlaying::dealWithActivedKeys() {
 
       if (Input::instance()
           ->getPlayerKey(INPUT_CHANGEDIR, p)
-          ->isPressed(v_keystate, v_mousestate)
+          ->isPressed(v_keystate, v_mousestate, numkeys)
           /*
            * Make sure we aren't holding down the A button, as this would cause
            * the player to change directions instantly after opening the level

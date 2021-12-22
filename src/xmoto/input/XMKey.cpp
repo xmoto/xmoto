@@ -407,11 +407,14 @@ bool XMKey::isModKeyDown(SDL_Keymod modKey) const {
   return (m_keyboard_mod & modKey) == modKey;
 }
 
-bool XMKey::isPressed(const Uint8 *i_keystate, Uint8 i_mousestate) const {
+bool XMKey::isPressed(const Uint8 *i_keystate, Uint8 i_mousestate, int numkeys) const {
   if (m_type == XMK_KEYBOARD) {
-    /* It'd probably be a good idea to perform a range-check here,
-     * just to be safe.. */
-    return i_keystate[SDL_GetScancodeFromKey(m_keyboard_sym)] == 1;
+    SDL_Scancode scancode = SDL_GetScancodeFromKey(m_keyboard_sym);
+
+    if (scancode >= numkeys)
+      return false;
+
+    return i_keystate[scancode] == 1;
   }
 
   if (m_type == XMK_MOUSEBUTTON) {
