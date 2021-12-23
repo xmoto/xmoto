@@ -255,8 +255,6 @@ public:
   void setLanguage(const std::string &i_value);
   void setNotifyAtInit(bool i_value);
   bool notifyAtInit() const;
-  void setKeyCompatUpgrade(bool i_value);
-  bool keyCompatUpgrade() const;
   std::string webLevelsUrl() const;
   std::string uploadDbSyncUrl() const;
   bool mirrorMode() const;
@@ -420,7 +418,6 @@ private:
   std::string m_screenshotFormat;
   std::string m_language;
   bool m_notifyAtInit;
-  bool m_keyCompatUpgrade;
   std::string m_webLevelsUrl;
   std::string m_uploadDbSyncUrl;
   bool m_mirrorMode;

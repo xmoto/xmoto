@@ -196,7 +196,6 @@ void StateMainMenu::enter() {
         XMSession::instance()->sitekey(), XMSession::instance()->profile()) ==
         false) {
     StateManager::instance()->pushState(new StateEditProfile());
-    XMSession::instance()->setKeyCompatUpgrade(false);
 
     /* in case there is no profile, we show a message box */
     /* Should we show a notification box? (with important one-time info) */
@@ -208,11 +207,6 @@ void StateMainMenu::enter() {
     }
 
   } else {
-    // Reset key binds if migrating from an SDL1.2 profile
-    if (XMSession::instance()->keyCompatUpgrade()) {
-      Input::instance()->keyCompatUpgrade();
-    }
-
     if (CheckWwwThread::isNeeded()) {
       if (m_checkWwwThread == NULL) {
         m_checkWwwThread = new CheckWwwThread();

@@ -26,10 +26,12 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "helpers/VExcept.h"
 #include "xmoto/Game.h"
 #include "xmoto/GameText.h"
+#include "xmoto/input/Input.h"
+#include "xmoto/input/InputLegacy.h"
 #include <sstream>
 #include <ctime>
 
-#define XMDB_VERSION 36
+#define XMDB_VERSION 37
 #define DB_MAX_SQL_RUNTIME 0.25
 #define DB_BUSY_TIMEOUT 60000 // 60 seconds
 
@@ -1003,6 +1005,19 @@ void xmDatabase::upgradeXmDbToVersion(int i_fromVersion,
         updateXmDbVersion(36, i_interface);
       } catch (Exception &e) {
         throw Exception("Unable to update xmDb from 35: " + e.getMsg());
+      }
+
+    case 36:
+      try {
+        auto config = GameApp::instance()->getUserConfig();
+
+        Input::instance()->loadConfig(config, this, i_profile);
+        InputSDL12Compat::remap();
+        Input::instance()->saveConfig(config, this, i_profile);
+
+        updateXmDbVersion(37, i_interface);
+      } catch (Exception &e) {
+        throw Exception("Unable to update xmDb from 36: " + e.getMsg());
       }
 
       // next

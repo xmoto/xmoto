@@ -79,9 +79,8 @@ private:
   ~InputSDL12Compat();
 
 public:
-  static void upgrade();
+  static void remap();
   static void mapKey(XMKey &key);
-  static bool isUpgraded(xmDatabase *pDb, const std::string &i_id_profile);
   static void resolveConflicts(const std::vector<IFullKey *> &keys);
 };
 

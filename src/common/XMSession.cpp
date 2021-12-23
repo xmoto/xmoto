@@ -123,7 +123,6 @@ void XMSession::setToDefault() {
   m_uploadHighscoreUrl = DEFAULT_UPLOADREPLAY_URL;
   m_screenshotFormat = DEFAULT_SCREENSHOTFORMAT;
   m_notifyAtInit = DEFAULT_NOTIFYATINIT;
-  m_keyCompatUpgrade = DEFAULT_KEYCOMPATUPGRADE;
   m_webLevelsUrl = DEFAULT_WEBLEVELS_URL;
   m_uploadDbSyncUrl = DEFAULT_UPLOADDBSYNC_URL;
   m_mirrorMode = DEFAULT_MIRRORMODE;
@@ -331,13 +330,6 @@ void XMSession::loadProfile(const std::string &i_id_profile, xmDatabase *pDb) {
     i_id_profile, "AutosaveHighscoreReplays", m_autosaveHighscoreReplays);
   m_notifyAtInit =
     pDb->config_getBool(i_id_profile, "NotifyAtInit", m_notifyAtInit);
-
-  if (!pDb->config_keyExists(i_id_profile, "KeyCompatUpgrade"))
-    // this is either an old profile from SDL1.2 or a fresh profile
-    m_keyCompatUpgrade = true;
-  else
-    m_keyCompatUpgrade =
-      pDb->config_getBool(i_id_profile, "KeyCompatUpgrade", m_keyCompatUpgrade);
 
   m_showMinimap =
     pDb->config_getBool(i_id_profile, "ShowMiniMap", m_showMinimap);
@@ -561,7 +553,6 @@ void XMSession::saveProfile(xmDatabase *pDb) {
   pDb->config_setBool(
     m_profile, "AutosaveHighscoreReplays", m_autosaveHighscoreReplays);
   pDb->config_setBool(m_profile, "NotifyAtInit", m_notifyAtInit);
-  pDb->config_setBool(m_profile, "KeyCompatUpgrade", m_keyCompatUpgrade);
   pDb->config_setBool(m_profile, "ShowMiniMap", m_showMinimap);
   pDb->config_setBool(m_profile, "ShowEngineCounter", m_showEngineCounter);
   pDb->config_setBool(m_profile, "ContextHelp", m_enableContextHelp);
@@ -1322,15 +1313,6 @@ void XMSession::setNotifyAtInit(bool i_value) {
 
 bool XMSession::notifyAtInit() const {
   return m_notifyAtInit;
-}
-
-void XMSession::setKeyCompatUpgrade(bool i_value) {
-  PROPAGATE(XMSession, setKeyCompatUpgrade, i_value, bool);
-  m_keyCompatUpgrade = i_value;
-}
-
-bool XMSession::keyCompatUpgrade() const {
-  return m_keyCompatUpgrade;
 }
 
 std::string XMSession::webLevelsUrl() const {

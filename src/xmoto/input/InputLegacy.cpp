@@ -44,7 +44,7 @@ void InputSDL12Compat::mapKey(XMKey &key) {
   }
 }
 
-void InputSDL12Compat::upgrade() {
+void InputSDL12Compat::remap() {
   std::vector<IFullKey *> keys;
 
   for (auto &f : Input::instance()->m_globalControls) {
@@ -63,8 +63,4 @@ void InputSDL12Compat::upgrade() {
     mapKey(f->key);
 
   resolveConflicts(keys);
-}
-
-bool InputSDL12Compat::isUpgraded(xmDatabase *pDb, const std::string &i_id_profile) {
-  return !pDb->config_getBool(i_id_profile, "KeyCompatUpgrade", true);
 }

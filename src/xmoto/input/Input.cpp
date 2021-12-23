@@ -93,10 +93,6 @@ void Input::loadConfig(UserConfig *pConfig,
   /* Set defaults */
   setDefaultConfig();
 
-  /* To preserve backward compatibility with SDL1.2,
-   * we copy the keys and prefix them with "_" */
-  const std::string prefix = InputSDL12Compat::isUpgraded(pDb, i_id_profile) ? "_" : "";
-
   /* Get settings for mode */
   for (unsigned int player = 0; player < INPUT_NB_PLAYERS; player++) {
     std::ostringstream v_n;
@@ -106,7 +102,7 @@ void Input::loadConfig(UserConfig *pConfig,
       try {
         f.key =
           XMKey(pDb->config_getString(i_id_profile,
-                                      prefix + f.name + v_n.str(),
+                                      f.name + v_n.str(),
                                       f.key.toString()));
       } catch (InvalidSystemKeyException &e) {
         /* keep default key */
@@ -125,7 +121,7 @@ void Input::loadConfig(UserConfig *pConfig,
       v_k << (k);
 
       v_key = pDb->config_getString(
-        i_id_profile, prefix + "KeyActionScript" + v_n.str() + "_" + v_k.str(), "");
+        i_id_profile, "KeyActionScript" + v_n.str() + "_" + v_k.str(), "");
       if (v_key != "") { // don't override the default key if there is nothing
         // in the config
         try {
@@ -143,7 +139,7 @@ void Input::loadConfig(UserConfig *pConfig,
   for (unsigned int i = 0; i < INPUT_NB_GLOBALKEYS; i++) {
     try {
       m_globalControls[i].key = XMKey(pDb->config_getString(
-        i_id_profile, prefix + m_globalControls[i].name, m_globalControls[i].key.toString()));
+        i_id_profile, m_globalControls[i].name, m_globalControls[i].key.toString()));
     } catch (InvalidSystemKeyException &e) {
       /* keep default key */
     } catch (Exception &e) {
@@ -283,19 +279,6 @@ void Input::setDefaultConfig() {
   }
 }
 
-void Input::keyCompatUpgrade() {
-  InputSDL12Compat::upgrade();
-
-  Input::instance()->saveConfig(
-    GameApp::instance()->getUserConfig(),
-    xmDatabase::instance("main"),
-    XMSession::instance("file")->profile());
-
-  XMSession::instance()->setKeyCompatUpgrade(false);
-
-  Logger::LogInfo("Key bindings upgraded");
-}
-
 /*===========================================================================
 Get key by action...
 ===========================================================================*/
@@ -334,8 +317,6 @@ void Input::saveConfig(UserConfig *pConfig,
                               const std::string &i_id_profile) {
   pDb->config_setValue_begin();
 
-  const std::string prefix = "_";
-
   for (unsigned int i = 0; i < INPUT_NB_PLAYERS; i++) {
     std::ostringstream v_n;
     v_n << (i + 1);
@@ -344,7 +325,7 @@ void Input::saveConfig(UserConfig *pConfig,
     for (unsigned int j = 0; j < INPUT_NB_PLAYERKEYS; j++) {
       if (m_controls[i].playerKeys[j].key.isDefined()) {
         pDb->config_setString(i_id_profile,
-                              prefix + m_controls[i].playerKeys[j].name + v_n.str(),
+                              m_controls[i].playerKeys[j].name + v_n.str(),
                               m_controls[i].playerKeys[j].key.toString());
       }
     }
@@ -356,7 +337,7 @@ void Input::saveConfig(UserConfig *pConfig,
         v_k << (k);
 
         pDb->config_setString(i_id_profile,
-                              prefix + "KeyActionScript" + v_n.str() + "_" + v_k.str(),
+                              "KeyActionScript" + v_n.str() + "_" + v_k.str(),
                               m_controls[i].scriptActionKeys[k].key.toString());
       }
     }
@@ -365,7 +346,7 @@ void Input::saveConfig(UserConfig *pConfig,
   // global keys
   for (unsigned int i = 0; i < INPUT_NB_GLOBALKEYS; i++) {
     pDb->config_setString(
-      i_id_profile, prefix + m_globalControls[i].name, m_globalControls[i].key.toString());
+      i_id_profile, m_globalControls[i].name, m_globalControls[i].key.toString());
   }
 
   pDb->config_setValue_end();
