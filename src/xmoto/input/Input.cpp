@@ -31,6 +31,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "helpers/VExcept.h"
 #include "xmoto/Game.h"
 #include "xmoto/GameText.h"
+#include "xmoto/SysMessage.h"
 #include <sstream>
 #include <utility>
 
@@ -429,61 +430,89 @@ bool Input::isANotGameSetKey(XMKey *i_xmkey) const {
 void Input::recheckJoysticks() {
   std::string joyName, joyId;
   int n;
-  bool continueToOpen = true;
   SDL_GameController *joystick;
 
   m_joysticks.clear();
 
-  std::vector<std::string> incompatible;
+  std::vector<int> compatible;
+  std::vector<int> invalid;
 
   for (int i = 0; i < SDL_NumJoysticks(); i++) {
-    if (!continueToOpen)
-      continue;
-
     if (!SDL_IsGameController(i)) {
-      const char *name = SDL_GameControllerNameForIndex(i);
-      incompatible.push_back(name);
+      invalid.push_back(i);
       continue;
     }
 
-    if ((joystick = SDL_GameControllerOpen(i)) != NULL) {
-      std::ostringstream id;
-      n = 0;
-      joyName = SDL_GameControllerName(joystick);
-      SDL_JoystickID joyNum = SDL_JoystickInstanceID(SDL_GameControllerGetJoystick(joystick));
-
-      // check if there is an other joystick with the same name
-      for (unsigned int j = 0; j < m_joysticks.size(); j++) {
-        if (m_joysticks[j].name == joyName) {
-          n++;
-        }
-      }
-
-      if (n > 0) {
-        id << " " << (n + 1); // +1 to get an id name starting at 1
-      }
-      joyId = joyName + id.str();
-      m_joysticks.push_back(Joystick{ joystick, joyName, joyNum });
-
-      LogInfo("Joystick found [%s], id is [%s]", joyName.c_str(), joyId.c_str());
-      char *mapping = SDL_GameControllerMapping(joystick);
-      if (mapping) {
-        LogDebug("Mapping: %s", mapping);
-        SDL_free(mapping);
-      } else {
-        LogDebug("No mapping available: %s", SDL_GetError());
-      }
-    } else {
+    if (!(joystick = SDL_GameControllerOpen(i))) {
       // don't continue to open joystick to keep m_joysticks[joystick.num] working
-      continueToOpen = false;
       LogWarning("Failed to open joystick [%s], abort to open other joysticks", joyName.c_str());
+      break;
     }
+
+    std::ostringstream id;
+    n = 0;
+    joyName = SDL_GameControllerName(joystick);
+    SDL_JoystickID joystickId = SDL_JoystickInstanceID(SDL_GameControllerGetJoystick(joystick));
+
+    // check if there is an other joystick with the same name
+    for (unsigned int j = 0; j < m_joysticks.size(); j++) {
+      if (m_joysticks[j].name == joyName) {
+        n++;
+      }
+    }
+
+    if (n > 0) {
+      id << " " << (n + 1); // +1 to get an id name starting at 1
+    }
+    joyId = joyName + id.str();
+    m_joysticks.push_back(Joystick{ joystick, joyName, joystickId });
+
+    compatible.push_back(i);
   }
 
-  if (incompatible.size() > 0) {
-    LogDebug("Found %d incompatible controllers:", incompatible.size());
-    for (int i = 0; i < incompatible.size(); i++) {
-      LogDebug("\t%d: %s", i+1, incompatible[i].c_str());
+  auto logControllers = [](const std::vector<int> &controllers,
+                           LogLevel logLevel, bool valid) -> void {
+    for (int i = 0; i < controllers.size(); i++) {
+      int deviceIndex = controllers[i];
+
+      auto func = valid ? SDL_GameControllerNameForIndex : SDL_JoystickNameForIndex;
+      const char *name = func(deviceIndex);
+      if (!name)
+        name = "<unknown>";
+
+#if SDL_VERSION_ATLEAST(2, 0, 6)
+      uint16_t vendorId = SDL_JoystickGetDeviceVendor(deviceIndex);
+      uint16_t productId = SDL_JoystickGetDeviceProduct(deviceIndex);
+
+      Logger::LogLevelMsg(logLevel, "  %d: %s (0x%04x:0x%04x)",
+          i+1, name, vendorId, productId);
+#else
+      Logger::LogLevelMsg(logLevel, "  %d: %s (<unknown vendor/product id>)",
+          i+1, name);
+#endif
+    }
+  };
+
+  LogInfo("%d compatible controllers found%s", compatible.size(),
+      compatible.size() > 0 ? ":" : "");
+  logControllers(compatible, LOG_INFO, true);
+
+  if (invalid.size() > 0) {
+    LogWarning("%d invalid controllers found:", invalid.size());
+    logControllers(invalid, LOG_WARNING, false);
+  }
+
+  if (XMSession::instance()->debug()) {
+    LogDebug("Controller mappings:");
+    for (int i = 0; i < compatible.size(); i++) {
+      char *mapping = SDL_GameControllerMapping(m_joysticks[i].handle);
+
+      if (mapping) {
+        LogDebug("  %d: %s", i+1, mapping);
+        SDL_free(mapping);
+      } else {
+        LogDebug("  %d: %s (%s)", i+1, "<not available>", SDL_GetError());
+      }
     }
   }
 }
@@ -492,7 +521,9 @@ void Input::loadJoystickMappings() {
   const char *mappingFile = "gamecontrollerdb.txt";
   FileHandle *file = XMFS::openIFile(FDT_DATA, mappingFile);
   if (!file) {
-    LogWarning("Failed to read joystick mapping file");
+    const char *error = "Failed to read joystick mapping file";
+    SysMessage::instance()->displayError(error);
+    LogWarning(error);
     return;
   }
 
