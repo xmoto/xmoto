@@ -32,7 +32,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #define ROOMS_NB_MAX 6
 
 // database file
-#define DATABASE_FILE XMFS::getUserDirUTF8(FDT_DATA) + "/" + "xm.db"
+#define DATABASE_FILE "xm.db"
 
 #define DEFAULT_CONTROLLERMODE "Keyboard"
 #define DEFAULT_LANGUAGE ""

@@ -40,7 +40,7 @@ private:
 public:
   void preInitForProfileLoading(const std::string &i_dbFileUTF8);
   // global init (upgrade data model)
-  void init(const std::string &i_dbFileUTF8,
+  bool init(const std::string &i_dbFileUTF8,
             const std::string &i_profile,
             const std::string &i_gameDataDir,
             const std::string &i_userDataDir,
@@ -49,8 +49,10 @@ public:
             XmDatabaseUpdateInterface *i_interface = NULL);
   // simple init (for subthreads)
   void init(const std::string &i_dbFileUTF8, bool i_readOnly = false);
+  void backupXmDb(const std::string &dbFile);
   void setUpdateAfterInitDone(); // call once, update after init are done
   int getXmDbVersion();
+  bool isOpen() const { return m_db != NULL; }
   static int getMemoryUsed();
 
   /* RULE:

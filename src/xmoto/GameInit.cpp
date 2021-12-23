@@ -395,15 +395,18 @@ void GameApp::run_load(int nNumArgs, char **ppcArgs) {
   }
 
   /* init the database (fully, including upgrades) */
-  pDb->init(DATABASE_FILE,
-            XMSession::instance()->profile() == ""
-              ? std::string("")
-              : XMSession::instance()->profile(),
-            XMFS::getSystemDataDir(),
-            XMFS::getUserDir(FDT_DATA),
-            XMFS::binCheckSum(),
-            v_xmArgs.isOptNoDBDirsCheck() == false,
-            this);
+  if (!pDb->init(DATABASE_FILE,
+                 XMSession::instance()->profile() == ""
+                   ? std::string("")
+                   : XMSession::instance()->profile(),
+                 XMFS::getSystemDataDir(),
+                 XMFS::getUserDir(FDT_DATA),
+                 XMFS::binCheckSum(),
+                 v_xmArgs.isOptNoDBDirsCheck() == false,
+                 this)) {
+    quit();
+    return;
+  }
 
   if (v_useGraphics) {
     // allocate the statemanager instance so that if it fails, it's not in a
@@ -1071,12 +1074,13 @@ void GameApp::run_unload() {
   if (Logger::isInitialized()) {
     LogDebug("UserUnload saveConfig at %.3f", GameApp::getXMTime());
   }
-  if (drawLib != NULL) { /* save config only if drawLib was initialized */
+  auto dbInstance = xmDatabase::instance("main");
+  if (drawLib != NULL && dbInstance->isOpen()) { /* save config only if drawLib was initialized */
     XMSession::instance("file")->save(m_userConfig,
                                       xmDatabase::instance("main"));
     Input::instance()->saveConfig(
       m_userConfig,
-      xmDatabase::instance("main"),
+      dbInstance,
       XMSession::instance("file")->profile());
     m_userConfig->saveFile();
   }

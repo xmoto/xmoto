@@ -93,8 +93,9 @@ public:
     FileDataType i_fdt,
     const std::string &From,
     const std::string &To,
-    std::string &To_really_done); /* To_really_done is out : it is the name of
-                                     the file really written */
+    /* To_really_done is out : it is the name of the file really written */
+    std::string &To_really_done,
+    bool mkdirs = false);
 
   // you can rename only user files
   static bool renameUserFile(const std::string &From, const std::string &To);
