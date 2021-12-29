@@ -28,6 +28,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "common/TextEdit.h"
 
 #include <tuple> // std::tie
+#include <algorithm>
 
 /*===========================================================================
 Painting
@@ -150,8 +151,10 @@ bool UIEdit::keyDown(int nKey, SDL_Keymod mod, const std::string &i_utf8Char) {
             return true;
           }
 
-          std::string s = getCaption();
+          std::string s;
           std::tie(s, m_nCursorPos) = TextEdit::insertAt(s, std::string(clipboard), m_nCursorPos);
+          s.erase(std::remove(s.begin(), s.end(), '\n'), s.end());
+
           setCaptionResetCursor(s, false);
           SDL_free(clipboard);
         }
@@ -228,18 +231,20 @@ bool UIEdit::keyDown(int nKey, SDL_Keymod mod, const std::string &i_utf8Char) {
 
 bool UIEdit::textInput(int nKey, SDL_Keymod mod, const std::string &i_utf8Char) {
   // alt/... and special keys must not be kept
-  if (utf8::utf8_length(i_utf8Char) == 1) {
-    std::string s = getCaption();
-
-    if ((unsigned int)m_nCursorPos == s.length()) {
-      s = utf8::utf8_concat(s, i_utf8Char);
-    } else {
-      s = utf8::utf8_insert(s, i_utf8Char, m_nCursorPos);
-    }
-    m_nCursorPos++;
-    setCaptionResetCursor(s, false);
-    return true;
+  if (utf8::utf8_length(i_utf8Char) != 1) {
+    return false;
   }
+
+  std::string s = getCaption();
+
+  if ((unsigned int)m_nCursorPos == s.length()) {
+    s = utf8::utf8_concat(s, i_utf8Char);
+  } else {
+    s = utf8::utf8_insert(s, i_utf8Char, m_nCursorPos);
+  }
+  m_nCursorPos++;
+  setCaptionResetCursor(s, false);
+  return true;
 }
 
 bool UIEdit::joystickAxisMotion(JoyAxisEvent event) {
