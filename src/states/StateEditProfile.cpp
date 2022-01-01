@@ -341,7 +341,17 @@ void StateEditProfile::sendFromMessageBox(const std::string &i_id,
         } catch (Exception &e) {
           LogWarning("Unable to create the profile");
         }
+
         createProfileList();
+
+        UIList *pList = reinterpret_cast<UIList *>(
+          m_sGUI->getChild("EDITPROFILE_FRAME:PROFILE_LIST"));
+
+        for (int i = 0; i < pList->getEntries().size(); i++) {
+          if (pList->getEntries()[i]->Text[0] != PlayerName)
+            continue;
+          pList->setRealSelected(i);
+        }
         break;
       }
       default:
