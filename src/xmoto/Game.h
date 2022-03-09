@@ -297,9 +297,6 @@ private:
   bool m_hasKeyboardFocus;
   bool m_isIconified;
 
-  // Window icon
-  SDL_Surface *m_icon;
-
   // demo
   XMDemo *m_xmdemo;
 };

@@ -60,18 +60,6 @@ std::vector<std::string> *System::getDisplayModes(int windowed) {
     dispModes.push_back({ mode.w, mode.h });
   }
 
-  /* Get available fullscreen/hardware modes */
-  //sdlModes = SDL_ListModes(NULL, nFlags);
-
-  /* Check is there are any modes available */
-  /*
-  if (sdlModes == (SDL_Rect **)0) {
-    LogWarning("No display modes available.");
-    delete modes;
-    throw Exception("getDisplayModes : No modes available.");
-  }
-  */
-
   /* Create a string-list of the display modes */
   std::sort(dispModes.begin(), dispModes.end(),
       [](const DisplayMode &a, const DisplayMode &b) {
