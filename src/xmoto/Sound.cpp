@@ -172,6 +172,7 @@ SoundSample *Sound::loadSample(const std::string &File) {
   FileHandle *pf = XMFS::openIFile(FDT_DATA, File);
   if (pf == NULL) {
     SDL_FreeRW(pOps);
+    delete pSample;
     throw Exception("failed to open sample file " + File);
   }
 

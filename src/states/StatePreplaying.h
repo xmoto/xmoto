@@ -55,8 +55,7 @@ protected:
   virtual void preloadLevels() = 0;
   virtual void initPlayers() = 0;
   virtual void runPlaying() = 0;
-  virtual bool shouldBeAnimated()
-    const; // return true wether the animation shoud be done
+  virtual bool shouldBeAnimated() const;
 
   virtual void addLocalGhosts();
   virtual void addWebGhosts();

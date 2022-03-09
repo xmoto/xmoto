@@ -586,6 +586,20 @@ void DrawLibOpenGL::setBlendMode(BlendMode blendMode) {
   m_blendMode = blendMode;
 }
 
+void DrawLibOpenGL::setCameraDimensionality(CameraDimension dimension) {
+  glViewport(m_renderSurf->downleft().x,
+             m_renderSurf->downleft().y,
+             m_renderSurf->size().x,
+             m_renderSurf->size().y);
+  glMatrixMode(GL_PROJECTION);
+  glLoadIdentity();
+  if (dimension == CAMERA_2D) {
+    glOrtho(0, m_renderSurf->size().x, 0, m_renderSurf->size().y, -1, 1);
+  }
+  glMatrixMode(GL_MODELVIEW);
+  glLoadIdentity();
+}
+
 void DrawLibOpenGL::clearGraphics() {
   /* Clear screen */
   glClear(GL_COLOR_BUFFER_BIT);

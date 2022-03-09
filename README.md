@@ -1,5 +1,5 @@
-# X-Moto 0.6.1 [![Build Status](https://travis-ci.org/xmoto/xmoto.svg?branch=master)](https://travis-ci.org/xmoto/xmoto)
-Copyright (C) 2005-2020
+# X-Moto 0.6.1 [![Build Status](https://travis-ci.com/xmoto/xmoto.svg?branch=master)](https://travis-ci.org/xmoto/xmoto) [![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=xmoto_xmoto&metric=alert_status)](https://sonarcloud.io/dashboard?id=xmoto_xmoto)
+Copyright (C) 2005-2021
 
 # Introduction
 
@@ -137,14 +137,4 @@ above mentioned licenses.
 ### Authors
 
 See the in-game credits under "Help".
-
-## Developers
-- 2014-2020 Maxwell S. (maxwells@xmoto.tuxfamily.org)
-- 2014-2020 Nikekson (nikekson@xmoto.tuxfamily.org)
-- 2014-2020 Unnheulu
-- 2014-2020 bb010g
-- 2006-2014 Nicolas Adenis-Lamarre (nicolas@adenis-lamarre.fr)
-- 2007-2011 Emmanuel Gorse (e.gorse@free.fr)
-- 2009-2010 Jens Erler (mothbox@gmx.net)
-- 2005-2006 Rasmus Neckelmann (neckelmann@gmail.com)
 

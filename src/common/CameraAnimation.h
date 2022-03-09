@@ -43,6 +43,8 @@ public:
   bool allowNextStep();
   virtual void goNextStep();
 
+  void resetSizeMultipliers();
+
   float startTime() const;
   const Vector2f &initialPosition() const;
   float initialZoom() const;
@@ -60,10 +62,10 @@ protected:
 
 private:
   // initial values
-  float m_I_cameraZoom;
-  Vector2f m_I_cameraPosition;
-  float m_I_entitiesToTakeZoom;
-  float m_I_entitiesWhichMakeWin;
+  float m_initialCameraZoom;
+  Vector2f m_initialCameraPosition;
+  float m_initialEntitiesToTakeZoom;
+  float m_initialEntitiesWhichMakeWin;
 
   // usable values
   float m_startTime;

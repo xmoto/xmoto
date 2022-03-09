@@ -34,7 +34,29 @@ ChipmunkWorld::ChipmunkWorld(PhysicsSettings *i_physicsSettings,
 }
 
 ChipmunkWorld::~ChipmunkWorld() {
-  cpSpaceDestroy(m_space);
+  for (size_t i = 0;i < m_joints.size();i++) {
+    cpJointFree(m_joints[i]);
+  }
+  for (size_t i = 0;i < m_shapes.size();i++) {
+    cpShapeFree(m_shapes[i]);
+  }
+  m_joints.clear();
+  m_shapes.clear();
+
+  /* free bodies */
+  for (size_t i = 0;i < m_ab.size();i++) {
+    cpBodyFree(m_ab[i]);
+    cpBodyFree(m_af[i]);
+    cpBodyFree(m_wb[i]);
+    cpBodyFree(m_wf[i]);
+  }
+  m_ab.clear();
+  m_af.clear();
+  m_wb.clear();
+  m_wf.clear();
+
+  cpBodyFree(m_body);
+  cpSpaceFree(m_space);
 }
 
 void ChipmunkWorld::setGravity(float i_x, float i_y) {
@@ -131,6 +153,9 @@ void ChipmunkWorld::addPlayer(PlayerLocalBiker *i_biker) {
   cpBody *v_wb;
   cpBody *v_wf;
 
+  cpJoint *v_jb;
+  cpJoint *v_jf;
+
   // Wheel mass.. as above ODE/Chipmunk
   cpFloat mass = CHIP_WHEEL_MASS;
   cpFloat wheel_moment = cpMomentForCircle(
@@ -152,8 +177,10 @@ void ChipmunkWorld::addPlayer(PlayerLocalBiker *i_biker) {
   cpSpaceAddBody(m_space, v_wf);
 
   // Pin-joint the wheels to the anchors
-  cpSpaceAddJoint(m_space, cpPinJointNew(v_ab, v_wb, cpvzero, cpvzero));
-  cpSpaceAddJoint(m_space, cpPinJointNew(v_af, v_wf, cpvzero, cpvzero));
+  v_jb = cpPinJointNew(v_ab, v_wb, cpvzero, cpvzero);
+  v_jf = cpPinJointNew(v_af, v_wf, cpvzero, cpvzero);
+  cpSpaceAddJoint(m_space, v_jb);
+  cpSpaceAddJoint(m_space, v_jf);
 
   // creating collision shapes for the wheels
   //   change to collision group 1
@@ -166,6 +193,7 @@ void ChipmunkWorld::addPlayer(PlayerLocalBiker *i_biker) {
   shape->e = CHIP_WHEEL_ELASTICITY;
   shape->group = 1;
   cpSpaceAddShape(m_space, shape);
+  m_shapes.push_back(shape);
 
   shape = cpCircleShapeNew(v_wb,
                            i_biker->getPhysicsSettings()->BikeWheelRadius() *
@@ -175,11 +203,15 @@ void ChipmunkWorld::addPlayer(PlayerLocalBiker *i_biker) {
   shape->e = CHIP_WHEEL_ELASTICITY;
   shape->group = 1;
   cpSpaceAddShape(m_space, shape);
+  m_shapes.push_back(shape);
 
   m_ab.push_back(v_ab);
   m_af.push_back(v_af);
   m_wb.push_back(v_wb);
   m_wf.push_back(v_wf);
+
+  m_joints.push_back(v_jb);
+  m_joints.push_back(v_jf);
 
   /* init position */
   v_af->p = cpv(i_biker->getState()->FrontWheelP.x * CHIP_SCALE_RATIO,

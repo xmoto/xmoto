@@ -41,7 +41,7 @@ endif()
 find_package(PNG REQUIRED)
 
 find_package(Lua)
-set(USE_SYSTEM_Lua $<AND:$<BOOL:${PREFER_SYSTEM_Lua}>,$<BOOL:${LUA51_FOUND}>,$<NOT:$<BOOL:${WIN32}>>>)
+set(USE_SYSTEM_Lua $<AND:$<BOOL:${PREFER_SYSTEM_Lua}>,$<BOOL:${LUA_FOUND}>,$<NOT:$<BOOL:${WIN32}>>>)
 if (NOT LUA_VERSION_STRING VERSION_LESS 5.2 AND LUA_VERSION_STRING VERSION_LESS 5.3)
     add_definitions("-DLUA_COMPAT_ALL")
 elseif (LUA_VERSION_STRING VERSION_GREATER_EQUAL "5.3")
@@ -180,6 +180,7 @@ set(helpers_src
   helpers/Environment.cpp helpers/Environment.h
   helpers/FileCompression.cpp helpers/FileCompression.h
   helpers/HighPrecisionTimer.h
+  helpers/ScopedTimer.h
   helpers/Log.cpp helpers/Log.h
   helpers/MultiSingleton.h
   helpers/Random.cpp helpers/Random.h
@@ -431,8 +432,10 @@ target_include_directories(xmoto
   PRIVATE
 
   "${PROJECT_SOURCE_DIR}/src"
-  "${SDL2_INCLUDE_DIRS}"
+  "${CURL_INCLUDE_DIR}"
   "${LIBXML2_INCLUDE_DIR}"
+  "${Intl_INCLUDE_DIRS}"
+  "${SDL2_INCLUDE_DIRS}"
   "$<${USE_SYSTEM_Lua}:${LUA_INCLUDE_DIR}>"
   "$<$<NOT:${USE_SYSTEM_Lua}>:${PROJECT_SOURCE_DIR}/vendor/lua/lua>"
 )
@@ -494,6 +497,11 @@ check_prototype_definition(mkdir
 )
 target_compile_definitions(xmoto PUBLIC MS_MKDIR=$<BOOL:${MS_MKDIR}>)
 
+if(USE_SYSTEM_Lua)
+  check_symbol_exists(luaL_openlib lauxlib.h HAVE_LUAL_OPENLIB)
+  target_compile_definitions(xmoto PUBLIC HAVE_LUAL_OPENLIB=$<BOOL:${HAVE_LUAL_OPENLIB}>)
+endif()
+
 target_compile_definitions(xmoto PUBLIC USE_OPENGL=$<BOOL:${USE_OPENGL}>)
 target_compile_definitions(xmoto PUBLIC USE_SDLGFX=$<BOOL:${USE_SDLGFX}>)
 target_compile_definitions(xmoto PUBLIC USE_GETTEXT=$<BOOL:${USE_GETTEXT}>)
@@ -515,12 +523,6 @@ else()
   target_compile_definitions(xmoto PRIVATE
     DEFAULT_ASIAN_TTF_FILE=\"/usr/share/fonts/truetype/arphic/bkai00mp.ttf\")
 endif()
-
-set(CPACK_RPM_EXCLUDE_FROM_AUTO_FILELIST_ADDITION
-  "/usr/share/applications"
-  "/usr/share/pixmaps"
-  "/usr/share/locale"
-)
 
 # Handle localization
 # Based on Dolphin Emulator's Source/Core/DolphinWX/CMakeLists.txt (831ae6a)
@@ -546,15 +548,6 @@ if(USE_GETTEXT AND GETTEXT_MSGMERGE_EXECUTABLE AND GETTEXT_MSGFMT_EXECUTABLE)
       )
     else()
       install(FILES "${mo}" DESTINATION share/locale/${lang}/LC_MESSAGES)
-
-      # work around a problem where cpack thinks it's a good
-      # idea to throw in the parent directories of files in
-      # the rpm that will be installed in the filesystem...
-      set(CPACK_RPM_EXCLUDE_FROM_AUTO_FILELIST_ADDITION
-        ${CPACK_RPM_EXCLUDE_FROM_AUTO_FILELIST_ADDITION}
-        "/usr/share/locale/${lang}"
-        "/usr/share/locale/${lang}/LC_MESSAGES"
-      )
     endif()
 
     add_custom_command(OUTPUT "${mo}"
@@ -565,12 +558,6 @@ if(USE_GETTEXT AND GETTEXT_MSGMERGE_EXECUTABLE AND GETTEXT_MSGFMT_EXECUTABLE)
     )
   endforeach()
 endif()
-
-# make this visible to its parent (and therefore to cpack/)
-set(CPACK_RPM_EXCLUDE_FROM_AUTO_FILELIST_ADDITION
-  ${CPACK_RPM_EXCLUDE_FROM_AUTO_FILELIST_ADDITION}
-  PARENT_SCOPE
-)
 
 #target_compile_options(xmoto PRIVATE -Wall)
 #target_compile_options(xmoto PRIVATE -Werror)

@@ -111,6 +111,7 @@ void xmDatabase::sync_buildServerFile(const std::string &i_outFile,
 
   /* stats_completedLevels */
   XMFS::writeLine(pfh, "<stats_completedLevels>");
+  read_DB_free(v_result);
   v_result = readDB("SELECT dbSync, id_level, timeStamp, finishTime "
                     "FROM profile_completedLevels "
                     "WHERE sitekey=\"" +
@@ -129,6 +130,7 @@ void xmDatabase::sync_buildServerFile(const std::string &i_outFile,
              atoi(getResult(v_result, 4, i, 3)));
     XMFS::writeLine(pfh, v_line);
   }
+  read_DB_free(v_result);
   XMFS::writeLine(pfh, "</stats_completedLevels>");
 
   XMFS::writeLine(pfh, "</xmoto_sync>");

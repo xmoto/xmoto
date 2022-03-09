@@ -105,6 +105,14 @@ enum BlendMode {
   BLEND_MODE_B // GL_ONE,GL_ONE
 };
 
+/**
+ * Dimensionality of the camera
+ **/
+enum CameraDimension {
+  CAMERA_2D,
+  CAMERA_3D
+};
+
 /*===========================================================================
   Class with various drawing functions
   ===========================================================================*/
@@ -144,6 +152,8 @@ public:
   bool isNoGraphics();
 
   SDL_Window *getWindow() const { return m_window; }
+
+  virtual void setCameraDimensionality(CameraDimension dimension);
 
   void setRenderSurface(RenderSurface *renderSurf, bool i_own);
   RenderSurface *getRenderSurface();

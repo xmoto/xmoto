@@ -56,10 +56,6 @@
 #define TRAILCAM_TRACKINGSHOT_SPEED 0.008 // smaller is faster
 #define TRAILCAM_DAMPING 0.01 // smaller damps more
 
-#ifdef ENABLE_OPENGL
-#include "../include/xm_OpenGL.h"
-#endif
-
 Camera::Camera(Vector2i downleft, Vector2i upright) {
   m_fScale = ZOOM_DEFAULT;
   m_cameraOffsetX = CAMERA_OFFSETX_DEFAULT;
@@ -157,7 +153,7 @@ void Camera::initCamera() {
 void Camera::setUseTrailCam(bool i_value) {
   m_useTrailCam = i_value;
 
-  if (m_useTrailCam == false && m_trailAvailable) {
+  if (m_useTrailCam == false && m_catchTrail && m_trailAvailable) {
     m_catchTrail = false;
     initCameraPosition();
   }
@@ -664,34 +660,17 @@ void Camera::activate() {
 }
 
 void Camera::setCamera2d() {
-#ifdef ENABLE_OPENGL
-  glViewport(m_renderSurf.downleft().x,
-             m_renderSurf.downleft().y,
-             m_renderSurf.size().x,
-             m_renderSurf.size().y);
-  glMatrixMode(GL_PROJECTION);
-  glLoadIdentity();
-  glOrtho(0, m_renderSurf.size().x, 0, m_renderSurf.size().y, -1, 1);
-  glMatrixMode(GL_MODELVIEW);
-  glLoadIdentity();
-#endif
-
   activate();
+
+  DrawLib *drawLib = GameApp::instance()->getDrawLib();
+  drawLib->setCameraDimensionality(CAMERA_2D);
 }
 
 void Camera::setCamera3d() {
-#ifdef ENABLE_OPENGL
-  glViewport(m_renderSurf.downleft().x,
-             m_renderSurf.downleft().y,
-             m_renderSurf.size().x,
-             m_renderSurf.size().y);
-  glMatrixMode(GL_PROJECTION);
-  glLoadIdentity();
-  glMatrixMode(GL_MODELVIEW);
-  glLoadIdentity();
-#endif
-
   activate();
+
+  DrawLib *drawLib = GameApp::instance()->getDrawLib();
+  drawLib->setCameraDimensionality(CAMERA_3D);
 }
 
 void Camera::setRenderSurface(Vector2i downleft, Vector2i upright) {

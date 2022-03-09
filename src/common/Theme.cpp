@@ -793,7 +793,7 @@ std::string AnimationSprite::getCurrentTextureFileName() {
   } else {
     char v_num[3];
     snprintf(
-      v_num, 3, "%02i", getCurrentFrame() % 100); // max 100 frames by animation
+      v_num, 3, "%02u", getCurrentFrame() % 100); // max 100 frames by animation
 
     return getFileDir() + "/" + m_fileBase + std::string(v_num) +
            std::string(".") + m_fileExtension;

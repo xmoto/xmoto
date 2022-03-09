@@ -1,12 +1,12 @@
 #
-# Kristian Jagd <Kristianjagd@gmail.com>, 2011.
+# Kristian Jagd <Kristianjagd@gmail.com>, 2011-2020.
 #
 msgid ""
 msgstr ""
 "Project-Id-Version: X-Moto\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-11-14 23:53+0200\n"
-"PO-Revision-Date: 2011-01-18 22:22+0100\n"
+"POT-Creation-Date: 2017-04-29 19:27-0700\n"
+"PO-Revision-Date: 2020-07-02 15:00+0200\n"
 "Last-Translator: Kristian Jagd <Kristianjagd@gmail.com>\n"
 "Language-Team: Dansk <LL@li.org>\n"
 "Language: da_DK\n"
@@ -14,6 +14,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
+"X-Generator: Poedit 2.2.1\n"
 
 #: src/xmoto/GameText.h:640
 msgid ""
@@ -48,13 +49,13 @@ msgstr "# Baner"
 msgid "%d death"
 msgid_plural "%d deaths"
 msgstr[0] "død %d gang"
-msgstr[1] "død %d gang"
+msgstr[1] "død %d gange"
 
 #: src/xmoto/GameText.h:753
 #, fuzzy, c-format
 msgid "%d different level"
 msgid_plural "%d different levels"
-msgstr[0] "%d forskellige baner"
+msgstr[0] "%d forskellig bane"
 msgstr[1] "%d forskellige baner"
 
 #: src/xmoto/GameText.h:758
@@ -62,7 +63,7 @@ msgstr[1] "%d forskellige baner"
 msgid "%d finished"
 msgid_plural "%d finished"
 msgstr[0] "%d gennemført"
-msgstr[1] "%d gennemført"
+msgstr[1] "%d gennemførte"
 
 #: src/xmoto/GameText.h:745
 #, c-format
@@ -86,7 +87,7 @@ msgstr[1] "%i spil"
 msgid "%d restart"
 msgid_plural "%d restarts"
 msgstr[0] "%d genstart"
-msgstr[1] "%d genstart"
+msgstr[1] "%d genstarter"
 
 #: src/xmoto/GameText.h:762
 #, c-format
@@ -98,21 +99,21 @@ msgstr "%d sekunder"
 msgid "%i joystick found"
 msgid_plural "%i joysticks found"
 msgstr[0] "%i joystick fundet"
-msgstr[1] "%i joystick fundet"
+msgstr[1] "%i joysticks fundet"
 
 #: src/xmoto/GameText.h:573
 #, fuzzy, c-format
 msgid "%i new or updated level available. Download now ?"
 msgid_plural "%i new or updated levels available. Download now ?"
-msgstr[0] "%i ny eller opdateret bane er tilgængelig. Hent den nu ? "
-msgstr[1] "%i ny eller opdateret bane er tilgængelig. Hent den nu ? "
+msgstr[0] "%i ny eller opdateret bane er tilgængelig. Hent den nu ?"
+msgstr[1] "%i ny eller opdateret baner er tilgængelig. Hent den nu ? "
 
 #: src/xmoto/GameText.h:616
 #, fuzzy, c-format
 msgid "%i player"
 msgid_plural "%i players"
 msgstr[0] "%i spiller"
-msgstr[1] "%i spiller"
+msgstr[1] "%i spillere"
 
 #: src/xmoto/GameText.h:792
 #, c-format
@@ -137,7 +138,7 @@ msgstr "%s: %s slog din rekord i banen '%s'"
 #: src/xmoto/LevelsText.h:29
 msgid "(You seem to be using a joystick, can't help with that :P)"
 msgstr ""
-"(Det ser ud som om at du bruger et joystick, kan ikke hjælpe med det :P"
+"(Det ser ud som om at du bruger et joystick, kan ikke hjælpe med det :P)"
 
 #: src/xmoto/GameText.h:68
 #, c-format
@@ -148,7 +149,7 @@ msgstr "(ved %s)"
 msgid ""
 "... and the one to the left is the best of all\n"
 "on this computer."
-msgstr "...og den til venstre er den bedste på computeren"
+msgstr "...og den til venstre er den bedste på computeren."
 
 #: src/xmoto/GameText.h:35
 msgid "11 kHz"
@@ -213,10 +214,10 @@ msgid ""
 "combination, and you should be on the other side.\n"
 "Try it..."
 msgstr ""
-"accelerer langsomt, med forhjulet løftet.\n"
+"Accelerer langsomt, med forhjulet løftet.\n"
 "Lige før hovedet rammer blokken, lav en hurtig\n"
 "højre/venstre manøvre, og så skulle du forhåbentlig\n"
-"komme helskindet ud på den anden side"
+"komme helskindet ud på den anden side."
 
 #: src/xmoto/LevelsText.h:62
 msgid ""
@@ -224,7 +225,7 @@ msgid ""
 "keep the front wheel at the ground..."
 msgstr ""
 "Accelerer NU! Få mest mulig fart på og prøv at holde\n"
-" forhjulet fri fra jorden..."
+"forhjulet fri fra jorden..."
 
 #: src/xmoto/GameText.h:361 src/xmoto/GameText.h:424
 msgid "Accelerates"
@@ -264,7 +265,7 @@ msgstr "Tilføjet til favoritter"
 
 #: src/xmoto/GameText.h:135
 msgid "Additional Programming"
-msgstr "co-udvikler"
+msgstr "Andet udvikling"
 
 #: src/xmoto/GameText.h:45 src/xmoto/GameText.h:51
 msgid "All (on this computer)"
@@ -290,7 +291,7 @@ msgstr "Tillad internet stemmer"
 msgid ""
 "An unexpected error has occurred. There may be some problems with the web "
 "site."
-msgstr "En uforventet fejl opstod. Måske er der problemer med websiden"
+msgstr "En uforventet fejl opstod. Måske er der problemer med websiden."
 
 #: src/xmoto/GameText.h:231
 msgid "Anyone who has helped in any way"
@@ -313,7 +314,7 @@ msgstr "Er du sikker på at du vil sætte indstillingerne til standard ?"
 
 #: src/xmoto/GameText.h:1064
 msgid "At least one difficulty"
-msgstr "Mindst en svær passage"
+msgstr "Mindst én svær passage"
 
 #: src/xmoto/GameText.h:52
 msgid "Audio"
@@ -369,7 +370,7 @@ msgstr "Tilbage til hovedmenuen"
 
 #: src/xmoto/GameText.h:1067
 msgid "Basic blocks, no decoration"
-msgstr "Normale kasser, ingen dekoration "
+msgstr "Normale kasser, ingen dekoration"
 
 #: src/xmoto/GameText.h:1068
 msgid "Basic decoration, not smooth blocks"
@@ -444,7 +445,7 @@ msgstr "Aktivt kamera zoom"
 msgid "Can't find a highscore in the next %i level"
 msgid_plural "Can't find a highscore in the next %i levels"
 msgstr[0] "Kan ikke finde en rekord i den næste %i bane"
-msgstr[1] "Kan ikke finde en rekord i den næste %i bane"
+msgstr[1] "Kan ikke finde en rekord i de næste %i baner"
 
 #: src/xmoto/GameText.h:711
 msgid ""
@@ -526,7 +527,7 @@ msgstr "Tjekker efter nye baner..."
 
 #: src/xmoto/GameText.h:82
 msgid "Checking for new or updated levels..."
-msgstr "Checker for nye eller opdaterede baner "
+msgstr "Checker for nye eller opdaterede baner…"
 
 #: src/xmoto/GameText.h:280
 msgid "Checking for new themes..."
@@ -588,7 +589,7 @@ msgstr "Gennemførte baner / totalt antal af baner i pakken"
 
 #: src/xmoto/GameText.h:92
 msgid "Configure Joystick..."
-msgstr "Konfigurer Joystick"
+msgstr "Konfigurér Joystick"
 
 #: src/xmoto/GameText.h:626
 msgid "Configure Proxy..."
@@ -805,7 +806,7 @@ msgstr "Viser en pil der viser hvor de andre kører er i banen"
 
 #: src/xmoto/GameText.h:266
 msgid "Display bike arrow indication"
-msgstr "Vis pil "
+msgstr "Vis pil"
 
 #: src/xmoto/GameText.h:928
 msgid "Display the time difference between the ghost and you"
@@ -834,7 +835,7 @@ msgstr ""
 
 #: src/xmoto/GameText.h:519
 msgid "Do you want to send a report to website administrators ?"
-msgstr ""
+msgstr "Vil du sende en rapport til website administratorene?"
 
 #: src/xmoto/GameText.h:738
 #, c-format
@@ -854,8 +855,8 @@ msgid ""
 "Down here there's the minimap, which shows the level\n"
 "around you, so you know where you're heading."
 msgstr ""
-"Nede her er minimappet, som viser banen\n"
-"rundt om dig så du ved hvor du er"
+"Hernede er minimappet, som viser banen\n"
+"rundt om dig så du ved hvor du er."
 
 #: src/xmoto/GameText.h:951
 msgid "Download or update the selected theme"
@@ -875,7 +876,7 @@ msgstr ""
 
 #: src/xmoto/GameText.h:269
 msgid "Downloading ghosts..."
-msgstr "Henter spøgelset"
+msgstr "Henter spøgelset…"
 
 #: src/xmoto/GameText.h:271
 msgid "Downloading high-scores..."
@@ -988,7 +989,7 @@ msgstr "FPS visning"
 
 #: src/xmoto/GameText.h:450
 msgid "Enable/disable audio"
-msgstr "lyd"
+msgstr "Lyd"
 
 #: src/xmoto/GameText.h:474 src/xmoto/GameText.h:688
 msgid "Enable/disable ugly mode"
@@ -1049,11 +1050,11 @@ msgstr "Eksterne baner (dem du putter i 'my levels' mappen)"
 
 #: src/xmoto/GameText.h:300
 msgid "Failed to check for levels."
-msgstr "Kunne ikke tjekke efter baner"
+msgstr "Kunne ikke tjekke efter baner.."
 
 #: src/xmoto/GameText.h:301
 msgid "Failed to download high-scores."
-msgstr "Kunne ikke hente rekorder"
+msgstr "Kunne ikke hente rekorder."
 
 #: src/xmoto/GameText.h:302
 msgid "Failed to download levels."
@@ -1065,7 +1066,7 @@ msgstr "Kunne ikke hente replayen."
 
 #: src/xmoto/GameText.h:304
 msgid "Failed to download the rooms list."
-msgstr "Kunne ikke hente rum-listen"
+msgstr "Kunne ikke hente rum-listen."
 
 #: src/xmoto/GameText.h:305
 msgid "Failed to get the selected theme"
@@ -1077,7 +1078,7 @@ msgstr "Kunne ikke starte banen!"
 
 #: src/xmoto/GameText.h:307
 msgid "Failed to load replay!"
-msgstr "Kunne ikke loade replayen"
+msgstr "Kunne ikke loade replayen!"
 
 #: src/xmoto/GameText.h:309
 msgid ""
@@ -1113,7 +1114,7 @@ msgid ""
 "the level."
 msgstr ""
 "Find alle jordbærene og rør blomsten for at gennemføre\n"
-"banen"
+"banen."
 
 #: src/xmoto/GameText.h:314
 msgid "Finish Time"
@@ -1356,11 +1357,11 @@ msgstr "Forøg konsol historik størrelsen"
 
 #: src/xmoto/GameText.h:997
 msgid "Increase or decrease the difficulty of the levels selected"
-msgstr "forøger eller formindsker sværhedsgraden af banerne"
+msgstr "Forøg eller formindsk sværhedsgraden af banerne"
 
 #: src/xmoto/GameText.h:995
 msgid "Increase or decrease the quality of the levels selected"
-msgstr "forøger eller formindsker kvaliteten af banerne"
+msgstr "Forøg eller formindsk kvaliteten af banerne"
 
 #: src/xmoto/GameText.h:676
 msgid "Info..."
@@ -1403,7 +1404,7 @@ msgstr "Styring"
 #: src/xmoto/GameText.h:687
 #, c-format
 msgid "Key '%s' of Player '%i' has been switched to '%s'"
-msgstr "Spilleren '%s's tast '%i' er skiftet til '%s' "
+msgstr "Spilleren '%s's tast '%i' er skiftet til '%s'"
 
 #: src/xmoto/GameText.h:504
 msgid "Keyboard"
@@ -1451,7 +1452,7 @@ msgstr "Sæt i gang ved opstart"
 
 #: src/xmoto/GameText.h:130
 msgid "Lead Programming"
-msgstr "hoved-udvikler"
+msgstr "Hoved-udvikler"
 
 #: src/xmoto/GameText.h:1111
 msgid "Less played levels (but played)"
@@ -1475,7 +1476,7 @@ msgstr "Banen '%s' kunne ikke loades"
 #: src/xmoto/GameText.h:524
 #, c-format
 msgid "Level '%s' required by replay!"
-msgstr "Banen '%s' påkrævet af replay! "
+msgstr "Banen '%s' påkrævet af replay!"
 
 #: src/xmoto/GameText.h:513
 msgid "Level Info"
@@ -1500,7 +1501,7 @@ msgstr ""
 #: src/xmoto/GameText.h:1171
 #, c-format
 msgid "Level pack \"%s\""
-msgstr "Bane pakke \"%s\"  "
+msgstr "Bane pakke \"%s\" "
 
 #: src/xmoto/GameText.h:977
 msgid "Level played in replay"
@@ -1731,7 +1732,7 @@ msgstr "Netværk"
 
 #: src/xmoto/GameText.h:780
 msgid "Network admin console"
-msgstr ""
+msgstr "Netværk admin konsol"
 
 #: src/xmoto/GameText.h:787
 msgid "Network error: you're disconnected"
@@ -1819,7 +1820,7 @@ msgstr "Ingen anelse"
 
 #: src/xmoto/GameText.h:113
 msgid "No joystick found"
-msgstr "intet joystick fundet"
+msgstr "Intet joystick fundet"
 
 #: src/xmoto/GameText.h:582
 msgid "No level following this one, sorry."
@@ -1837,11 +1838,11 @@ msgid ""
 msgstr ""
 "Ingen nye eller opdaterede baner er tilgængelige\n"
 "\n"
-"Prøv igen senere"
+"Prøv igen senere."
 
 #: src/xmoto/GameText.h:583
 msgid "No statistics for this profile."
-msgstr "Ingen statistikker for denne spiller"
+msgstr "Ingen statistikker for denne spiller."
 
 #: src/xmoto/GameText.h:1063
 msgid "No technical difficulty"
@@ -1902,7 +1903,7 @@ msgstr "Nu til det aller sværeste hop!"
 
 #: src/xmoto/LevelsText.h:28
 msgid "Now let's look at your controls."
-msgstr "Lad os tage et kig på kontrollerne"
+msgstr "Lad os tage et kig på kontrollerne."
 
 #: src/xmoto/LevelsText.h:73
 msgid ""
@@ -1924,11 +1925,11 @@ msgstr "OK"
 
 #: src/xmoto/GameText.h:724
 msgid "Oh no !"
-msgstr "Ã…h nej!"
+msgstr "Åh nej!"
 
 #: src/xmoto/LevelsText.h:35
 msgid "Okay. The red dot on your minimap is a strawberry."
-msgstr "Okay. Den røde prik på dit minimap er et jordbærd"
+msgstr "Okay. Den røde prik på dit minimap er et jordbær."
 
 #: src/xmoto/GameText.h:1114
 msgid "Oldest highscores"
@@ -1960,7 +1961,7 @@ msgstr "Vis indstillinger"
 
 #: src/xmoto/GameText.h:81
 msgid "Open private chat dialog box"
-msgstr ""
+msgstr "Åben privat chat"
 
 #: src/xmoto/GameText.h:599
 msgid "Operation completed"
@@ -2092,7 +2093,7 @@ msgstr "Spiller som optog replayen"
 
 #: src/xmoto/LevelsText.h:44
 msgid "Please stay put and follow the instructions! :)"
-msgstr "Så forbliv rolig og følg instruktionerne! :) "
+msgstr "Så forbliv rolig og følg instruktionerne! :)"
 
 #: src/xmoto/GameText.h:334
 msgid ""
@@ -2147,7 +2148,7 @@ msgstr "Tryk ESC for at vise menuen"
 #: src/xmoto/GameText.h:623
 #, c-format
 msgid "Press key you want to '%s' or ESC to cancel..."
-msgstr "Pres den tast du vil have som  '%s'  eller ESC for at anullere"
+msgstr "Pres den tast du vil have som  '%s'  eller ESC for at anullere…"
 
 #: src/xmoto/GameText.h:993
 msgid "Press to play X-Moto immediately"
@@ -2171,7 +2172,7 @@ msgstr "Blander banerne i pakken"
 
 #: src/xmoto/GameText.h:627
 msgid "Quality"
-msgstr "kvalitet"
+msgstr "Kvalitet"
 
 #: src/xmoto/GameText.h:631
 msgid "Quick start"
@@ -2229,11 +2230,11 @@ msgstr "Genindlæser baner, temaer og replays"
 
 #: src/xmoto/GameText.h:636
 msgid "Reloading levels..."
-msgstr "Genindlæser baner"
+msgstr "Genindlæser baner…"
 
 #: src/xmoto/GameText.h:637
 msgid "Reloading replays..."
-msgstr "Genindlæser replays"
+msgstr "Genindlæser replays…"
 
 #: src/xmoto/GameText.h:638
 msgid "Reloading themes..."
@@ -2245,7 +2246,7 @@ msgid ""
 "by pressing :"
 msgstr ""
 "Husk at du kan vende cyklen for at\n"
-"få bedre tilløb med:"
+"få bedre tilløb med :"
 
 #: src/xmoto/GameText.h:1017
 msgid "Remove levels not suitable for children"
@@ -2274,7 +2275,7 @@ msgstr "Replays"
 
 #: src/xmoto/GameText.h:1219
 msgid "Restart Level to activate!"
-msgstr "Genstart banen for at aktivere"
+msgstr "Genstart banen for at aktivere!"
 
 #: src/xmoto/GameText.h:660
 msgid "Restart This Level"
@@ -2352,12 +2353,12 @@ msgstr "STATS"
 #: src/xmoto/GameText.h:667
 #, fuzzy
 msgid "Safemode Disabled"
-msgstr "Tema mode slået fra"
+msgstr "Sikker tilstand slået fra"
 
 #: src/xmoto/GameText.h:666
 #, fuzzy
 msgid "Safemode Enabled"
-msgstr "Tema mode slået til"
+msgstr "Sikker tilstand slået til"
 
 #: src/xmoto/GameText.h:668
 msgid "Save"
@@ -2433,7 +2434,7 @@ msgstr "Vælg dette hvis du har en direkte forbindelse til internettet"
 
 #: src/xmoto/GameText.h:563
 msgid "Semi-cooperative mode"
-msgstr "halv-samarbejde mode"
+msgstr "Halv-samarbejde mode"
 
 #: src/xmoto/GameText.h:1045
 msgid "Send this report"
@@ -2445,11 +2446,11 @@ msgstr "Send denne report til serveren"
 
 #: src/xmoto/GameText.h:520
 msgid "Sending the report..."
-msgstr ""
+msgstr "Sender rapporten…"
 
 #: src/xmoto/GameText.h:521
 msgid "Sending the vote..."
-msgstr ""
+msgstr "Sender stemmen…"
 
 #: src/xmoto/GameText.h:770
 msgid "Server"
@@ -2477,7 +2478,7 @@ msgstr "Mange svære steder"
 
 #: src/xmoto/GameText.h:1071
 msgid "Several textures, sprites, ..."
-msgstr "Mange textures og elementer"
+msgstr "Mange textures og elementer."
 
 #: src/xmoto/GameText.h:1122
 msgid "Shortest levels"
@@ -2533,7 +2534,7 @@ msgstr "Vis næste pris inde i spillet"
 
 #: src/xmoto/GameText.h:833
 msgid "Show replays of all players in list"
-msgstr "Vis replays af alle kørere i listen "
+msgstr "Vis replays af alle kørere i listen"
 
 #: src/xmoto/GameText.h:847
 msgid "Show the World Record for a given level when playing"
@@ -2577,9 +2578,7 @@ msgstr "slovakisk"
 
 #: src/xmoto/GameText.h:602
 msgid "Some options will not take effect before next restart!"
-msgstr ""
-"Nogle indstillinger vil ikke tage nogen effekt før næste genstart!Nogle af "
-"indstillingerne vil første virke efter næste genstart af X-Moto!"
+msgstr "Nogle indstillinger vil ikke tage nogen effekt før næste genstart!"
 
 #: src/xmoto/GameText.h:1133
 msgid "Somebody in the room made a better highscore than yours"
@@ -2591,7 +2590,7 @@ msgid ""
 "Choosing random levels instead"
 msgstr ""
 "Beklager, men der er ikke nok baner der matcher dit valg. Vælger tilfældige "
-"baner i stedet for."
+"baner i stedet for"
 
 #: src/xmoto/GameText.h:153
 msgid "Sound Effects"
@@ -2705,11 +2704,11 @@ msgstr "Skift den grafiske kvalitet"
 
 #: src/xmoto/GameText.h:693
 msgid "Switch highscore information"
-msgstr ""
+msgstr "Skift rekord information"
 
 #: src/xmoto/GameText.h:692
 msgid "Switch net game mode"
-msgstr ""
+msgstr "Skift net spil mode"
 
 #: src/xmoto/GameText.h:1051
 msgid "Switch player"
@@ -2718,7 +2717,7 @@ msgstr "Skift spiller"
 #: src/xmoto/GameText.h:697
 #, fuzzy
 msgid "Switch safe mode"
-msgstr "Skift grafik mode"
+msgstr "Skift sikker tilstand"
 
 #: src/xmoto/GameText.h:1052
 msgid "Switch trackingshot mode"
@@ -2726,7 +2725,7 @@ msgstr "Skift tracking mode"
 
 #: src/xmoto/GameText.h:685
 msgid "Synchronisation done successfully"
-msgstr "synkronisation udført"
+msgstr "Synkronisation udført"
 
 #: src/xmoto/GameText.h:683
 msgid "Synchronisation down"
@@ -2758,7 +2757,7 @@ msgstr "Taiwanesisk"
 
 #: src/xmoto/GameText.h:390 src/xmoto/GameText.h:483
 msgid "Take a screenshot"
-msgstr "Tager et screenshot"
+msgstr "Tag et screenshot"
 
 #: src/xmoto/GameText.h:209
 msgid "Thanks to"
@@ -2774,9 +2773,9 @@ msgid ""
 "length of the jump.\n"
 "Try it..."
 msgstr ""
-"Det vil få cyklen til at flyve længere.\n"
-"Men pas på at du ikke falder bagover\n"
-"hvis du hiver for hårdt!"
+"Det vil få bagstøddæmperne til at\n"
+"øge længden på hoppet.\n"
+"Prøv det…"
 
 #: src/xmoto/LevelsText.h:66
 msgid ""
@@ -2806,7 +2805,7 @@ msgid ""
 msgstr ""
 "Det svære bliver at holde balancen.\n"
 "Når distancen du skal køre er kort\n"
-"behøver du ikke at holde balancen"
+"behøver du ikke at holde balancen."
 
 #: src/xmoto/LevelsText.h:47
 msgid "The first jump you're going to perform is very easy."
@@ -2826,11 +2825,11 @@ msgid ""
 "indicates how many strawberries still left."
 msgstr ""
 "Ikonet til højre af tiden\n"
-"viser hvor mange jordbær der er tilbage"
+"viser hvor mange jordbær der er tilbage."
 
 #: src/xmoto/GameText.h:517
 msgid "The level failed while loading with the following error :"
-msgstr ""
+msgstr "Banen fejlede under hentning med følgende besked :"
 
 #: src/xmoto/GameText.h:1182
 msgid "The long levels (1 minute to 2 minutes)"
@@ -2857,8 +2856,8 @@ msgid ""
 "The primary objective of the game is for you\n"
 "to collect all of them, and then find the flower."
 msgstr ""
-"Hoved formålet med spillet er at samle dem\n"
-"og til sidst finde blomsten"
+"Hovedformålet med spillet er at samle dem alle\n"
+"og til sidst at finde blomsten."
 
 #: src/xmoto/GameText.h:647
 msgid "The replay can't be played!"
@@ -2900,7 +2899,7 @@ msgstr "Tema mode slået til"
 
 #: src/xmoto/GameText.h:298
 msgid "There are errors in the level, don't expect it to be playable!"
-msgstr "Der er fejl i banen; forvent ikke at den kan spilles"
+msgstr "Der er fejl i banen; forvent ikke at den kan spilles!"
 
 #: src/xmoto/GameText.h:90
 msgid "There is no replay to clean"
@@ -2928,7 +2927,7 @@ msgstr "Denne gang er fart ikke nok..."
 
 #: src/xmoto/LevelsText.h:59
 msgid "This tutorial will teach you the basics of jumping."
-msgstr "Denne bane vil lære dig at hoppe"
+msgstr "Denne bane vil lære dig at hoppe."
 
 #: src/xmoto/LevelsText.h:82
 msgid ""
@@ -2979,7 +2978,7 @@ msgstr "Trail kamera"
 
 #: src/xmoto/GameText.h:448
 msgid "Toggle blacklist"
-msgstr "dårlige baner"
+msgstr "Dårlige baner"
 
 #: src/xmoto/GameText.h:464
 msgid "Toggle favorite"
@@ -3052,11 +3051,11 @@ msgstr "Type"
 
 #: src/xmoto/GameText.h:1192
 msgid "Ugly mode disabled"
-msgstr "ugly mode slået fra"
+msgstr "Ugly mode slået fra"
 
 #: src/xmoto/GameText.h:1191
 msgid "Ugly mode enabled"
-msgstr "ugly mode slået til"
+msgstr "Ugly mode slået til"
 
 #: src/xmoto/GameText.h:1196
 msgid "UglyOver mode disabled"
@@ -3068,7 +3067,7 @@ msgstr "UglyOver mode slået til"
 
 #: src/xmoto/GameText.h:1225
 msgid "Unable to build the report"
-msgstr ""
+msgstr "Kunne ikke lave rapporten"
 
 #: src/xmoto/GameText.h:786
 msgid "Unable to connect on the server"
@@ -3177,7 +3176,7 @@ msgstr "Brug trail cam"
 
 #: src/xmoto/GameText.h:974
 msgid "Use a camera that directs to the shortest path through the level"
-msgstr "Brug et camera der viser dig den korteste rute igennem banen."
+msgstr "Brug et camera der viser dig den korteste rute igennem banen"
 
 #: src/xmoto/GameText.h:726
 msgid "Use crappy information"
@@ -3193,7 +3192,7 @@ msgstr "Anvend permanent konsol"
 
 #: src/xmoto/GameText.h:878
 msgid "Use the selected player profile"
-msgstr "Brug valgte spiller profil"
+msgstr "Brug den valgte spiller profil"
 
 #: src/xmoto/GameText.h:78
 msgid ""
@@ -3249,7 +3248,7 @@ msgstr "Vis indholdet af pakken"
 
 #: src/xmoto/GameText.h:830
 msgid "View general information about the level, best times, and replays"
-msgstr "Vis genreral info omkring banen, bedste tider og replays"
+msgstr "Vis general info omkring banen, bedste tider og replays"
 
 #: src/xmoto/GameText.h:823
 msgid "View list of recorded replays"
@@ -3319,7 +3318,7 @@ msgid ""
 "It's the purple dot on your minimap."
 msgstr ""
 "Når du er færdig, så kør efter blomsten.\n"
-"Det er den lilla plet på minimappet"
+"Det er den lilla plet på minimappet."
 
 #: src/xmoto/GameText.h:924
 msgid "When starting a level with a ghost, display who the ghost is of"
@@ -3375,7 +3374,7 @@ msgstr "Baner du aldrig har spillet"
 msgid "X-Moto started %d time"
 msgid_plural "X-Moto started %d times"
 msgstr[0] "X-Moto er opstartet %d gang"
-msgstr[1] "X-Moto er opstartet %d gang"
+msgstr[1] "X-Moto er opstartet %d gange"
 
 #: src/xmoto/GameText.h:240
 msgid ""
@@ -3516,7 +3515,7 @@ msgstr "knappen %i"
 
 #: src/xmoto/GameText.h:446
 msgid "change mirror mode"
-msgstr "Skift spejling"
+msgstr "skift spejling"
 
 #: src/xmoto/GameText.h:120
 msgid "down"

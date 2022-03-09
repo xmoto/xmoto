@@ -19,9 +19,9 @@
 	<key>CFBundlePackageType</key>
 	<string>APPL</string>
 	<key>CFBundleShortVersionString</key>
-	<string>%VERS%</string>
+	<string>${XMOTO_VERSION}</string>
 	<key>CFBundleVersion</key>
-	<string>%VERS%</string>
+	<string>${XMOTO_VERSION}</string>
 	<key>CFBundleDocumentTypes</key>
 	<array>
 		<dict>
@@ -38,7 +38,7 @@
 		</dict>
 	</array>
 	<key>NSHumanReadableCopyright</key>
-	<string>© 2005-2020</string>
+	<string>© 2005-2021</string>
 	<key>NSPrincipalClass</key>
 	<string>NSApplication</string>
 </dict>

@@ -410,6 +410,8 @@ void DrawLib::drawCircle(const Vector2f &Center,
     setBlendMode(BLEND_MODE_NONE);
 }
 
+void DrawLib::setCameraDimensionality(CameraDimension dimension) {}
+
 void DrawLib::setRenderSurface(RenderSurface *renderSurf, bool i_own) {
   if (m_renderSurf != renderSurf && m_ownsRenderSurface)
     delete m_renderSurf;
@@ -521,6 +523,7 @@ void DrawLib::drawImage(const Vector2f &a,
                         BlendMode i_blendMode) {
   setTexture(pTexture, i_blendMode);
   drawImageTextureSet(a, b, c, d, Tint, i_coordsReversed);
+  setTexture(NULL, i_blendMode);
 }
 
 void DrawLib::drawImageTextureSet(const Vector2f &a,

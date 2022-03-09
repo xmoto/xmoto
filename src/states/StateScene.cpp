@@ -124,8 +124,7 @@ StateScene::~StateScene() {
   StateManager::instance()->unregisterAsObserver("INTERPOLATION_CHANGED", this);
   StateManager::instance()->unregisterAsObserver("MIRRORMODE_CHANGED", this);
   StateManager::instance()->unregisterAsObserver("REPLAY_DOWNLOADED", this);
-  StateManager::instance()->unregisterAsObserver("REPLAY_FAILEDTODOWNLOAD",
-                                                 this);
+  StateManager::instance()->unregisterAsObserver("REPLAY_FAILEDTODOWNLOAD", this);
   StateManager::instance()->unregisterAsObserver("CHANGE_TRAILCAM", this);
 
   if (m_cameraAnim != NULL) {
@@ -987,29 +986,17 @@ void StateScene::displayStats() {
       }
     } else {
       for (int i = 0; i < 5; i++) {
-        if (i < (int)(m_quality)) {
-          drawLib->drawImage(
-            Vector2f(A.x - vborder * 2 + (STATS_LEVELS_NOTES_SIZE * i),
-                     A.y - vborder * 2 - STATS_LEVELS_NOTES_SIZE -
-                       v_quality_yoffset),
-            Vector2f(A.x - vborder * 2 + STATS_LEVELS_NOTES_SIZE +
-                       (STATS_LEVELS_NOTES_SIZE * i),
-                     A.y - vborder * 2 - v_quality_yoffset),
-            m_qualityTex,
-            0xFFFFFFFF,
-            true);
-        } else {
-          drawLib->drawImage(
-            Vector2f(A.x - vborder * 2 + (STATS_LEVELS_NOTES_SIZE * i),
-                     A.y - vborder * 2 - STATS_LEVELS_NOTES_SIZE -
-                       v_quality_yoffset),
-            Vector2f(A.x - vborder * 2 + STATS_LEVELS_NOTES_SIZE +
-                       (STATS_LEVELS_NOTES_SIZE * i),
-                     A.y - vborder * 2 - v_quality_yoffset),
-            m_uncheckedTex,
-            0xFFFFFFFF,
-            true);
-        }
+        drawLib->drawImage(
+          Vector2f(A.x - vborder * 2 + (STATS_LEVELS_NOTES_SIZE * i),
+                   A.y - vborder * 2 - STATS_LEVELS_NOTES_SIZE -
+                     v_quality_yoffset),
+          Vector2f(A.x - vborder * 2 + STATS_LEVELS_NOTES_SIZE +
+                     (STATS_LEVELS_NOTES_SIZE * i),
+                   A.y - vborder * 2 - v_quality_yoffset),
+          (i < (int)m_quality) ? m_qualityTex : m_uncheckedTex,
+          0xFFFFFFFF,
+          true);
+
       }
     }
   }
@@ -1043,29 +1030,16 @@ void StateScene::displayStats() {
       }
     } else {
       for (int i = 0; i < 5; i++) {
-        if (i < (int)(m_difficulty)) {
-          drawLib->drawImage(
-            Vector2f(A.x - vborder * 2 + (STATS_LEVELS_NOTES_SIZE * i),
-                     A.y - vborder * 2 - STATS_LEVELS_NOTES_SIZE -
-                       v_difficulty_yoffset),
-            Vector2f(A.x - vborder * 2 + STATS_LEVELS_NOTES_SIZE +
-                       (STATS_LEVELS_NOTES_SIZE * i),
-                     A.y - vborder * 2 - v_difficulty_yoffset),
-            m_difficultyTex,
-            0xFFFFFFFF,
-            true);
-        } else {
-          drawLib->drawImage(
-            Vector2f(A.x - vborder * 2 + (STATS_LEVELS_NOTES_SIZE * i),
-                     A.y - vborder * 2 - STATS_LEVELS_NOTES_SIZE -
-                       v_difficulty_yoffset),
-            Vector2f(A.x - vborder * 2 + STATS_LEVELS_NOTES_SIZE +
-                       (STATS_LEVELS_NOTES_SIZE * i),
-                     A.y - vborder * 2 - v_difficulty_yoffset),
-            m_uncheckedTex,
-            0xFFFFFFFF,
-            true);
-        }
+        drawLib->drawImage(
+          Vector2f(A.x - vborder * 2 + (STATS_LEVELS_NOTES_SIZE * i),
+                   A.y - vborder * 2 - STATS_LEVELS_NOTES_SIZE -
+                     v_difficulty_yoffset),
+          Vector2f(A.x - vborder * 2 + STATS_LEVELS_NOTES_SIZE +
+                     (STATS_LEVELS_NOTES_SIZE * i),
+                   A.y - vborder * 2 - v_difficulty_yoffset),
+          (i < (int)m_difficulty) ? m_difficultyTex : m_uncheckedTex,
+          0xFFFFFFFF,
+          true);
       }
     }
   }
@@ -1262,6 +1236,10 @@ void StateScene::playLevelMusic() {
 void StateScene::playToCheckpoint() {
   if (m_universe == NULL) {
     return;
+  }
+
+  if (m_cameraAnim) {
+    m_cameraAnim->resetSizeMultipliers();
   }
 
   m_universe->deleteCurrentReplay(); // delete the replay when using checkpoints

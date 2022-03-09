@@ -37,6 +37,8 @@ public:
   virtual void glVertexSP(float x, float y);
   virtual void glVertex(float x, float y);
 
+  virtual void setCameraDimensionality(CameraDimension dimension);
+
   // texture coordinate
   virtual void glTexCoord(float x, float y);
   virtual void setColor(Color color);
