@@ -729,45 +729,33 @@ void GameApp::manageEvent(SDL_Event *Event) {
   switch (Event->type) {
     case SDL_TEXTINPUT:
       utf8Char = Event->text.text;
-      printf("text: %s\n", utf8Char.c_str());
 
       StateManager::instance()->xmKey(
         INPUT_TEXT,
         XMKey(0, (SDL_Keymod)0, utf8Char));
-
-      break;
-    case SDL_KEYDOWN: {
-      StateManager::instance()->xmKey(
-        INPUT_DOWN,
-        XMKey(Event->key.keysym.sym, (SDL_Keymod)Event->key.keysym.mod, ""));
-
       break;
 
-      // TODO
-      //utf8Char = unicode2utf8(Event->key.keysym.unicode);
+    case SDL_KEYDOWN:
+      utf8Char = unicode2utf8(Event->key.keysym.sym);
 
-      // NOTE:
-      // Doing this breaks text input (e.g. when entering the player's name)
-      // It can be reproduced by hitting an arrow key in a text box
-
-      // printf("%i - %i\n", Event->key.keysym.sym, utf8Char.c_str()[0]);
       StateManager::instance()->xmKey(
         INPUT_DOWN,
         XMKey(Event->key.keysym.sym, (SDL_Keymod)Event->key.keysym.mod, utf8Char));
       break;
-    }
+
     case SDL_KEYUP:
-      // TODO:
-      utf8Char = unicode2utf8(Event->key.keysym.sym); // this is a hack and DOES NOT SUPPORT UNICODE!!
+      utf8Char = unicode2utf8(Event->key.keysym.sym);
+
       StateManager::instance()->xmKey(
         INPUT_UP,
         XMKey(Event->key.keysym.sym, (SDL_Keymod)Event->key.keysym.mod, utf8Char));
-
       break;
+
     case SDL_QUIT:
       /* Force quit */
       quit();
       break;
+
     case SDL_MOUSEBUTTONDOWN:
       /* Is this a double click? */
       getMousePos(&nX, &nY);

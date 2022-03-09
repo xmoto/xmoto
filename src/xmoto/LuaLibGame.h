@@ -41,9 +41,9 @@ protected:
 
 private:
   Scene *m_pScene;
-  Input *m_pActiveInput;
+  Input *m_pActiveInputHandler;
 
-  static Input *m_exec_activeInput;
+  static Input *m_exec_activeInputHandler;
   static Scene *m_exec_world;
   static luaL_Reg m_gameFuncs[];
 

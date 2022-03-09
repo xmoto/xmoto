@@ -328,13 +328,6 @@ std::string XMKey::toFancyString() const {
         v_button = GAMETEXT_MOUSE_RIGHTBUTTON;
         break;
 
-      /* TODO:
-      case SDL_MOUSEWHEEL:
-        v_button = GAMETEXT_MOUSE_WHEELUPBUTTON;
-        v_button = GAMETEXT_MOUSE_WHEELDOWNBUTTON;
-        break;
-      */
-
       default:
         char v_button_tmp[256];
         snprintf(

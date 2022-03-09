@@ -340,7 +340,6 @@ void DrawLibOpenGL::init(unsigned int nDispWidth,
     }
   }
 
-  /* TODO: Maybe this shouldn't be done here.. */
   SDL_SetWindowTitle(m_window, title.c_str());
 
 #if !defined(WIN32) && !defined(__APPLE__) && !defined(__amigaos4__)
@@ -360,13 +359,6 @@ void DrawLibOpenGL::init(unsigned int nDispWidth,
 
   /* Create an OpenGL context */
   SDL_GLContext m_glContext = SDL_GL_CreateContext(m_window);
-
-  /* Retrieve actual configuration */
-  /* TODO
-  pVidInfo = SDL_GetVideoInfo();
-  if (pVidInfo == NULL)
-    throw Exception("(2) SDL_GetVideoInfo : " + std::string(SDL_GetError()));
-  */
 
   if (!gladLoadGLLoader((GLADloadproc)SDL_GL_GetProcAddress)) {
     /* Try without SDL's loader */
