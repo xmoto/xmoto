@@ -271,6 +271,27 @@ void StateOptions::checkEvents() {
     SysMessage::instance()->displayInformation(GAMETEXT_OPTION_NEED_TO_RESTART);
   }
 
+  v_edit = reinterpret_cast<UIEdit *>(
+    m_GUI->getChild("MAIN:TABS:GENERAL_TAB:TABS:VIDEO_TAB:MAX_FRAMERATE"));
+  if (v_edit->hasChanged()) {
+    v_edit->setHasChanged(false);
+    int maxFramerate = std::atoi(v_edit->getCaption().c_str());
+    if (maxFramerate < 30)
+      maxFramerate = 30;
+    XMSession::instance()->setMaxRenderFps(maxFramerate);
+    SysMessage::instance()->displayInformation(GAMETEXT_OPTION_NEED_TO_RESTART);
+  }
+
+
+
+
+
+
+
+
+
+
+
   v_button = reinterpret_cast<UIButton *>(
     m_GUI->getChild("MAIN:TABS:GENERAL_TAB:TABS:VIDEO_TAB:MENULOW"));
   if (v_button->isClicked()) {
@@ -1131,6 +1152,7 @@ UIWindow *StateOptions::makeWindowOptions_video(UIWindow *i_parent) {
   UIButton *v_button;
   UIList *v_list;
   UIStatic *v_someText;
+  UIEdit *v_edit;
   DrawLib *drawlib = GameApp::instance()->getDrawLib();
 
   v_window = new UIWindow(i_parent,
@@ -1147,7 +1169,7 @@ UIWindow *StateOptions::makeWindowOptions_video(UIWindow *i_parent) {
                       5,
                       "",
                       v_window->getPosition().nWidth - 10,
-                      v_window->getPosition().nHeight - 5 - 10 - 140);
+                      v_window->getPosition().nHeight - 5 - 10 - 140 - 40);
   v_list->setID("RESOLUTIONS_LIST");
   v_list->setFont(drawlib->getFontSmall());
   v_list->addColumn(
@@ -1156,7 +1178,7 @@ UIWindow *StateOptions::makeWindowOptions_video(UIWindow *i_parent) {
 
   v_button = new UIButton(v_window,
                           5,
-                          v_window->getPosition().nHeight - 43 - 10 - 90,
+                          v_window->getPosition().nHeight - 43 - 10 - 90 - 40,
                           GAMETEXT_RUNWINDOWED,
                           v_window->getPosition().nWidth - 40,
                           28);
@@ -1164,6 +1186,30 @@ UIWindow *StateOptions::makeWindowOptions_video(UIWindow *i_parent) {
   v_button->setID("WINDOWED");
   v_button->setFont(drawlib->getFontSmall());
   v_button->setContextHelp(CONTEXTHELP_RUN_IN_WINDOW);
+
+  v_someText = new UIStatic(
+    v_window,
+    5+2,
+    v_window->getPosition().nHeight - 43 - 10 - 90 - 2,
+    std::string(GAMETEXT_MAX_FRAMERATE) + ":",
+    v_window->getPosition().nWidth - 40,
+    28);
+
+
+  v_someText->setID("MAX_FRAMERATE_LABEL");
+  v_someText->setHAlign(UI_ALIGN_LEFT);
+  v_someText->setFont(drawlib->getFontSmall());
+
+  v_edit = new UIEdit(v_window,
+      120+8,
+      v_window->getPosition().nHeight - 43 - 10 - 90 - 2,
+      "",
+      60,
+      28);
+  v_edit->setFont(drawlib->getFontSmall());
+  v_edit->setID("MAX_FRAMERATE");
+  v_edit->setContextHelp(CONTEXTHELP_MAX_FRAMERATE);
+
 
   v_someText = new UIStatic(v_window,
                             5,
@@ -2306,6 +2352,11 @@ void StateOptions::updateOptions() {
   v_button = reinterpret_cast<UIButton *>(
     m_GUI->getChild("MAIN:TABS:GENERAL_TAB:TABS:VIDEO_TAB:WINDOWED"));
   v_button->setChecked(XMSession::instance()->windowed());
+
+  v_edit = reinterpret_cast<UIEdit *>(
+    m_GUI->getChild("MAIN:TABS:GENERAL_TAB:TABS:VIDEO_TAB:MAX_FRAMERATE"));
+  v_edit->setCaption(std::to_string(XMSession::instance()->maxRenderFps()));
+  v_edit->setHasChanged(false);
 
   v_button = reinterpret_cast<UIButton *>(
     m_GUI->getChild("MAIN:TABS:GENERAL_TAB:TABS:VIDEO_TAB:MENULOW"));

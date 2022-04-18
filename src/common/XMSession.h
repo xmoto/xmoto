@@ -117,6 +117,7 @@ public:
   bool windowed() const;
   void setResolutionWidth(int i_value);
   void setResolutionHeight(int i_value);
+  void setMaxRenderFps(int i_value);
   void setWindowed(bool i_value);
   bool useThemeCursor() const;
   void setUseThemeCursor(bool i_value);

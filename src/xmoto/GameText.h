@@ -533,6 +533,7 @@ Central place to keep many in-game text strings
 #define GAMETEXT_LOGIN _("Login")
 #define GAMETEXT_LOW _("Low")
 #define GAMETEXT_MAIN _("Main")
+#define GAMETEXT_MAX_FRAMERATE _("Max Framerate")
 #define GAMETEXT_MOUSE _("Mouse")
 #define GAMETEXT_THEME _("Theme")
 #define GAMETEXT_TTF_MISSING \
@@ -854,6 +855,7 @@ Central place to keep many in-game text strings
   _("Allow X-Moto to ask you your mind about levels")
 #define CONTEXTHELP_RESOLUTION _("Select graphics resolution")
 #define CONTEXTHELP_RUN_IN_WINDOW _("Run the game in a window")
+#define CONTEXTHELP_MAX_FRAMERATE _("Set the maximum framerate the game can run at")
 #define CONTEXTHELP_LOW_MENU _("Not so fancy menu graphics")
 #define CONTEXTHELP_MEDIUM_MENU _("A bit more fancy menu graphics")
 #define CONTEXTHELP_HIGH_MENU _("Fanciest menu graphics")

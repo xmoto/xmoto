@@ -678,6 +678,11 @@ void XMSession::setResolutionHeight(int i_value) {
   m_resolutionHeight = i_value;
 }
 
+void XMSession::setMaxRenderFps(int i_value) {
+  PROPAGATE(XMSession, setMaxRenderFps, i_value, int);
+  m_maxRenderFps = i_value;
+}
+
 void XMSession::setWindowed(bool i_value) {
   PROPAGATE(XMSession, setWindowed, i_value, bool);
   m_windowed = i_value;
