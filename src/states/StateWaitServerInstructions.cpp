@@ -82,8 +82,9 @@ void StateWaitServerInstructions::xmKey(InputEventType i_type,
                                         const XMKey &i_xmkey) {
   if (i_type == INPUT_DOWN &&
       (i_xmkey == XMKey(SDLK_ESCAPE, KMOD_NONE) ||
+       i_xmkey.getJoyButton() == SDL_CONTROLLER_BUTTON_B ||
        i_xmkey ==
-         (*InputHandler::instance()->getGlobalKey(INPUT_SWITCHNETMODE)))) {
+         (*Input::instance()->getGlobalKey(INPUT_SWITCHNETMODE)))) {
     /* quit this state */
     m_requestForEnd = true;
     if (NetClient::instance()->isConnected()) {

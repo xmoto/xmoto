@@ -33,8 +33,8 @@ class RenderSurface;
 #include "common/Theme.h"
 #include "helpers/VMath.h"
 #include "include/xm_SDL.h"
+#include "xmoto/input/XMKey.h"
 
-#define GUI_JOYSTICK_MINIMUM_DETECTION 3000
 #define UGLY_MODE_WINDOW_BG MAKE_COLOR(35, 35, 35, 255)
 
 /*===========================================================================
@@ -125,14 +125,16 @@ private:
   UI window
   ===========================================================================*/
 enum UIMsgBoxButton {
-  UI_MSGBOX_NOTHING = 0,
-  UI_MSGBOX_OK = 1,
-  UI_MSGBOX_CANCEL = 2,
-  UI_MSGBOX_YES = 4,
-  UI_MSGBOX_NO = 8,
-  UI_MSGBOX_YES_FOR_ALL = 16,
-  UI_MSGBOX_CUSTOM1 = 32,
-  UI_MSGBOX_CUSTOM2 = 64
+  UI_MSGBOX_NOTHING     = 0,
+  UI_MSGBOX_OK          = (1<<0),
+  UI_MSGBOX_CANCEL      = (1<<1),
+  UI_MSGBOX_OPTIONS     = (1<<2),
+  UI_MSGBOX_QUIT        = (1<<3),
+  UI_MSGBOX_YES         = (1<<4),
+  UI_MSGBOX_NO          = (1<<5),
+  UI_MSGBOX_YES_FOR_ALL = (1<<6),
+  UI_MSGBOX_CUSTOM1     = (1<<7),
+  UI_MSGBOX_CUSTOM2     = (1<<8)
 };
 
 class UIWindow {
@@ -178,15 +180,16 @@ public:
   virtual void mouseRUp(int x, int y) {}
   virtual void mouseHover(int x, int y) {}
   virtual void mouseOut(int x, int y) {}
-  virtual bool keyDown(int nKey, SDLMod mod, const std::string &i_utf8Char) {
+  virtual bool keyDown(int nKey, SDL_Keymod mod, const std::string &i_utf8Char) {
     return false;
   }
-  virtual bool keyUp(int nKey, SDLMod mod, const std::string &i_utf8Char) {
+  virtual bool keyUp(int nKey, SDL_Keymod mod, const std::string &i_utf8Char) {
     return false;
   }
-  virtual bool joystickAxisMotion(Uint8 i_joyNum,
-                                  Uint8 i_joyAxis,
-                                  Sint16 i_joyAxisValue) {
+  virtual bool textInput(int nKey, SDL_Keymod mod, const std::string &i_utf8Char) {
+    return false;
+  }
+  virtual bool joystickAxisMotion(JoyAxisEvent event) {
     return false;
   }
   virtual bool joystickButtonDown(Uint8 i_joyNum, Uint8 i_joyButton) {
@@ -374,10 +377,9 @@ public:
 
   /* Methods */
   virtual void paint(void);
-  virtual bool keyDown(int nKey, SDLMod mod, const std::string &i_utf8Char);
-  virtual bool joystickAxisMotion(Uint8 i_joyNum,
-                                  Uint8 i_joyAxis,
-                                  Sint16 i_joyAxisValue);
+  virtual bool keyDown(int nKey, SDL_Keymod mod, const std::string &i_utf8Char);
+  virtual bool textInput(int nKey, SDL_Keymod mod, const std::string &i_utf8Char);
+  virtual bool joystickAxisMotion(JoyAxisEvent event);
   virtual bool joystickButtonDown(Uint8 i_joyNum, Uint8 i_joyButton);
 
   virtual bool offerActivation(void) { return true; }
@@ -424,6 +426,9 @@ public:
 
   void makeMinimizable(int nMinX, int nMinY);
   void setMinimized(bool b);
+  void toggle();
+
+  bool isMinimized() const { return m_bMinimized; }
 
   /* Data interface */
   UIFrameStyle getStyle(void) { return m_Style; }
@@ -516,7 +521,8 @@ public:
 
   /* Virtual methods */
   virtual void paint(void);
-  virtual bool keyDown(int nKey, SDLMod mod, const std::string &i_utf8Char);
+  virtual bool keyDown(int nKey, SDL_Keymod mod, const std::string &i_utf8Char);
+  virtual bool textInput(int nKey, SDL_Keymod mod, const std::string &i_utf8Char);
   virtual bool offerActivation(void) {
     if (m_bTextInput)
       return true;
@@ -573,7 +579,7 @@ private:
   /* Helpers */
   void _ReEnableSiblings(void);
   std::vector<std::string> findMatches();
-  void showMatch();
+  void showMatch(bool reverse);
 };
 
 /*===========================================================================
@@ -595,7 +601,7 @@ public:
   }
 
   /* Virtual methods */
-  virtual bool keyDown(int nKey, SDLMod mod, const std::string &i_utf8Char);
+  virtual bool keyDown(int nKey, SDL_Keymod mod, const std::string &i_utf8Char);
 };
 
 /*===========================================================================
@@ -691,7 +697,7 @@ public:
   virtual void mouseHover(int x, int y);
   virtual void mouseOut(int x, int y);
   virtual bool offerActivation(void);
-  virtual bool keyDown(int nKey, SDLMod mod, const std::string &i_utf8Char);
+  virtual bool keyDown(int nKey, SDL_Keymod mod, const std::string &i_utf8Char);
   virtual bool joystickButtonDown(Uint8 i_joyNum, Uint8 i_joyButton);
 
   /* Data interface */
@@ -717,7 +723,7 @@ protected:
   void _UncheckGroup(int nGroup);
 
 private:
-  void actionnate();
+  void toggle();
 };
 
 class UIButtonDrawn : public UIButton {
@@ -782,10 +788,8 @@ public:
   virtual void mouseWheelDown(int x, int y);
   virtual void mouseHover(int x, int y);
   virtual bool offerActivation(void);
-  virtual bool keyDown(int nKey, SDLMod mod, const std::string &i_utf8Char);
-  virtual bool joystickAxisMotion(Uint8 i_joyNum,
-                                  Uint8 i_joyAxis,
-                                  Sint16 i_joyAxisValue);
+  virtual bool keyDown(int nKey, SDL_Keymod mod, const std::string &i_utf8Char);
+  virtual bool joystickAxisMotion(JoyAxisEvent event);
   virtual bool joystickButtonDown(Uint8 i_joyNum, Uint8 i_joyButton);
   virtual std::string subContextHelp(int x, int y);
 
@@ -888,6 +892,8 @@ private:
   void eventUp();
   void eventLeft();
   void eventRight();
+  bool eventJump(int count);
+  bool eventJumpAbs(int index, bool allowNegative = false);
 
   int m_headerHeight;
   int m_headerSubBorderHeight;
@@ -963,7 +969,7 @@ private:
 /*===========================================================================
   UI root
   ===========================================================================*/
-enum UIRootMouseEvent {
+enum UIRootMouseEventType {
   UI_ROOT_MOUSE_LBUTTON_DOWN,
   UI_ROOT_MOUSE_LBUTTON_UP,
   UI_ROOT_MOUSE_RBUTTON_DOWN,
@@ -974,7 +980,24 @@ enum UIRootMouseEvent {
   UI_ROOT_MOUSE_DOUBLE_CLICK
 };
 
-enum UIRootKeyEvent { UI_ROOT_KEY_DOWN, UI_ROOT_KEY_UP };
+enum UIRootKeyEventType {
+  UI_ROOT_KEY_DOWN,
+  UI_ROOT_KEY_UP,
+  UI_ROOT_TEXT_INPUT
+};
+
+struct UIRootMouseEvent {
+  UIRootMouseEventType type;
+  int x, y;
+  int wheelX, wheelY;
+};
+
+struct UIRootKeyEvent {
+  UIRootKeyEventType type;
+  int nKey;
+  SDL_Keymod mod;
+  const std::string &utf8Char;
+};
 
 struct UIRootActCandidate {
   UIWindow *pWindow;
@@ -994,13 +1017,12 @@ public:
   virtual void mouseRDown(int x, int y);
   virtual void mouseRUp(int x, int y);
   virtual void mouseHover(int x, int y);
-  virtual void mouseWheelUp(int x, int y);
-  virtual void mouseWheelDown(int x, int y);
-  virtual bool keyDown(int nKey, SDLMod mod, const std::string &i_utf8Char);
-  virtual bool keyUp(int nKey, SDLMod mod, const std::string &i_utf8Char);
-  virtual bool joystickAxisMotion(Uint8 i_joyNum,
-                                  Uint8 i_joyAxis,
-                                  Sint16 i_joyAxisValue);
+  virtual void mouseWheelUp(int x, int y, Sint16 wheelX, Sint16 wheelY);
+  virtual void mouseWheelDown(int x, int y, Sint16 wheelX, Sint16 wheelY);
+  virtual bool keyDown(int nKey, SDL_Keymod mod, const std::string &i_utf8Char);
+  virtual bool keyUp(int nKey, SDL_Keymod mod, const std::string &i_utf8Char);
+  virtual bool textInput(int nKey, SDL_Keymod mod, const std::string &i_utf8Char);
+  virtual bool joystickAxisMotion(JoyAxisEvent event);
   virtual bool joystickButtonDown(Uint8 i_joyNum, Uint8 i_joyButton);
 
   void deactivate(UIWindow *pWindow);
@@ -1026,21 +1048,12 @@ private:
   GameApp *m_pApp; /* Application */
 
   /* Helpers */
-  bool _RootKeyEvent(UIWindow *pWindow,
-                     UIRootKeyEvent Event,
-                     int nKey,
-                     SDLMod mod,
-                     const std::string &i_utf8Char);
+  bool _RootKeyEvent(UIWindow *pWindow, UIRootKeyEvent Event);
 
-  bool _RootJoystickAxisMotionEvent(UIWindow *pWindow,
-                                    Uint8 i_joyNum,
-                                    Uint8 i_joyAxis,
-                                    Sint16 i_joyAxisValue);
-  bool _RootJoystickButtonDownEvent(UIWindow *pWindow,
-                                    Uint8 i_joyNum,
-                                    Uint8 i_joyButton);
+  bool _RootJoystickAxisMotionEvent(UIWindow *pWindow, JoyAxisEvent event);
+  bool _RootJoystickButtonDownEvent(UIWindow *pWindow, Uint8 i_joyNum, Uint8 i_joyButton);
 
-  bool _RootMouseEvent(UIWindow *pWindow, UIRootMouseEvent Event, int x, int y);
+  bool _RootMouseEvent(UIWindow *pWindow, UIRootMouseEvent Event);
   void _RootPaint(int x, int y, UIWindow *pWindow, UIRect *pRect);
   void _ClipRect(UIRect *pRect, UIRect *pClipWith);
   unsigned int _UpdateActivationMap(UIWindow *pWindow,

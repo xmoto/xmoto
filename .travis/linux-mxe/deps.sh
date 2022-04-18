@@ -12,6 +12,6 @@ sudo apt-get update
 
 sudo apt-get install -y \
   mxe-i686-w64-mingw32.shared-{cc,curl,jpeg,libpng,zlib,libxml2,sqlite,gettext} \
-  mxe-i686-w64-mingw32.shared-{smpeg2,sdl,sdl-mixer,sdl-net,sdl-ttf,lzma,bzip2,nsis} \
+  mxe-i686-w64-mingw32.shared-{smpeg2,sdl2,sdl2-mixer,sdl2-net,sdl2-ttf,lzma,bzip2,nsis} \
   wine-stable wine32 xvfb
 

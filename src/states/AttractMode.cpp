@@ -40,7 +40,7 @@ bool AttractMode::inAttractMode() {
   return m_inAttractMode;
 }
 
-void AttractMode::attractModeKeyDown(SDLKey nKey) {
+void AttractMode::attractModeKeyDown(SDL_Keycode nKey) {
   if (m_quitKey == NO_KEY) {
     return;
   } else if (m_quitKey == EVERY_KEY) {

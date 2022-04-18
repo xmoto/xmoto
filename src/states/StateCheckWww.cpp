@@ -20,7 +20,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
 #include "StateCheckWww.h"
 #include "thread/CheckWwwThread.h"
-#include "xmoto/Input.h"
+#include "xmoto/input/Input.h"
 
 StateCheckWww::StateCheckWww(bool forceUpdate,
                              bool drawStateBehind,
@@ -40,7 +40,7 @@ void StateCheckWww::callAfterThreadFinished(int threadResult) {
 
 void StateCheckWww::xmKey(InputEventType i_type, const XMKey &i_xmkey) {
   if (i_type == INPUT_DOWN &&
-      i_xmkey == (*InputHandler::instance()->getGlobalKey(INPUT_KILLPROCESS))) {
+      i_xmkey == (*Input::instance()->getGlobalKey(INPUT_KILLPROCESS))) {
     if (m_threadStarted == true) {
       m_pThread->safeKill();
     }

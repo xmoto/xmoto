@@ -24,11 +24,14 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "GUI.h"
 #include "drawlib/DrawLib.h"
 #include "helpers/utf8.h"
+#include "helpers/VMath.h"
 #include "xmoto/Game.h"
+#include "xmoto/input/Joystick.h"
 #include "xmoto/Sound.h"
 #include <sstream>
 
 #define GUILIST_SCROLL_SIZE 10
+#define GUILIST_JUMP_COUNT 10
 
 int UIList::HeaderHeight() {
   return m_headerHeight;
@@ -905,10 +908,25 @@ void UIList::eventRight() {
   getRoot()->activateRight();
 }
 
+bool UIList::eventJump(int count) {
+  return eventJumpAbs(m_nVisibleSelected + count);
+}
+
+bool UIList::eventJumpAbs(int index, bool allowNegative) {
+  int last = (int)(m_Entries.size() - m_filteredItems - 1);
+  if (allowNegative && index < 0)
+    index = last + index + 1;
+  index = clamp(index, 0, last);
+
+  setVisibleSelected(index);
+
+  return index == 0 || index == last;
+}
+
 /*===========================================================================
 Up/down keys select elements
 ===========================================================================*/
-bool UIList::keyDown(int nKey, SDLMod mod, const std::string &i_utf8Char) {
+bool UIList::keyDown(int nKey, SDL_Keymod mod, const std::string &i_utf8Char) {
   switch (nKey) {
     case SDLK_RETURN:
       eventGo();
@@ -920,22 +938,20 @@ bool UIList::keyDown(int nKey, SDLMod mod, const std::string &i_utf8Char) {
       eventDown();
       return true;
     case SDLK_PAGEUP:
-      for (int i = 0; i < 10; i++) {
-        if (m_nVisibleSelected <= 0)
-          break;
-        else {
-          setVisibleSelected(m_nVisibleSelected - 1);
-        }
-      }
+      if (eventJump(-GUILIST_JUMP_COUNT))
+        break;
       return true;
     case SDLK_PAGEDOWN:
-      for (int i = 0; i < 10; i++) {
-        if (m_nVisibleSelected >= (int)(m_Entries.size() - m_filteredItems - 1))
-          break;
-        else {
-          setVisibleSelected(m_nVisibleSelected + 1);
-        }
-      }
+      if (eventJump(GUILIST_JUMP_COUNT))
+        break;
+      return true;
+    case SDLK_HOME:
+      if (eventJumpAbs(0, true))
+        break;
+      return true;
+    case SDLK_END:
+      if (eventJumpAbs(-1, true))
+        break;
       return true;
 
     /* Left and right always selects another window */
@@ -986,32 +1002,59 @@ bool UIList::keyDown(int nKey, SDLMod mod, const std::string &i_utf8Char) {
   return false;
 }
 
-bool UIList::joystickAxisMotion(Uint8 i_joyNum,
-                                Uint8 i_joyAxis,
-                                Sint16 i_joyAxisValue) {
-  if (i_joyAxis % 2 == 0) { // horizontal
-    if (i_joyAxisValue < -(GUI_JOYSTICK_MINIMUM_DETECTION)) {
-      eventLeft();
+bool UIList::joystickAxisMotion(JoyAxisEvent event) {
+  if (JoystickInput::axisInside(event.axisValue, JOYSTICK_DEADZONE_MENU))
+    return false;
+
+  JoyDir dir = JoystickInput::getJoyAxisDir(event.axisValue);
+
+  switch (event.axis) {
+    case SDL_CONTROLLER_AXIS_LEFTX:
+      if (dir < 0)
+        eventLeft();
+      else
+        eventRight();
       return true;
-    } else if (i_joyAxisValue > GUI_JOYSTICK_MINIMUM_DETECTION) {
-      eventRight();
+    case SDL_CONTROLLER_AXIS_LEFTY: {
+      if (dir < 0)
+        eventUp();
+      else
+        eventDown();
       return true;
     }
-  } else { // vertical
-    if (i_joyAxisValue < -(GUI_JOYSTICK_MINIMUM_DETECTION)) {
-      eventUp();
-      return true;
-    } else if (i_joyAxisValue > GUI_JOYSTICK_MINIMUM_DETECTION) {
-      eventDown();
-      return true;
-    }
+
+    case SDL_CONTROLLER_AXIS_TRIGGERLEFT:
+      if (!eventJump(-GUILIST_JUMP_COUNT))
+        return true;
+      break;
+    case SDL_CONTROLLER_AXIS_TRIGGERRIGHT:
+      if (!eventJump(GUILIST_JUMP_COUNT))
+        return true;
+      break;
   }
+
   return false;
 }
 
 bool UIList::joystickButtonDown(Uint8 i_joyNum, Uint8 i_joyButton) {
-  eventGo();
-  return true;
+  switch (i_joyButton) {
+    case SDL_CONTROLLER_BUTTON_A:
+      eventGo();
+      return true;
+    case SDL_CONTROLLER_BUTTON_DPAD_UP:
+      eventUp();
+      return true;
+    case SDL_CONTROLLER_BUTTON_DPAD_DOWN:
+      eventDown();
+      return true;
+    case SDL_CONTROLLER_BUTTON_DPAD_LEFT:
+      eventLeft();
+      return true;
+    case SDL_CONTROLLER_BUTTON_DPAD_RIGHT:
+      eventRight();
+      return true;
+  }
+  return false;
 }
 
 void UIList::adaptRealSelectedOnVisibleEntries() { // m_nRealSelected must be >=

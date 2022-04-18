@@ -12,7 +12,7 @@ for pkg in cmake ninja ccache jpeg libpng \
 done
 
 # install the rest of the packages
-brew install gettext sdl sdl_mixer sdl_net sdl_ttf
+brew install gettext sdl2 sdl2_mixer sdl2_net sdl2_ttf
 
 brew unlink gettext
 brew link --force gettext

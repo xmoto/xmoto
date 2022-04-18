@@ -20,7 +20,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
 #include "LuaLibGame.h"
 #include "GameEvents.h"
-#include "Input.h"
+#include "input/Input.h"
 #include "common/Locales.h"
 #include "common/XMSession.h"
 #include "helpers/Log.h"
@@ -107,12 +107,12 @@ luaL_Reg LuaLibGame::m_gameFuncs[] = {
 };
 
 Scene *LuaLibGame::m_exec_world = NULL;
-InputHandler *LuaLibGame::m_exec_activeInputHandler = NULL;
+Input *LuaLibGame::m_exec_activeInputHandler = NULL;
 
 LuaLibGame::LuaLibGame(Scene *i_pScene)
   : LuaLibBase("Game", m_gameFuncs) {
   m_pScene = i_pScene;
-  m_pActiveInputHandler = InputHandler::instance();
+  m_pActiveInputHandler = Input::instance();
 }
 
 LuaLibGame::~LuaLibGame() {}

@@ -50,9 +50,9 @@ void XMSession::setToDefault() {
   m_verbose = DEFAULT_VERBOSE;
   m_resolutionWidth = DEFAULT_RESOLUTION_WIDTH;
   m_resolutionHeight = DEFAULT_RESOLUTION_HEIGHT;
-  m_bpp = DEFAULT_BPP;
   m_maxRenderFps = DEFAULT_MAXRENDERFPS;
   m_windowed = DEFAULT_WINDOWED;
+  m_useThemeCursor = DEFAULT_USETHEMECURSOR;
   m_glExts = DEFAULT_GLEXTS;
   m_glVOBS = DEFAULT_GLVOBS;
   m_drawlib = DEFAULT_DRAWLIB;
@@ -163,10 +163,6 @@ void XMSession::load(const XMArguments *i_xmargs) {
   if (i_xmargs->isOptRes()) {
     m_resolutionWidth = i_xmargs->getOpt_res_dispWidth();
     m_resolutionHeight = i_xmargs->getOpt_res_dispHeight();
-  }
-
-  if (i_xmargs->isOptBpp()) {
-    m_bpp = i_xmargs->getOpt_bpp_value();
   }
 
   if (i_xmargs->isOptWindowed()) {
@@ -288,6 +284,7 @@ void XMSession::load(UserConfig *m_Config) {
   m_maxRenderFps = m_Config->getInteger("DisplayMaxRenderFPS");
   m_windowed = m_Config->getBool("DisplayWindowed");
   m_drawlib = m_Config->getString("DrawLib");
+  m_useThemeCursor = m_Config->getBool("UseThemeCursor");
 
   m_screenshotFormat = m_Config->getString("ScreenshotFormat");
   m_storeReplays = m_Config->getBool("StoreReplays");
@@ -333,6 +330,7 @@ void XMSession::loadProfile(const std::string &i_id_profile, xmDatabase *pDb) {
     i_id_profile, "AutosaveHighscoreReplays", m_autosaveHighscoreReplays);
   m_notifyAtInit =
     pDb->config_getBool(i_id_profile, "NotifyAtInit", m_notifyAtInit);
+
   m_showMinimap =
     pDb->config_getBool(i_id_profile, "ShowMiniMap", m_showMinimap);
   m_showEngineCounter =
@@ -515,6 +513,7 @@ void XMSession::save(UserConfig *v_config, xmDatabase *pDb) {
   v_config->setInteger("DisplayBPP", m_bpp);
   v_config->setInteger("DisplayMaxRenderFPS", m_maxRenderFps);
   v_config->setBool("DisplayWindowed", m_windowed);
+  v_config->setBool("UseThemeCursor", m_useThemeCursor);
 
   v_config->setString("WebThemesURL", m_webThemesURL);
   v_config->setString("WebThemesURLBase", m_webThemesURLBase);
@@ -661,10 +660,6 @@ int XMSession::resolutionHeight() const {
   return m_resolutionHeight;
 }
 
-int XMSession::bpp() const {
-  return m_bpp;
-}
-
 int XMSession::maxRenderFps() const {
   return m_maxRenderFps;
 }
@@ -683,14 +678,23 @@ void XMSession::setResolutionHeight(int i_value) {
   m_resolutionHeight = i_value;
 }
 
-void XMSession::setBpp(int i_value) {
-  PROPAGATE(XMSession, setBpp, i_value, int);
-  m_bpp = i_value;
+void XMSession::setMaxRenderFps(int i_value) {
+  PROPAGATE(XMSession, setMaxRenderFps, i_value, int);
+  m_maxRenderFps = i_value;
 }
 
 void XMSession::setWindowed(bool i_value) {
   PROPAGATE(XMSession, setWindowed, i_value, bool);
   m_windowed = i_value;
+}
+
+bool XMSession::useThemeCursor() const {
+  return m_useThemeCursor;
+}
+
+void XMSession::setUseThemeCursor(bool i_value) {
+  PROPAGATE(XMSession, setUseThemeCursor, i_value, bool);
+  m_useThemeCursor = i_value;
 }
 
 bool XMSession::glExts() const {
@@ -1640,6 +1644,7 @@ void XMSession::createDefaultConfig(UserConfig *v_config) {
   v_config->createVar("DisplayWindowed", "true");
   v_config->createVar("DisplayMaxRenderFPS", "50");
   v_config->createVar("DrawLib", DEFAULT_DRAWLIB);
+  v_config->createVar("UseThemeCursor", "true");
 
   /* option not easy to change (not in the options tab) ; keep them here */
   v_config->createVar("DefaultProfile", DEFAULT_PROFILE);

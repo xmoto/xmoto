@@ -25,14 +25,19 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "gui/basic/GUI.h"
 #include "helpers/Log.h"
 #include "xmoto/Game.h"
+#include "xmoto/input/Input.h"
+#include "xmoto/input/Joystick.h"
 #include "xmscene/Camera.h"
+#include <stdint.h>
+#include <cstdlib>
+#include <utility>
 
 StateMenu::StateMenu(bool drawStateBehind, bool updateStatesBehind)
   : GameState(drawStateBehind, updateStatesBehind) {
   m_GUI = NULL;
   m_showCursor = true;
 
-  m_renderFps = 30; // is enouh for menus
+  m_renderFps = XMSession::instance()->maxRenderFps();
   m_updateFps = 30;
 }
 
@@ -48,6 +53,8 @@ void StateMenu::leave() {}
 void StateMenu::enterAfterPop() {
   GameState::enterAfterPop();
   m_GUI->enableWindow(true);
+
+  JoystickInput::instance()->resetJoyAxes();
 }
 
 void StateMenu::leaveAfterPush() {
@@ -74,17 +81,16 @@ bool StateMenu::render() {
 void StateMenu::xmKey(InputEventType i_type, const XMKey &i_xmkey) {
   int nX, nY;
   Uint8 nButton;
-  Uint8 v_joyNum;
-  Uint8 v_joyAxis;
-  Sint16 v_joyAxisValue;
+  Sint32 wheelX, wheelY;
+  JoyAxisEvent axisEvent;
   Uint8 v_joyButton;
-  SDLKey v_nKey;
-  SDLMod v_mod;
+  SDL_Keycode v_nKey;
+  SDL_Keymod v_mod;
   std::string v_utf8Char;
 
   if (i_type == INPUT_DOWN &&
       i_xmkey ==
-        (*InputHandler::instance()->getGlobalKey(INPUT_RELOADFILESTODB))) {
+        (*Input::instance()->getGlobalKey(INPUT_RELOADFILESTODB))) {
     StateManager::instance()->pushState(new StateUpdateDb());
   }
 
@@ -95,6 +101,9 @@ void StateMenu::xmKey(InputEventType i_type, const XMKey &i_xmkey) {
         break;
       case INPUT_UP:
         m_GUI->keyUp(v_nKey, v_mod, v_utf8Char);
+        break;
+      case INPUT_TEXT:
+        m_GUI->textInput(v_nKey, v_mod, v_utf8Char);
         break;
     }
     checkEvents();
@@ -109,14 +118,7 @@ void StateMenu::xmKey(InputEventType i_type, const XMKey &i_xmkey) {
         } else if (nButton == SDL_BUTTON_RIGHT) {
           m_GUI->mouseRDown(nX, nY);
           checkEvents();
-        } else if (nButton == SDL_BUTTON_WHEELUP) {
-          m_GUI->mouseWheelUp(nX, nY);
-          checkEvents();
-        } else if (nButton == SDL_BUTTON_WHEELDOWN) {
-          m_GUI->mouseWheelDown(nX, nY);
-          checkEvents();
         }
-
       } else if (i_type == INPUT_UP) {
         if (nButton == SDL_BUTTON_LEFT) {
           m_GUI->mouseLUp(nX, nY);
@@ -134,14 +136,28 @@ void StateMenu::xmKey(InputEventType i_type, const XMKey &i_xmkey) {
     }
   }
 
+  else if (i_xmkey.toMouseWheel(nX, nY, wheelX, wheelY)) {
+    if (i_type == INPUT_SCROLL) {
+      if (wheelY > 0) {
+        m_GUI->mouseWheelUp(nX, nY, wheelX, wheelY);
+      } else if (wheelY < 0) {
+        m_GUI->mouseWheelDown(nX, nY, wheelX, wheelY);
+      }
+      checkEvents();
+    }
+  }
+
   else if (i_type == INPUT_DOWN &&
-           i_xmkey.toJoystickButton(v_joyNum, v_joyButton)) {
-    m_GUI->joystickButtonDown(v_joyNum, v_joyButton);
+           i_xmkey.toJoystickButton(axisEvent.joystickNum, v_joyButton)) {
+    m_GUI->joystickButtonDown(axisEvent.joystickNum, v_joyButton);
     checkEvents();
   }
 
-  else if (i_xmkey.toJoystickAxisMotion(v_joyNum, v_joyAxis, v_joyAxisValue)) {
-    m_GUI->joystickAxisMotion(v_joyNum, v_joyAxis, v_joyAxisValue);
+  else if (i_xmkey.toJoystickAxisMotion(axisEvent)) {
+    if (JoystickInput::instance()->joyAxisRepeat(axisEvent))
+      m_GUI->joystickAxisMotion(axisEvent);
+
+    checkEvents();
   }
 
   GameState::xmKey(i_type, i_xmkey);

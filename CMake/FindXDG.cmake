@@ -1,4 +1,4 @@
-# find XDG (Open Dynamics Engine) includes and library
+# find XDG includes and library
 #
 # XDG_INCLUDE_DIR - where the directory containing the XDG headers can be
 #                   found

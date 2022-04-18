@@ -24,11 +24,12 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "Game.h"
 #include "Credits.h"
 #include "GameText.h"
-#include "Input.h"
+#include "input/Input.h"
 #include "PhysSettings.h"
 #include "Sound.h"
 #include "SysMessage.h"
 #include "UserConfig.h"
+#include "XMDemo.h"
 #include "common/Image.h"
 #include "common/VFileIO.h"
 #include "common/XMSession.h"
@@ -37,6 +38,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "gui/specific/GUIXMoto.h"
 #include "helpers/Log.h"
 #include "helpers/Text.h"
+#include "net/NetClient.h"
 #include "xmscene/Bike.h"
 #include "xmscene/BikeGhost.h"
 #include "xmscene/BikePlayer.h"
@@ -52,6 +54,9 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "states/StatePause.h"
 #include "states/StatePlaying.h"
 #include "states/StatePreplaying.h"
+#include "states/StatePreplayingGame.h"
+#include "states/StatePreplayingReplay.h"
+#include "states/StateWaitServerInstructions.h"
 #include "thread/XMThreadStats.h"
 #include <curl/curl.h>
 #include <iomanip>
@@ -124,24 +129,11 @@ void GameApp::_InitWin(bool bInitGraphics) {
     if (SDL_Init(SDL_INIT_TIMER | SDL_INIT_VIDEO) < 0)
       throw Exception("(2) SDL_Init : " + std::string(SDL_GetError()));
   }
-  /* Set window title */
-  SDL_WM_SetCaption(XMBuild::getVersionString(true).c_str(),
-                    XMBuild::getVersionString(true).c_str());
-
-#if !defined(WIN32) && !defined(__APPLE__) && !defined(__amigaos4__)
-  SDL_Surface *v_icon = SDL_LoadBMP(
-    (XMFS::getSystemDataDir() + std::string("/xmoto_icone_x.ico")).c_str());
-  if (v_icon != NULL) {
-    SDL_SetColorKey(
-      v_icon, SDL_SRCCOLORKEY, SDL_MapRGB(v_icon->format, 236, 45, 211));
-    SDL_WM_SetIcon(v_icon, NULL);
-    m_icon = v_icon;
-  }
-#endif
 
   if (TTF_Init() < 0) {
     throw Exception("Initializing TTF failed: " + std::string(TTF_GetError()));
   }
+
   atexit(TTF_Quit);
 }
 
@@ -157,9 +149,6 @@ GameApp::~GameApp() {
   StateManager::cleanStates();
   delete m_userConfig;
   //  delete m_fileGhost;
-  if (m_icon != NULL) {
-    SDL_FreeSurface(m_icon);
-  }
 }
 
 GameApp::GameApp() {
@@ -205,7 +194,6 @@ GameApp::GameApp() {
 
   m_xmdemo = NULL;
   m_loadLevelHook_per = 0;
-  m_icon = NULL;
 }
 
 /*===========================================================================
@@ -565,6 +553,60 @@ void GameApp::setSpecificLevelId(const std::string &i_levelID) {
 
 void GameApp::setSpecificLevelFile(const std::string &i_leveFile) {
   m_PlaySpecificLevelFile = i_leveFile;
+}
+
+void GameApp::playLevel(const std::string &levelId) {
+  if (XMSession::instance()->clientGhostMode() == false &&
+      NetClient::instance()->isConnected()) {
+    StateManager::instance()->pushState(new StateWaitServerInstructions());
+  } else {
+    StateManager::instance()->pushState(
+      new StatePreplayingGame(levelId, false));
+  }
+  LogInfo("Playing as '%s'...", XMSession::instance()->profile().c_str());
+}
+
+void GameApp::playReplay(const std::string &replayId) {
+  StateManager::instance()->pushState(
+    new StatePreplayingReplay(replayId, false));
+}
+
+std::string GameApp::loadDemoReplay(const std::string &demoFile) {
+  std::string demoReplay;
+
+  if (m_xmdemo != NULL) {
+    m_xmdemo->destroyFiles();
+    delete m_xmdemo;
+    m_xmdemo = NULL;
+  }
+
+  /* demo : download the level and the replay
+     load the level as external,
+     play the replay
+   */
+  try {
+    m_xmdemo = new XMDemo(demoFile);
+    LogInfo("Loading demo file %s\n", demoFile.c_str());
+
+    _UpdateLoadingScreen(GAMETEXT_DLLEVEL);
+    m_xmdemo->getLevel(XMSession::instance()->proxySettings());
+    _UpdateLoadingScreen(GAMETEXT_DLREPLAY);
+    m_xmdemo->getReplay(XMSession::instance()->proxySettings());
+
+    try {
+      LevelsManager::instance()->addExternalLevel(
+        m_xmdemo->levelFile(),
+        xmDatabase::instance("main"),
+        false);
+    } catch (Exception &e) {
+      LogError("Can't add level %s as external level",
+               m_xmdemo->levelFile().c_str());
+    }
+    demoReplay = m_xmdemo->replayFile();
+  } catch (Exception &e) {
+    throw e;
+  }
+  return demoReplay;
 }
 
 void GameApp::addLevelToFavorite(const std::string &i_levelId) {

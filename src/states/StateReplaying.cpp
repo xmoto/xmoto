@@ -19,6 +19,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 =============================================================================*/
 
 #include "StateReplaying.h"
+#include "StateLevelInfoViewer.h"
 #include "StateMessageBox.h"
 #include "StatePreplayingReplay.h"
 #include "StateViewHighscore.h"
@@ -205,13 +206,13 @@ void StateReplaying::nextLevel(bool i_positifOrder) {
 void StateReplaying::xmKey(InputEventType i_type, const XMKey &i_xmkey) {
   if (i_type == INPUT_DOWN &&
       i_xmkey ==
-        (*InputHandler::instance()->getGlobalKey(INPUT_REPLAYINGSTOP))) {
+        (*Input::instance()->getGlobalKey(INPUT_REPLAYINGSTOP))) {
     m_requestForEnd = true;
     closePlaying();
   }
 
   else if (i_type == INPUT_DOWN &&
-           i_xmkey == (*InputHandler::instance()->getGlobalKey(
+           i_xmkey == (*Input::instance()->getGlobalKey(
                         INPUT_REPLAYINGFORWARD))) {
     /* Right arrow key: fast forward */
     if (m_stopToUpdate == false) {
@@ -225,7 +226,7 @@ void StateReplaying::xmKey(InputEventType i_type, const XMKey &i_xmkey) {
 
   else if (i_type == INPUT_DOWN &&
            i_xmkey ==
-             (*InputHandler::instance()->getGlobalKey(INPUT_REPLAYINGREWIND))) {
+             (*Input::instance()->getGlobalKey(INPUT_REPLAYINGREWIND))) {
     if (m_universe != NULL) {
       if (m_universe->getScenes().size() > 0) {
         if (m_universe->getScenes()[0]->getLevelSrc()->isScripted() == false &&
@@ -244,7 +245,7 @@ void StateReplaying::xmKey(InputEventType i_type, const XMKey &i_xmkey) {
 
   else if (i_type == INPUT_DOWN &&
            i_xmkey ==
-             (*InputHandler::instance()->getGlobalKey(INPUT_REPLAYINGPAUSE))) {
+             (*Input::instance()->getGlobalKey(INPUT_REPLAYINGPAUSE))) {
     /* pause */
     if (m_universe != NULL && m_renderer != NULL) {
       for (unsigned int i = 0; i < m_universe->getScenes().size(); i++) {
@@ -261,15 +262,15 @@ void StateReplaying::xmKey(InputEventType i_type, const XMKey &i_xmkey) {
   }
 
   else if (i_type == INPUT_DOWN &&
-           (i_xmkey == (*InputHandler::instance()->getGlobalKey(
+           (i_xmkey == (*Input::instance()->getGlobalKey(
                          INPUT_REPLAYINGFASTER)) ||
-            i_xmkey == (*InputHandler::instance()->getGlobalKey(
+            i_xmkey == (*Input::instance()->getGlobalKey(
                          INPUT_REPLAYINGABITFASTER)))) {
     /* faster */
     if (m_universe != NULL && m_renderer != NULL) {
       for (unsigned int i = 0; i < m_universe->getScenes().size(); i++) {
         if (i_xmkey ==
-            (*InputHandler::instance()->getGlobalKey(INPUT_REPLAYINGFASTER))) {
+            (*Input::instance()->getGlobalKey(INPUT_REPLAYINGFASTER))) {
           m_universe->getScenes()[i]->faster();
         } else {
           m_universe->getScenes()[i]->faster(0.01);
@@ -285,15 +286,15 @@ void StateReplaying::xmKey(InputEventType i_type, const XMKey &i_xmkey) {
   }
 
   else if (i_type == INPUT_DOWN &&
-           (i_xmkey == (*InputHandler::instance()->getGlobalKey(
+           (i_xmkey == (*Input::instance()->getGlobalKey(
                          INPUT_REPLAYINGSLOWER)) ||
-            i_xmkey == (*InputHandler::instance()->getGlobalKey(
+            i_xmkey == (*Input::instance()->getGlobalKey(
                          INPUT_REPLAYINGABITSLOWER)))) {
     /* slower */
     if (m_universe != NULL) {
       for (unsigned int i = 0; i < m_universe->getScenes().size(); i++) {
         if (i_xmkey ==
-            (*InputHandler::instance()->getGlobalKey(INPUT_REPLAYINGSLOWER))) {
+            (*Input::instance()->getGlobalKey(INPUT_REPLAYINGSLOWER))) {
           m_universe->getScenes()[i]->slower();
         } else {
           m_universe->getScenes()[i]->slower(0.01);
@@ -314,7 +315,7 @@ void StateReplaying::xmKey(InputEventType i_type, const XMKey &i_xmkey) {
     }
   }
 #if defined(ENABLE_DEV)
-  else if (i_type == INPUT_DOWN && i_xmkey == XMKey(SDLK_KP0, KMOD_NONE)) {
+  else if (i_type == INPUT_DOWN && i_xmkey == XMKey(SDLK_KP_0, KMOD_NONE)) {
     // TRAINER
     /* store current bike position (for trainer) */
     if (m_universe != NULL) {
@@ -333,6 +334,12 @@ void StateReplaying::xmKey(InputEventType i_type, const XMKey &i_xmkey) {
     }
   }
 #endif
+
+  else if (i_type == INPUT_DOWN &&
+      i_xmkey == (*Input::instance()->getGlobalKey(INPUT_LEVELINFO))) {
+    StateManager::instance()->pushState(new StateLevelInfoViewer(
+          m_universe->getScenes()[0]->getLevelSrc()->Id(), true, false));
+  }
 
   else {
     StateScene::xmKey(i_type, i_xmkey);

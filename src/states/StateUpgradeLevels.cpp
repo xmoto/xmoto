@@ -26,7 +26,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "helpers/Log.h"
 #include "thread/UpgradeLevelsThread.h"
 #include "xmoto/GameText.h"
-#include "xmoto/Input.h"
+#include "xmoto/input/Input.h"
 
 #define UPGRADE_LEVELS_NB_PROPOSAL 20
 
@@ -135,13 +135,14 @@ void StateUpgradeLevels::callAfterThreadFinished(int threadResult) {
 }
 
 void StateUpgradeLevels::xmKey(InputEventType i_type, const XMKey &i_xmkey) {
-  if (i_type == INPUT_DOWN && i_xmkey == XMKey(SDLK_ESCAPE, KMOD_NONE)) {
+  if (i_type == INPUT_DOWN && (i_xmkey == XMKey(SDLK_ESCAPE, KMOD_NONE) ||
+                               i_xmkey.getJoyButton() == SDL_CONTROLLER_BUTTON_B)) {
     m_pThread->askThreadToEnd();
   }
 
   else if (i_type == INPUT_DOWN &&
            i_xmkey ==
-             (*InputHandler::instance()->getGlobalKey(INPUT_KILLPROCESS))) {
+             (*Input::instance()->getGlobalKey(INPUT_KILLPROCESS))) {
     if (m_threadStarted == true) {
       m_pThread->safeKill();
     }

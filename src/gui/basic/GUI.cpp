@@ -23,6 +23,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 #include "GUI.h"
 #include "common/VXml.h"
+#include "common/TextEdit.h"
 #include "drawlib/DrawLib.h"
 #include "helpers/Log.h"
 #include "helpers/RenderSurface.h"
@@ -30,6 +31,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "helpers/VMath.h"
 #include "xmoto/Game.h"
 #include "xmoto/GameText.h"
+#include "xmoto/input/Joystick.h"
 
 #ifdef ENABLE_OPENGL
 #include "include/xm_OpenGL.h"
@@ -226,7 +228,7 @@ bool UIWindow::isBranchHidden(void) {
 Special message box for querying keypresses
 ===========================================================================*/
 bool UIQueryKeyBox::keyDown(int nKey,
-                            SDLMod mod,
+                            SDL_Keymod mod,
                             const std::string &i_utf8Char) {
   //    MessageBox(NULL,"HELLO",NULL,MB_OK);
   return false;
@@ -295,6 +297,10 @@ UIMsgBoxButton UIMsgBox::getClicked(void) {
         return UI_MSGBOX_OK;
       if (m_pButtons[i]->getCaption() == GAMETEXT_CANCEL)
         return UI_MSGBOX_CANCEL;
+      if (m_pButtons[i]->getCaption() == GAMETEXT_OPTIONS)
+        return UI_MSGBOX_OPTIONS;
+      if (m_pButtons[i]->getCaption() == GAMETEXT_QUIT)
+        return UI_MSGBOX_QUIT;
       if (m_pButtons[i]->getCaption() == GAMETEXT_YES)
         return UI_MSGBOX_YES;
       if (m_pButtons[i]->getCaption() == GAMETEXT_NO)
@@ -339,6 +345,20 @@ void UIMsgBox::makeActiveButton(UIMsgBoxButton i_button) {
 
     if (i_button == UI_MSGBOX_CANCEL) {
       if (m_pButtons[i]->getCaption() == GAMETEXT_CANCEL) {
+        m_pButtons[i]->makeActive();
+        return;
+      }
+    }
+
+    if (i_button == UI_MSGBOX_OPTIONS) {
+      if (m_pButtons[i]->getCaption() == GAMETEXT_OPTIONS) {
+        m_pButtons[i]->makeActive();
+        return;
+      }
+    }
+
+    if (i_button == UI_MSGBOX_QUIT) {
+      if (m_pButtons[i]->getCaption() == GAMETEXT_QUIT) {
         m_pButtons[i]->makeActive();
         return;
       }
@@ -405,7 +425,20 @@ void UIMsgBox::paint(void) {
   }
 }
 
-bool UIMsgBox::keyDown(int nKey, SDLMod mod, const std::string &i_utf8Char) {
+bool UIMsgBox::textInput(int nKey, SDL_Keymod mod, const std::string &i_utf8Char) {
+  // alt/... and special keys must not be kept
+  if (utf8::utf8_length(i_utf8Char) == 1) {
+    // you can generate ascii 10 with ctrl+j or keyboard having new line key
+    if (i_utf8Char[0] != '\n') {
+      m_TextInput_fake = utf8::utf8_concat(m_TextInput_fake, i_utf8Char);
+      m_TextInput_real = m_TextInput_fake;
+    }
+  }
+
+  return true;
+}
+
+bool UIMsgBox::keyDown(int nKey, SDL_Keymod mod, const std::string &i_utf8Char) {
   switch (nKey) {
     case SDLK_ESCAPE:
       if (!setClicked(GAMETEXT_CANCEL))
@@ -422,28 +455,31 @@ bool UIMsgBox::keyDown(int nKey, SDLMod mod, const std::string &i_utf8Char) {
       if (m_bTextInput) {
         switch (nKey) {
           case SDLK_BACKSPACE:
-            m_TextInput_real =
-              m_TextInput_fake; // valid completion if in competion
+            m_TextInput_real = m_TextInput_fake; // valid completion if in competion
             if (m_TextInput_real != "") {
-              m_TextInput_fake = utf8::utf8_delete(
-                m_TextInput_fake, utf8::utf8_length(m_TextInput_fake));
+              if (mod & KMOD_CTRL) {
+                /* Delete the last word */
+
+                m_TextInput_fake = TextEdit::deleteWordLeft(m_TextInput_fake,
+                    /* This is the cursor pos, but as a cursor has not yet
+                     * been implemented, use the length of the string*/
+                    utf8::utf8_length(m_TextInput_fake)).first;
+              } else {
+                /* Delete the last character */
+                m_TextInput_fake = utf8::utf8_delete(m_TextInput_fake, utf8::utf8_length(m_TextInput_fake));
+              }
+
               m_TextInput_real = m_TextInput_fake;
             }
             return true;
+          case SDLK_DELETE:
+            // TODO
+            break;
           case SDLK_TAB:
-            showMatch();
-            return true;
-          default:
-            if (utf8::utf8_length(i_utf8Char) ==
-                1) { // alt/... and special keys must not be kept
-              if (i_utf8Char[0] != '\n') { // you can generate ascii 10 with
-                // ctrl+j or keyboard having new line
-                // key
-                m_TextInput_fake =
-                  utf8::utf8_concat(m_TextInput_fake, i_utf8Char);
-                m_TextInput_real = m_TextInput_fake;
-              }
-            }
+            if (mod & KMOD_SHIFT)
+              showMatch(true);
+            else
+              showMatch(false);
             return true;
         }
       }
@@ -466,6 +502,10 @@ UIMsgBox *UIWindow::msgBox(std::string Text,
   if (Buttons & UI_MSGBOX_OK)
     nNumButtons++;
   if (Buttons & UI_MSGBOX_CANCEL)
+    nNumButtons++;
+  if (Buttons & UI_MSGBOX_OPTIONS)
+    nNumButtons++;
+  if (Buttons & UI_MSGBOX_QUIT)
     nNumButtons++;
   if (Buttons & UI_MSGBOX_YES)
     nNumButtons++;
@@ -578,6 +618,24 @@ UIMsgBox *UIWindow::msgBox(std::string Text,
     pMsgBox->addButton(pButton);
     nCX += v_buttonWidth;
   }
+  if (Buttons & UI_MSGBOX_OPTIONS) {
+    pButton =
+      new UIButton(pMsgBox, nCX, nCY, GAMETEXT_OPTIONS, v_buttonWidth, 57);
+    pButton->setFont(getFont());
+    if (v_useCustom == false)
+      pButton->setType(UI_BUTTON_TYPE_SMALL);
+    pMsgBox->addButton(pButton);
+    nCX += v_buttonWidth;
+  }
+  if (Buttons & UI_MSGBOX_QUIT) {
+    pButton =
+      new UIButton(pMsgBox, nCX, nCY, GAMETEXT_QUIT, v_buttonWidth, 57);
+    pButton->setFont(getFont());
+    if (v_useCustom == false)
+      pButton->setType(UI_BUTTON_TYPE_SMALL);
+    pMsgBox->addButton(pButton);
+    nCX += v_buttonWidth;
+  }
   if (Buttons & UI_MSGBOX_YES) {
     pButton = new UIButton(pMsgBox, nCX, nCY, GAMETEXT_YES, v_buttonWidth, 57);
     pButton->setFont(getFont());
@@ -676,25 +734,26 @@ void UIMsgBox::addCompletionWord(std::vector<std::string> &list) {
  * completion word function
  */
 
-void UIMsgBox::showMatch() {
+void UIMsgBox::showMatch(bool reverse) {
   int last_word_f_pos = m_TextInput_real.rfind(" ") + 1;
   std::string last_word_f = m_TextInput_fake.substr(last_word_f_pos);
   std::vector<std::string> matches = findMatches();
+
   for (int i = 0, n = matches.size(); i < n; i++) {
     std::string match = matches[i];
+
     if (match.find(last_word_f) == 0) {
-      if (i == (n - 1)) {
-        std::string s;
-        s = m_TextInput_fake.substr(0, last_word_f_pos);
-        s += matches[0];
+      std::string s = m_TextInput_fake.substr(0, last_word_f_pos);
+
+      if ((reverse && i == 0) || (!reverse && i == n-1)) {
+        s += reverse ? matches[n-1] : matches[0];
         m_TextInput_fake = s;
         break;
       } else {
-        std::string s;
-        s = m_TextInput_fake.substr(0, last_word_f_pos);
-        s += matches[i + 1];
+        s += reverse ? matches[i-1] : matches[i+1];
         m_TextInput_fake = s;
       }
+
     }
   }
 }
@@ -711,8 +770,9 @@ std::vector<std::string> UIMsgBox::findMatches() {
       matchesList.push_back(m_completionWords[i]);
     }
   }
-  matchesList.push_back(
-    last_word_normal); // allow to come back before completion
+
+  // allow to come back before completion
+  matchesList.push_back(last_word_normal);
 
   std::vector<std::string> empty;
   empty.push_back("");
@@ -1136,39 +1196,48 @@ void UIRoot::paint(void) {
 }
 
 void UIRoot::mouseLDown(int x, int y) {
-  _RootMouseEvent(this, UI_ROOT_MOUSE_LBUTTON_DOWN, x, y);
+  UIRootMouseEvent evt = { UI_ROOT_MOUSE_LBUTTON_DOWN, x, y };
+  _RootMouseEvent(this, evt);
 }
 
 void UIRoot::mouseLDoubleClick(int x, int y) {
-  _RootMouseEvent(this, UI_ROOT_MOUSE_DOUBLE_CLICK, x, y);
+  UIRootMouseEvent evt = { UI_ROOT_MOUSE_DOUBLE_CLICK, x, y };
+  _RootMouseEvent(this, evt);
 }
 
 void UIRoot::mouseLUp(int x, int y) {
-  _RootMouseEvent(this, UI_ROOT_MOUSE_LBUTTON_UP, x, y);
+  UIRootMouseEvent evt = { UI_ROOT_MOUSE_LBUTTON_UP, x, y };
+  _RootMouseEvent(this, evt);
 }
 
 void UIRoot::mouseRDown(int x, int y) {
-  _RootMouseEvent(this, UI_ROOT_MOUSE_RBUTTON_DOWN, x, y);
+  UIRootMouseEvent evt = { UI_ROOT_MOUSE_RBUTTON_DOWN, x, y };
+  _RootMouseEvent(this, evt);
 }
 
 void UIRoot::mouseRUp(int x, int y) {
-  _RootMouseEvent(this, UI_ROOT_MOUSE_RBUTTON_UP, x, y);
+  UIRootMouseEvent evt = { UI_ROOT_MOUSE_RBUTTON_UP, x, y };
+  _RootMouseEvent(this, evt);
 }
 
 void UIRoot::mouseHover(int x, int y) {
-  _RootMouseEvent(this, UI_ROOT_MOUSE_HOVER, x, y);
+  UIRootMouseEvent evt = { UI_ROOT_MOUSE_HOVER, x, y };
+  _RootMouseEvent(this, evt);
 }
 
-void UIRoot::mouseWheelUp(int x, int y) {
-  _RootMouseEvent(this, UI_ROOT_MOUSE_WHEEL_UP, x, y);
+void UIRoot::mouseWheelUp(int x, int y, Sint16 wheelX, Sint16 wheelY) {
+  UIRootMouseEvent evt = { UI_ROOT_MOUSE_WHEEL_UP, x, y };
+  _RootMouseEvent(this, evt);
 }
 
-void UIRoot::mouseWheelDown(int x, int y) {
-  _RootMouseEvent(this, UI_ROOT_MOUSE_WHEEL_DOWN, x, y);
+void UIRoot::mouseWheelDown(int x, int y, Sint16 wheelX, Sint16 wheelY) {
+  UIRootMouseEvent evt = { UI_ROOT_MOUSE_WHEEL_DOWN, x, y };
+  _RootMouseEvent(this, evt);
 }
 
-bool UIRoot::keyDown(int nKey, SDLMod mod, const std::string &i_utf8Char) {
-  if (!_RootKeyEvent(this, UI_ROOT_KEY_DOWN, nKey, mod, i_utf8Char)) {
+bool UIRoot::keyDown(int nKey, SDL_Keymod mod, const std::string &i_utf8Char) {
+  UIRootKeyEvent evt = { UI_ROOT_KEY_DOWN, nKey, mod, i_utf8Char };
+  if (!_RootKeyEvent(this, evt)) {
     switch (nKey) {
       case SDLK_UP:
         activateUp();
@@ -1183,7 +1252,10 @@ bool UIRoot::keyDown(int nKey, SDLMod mod, const std::string &i_utf8Char) {
         activateRight();
         return true;
       case SDLK_TAB:
-        activateNext();
+        if (mod & KMOD_SHIFT)
+          activatePrevious();
+        else
+          activateNext();
         return true;
       case SDLK_BACKSPACE:
         activatePrevious();
@@ -1194,22 +1266,24 @@ bool UIRoot::keyDown(int nKey, SDLMod mod, const std::string &i_utf8Char) {
   return true;
 }
 
-bool UIRoot::keyUp(int nKey, SDLMod mod, const std::string &i_utf8Char) {
-  return _RootKeyEvent(this, UI_ROOT_KEY_UP, nKey, mod, i_utf8Char);
+bool UIRoot::keyUp(int nKey, SDL_Keymod mod, const std::string &i_utf8Char) {
+  UIRootKeyEvent evt = { UI_ROOT_KEY_UP, nKey, mod, i_utf8Char };
+  return _RootKeyEvent(this, evt);
 }
 
-bool UIRoot::_RootKeyEvent(UIWindow *pWindow,
-                           UIRootKeyEvent Event,
-                           int nKey,
-                           SDLMod mod,
-                           const std::string &i_utf8Char) {
+bool UIRoot::textInput(int nKey, SDL_Keymod mod, const std::string &i_utf8Char) {
+  UIRootKeyEvent evt = { UI_ROOT_TEXT_INPUT, 0, (SDL_Keymod)0, i_utf8Char };
+  return _RootKeyEvent(this, evt);
+}
+
+bool UIRoot::_RootKeyEvent(UIWindow *pWindow, UIRootKeyEvent Event) {
   /* Hidden or disabled? */
   if (pWindow->isHidden() || pWindow->isDisabled())
     return false;
 
   /* First try if any children want it */
   for (unsigned int i = 0; i < pWindow->getChildren().size(); i++) {
-    if (_RootKeyEvent(pWindow->getChildren()[i], Event, nKey, mod, i_utf8Char))
+    if (_RootKeyEvent(pWindow->getChildren()[i], Event))
       return true;
   }
 
@@ -1217,57 +1291,72 @@ bool UIRoot::_RootKeyEvent(UIWindow *pWindow,
   if (pWindow != this && pWindow->isActive()) {
     bool b = false;
 
-    switch (Event) {
+    switch (Event.type) {
       case UI_ROOT_KEY_DOWN:
-        b = pWindow->keyDown(nKey, mod, i_utf8Char);
+        b = pWindow->keyDown(Event.nKey, Event.mod, Event.utf8Char);
         break;
       case UI_ROOT_KEY_UP:
-        b = pWindow->keyUp(nKey, mod, i_utf8Char);
+        b = pWindow->keyUp(Event.nKey, Event.mod, Event.utf8Char);
+        break;
+      case UI_ROOT_TEXT_INPUT:
+        b = pWindow->textInput(Event.nKey, Event.mod, Event.utf8Char);
         break;
     }
 
     return b;
-  } else
-    return false;
+  }
 
-  /* Ok */
-  return true;
+  return false;
 }
 
-bool UIRoot::joystickAxisMotion(Uint8 i_joyNum,
-                                Uint8 i_joyAxis,
-                                Sint16 i_joyAxisValue) {
-  if (!_RootJoystickAxisMotionEvent(
-        this, i_joyNum, i_joyAxis, i_joyAxisValue)) {
-    if (i_joyAxis % 2 == 0) { // horizontal
-      if (i_joyAxisValue < -(GUI_JOYSTICK_MINIMUM_DETECTION)) {
+bool UIRoot::joystickAxisMotion(JoyAxisEvent event) {
+  if (JoystickInput::axisInside(event.axisValue, JOYSTICK_DEADZONE_MENU))
+    return false;
+
+  if (_RootJoystickAxisMotionEvent(this, event))
+    return false;
+
+  JoyDir dir = JoystickInput::getJoyAxisDir(event.axisValue);
+
+  switch (event.axis) {
+    case SDL_CONTROLLER_AXIS_LEFTX:
+      if (dir < 0)
         activateLeft();
-        return true;
-      } else if (i_joyAxisValue > GUI_JOYSTICK_MINIMUM_DETECTION) {
+      else
         activateRight();
-        return true;
-      }
-    } else { // vertical
-      if (i_joyAxisValue < -(GUI_JOYSTICK_MINIMUM_DETECTION)) {
+      return true;
+    case SDL_CONTROLLER_AXIS_LEFTY:
+      if (dir < 0)
+        activateUp();
+      else
+        activateDown();
+      return true;
+  }
+
+  return false;
+}
+
+bool UIRoot::joystickButtonDown(Uint8 i_joyNum, Uint8 i_joyButton) {
+  if (!_RootJoystickButtonDownEvent(this, i_joyNum, i_joyButton)) {
+    switch (i_joyButton) {
+      case SDL_CONTROLLER_BUTTON_DPAD_UP:
         activateUp();
         return true;
-      } else if (i_joyAxisValue > GUI_JOYSTICK_MINIMUM_DETECTION) {
+      case SDL_CONTROLLER_BUTTON_DPAD_DOWN:
         activateDown();
         return true;
-      }
+      case SDL_CONTROLLER_BUTTON_DPAD_LEFT:
+        activateLeft();
+        return true;
+      case SDL_CONTROLLER_BUTTON_DPAD_RIGHT:
+        activateRight();
+        return true;
     }
   }
   return false;
 }
 
-bool UIRoot::joystickButtonDown(Uint8 i_joyNum, Uint8 i_joyButton) {
-  return _RootJoystickButtonDownEvent(this, i_joyNum, i_joyButton);
-}
-
-bool UIRoot::_RootJoystickAxisMotionEvent(UIWindow *pWindow,
-                                          Uint8 i_joyNum,
-                                          Uint8 i_joyAxis,
-                                          Sint16 i_joyAxisValue) {
+bool UIRoot::_RootJoystickAxisMotionEvent(UIWindow *pWindow, JoyAxisEvent event) {
   /* Hidden or disabled? */
   if (pWindow->isHidden() || pWindow->isDisabled())
     return false;
@@ -1275,18 +1364,16 @@ bool UIRoot::_RootJoystickAxisMotionEvent(UIWindow *pWindow,
   /* First try if any children want it */
   for (unsigned int i = 0; i < pWindow->getChildren().size(); i++) {
     if (_RootJoystickAxisMotionEvent(
-          pWindow->getChildren()[i], i_joyNum, i_joyAxis, i_joyAxisValue))
+          pWindow->getChildren()[i], event))
       return true;
   }
 
   /* Try this */
   if (pWindow != this && pWindow->isActive()) {
-    return pWindow->joystickAxisMotion(i_joyNum, i_joyAxis, i_joyAxisValue);
-  } else
-    return false;
+    return pWindow->joystickAxisMotion(event);
+  }
 
-  /* Ok */
-  return true;
+  return false;
 }
 
 bool UIRoot::_RootJoystickButtonDownEvent(UIWindow *pWindow,
@@ -1306,31 +1393,29 @@ bool UIRoot::_RootJoystickButtonDownEvent(UIWindow *pWindow,
   /* Try this */
   if (pWindow != this && pWindow->isActive()) {
     return pWindow->joystickButtonDown(i_joyNum, i_joyButton);
-  } else
+  } else {
     return false;
+  }
 
   /* Ok */
   return true;
 }
 
-bool UIRoot::_RootMouseEvent(UIWindow *pWindow,
-                             UIRootMouseEvent Event,
-                             int x,
-                             int y) {
+bool UIRoot::_RootMouseEvent(UIWindow *pWindow, UIRootMouseEvent Event) {
   /* Hidden or disabled? */
   if (pWindow->isHidden() || pWindow->isDisabled())
     return false;
 
   /* All root mouse events are handled the same... - first remap coords */
-  int wx = x - pWindow->getPosition().nX;
-  int wy = y - pWindow->getPosition().nY;
+  int wx = Event.x - pWindow->getPosition().nX;
+  int wy = Event.y - pWindow->getPosition().nY;
 
   /* Inside window? */
   if (wx >= 0 && wy >= 0 && wx < pWindow->getPosition().nWidth &&
       wy < pWindow->getPosition().nHeight) {
     /* Offer activation to this window first */
-    if ((Event == UI_ROOT_MOUSE_LBUTTON_UP ||
-         Event == UI_ROOT_MOUSE_RBUTTON_UP) &&
+    if ((Event.type == UI_ROOT_MOUSE_LBUTTON_UP ||
+         Event.type == UI_ROOT_MOUSE_RBUTTON_UP) &&
         pWindow->offerActivation()) {
       /* Nice, acquire it. */
       deactivate(this); /* start by making sure nothing is activated */
@@ -1340,7 +1425,8 @@ bool UIRoot::_RootMouseEvent(UIWindow *pWindow,
     /* Recurse children */
     for (int i = (int)pWindow->getChildren().size() - 1; i >= 0; i--) {
       if (pWindow->getChildren()[i]->offerMouseEvent()) {
-        if (_RootMouseEvent(pWindow->getChildren()[i], Event, wx, wy)) {
+        UIRootMouseEvent evt = { Event.type, wx, wy, 0, 0 };
+        if (_RootMouseEvent(pWindow->getChildren()[i], evt)) {
           return true;
         }
       }
@@ -1350,12 +1436,12 @@ bool UIRoot::_RootMouseEvent(UIWindow *pWindow,
     if (pWindow != this) {
       if (m_lastHover != pWindow) { // change of focus for the children
         if (m_lastHover != NULL) {
-          m_lastHover->mouseOut(x, y);
+          m_lastHover->mouseOut(Event.x, Event.y);
         }
         m_lastHover = pWindow;
       }
 
-      switch (Event) {
+      switch (Event.type) {
         case UI_ROOT_MOUSE_LBUTTON_DOWN:
           pWindow->mouseLDown(wx, wy);
           break;

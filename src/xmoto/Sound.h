@@ -111,12 +111,9 @@ private:
   // nLen);
 
   /* SDL_mixer callbacks (RWops) */
-  static int RWops_seek(SDL_RWops *context, int offset, int whence);
-  static int RWops_read(SDL_RWops *context, void *ptr, int size, int maxnum);
-  static int RWops_write(SDL_RWops *context,
-                         const void *ptr,
-                         int size,
-                         int num);
+  static int64_t RWops_seek(SDL_RWops *context, int64_t offset, int whence);
+  static size_t RWops_read(SDL_RWops *context, void *ptr, size_t size, size_t maxnum);
+  static size_t RWops_write(SDL_RWops *context, const void *ptr, size_t size, size_t num);
   static int RWops_close(SDL_RWops *context);
 
   /* Data */

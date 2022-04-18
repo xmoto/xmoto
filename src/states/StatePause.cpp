@@ -140,15 +140,15 @@ void StatePause::checkEvents() {
 
 void StatePause::xmKey(InputEventType i_type, const XMKey &i_xmkey) {
   if (i_type == INPUT_DOWN &&
-      i_xmkey ==
-        (*InputHandler::instance()->getGlobalKey(INPUT_PLAYINGPAUSE))) {
+      (i_xmkey == (*Input::instance()->getGlobalKey(INPUT_PLAYINGPAUSE)) ||
+       i_xmkey.getJoyButton() == SDL_CONTROLLER_BUTTON_START)) {
     /* quit this state */
     m_requestForEnd = true;
   }
 
   else if (i_type == INPUT_DOWN &&
            i_xmkey ==
-             (*InputHandler::instance()->getGlobalKey(INPUT_SWITCHFAVORITE))) {
+             (*Input::instance()->getGlobalKey(INPUT_SWITCHFAVORITE))) {
     if (m_universe != NULL) {
       if (m_universe->getScenes().size() > 0) { // just add the first world
         GameApp::instance()->switchLevelToFavorite(
@@ -160,7 +160,7 @@ void StatePause::xmKey(InputEventType i_type, const XMKey &i_xmkey) {
 
   else if (i_type == INPUT_DOWN &&
            i_xmkey ==
-             (*InputHandler::instance()->getGlobalKey(INPUT_SWITCHBLACKLIST))) {
+             (*Input::instance()->getGlobalKey(INPUT_SWITCHBLACKLIST))) {
     if (m_universe != NULL) {
       if (m_universe->getScenes().size() >
           0) { // just blacklist the first world

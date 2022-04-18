@@ -67,7 +67,7 @@ void XMThread::startThread() {
   m_currentOperation = "";
   m_askThreadToEnd = false;
   m_isRunning = true; // set before running the thread
-  m_pThread = SDL_CreateThread(&XMThread::run, this);
+  m_pThread = SDL_CreateThread(&XMThread::run, NULL, this);
 }
 
 int XMThread::runInMain() {
@@ -103,7 +103,8 @@ void XMThread::askThreadToSleep() {
 
 void XMThread::killThread() {
   LogWarning("Kill violently the thread");
-  SDL_KillThread(m_pThread);
+  // TODO:
+  //SDL_KillThread(m_pThread);
   m_pThread = NULL;
   m_isRunning = false;
 }

@@ -21,7 +21,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "StateUpdateThemesList.h"
 #include "thread/UpdateThemesListThread.h"
 #include "xmoto/GameText.h"
-#include "xmoto/Input.h"
+#include "xmoto/input/Input.h"
 
 StateUpdateThemesList::StateUpdateThemesList(bool drawStateBehind,
                                              bool updateStatesBehind)
@@ -38,7 +38,7 @@ StateUpdateThemesList::~StateUpdateThemesList() {
 
 void StateUpdateThemesList::xmKey(InputEventType i_type, const XMKey &i_xmkey) {
   if (i_type == INPUT_DOWN &&
-      i_xmkey == (*InputHandler::instance()->getGlobalKey(INPUT_KILLPROCESS))) {
+      i_xmkey == (*Input::instance()->getGlobalKey(INPUT_KILLPROCESS))) {
     m_pThread->safeKill();
   }
 }

@@ -54,8 +54,8 @@ void StateServerConsole::enter() {
 void StateServerConsole::checkEvents() {}
 
 void StateServerConsole::xmKey(InputEventType i_type, const XMKey &i_xmkey) {
-  SDLKey v_nKey;
-  SDLMod v_mod;
+  SDL_Keycode v_nKey;
+  SDL_Keymod v_mod;
   std::string v_utf8Char;
 
   if (i_type == INPUT_DOWN && i_xmkey == XMKey(SDLK_ESCAPE, KMOD_NONE)) {
@@ -66,6 +66,9 @@ void StateServerConsole::xmKey(InputEventType i_type, const XMKey &i_xmkey) {
   if (i_xmkey.toKeyboard(v_nKey, v_mod, v_utf8Char)) {
     if (i_type == INPUT_DOWN) {
       m_console->keyDown(v_nKey, v_mod, v_utf8Char);
+      return;
+    } else if (i_type == INPUT_TEXT) {
+      m_console->textInput(v_nKey, v_mod, v_utf8Char);
       return;
     }
   }

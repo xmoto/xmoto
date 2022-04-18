@@ -21,6 +21,9 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #ifndef __STATEMENU_H__
 #define __STATEMENU_H__
 
+#include <array>
+#include "include/xm_SDL.h"
+
 #include "GameState.h"
 
 class UIRoot;
@@ -43,11 +46,11 @@ public:
   /* input */
   virtual void xmKey(InputEventType i_type, const XMKey &i_xmkey);
 
+  UIRoot *getGUI() const { return m_GUI; }
+
 protected:
   virtual void checkEvents() = 0;
   UIRoot *m_GUI;
-
-private:
 };
 
 #endif

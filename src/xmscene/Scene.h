@@ -52,7 +52,7 @@ class SceneEvent;
 class Replay;
 class GameRenderer;
 class CollisionSystem;
-class InputHandler;
+class Input;
 class SerializedBikeState;
 class DBuffer;
 class RecordedGameEvent;

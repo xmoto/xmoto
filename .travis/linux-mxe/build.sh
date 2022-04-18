@@ -52,10 +52,16 @@ make -j"$(nproc)"
 Xvfb :0 -screen 0 1024x768x16 &
 xvfb_pid=$!
 
-sleep 5
-
-echo "pidof Xvfb:"
-pidof Xvfb
+count=0
+max=20
+while [ ! -e /tmp/.X11-unix/X0 ]; do
+  sleep 0.5
+  count=$((count+1))
+  if [ "$count" -ge "$max" ]; then
+    >&2 echo "xvfb timed out"
+    exit 1
+  fi
+done
 
 make xmoto_pack
 

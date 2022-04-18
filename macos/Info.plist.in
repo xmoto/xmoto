@@ -22,6 +22,21 @@
 	<string>${XMOTO_VERSION}</string>
 	<key>CFBundleVersion</key>
 	<string>${XMOTO_VERSION}</string>
+	<key>CFBundleDocumentTypes</key>
+	<array>
+		<dict>
+			<key>CFBundleTypeRole</key>
+			<string>Viewer</string>
+			<key>LSHandlerRank</key>
+			<string>Alternate</string>
+			<key>CFBundleTypeExtensions</key>
+			<array>
+				<string>lvl</string>
+				<string>rpl</string>
+				<string>dmo</string>
+			</array>
+		</dict>
+	</array>
 	<key>NSHumanReadableCopyright</key>
 	<string>© 2005-2021</string>
 	<key>NSPrincipalClass</key>

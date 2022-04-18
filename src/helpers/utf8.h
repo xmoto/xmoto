@@ -44,8 +44,12 @@ public:
                                  unsigned int i_numChar);
   static unsigned int utf8_length(const std::string &i_a);
   static std::string utf8_substring(const std::string &i_a,
-                                    unsigned int i_numChar,
-                                    unsigned int i_nbChars);
+                                    size_t i_numChar,
+                                    size_t i_nbChars);
+  /* substring with absolute indexes instead of a length */
+  static std::string utf8_substring_abs(const std::string &str,
+                                    size_t start,
+                                    size_t end = std::string::npos);
 
   static void utf8_split(const std::string &i_line,
                          const std::string &i_char,

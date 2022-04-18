@@ -21,27 +21,32 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #ifndef __INPUT_H__
 #define __INPUT_H__
 
-#define INPUT_NB_PLAYERS 4
-
 #include "XMKey.h"
 #include "helpers/Singleton.h"
 #include <string>
 #include <vector>
+#include <array>
+#include <unordered_map>
 
 class xmDatabase;
 class UserConfig;
 class Universe;
 class Scene;
+class InputSDL12Compat;
+
+static const int INPUT_NB_PLAYERS = 4;
+static const int MAX_SCRIPT_KEY_HOOKS = 16;
 
 struct IFullKey {
   IFullKey();
   IFullKey(const std::string &i_name,
-           const XMKey &i_key,
+           const XMKey &i_defaultKey,
            const std::string i_help,
-           bool i_customisable = true);
+           bool i_customizable = true);
 
   std::string name;
   XMKey key;
+  XMKey defaultKey;
   std::string help;
   bool customizable;
 };
@@ -60,6 +65,7 @@ enum INPUT_GLOBALKEYS {
   INPUT_SWITCHTRACKINGSHOTMODE,
   INPUT_SWITCHRENDERGHOSTTRAIL,
   INPUT_SCREENSHOT,
+  INPUT_LEVELINFO,
   INPUT_SWITCHWWWACCESS,
   INPUT_SWITCHFPS,
   INPUT_SWITCHGFXQUALITYMODE,
@@ -104,8 +110,6 @@ enum INPUT_PLAYERKEYS {
 /*===========================================================================
 Script hooks
 ===========================================================================*/
-#define MAX_SCRIPT_KEY_HOOKS 16
-
 struct InputScriptKeyHook {
   XMKey nKey; /* Hooked key */
   std::string FuncName; /* Script function to invoke */
@@ -113,14 +117,22 @@ struct InputScriptKeyHook {
 };
 
 /*===========================================================================
+Controls
+===========================================================================*/
+struct Controls {
+  IFullKey playerKeys[INPUT_NB_PLAYERKEYS];
+  IFullKey scriptActionKeys[MAX_SCRIPT_KEY_HOOKS];
+};
+
+/*===========================================================================
 Input handler class
 ===========================================================================*/
-class InputHandler : public Singleton<InputHandler> {
-  friend class Singleton<InputHandler>;
+class Input : public Singleton<Input> {
+  friend class Singleton<Input>;
 
 private:
-  InputHandler();
-  ~InputHandler() {}
+  Input();
+  ~Input() {}
 
 public:
   /* Methods */
@@ -145,13 +157,15 @@ public:
   XMKey getScriptActionKeys(int i_player, int i_actionScript) const;
 
   std::string getKeyByAction(const std::string &Action, bool i_tech = false);
-  std::string *getJoyId(Uint8 i_joynum);
-  Uint8 getJoyNum(const std::string &i_name);
-  std::string *getJoyIdByStrId(const std::string &i_name);
-  SDL_Joystick *getJoyById(std::string *i_id);
-  InputEventType joystickAxisSens(Sint16 m_joyAxisValue);
+
+  Joystick *getJoyById(SDL_JoystickID num);
+  SDL_JoystickID getJoyNum(const Joystick &joystick) const;
+
+  std::vector<Joystick> &getJoysticks() { return m_joysticks; }
+
+  InputEventType joystickAxisSens(int16_t m_joyAxisValue);
   void recheckJoysticks();
-  std::vector<std::string> &getJoysticksNames();
+  void loadJoystickMappings();
   bool areJoysticksEnabled() const;
   void enableJoysticks(bool i_value);
 
@@ -174,24 +188,19 @@ public:
   std::string getGlobalKeyHelp(unsigned int INPUT_key) const;
   bool getGlobalKeyCustomizable(unsigned int INPUT_key) const;
 
-  static float joyRawToFloat(float raw,
-                             float neg,
-                             float deadzone_neg,
-                             float deadzone_pos,
-                             float pos);
+  static InputEventType eventState(uint32_t type);
 
 private:
   /* Data */
   int m_nNumScriptKeyHooks;
   InputScriptKeyHook m_ScriptKeyHooks[MAX_SCRIPT_KEY_HOOKS];
 
-  std::vector<SDL_Joystick *> m_Joysticks;
-  std::vector<std::string> m_JoysticksNames;
-  std::vector<std::string> m_JoysticksIds;
+  std::vector<Joystick> m_joysticks;
 
-  XMKey m_nScriptActionKeys[INPUT_NB_PLAYERS][MAX_SCRIPT_KEY_HOOKS];
-  IFullKey m_playerKeys[INPUT_NB_PLAYERS][INPUT_NB_PLAYERKEYS];
-  IFullKey m_globalKeys[INPUT_NB_GLOBALKEYS];
+  Controls m_controls[INPUT_NB_PLAYERS];
+  IFullKey m_globalControls[INPUT_NB_GLOBALKEYS];
+
+  friend class InputSDL12Compat;
 };
 
 #endif

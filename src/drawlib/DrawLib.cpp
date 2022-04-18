@@ -79,7 +79,6 @@ DrawLib *DrawLib::DrawLibFromName(std::string i_drawLibName) {
 
 void DrawLib::init(unsigned int nDispWidth,
                    unsigned int nDispHeight,
-                   unsigned int nDispBPP,
                    bool bWindowed) {
   m_initialized = true;
 }
@@ -102,7 +101,6 @@ void DrawLib::checkFontPrerequites() {
 DrawLib::DrawLib() {
   m_nDispWidth = 800;
   m_nDispHeight = 600;
-  m_nDispBPP = 32;
   m_bWindowed = true;
   m_bNoGraphics = false;
   m_bDontUseGLExtensions = false;
@@ -115,7 +113,7 @@ DrawLib::DrawLib() {
   m_blendMode = BLEND_MODE_NONE;
   m_ownsRenderSurface = false;
   m_renderSurf = NULL;
-  m_screen = NULL;
+  m_window = NULL;
   m_menuCamera = NULL;
 
   m_fontSmall = NULL;
@@ -294,7 +292,7 @@ void DrawLib::DrawFilledCircle(unsigned int nSteps,
   }
   setColor(CircleColor);
   for (unsigned int i = 0; i < nSteps; i++) {
-    float r = (PI * 2.0f * (float)i) / (float)nSteps;
+    float r = (M_PI * 2.0f * (float)i) / (float)nSteps;
     glVertex(Vector2f(C.x + fRadius * sinf(r), C.y + fRadius * cosf(r)));
   }
   endDraw();
@@ -320,10 +318,10 @@ void DrawLib::DrawLine(Vector2f &i_p1,
   // calculate!
   p1 = Vector2f(i_p1.x + cos(ang) * -i_thickness1 / 2,
                 i_p1.y + sin(ang) * -i_thickness1 / 2);
-  p2 = Vector2f(i_p1.x + cos(ang + PI * 2) * i_thickness1 / 2,
-                i_p1.y + sin(ang + PI * 2) * i_thickness1 / 2);
-  p3 = Vector2f(i_p2.x + cos(ang + PI * 2) * i_thickness2 / 2,
-                i_p2.y + sin(ang + PI * 2) * i_thickness2 / 2);
+  p2 = Vector2f(i_p1.x + cos(ang + M_PI * 2) * i_thickness1 / 2,
+                i_p1.y + sin(ang + M_PI * 2) * i_thickness1 / 2);
+  p3 = Vector2f(i_p2.x + cos(ang + M_PI * 2) * i_thickness2 / 2,
+                i_p2.y + sin(ang + M_PI * 2) * i_thickness2 / 2);
   p4 = Vector2f(i_p2.x + cos(ang) * -i_thickness2 / 2,
                 i_p2.y + sin(ang) * -i_thickness2 / 2);
   // DRAW!
@@ -378,7 +376,7 @@ void DrawLib::drawCircle(const Vector2f &Center,
       setBlendMode(BLEND_MODE_A);
     setColor(Back);
     for (int i = 0; i < nSteps; i++) {
-      float rads = (PI * 2.0f * (float)i) / (float)nSteps;
+      float rads = (M_PI * 2.0f * (float)i) / (float)nSteps;
       glVertexSP(Center.x + fRadius * sin(rads),
                  Center.y + fRadius * cos(rads));
     }
@@ -388,8 +386,8 @@ void DrawLib::drawCircle(const Vector2f &Center,
   /* Draw circle border */
   if (fBorder > 0.0f && GET_ALPHA(Front) > 0) {
     for (int i = 0; i < nSteps; i++) {
-      float rads1 = (PI * 2.0f * (float)i) / (float)nSteps;
-      float rads2 = (PI * 2.0f * (float)(i + 1)) / (float)nSteps;
+      float rads1 = (M_PI * 2.0f * (float)i) / (float)nSteps;
+      float rads2 = (M_PI * 2.0f * (float)(i + 1)) / (float)nSteps;
 
       startDraw(DRAW_MODE_POLYGON);
       if (bAlpha)
@@ -447,14 +445,6 @@ void DrawLib::setDispHeight(unsigned int height) {
 
 unsigned int DrawLib::getDispHeight(void) {
   return m_nDispHeight;
-}
-
-void DrawLib::setDispBPP(unsigned int bpp) {
-  m_nDispBPP = bpp;
-}
-
-unsigned int DrawLib::getDispBPP(void) {
-  return m_nDispBPP;
 }
 
 void DrawLib::setWindowed(bool windowed) {
@@ -588,10 +578,13 @@ void DrawLib::drawImageTextureSet(const Vector2f &a,
   }
 }
 
+#include <cassert>
 void DrawLib::toogleFullscreen() {
-  if (SDL_WM_ToggleFullScreen(m_screen) != 0) {
+  // Need more code when using SDL2
+  //if (SDL_WM_ToggleFullScreen(m_screen) != 0) {
+    assert(false);
     /* hum */
-  }
+  //}
 }
 
 FontManager::FontManager(DrawLib *i_drawLib,

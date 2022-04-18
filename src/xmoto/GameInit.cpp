@@ -24,7 +24,8 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
 #include "Game.h"
 #include "GameText.h"
-#include "Input.h"
+#include "input/Input.h"
+#include "input/Joystick.h"
 #include "PhysSettings.h"
 #include "Sound.h"
 #include "common/VFileIO.h"
@@ -56,6 +57,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "states/StatePreplayingReplay.h"
 #include "states/StateReplaying.h"
 #include "states/StateWaitServerInstructions.h"
+#include "states/StatePlayingLocal.h"
 
 #include "thread/UpgradeLevelsThread.h"
 
@@ -69,6 +71,8 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #if !defined(WIN32)
 #include <signal.h>
 #endif
+
+#include <cassert>
 
 #define MOUSE_DBCLICK_TIME 0.250f
 
@@ -345,8 +349,8 @@ void GameApp::run_load(int nNumArgs, char **ppcArgs) {
   }
 #endif
 
-  _InitWin(
-    v_useGraphics); // initwin inits sdl (and only sdl if initwin is false)
+  // _InitWin initializes SDL (and only SDL if the argument is false)
+  _InitWin(v_useGraphics);
 
   /* drawlib */
   if (v_useGraphics) {
@@ -365,37 +369,44 @@ void GameApp::run_load(int nNumArgs, char **ppcArgs) {
     drawLib->setDontUseGLExtensions(XMSession::instance()->glExts() == false);
     drawLib->setDontUseGLVOBS(XMSession::instance()->glVOBS() == false);
 
-    LogInfo("Wanted resolution: %ix%i (%i bpp)",
+    LogInfo("Wanted resolution: %ix%i",
             XMSession::instance()->resolutionWidth(),
-            XMSession::instance()->resolutionHeight(),
-            XMSession::instance()->bpp());
+            XMSession::instance()->resolutionHeight());
     drawLib->init(XMSession::instance()->resolutionWidth(),
                   XMSession::instance()->resolutionHeight(),
-                  XMSession::instance()->bpp(),
                   XMSession::instance()->windowed());
     /* drawlib can change the final resolution if it fails, then, reinit session
      * one's */
     XMSession::instance()->setResolutionWidth(drawLib->getDispWidth());
     XMSession::instance()->setResolutionHeight(drawLib->getDispHeight());
-    XMSession::instance()->setBpp(drawLib->getDispBPP());
     XMSession::instance()->setWindowed(drawLib->getWindowed());
-    LogInfo("Resolution: %ix%i (%i bpp)",
+    LogInfo("Resolution: %ix%i",
             XMSession::instance()->resolutionWidth(),
-            XMSession::instance()->resolutionHeight(),
-            XMSession::instance()->bpp());
-    /* */
+            XMSession::instance()->resolutionHeight());
+
+    /* set initial focus state */
+    uint32_t wflags = SDL_GetWindowFlags(GameApp::instance()->getDrawLib()->getWindow());
+    m_hasKeyboardFocus = wflags & SDL_WINDOW_INPUT_FOCUS;
+    m_hasMouseFocus    = wflags & SDL_WINDOW_MOUSE_FOCUS;
+    m_isIconified      = wflags & SDL_WINDOW_HIDDEN;
+  } else {
+    // Doesn't matter anyway
+    m_hasKeyboardFocus = m_hasMouseFocus = m_isIconified = false;
   }
 
   /* init the database (fully, including upgrades) */
-  pDb->init(DATABASE_FILE,
-            XMSession::instance()->profile() == ""
-              ? std::string("")
-              : XMSession::instance()->profile(),
-            XMFS::getSystemDataDir(),
-            XMFS::getUserDir(FDT_DATA),
-            XMFS::binCheckSum(),
-            v_xmArgs.isOptNoDBDirsCheck() == false,
-            this);
+  if (!pDb->init(DATABASE_FILE,
+                 XMSession::instance()->profile() == ""
+                   ? std::string("")
+                   : XMSession::instance()->profile(),
+                 XMFS::getSystemDataDir(),
+                 XMFS::getUserDir(FDT_DATA),
+                 XMFS::binCheckSum(),
+                 v_xmArgs.isOptNoDBDirsCheck() == false,
+                 this)) {
+    quit();
+    return;
+  }
 
   if (v_useGraphics) {
     // allocate the statemanager instance so that if it fails, it's not in a
@@ -415,7 +426,7 @@ void GameApp::run_load(int nNumArgs, char **ppcArgs) {
 
   // network requires the input information (to display the chat command)
   if (v_useGraphics) {
-    InputHandler::instance()->init(m_userConfig,
+    Input::instance()->init(m_userConfig,
                                    pDb,
                                    XMSession::instance()->profile(),
                                    XMSession::instance()->enableJoysticks());
@@ -508,29 +519,8 @@ void GameApp::run_load(int nNumArgs, char **ppcArgs) {
     m_PlaySpecificReplay = v_xmArgs.getOpt_replay_file();
   }
   if (v_xmArgs.isOptDemo()) {
-    /* demo : download the level and the replay
-       load the level as external,
-       play the replay
-     */
     try {
-      m_xmdemo = new XMDemo(v_xmArgs.getOpt_demo_file());
-      LogInfo("Loading demo file %s\n", v_xmArgs.getOpt_demo_file().c_str());
-
-      _UpdateLoadingScreen(GAMETEXT_DLLEVEL);
-      m_xmdemo->getLevel(XMSession::instance()->proxySettings());
-      _UpdateLoadingScreen(GAMETEXT_DLREPLAY);
-      m_xmdemo->getReplay(XMSession::instance()->proxySettings());
-
-      try {
-        LevelsManager::instance()->addExternalLevel(
-          m_xmdemo->levelFile(),
-          xmDatabase::instance("main"),
-          v_xmArgs.isOptServerOnly());
-      } catch (Exception &e) {
-        LogError("Can't add level %s as external level",
-                 m_xmdemo->levelFile().c_str());
-      }
-      m_PlaySpecificReplay = m_xmdemo->replayFile();
+      m_PlaySpecificReplay = loadDemoReplay(v_xmArgs.getOpt_demo_file());
     } catch (Exception &e) {
       LogError("Unable to load the demo file");
     }
@@ -675,31 +665,24 @@ void GameApp::run_load(int nNumArgs, char **ppcArgs) {
     /* What to do? */
     if (m_PlaySpecificLevelFile != "") {
       try {
-        LevelsManager::instance()->addExternalLevel(
+        m_PlaySpecificLevelId = LevelsManager::instance()->addExternalLevel(
           m_PlaySpecificLevelFile,
           xmDatabase::instance("main"),
           v_xmArgs.isOptServerOnly());
-        m_PlaySpecificLevelId = LevelsManager::instance()->LevelByFileName(
-          m_PlaySpecificLevelFile, xmDatabase::instance("main"));
+        if (m_PlaySpecificLevelId.empty()) {
+          m_PlaySpecificLevelId = LevelsManager::instance()->LevelByFileName(
+            m_PlaySpecificLevelFile, xmDatabase::instance("main"));
+        }
       } catch (Exception &e) {
         m_PlaySpecificLevelId = m_PlaySpecificLevelFile;
       }
     }
     if ((m_PlaySpecificLevelId != "")) {
       /* ======= PLAY SPECIFIC LEVEL ======= */
-
-      if (XMSession::instance()->clientGhostMode() == false &&
-          NetClient::instance()->isConnected()) {
-        StateManager::instance()->pushState(new StateWaitServerInstructions());
-      } else {
-        StateManager::instance()->pushState(
-          new StatePreplayingGame(m_PlaySpecificLevelId, false));
-      }
-      LogInfo("Playing as '%s'...", XMSession::instance()->profile().c_str());
+      playLevel(m_PlaySpecificLevelId);
     } else if (m_PlaySpecificReplay != "") {
       /* ======= PLAY SPECIFIC REPLAY ======= */
-      StateManager::instance()->pushState(
-        new StatePreplayingReplay(m_PlaySpecificReplay, false));
+      playReplay(m_PlaySpecificReplay);
     } else {
       /* display what must be displayed */
       StateManager::instance()->pushState(new StateMainMenu());
@@ -727,38 +710,52 @@ void GameApp::manageEvent(SDL_Event *Event) {
   std::string utf8Char;
 
   if (Event->type == SDL_KEYDOWN || Event->type == SDL_KEYUP) {
-    /* don't allow simple modifier key */
-    if (Event->key.keysym.sym == SDLK_RSHIFT ||
-        Event->key.keysym.sym == SDLK_LSHIFT ||
-        Event->key.keysym.sym == SDLK_RCTRL ||
-        Event->key.keysym.sym == SDLK_LCTRL ||
-        Event->key.keysym.sym == SDLK_RALT ||
-        Event->key.keysym.sym == SDLK_LALT ||
-        Event->key.keysym.sym == SDLK_RMETA ||
-        Event->key.keysym.sym == SDLK_LMETA) {
-      return;
+    /* ignore modifier-only key presses */
+    switch (Event->key.keysym.sym) {
+      case SDLK_RSHIFT:
+      case SDLK_LSHIFT:
+      case SDLK_RCTRL:
+      case SDLK_LCTRL:
+      case SDLK_RALT:
+      case SDLK_LALT:
+      case SDLK_RGUI:
+      case SDLK_LGUI:
+        return;
     }
   }
 
-  /* What event? */
+  SDL_StartTextInput();
+
   switch (Event->type) {
+    case SDL_TEXTINPUT:
+      utf8Char = Event->text.text;
+
+      StateManager::instance()->xmKey(
+        INPUT_TEXT,
+        XMKey(0, (SDL_Keymod)0, utf8Char));
+      break;
+
     case SDL_KEYDOWN:
-      utf8Char = unicode2utf8(Event->key.keysym.unicode);
-      // printf("%i - %i\n", Event->key.keysym.sym, utf8Char.c_str()[0]);
+      utf8Char = unicode2utf8(Event->key.keysym.sym);
+
       StateManager::instance()->xmKey(
         INPUT_DOWN,
-        XMKey(Event->key.keysym.sym, Event->key.keysym.mod, utf8Char));
+        XMKey(Event->key.keysym.sym, (SDL_Keymod)Event->key.keysym.mod, utf8Char));
       break;
+
     case SDL_KEYUP:
-      utf8Char = unicode2utf8(Event->key.keysym.unicode);
+      utf8Char = unicode2utf8(Event->key.keysym.sym);
+
       StateManager::instance()->xmKey(
         INPUT_UP,
-        XMKey(Event->key.keysym.sym, Event->key.keysym.mod, utf8Char));
+        XMKey(Event->key.keysym.sym, (SDL_Keymod)Event->key.keysym.mod, utf8Char));
       break;
+
     case SDL_QUIT:
       /* Force quit */
       quit();
       break;
+
     case SDL_MOUSEBUTTONDOWN:
       /* Is this a double click? */
       getMousePos(&nX, &nY);
@@ -782,49 +779,136 @@ void GameApp::manageEvent(SDL_Event *Event) {
     case SDL_MOUSEBUTTONUP:
       StateManager::instance()->xmKey(INPUT_UP, XMKey(Event->button.button));
       break;
-
-    case SDL_JOYAXISMOTION:
-      StateManager::instance()->xmKey(
-        InputHandler::instance()->joystickAxisSens(Event->jaxis.value),
-        XMKey(InputHandler::instance()->getJoyId(Event->jbutton.which),
-              Event->jaxis.axis,
-              Event->jaxis.value));
+    case SDL_MOUSEWHEEL:
+      StateManager::instance()->xmKey(INPUT_SCROLL, XMKey(*Event));
       break;
-
-    case SDL_JOYBUTTONDOWN:
+    case SDL_CONTROLLERAXISMOTION:
       StateManager::instance()->xmKey(
-        INPUT_DOWN,
-        XMKey(InputHandler::instance()->getJoyId(Event->jbutton.which),
-              Event->jbutton.button));
+        Input::instance()->joystickAxisSens(Event->caxis.value),
+        XMKey(Input::instance()->getJoyById(Event->cbutton.which),
+              Event->caxis.axis,
+              Event->caxis.value));
       break;
-
-    case SDL_JOYBUTTONUP:
-      StateManager::instance()->xmKey(
-        INPUT_UP,
-        XMKey(InputHandler::instance()->getJoyId(Event->jbutton.which),
-              Event->jbutton.button));
-      break;
-
-    case SDL_ACTIVEEVENT:
-
-      if ((Event->active.state & SDL_APPMOUSEFOCUS) != 0) { // mouse focus
-        if (m_hasKeyboardFocus == false) {
-          StateManager::instance()->changeFocus(Event->active.gain == 1);
+    case SDL_USEREVENT: {
+      if (Event->user.code == SDL_CONTROLLERAXISMOTION) {
+        const auto &event = *(static_cast<JoyAxisEvent *>(Event->user.data1));
+        StateMenu *state = dynamic_cast<StateMenu *>(
+            StateManager::instance()->getTopState());
+        if (state) {
+          state->getGUI()->joystickAxisMotion(event);
         }
-        m_hasMouseFocus = (Event->active.gain == 1);
       }
+      break;
+    }
 
-      if ((Event->active.state & SDL_APPINPUTFOCUS) != 0) { // keyboard focus
-        if (m_hasMouseFocus == false) {
-          StateManager::instance()->changeFocus(Event->active.gain == 1);
+    case SDL_CONTROLLERBUTTONDOWN: {
+    case SDL_CONTROLLERBUTTONUP:
+      InputEventType type = Input::eventState(Event->type);
+      XMKey key = XMKey(
+          Input::instance()->getJoyById(Event->cbutton.which),
+          Event->cbutton.button);
+      StateManager::instance()->xmKey(type, key);
+      break;
+    }
+
+    case SDL_WINDOWEVENT: {
+      switch (Event->window.event) {
+        case SDL_WINDOWEVENT_ENTER:
+        case SDL_WINDOWEVENT_LEAVE: {
+          bool hasFocus = false;
+          switch (Event->window.event) {
+            case SDL_WINDOWEVENT_ENTER: hasFocus = true;  break;
+            case SDL_WINDOWEVENT_LEAVE: hasFocus = false; break;
+            /* never hit */
+            default: hasFocus = StateManager::instance()->hasFocus(); break;
+          }
+          if (!m_hasKeyboardFocus) {
+            StateManager::instance()->changeFocus(hasFocus);
+          }
+          m_hasMouseFocus = hasFocus;
+          break;
         }
-        m_hasKeyboardFocus = (Event->active.gain == 1);
-      }
+        case SDL_WINDOWEVENT_FOCUS_GAINED: /* fall through */
+        case SDL_WINDOWEVENT_FOCUS_LOST: {
+          bool hasFocus;
+          switch (Event->window.event) {
+            case SDL_WINDOWEVENT_FOCUS_GAINED: hasFocus = true;  break;
+            case SDL_WINDOWEVENT_FOCUS_LOST:   hasFocus = false; break;
+            /* never hit */
+            default: assert(false); hasFocus = StateManager::instance()->hasFocus(); break;
+          }
+          if (hasFocus) {
+            // Pending keydown events need to be flushed after gaining focus
+            // because SDL2 will send them for keys that were pressed outside the game
+            // (e.g. when alt-tabbing in)
+            SDL_FlushEvents(SDL_KEYDOWN, SDL_KEYDOWN);
+          } else {
+            /*
+             * With SDL2, input events come in in the opposite order from SDL1.2
+             * (the order used to be: "focus lost" -> "key released").
+             * We need to invalidate the keys here so they don't persist after focus is lost
+             */
+            StatePlayingLocal *state = dynamic_cast<StatePlayingLocal *>(
+                StateManager::instance()->getTopState());
+            if (state) {
+              state->dealWithActivedKeys();
+            }
+          }
 
-      if ((Event->active.state & SDL_APPACTIVE) != 0) {
-        StateManager::instance()->changeVisibility(Event->active.gain == 1);
-        m_isIconified = (Event->active.gain == 0);
+          if (!m_hasMouseFocus) {
+            StateManager::instance()->changeFocus(hasFocus);
+          }
+          m_hasKeyboardFocus = hasFocus;
+
+          if (!hasFocus) {
+            int numkeys = 0;
+            const uint8_t* keys = SDL_GetKeyboardState(&numkeys);
+            bool b = Input::instance()->getPlayerKey(INPUT_DRIVE, 0)->isPressed(keys, 0, numkeys);
+
+#if 0
+            // invalidate all pressed keys
+            {
+              for (unsigned int player = 0; player < INPUT_NB_PLAYERS; ++player) {
+                for (unsigned int i = 0; i < INPUT_NB_PLAYERKEYS; ++i) {
+                  StateManager::instance()->xmKey(INPUT_UP, *Input::instance()->getPlayerKey(i, player));
+                }
+              }
+              for (unsigned int i = 0; i < INPUT_NB_GLOBALKEYS; ++i) {
+                StateManager::instance()->xmKey(INPUT_UP, *Input::instance()->getGlobalKey(i));
+              }
+            }
+#endif
+          }
+
+          break;
+        }
+        case SDL_WINDOWEVENT_EXPOSED:
+          StateManager::instance()->setInvalidated(true);
+          break;
+        case SDL_WINDOWEVENT_SHOWN:
+          StateManager::instance()->changeVisibility(true);
+          m_isIconified = false;
+          break;
+        case SDL_WINDOWEVENT_HIDDEN:
+          StateManager::instance()->changeVisibility(false);
+          m_isIconified = true;
+          break;
       }
+      printf("focus: %s | kbd: %s | mouse: %s\n",
+              StateManager::instance()->hasFocus() ? "yes" : "no",
+              m_hasKeyboardFocus ? "yes" : "no",
+              m_hasMouseFocus ? "yes" : "no"
+            );
+      break;
+    }
+    case SDL_DROPFILE: {
+      char *file = Event->drop.file;
+      std::string path(file);
+      SDL_free(file);
+      StateManager::instance()->fileDrop(path);
+
+      break;
+    }
   }
 }
 
@@ -950,8 +1034,8 @@ void GameApp::run_unload() {
     delete m_pWebLevels;
   }
 
-  if (InputHandler::instance() != NULL) {
-    InputHandler::instance()
+  if (Input::instance() != NULL) {
+    Input::instance()
       ->uninit(); // uinit the input, but you can still save the config
   }
 
@@ -978,12 +1062,13 @@ void GameApp::run_unload() {
   if (Logger::isInitialized()) {
     LogDebug("UserUnload saveConfig at %.3f", GameApp::getXMTime());
   }
-  if (drawLib != NULL) { /* save config only if drawLib was initialized */
+  auto dbInstance = xmDatabase::instance("main");
+  if (drawLib != NULL && dbInstance->isOpen()) { /* save config only if drawLib was initialized */
     XMSession::instance("file")->save(m_userConfig,
                                       xmDatabase::instance("main"));
-    InputHandler::instance()->saveConfig(
+    Input::instance()->saveConfig(
       m_userConfig,
-      xmDatabase::instance("main"),
+      dbInstance,
       XMSession::instance("file")->profile());
     m_userConfig->saveFile();
   }
@@ -996,7 +1081,7 @@ void GameApp::run_unload() {
     drawLib->unInit();
   }
 
-  InputHandler::destroy();
+  Input::destroy();
   LevelsManager::destroy();
   GeomsManager::destroy();
   Theme::destroy();

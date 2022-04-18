@@ -19,11 +19,13 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 =============================================================================*/
 
 #include "StatePlayingNet.h"
+#include "StateLevelInfoViewer.h"
 #include "StateManager.h"
 #include "StatePreplayingNet.h"
 #include "common/XMSession.h"
 #include "net/NetClient.h"
 #include "xmoto/Universe.h"
+#include "xmscene/Level.h"
 
 StatePlayingNet::StatePlayingNet(Universe *i_universe, GameRenderer *i_renderer)
   : StatePlaying(i_universe, i_renderer) {
@@ -70,11 +72,23 @@ void StatePlayingNet::enter() {
 void StatePlayingNet::xmKey(InputEventType i_type, const XMKey &i_xmkey) {
   if (i_type == INPUT_DOWN &&
       (i_xmkey == XMKey(SDLK_ESCAPE, KMOD_NONE) ||
+       i_xmkey.getJoyButton() == SDL_CONTROLLER_BUTTON_B ||
        i_xmkey ==
-         (*InputHandler::instance()->getGlobalKey(INPUT_SWITCHNETMODE)))) {
+         (*Input::instance()->getGlobalKey(INPUT_SWITCHNETMODE)))) {
     StateManager::instance()->sendAsynchronousMessage(
       "ABORT", "", getStateId()); /* self sending */
-  } else {
+  }
+
+  else if (i_type == INPUT_DOWN &&
+      i_xmkey == (*Input::instance()->getGlobalKey(INPUT_LEVELINFO))) {
+    if (!isLockedScene()) {
+      m_displayStats = true;
+      StateManager::instance()->pushState(new StateLevelInfoViewer(
+            m_universe->getScenes()[0]->getLevelSrc()->Id(), true, false));
+    }
+  }
+
+  else {
     handleControllers(i_type, i_xmkey);
     StateScene::xmKey(i_type, i_xmkey);
   }

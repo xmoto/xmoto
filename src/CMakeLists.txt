@@ -1,6 +1,6 @@
 option(STATIC_BUILD "Build a static executable" OFF)
 option(USE_OPENGL "Build with OpenGL for graphics" ON)
-option(USE_SDLGFX "Build with SDL for graphics" OFF)
+option(USE_SDLGFX "Build with SDL2 for graphics" OFF)
 option(USE_GETTEXT "Build with Gettext for internationalization" ON)
 option(PREFER_SYSTEM_BZip2 "Prefer system BZip2" ON)
 option(PREFER_SYSTEM_Lua "Prefer system Lua" ON)
@@ -50,10 +50,13 @@ endif()
 
 # Can't disable yet
 if(ON OR USE_SDLGFX)
-  find_package(SDL REQUIRED)
-  find_package(SDL_mixer REQUIRED)
-  find_package(SDL_net REQUIRED)
-  find_package(SDL_ttf REQUIRED)
+  find_package(SDL2 REQUIRED)
+  find_package(SDL2_mixer REQUIRED)
+  find_package(SDL2_net REQUIRED)
+  find_package(SDL2_ttf REQUIRED)
+  if("${SDL2_LIBRARIES}" STREQUAL "")
+    set(SDL2_LIBRARIES SDL2::SDL2)
+  endif()
 endif()
 
 find_package(SQLITE3 REQUIRED)
@@ -62,6 +65,10 @@ find_package(XDG)
 set(USE_SYSTEM_XDG $<AND:$<BOOL:${PREFER_SYSTEM_XDG}>,$<BOOL:${XDG_FOUND}>>)
 
 find_package(ZLIB REQUIRED)
+
+if(APPLE)
+  find_library(COREFOUNDATION_LIBRARY CoreFoundation)
+endif()
 
 # sources
 
@@ -91,6 +98,8 @@ set(common_src
   common/Packager.h
   common/PolyDraw.cpp
   common/PolyDraw.h
+  common/TextEdit.cpp
+  common/TextEdit.h
   common/Theme.cpp
   common/Theme.h
   common/VBezier.cpp
@@ -298,7 +307,6 @@ set(xmoto_src
   xmoto/GameEvents.cpp xmoto/GameEvents.h
   xmoto/GameInit.cpp xmoto/GameText.h
   xmoto/GeomsManager.cpp xmoto/GeomsManager.h
-  xmoto/Input.cpp xmoto/Input.h
   xmoto/LevelsManager.cpp xmoto/LevelsManager.h
   xmoto/LevelsText.h
   xmoto/LuaLibBase.cpp xmoto/LuaLibBase.h
@@ -317,8 +325,14 @@ set(xmoto_src
   xmoto/VideoRecorder.cpp xmoto/VideoRecorder.h
   xmoto/VirtualLevelsList.cpp xmoto/VirtualLevelsList.h
   xmoto/XMDemo.cpp xmoto/XMDemo.h
-  xmoto/XMKey.cpp xmoto/XMKey.h
   xmoto/sqlqueries.h
+)
+
+set(xmoto_input_src
+  xmoto/input/Input.cpp xmoto/input/Input.h
+  xmoto/input/InputLegacy.cpp xmoto/input/InputLegacy.h
+  xmoto/input/Joystick.cpp xmoto/input/Joystick.h
+  xmoto/input/XMKey.cpp xmoto/input/XMKey.h
 )
 
 set(xmscene_src
@@ -387,6 +401,7 @@ add_executable(xmoto
   ${thread_src}
   ${xmincludes_src}
   ${xmoto_src}
+  ${xmoto_input_src}
   ${xmscene_src}
   $<$<PLATFORM_ID:Windows>:${PROJECT_SOURCE_DIR}/extra/xmoto.rc>
   $<$<PLATFORM_ID:Darwin>:${XMOTO_MACOS_ICON}>
@@ -398,6 +413,21 @@ elseif(APPLE AND BUILD_MACOS_BUNDLE)
   set_property(TARGET xmoto PROPERTY MACOSX_BUNDLE TRUE)
 endif()
 
+if(WIN32)
+  # MXE exports MSYS=1 so we can't use that to
+  # differentiate between it and MSYS2
+  if(DEFINED ENV{MSYSTEM_PREFIX})
+    set(IS_MSYS2 TRUE)
+  else()
+    set(IS_MSYS2 FALSE)
+  endif()
+  message("IS_MSYS2: ${IS_MSYS2}")
+endif()
+
+if(WIN32 AND IS_MSYS2)
+  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -lmingw32")
+endif()
+
 target_include_directories(xmoto
   PRIVATE
 
@@ -405,10 +435,7 @@ target_include_directories(xmoto
   "${CURL_INCLUDE_DIR}"
   "${LIBXML2_INCLUDE_DIR}"
   "${Intl_INCLUDE_DIRS}"
-  "${SDL_INCLUDE_DIR}"
-  "${SDL_MIXER_INCLUDE_DIRS}"
-  "${SDL_NET_INCLUDE_DIRS}"
-  "${SDL_TTF_INCLUDE_DIRS}"
+  "${SDL2_INCLUDE_DIRS}"
   "$<${USE_SYSTEM_Lua}:${LUA_INCLUDE_DIR}>"
   "$<$<NOT:${USE_SYSTEM_Lua}>:${PROJECT_SOURCE_DIR}/vendor/lua/lua>"
 )
@@ -442,14 +469,16 @@ target_link_libraries(xmoto PUBLIC
   ${CMAKE_DL_LIBS}
   ${OPENGL_LIBRARIES}
   ${PNG_LIBRARY}
-  ${SDL_LIBRARY}
-  ${SDL_MIXER_LIBRARIES}
-  ${SDL_NET_LIBRARIES}
-  ${SDL_TTF_LIBRARIES}
+  $<$<AND:$<PLATFORM_ID:Windows>,$<BOOL:${IS_MSYS2}>>:SDL2main>
+  ${SDL2_LIBRARIES}
+  ${SDL2_MIXER_LIBRARY}
+  ${SDL2_NET_LIBRARY}
+  ${SDL2_TTF_LIBRARY}
   ${SQLITE3_LIBRARIES}
   $<${USE_SYSTEM_XDG}:${XDG_LIBRARY}>
   $<$<NOT:${USE_SYSTEM_XDG}>:xdgbasedir>
   ${ZLIB_LIBRARIES}
+  $<$<PLATFORM_ID:Darwin>:${COREFOUNDATION_LIBRARY}>
 )
 
 set_property(TARGET xmoto PROPERTY CXX_STANDARD 11)
@@ -560,15 +589,6 @@ function(win32_run_script _CMD _ARGS _IS_MSYS2)
 endfunction()
 
 if(WIN32)
-  # MXE exports MSYS=1 so we can't use that to
-  # differentiate between it and MSYS2
-  if(DEFINED ENV{MSYSTEM_PREFIX})
-    set(IS_MSYS2 TRUE)
-  else()
-    set(IS_MSYS2 FALSE)
-  endif()
-  message("IS_MSYS2: ${IS_MSYS2}")
-
   if(IS_MSYS2)
     # use msys prefix path as the target
     set_win32_compat_path(DLLCOPY_TARGET $ENV{MSYSTEM_PREFIX})
@@ -635,23 +655,23 @@ elseif(NOT BUILD_MACOS_BUNDLE)
   install(TARGETS xmoto RUNTIME DESTINATION bin)
 endif()
 
-message("BZip2     libraries: ${BZIP2_LIBRARIES}")
-message("Curl      libraries: ${CURL_LIBRARIES}")
-message("Intl      libraries: ${Intl_LIBRARIES}")
-message("Jpeg      libraries: ${JPEG_LIBRARIES}")
-message("LibXml2   libraries: ${LIBXML2_LIBRARIES}")
-message("LibLZMA   libraries: ${LIBLZMA_LIBRARIES}")
-message("Lua       libraries: ${LUA_LIBRARIES}")
-message("Ode       libraries: ${ODE_LIBRARY}")
-message("OpenGL    libraries: ${OPENGL_LIBRARIES}")
-message("Png       libraries: ${PNG_LIBRARY}")
-message("SDL       libraries: ${SDL_LIBRARY}")
-message("SDL_mixer libraries: ${SDL_MIXER_LIBRARIES}")
-message("SDL_net   libraries: ${SDL_NET_LIBRARIES}")
-message("SDL_ttf   libraries: ${SDL_TTF_LIBRARIES}")
-message("Sqlite3   libraries: ${SQLITE3_LIBRARIES}")
-message("Xdg       libraries: ${XDG_LIBRARY}")
-message("Zlib      libraries: ${ZLIB_LIBRARIES}")
+message("BZip2      libraries: ${BZIP2_LIBRARIES}")
+message("Curl       libraries: ${CURL_LIBRARIES}")
+message("Intl       libraries: ${Intl_LIBRARIES}")
+message("Jpeg       libraries: ${JPEG_LIBRARIES}")
+message("LibXml2    libraries: ${LIBXML2_LIBRARIES}")
+message("LibLZMA    libraries: ${LIBLZMA_LIBRARIES}")
+message("Lua        librarues: ${LUA_LIBRARIES}")
+message("Ode        libraries: ${ODE_LIBRARY}")
+message("OpenGL     libraries: ${OPENGL_LIBRARIES}")
+message("Png        libraries: ${PNG_LIBRARY}")
+message("SDL2       libraries: ${SDL2_LIBRARIES}")
+message("SDL2_mixer libraries: ${SDL2_MIXER_LIBRARY}")
+message("SDL2_net   libraries: ${SDL2_NET_LIBRARY}")
+message("SDL2_ttf   libraries: ${SDL2_TTF_LIBRARY}")
+message("Sqlite3    libraries: ${SQLITE3_LIBRARIES}")
+message("Xdg        libraries: ${XDG_LIBRARY}")
+message("Zlib       libraries: ${ZLIB_LIBRARIES}")
 message("")
 
 message("Installation path: ${CMAKE_INSTALL_PREFIX}")

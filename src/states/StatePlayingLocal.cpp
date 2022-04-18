@@ -22,6 +22,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "StateDeadJust.h"
 #include "StateDeadMenu.h"
 #include "StateFinished.h"
+#include "StateLevelInfoViewer.h"
 #include "StateMessageBox.h"
 #include "StatePause.h"
 #include "common/CameraAnimation.h"
@@ -214,8 +215,8 @@ bool StatePlayingLocal::update() {
 
 void StatePlayingLocal::xmKey(InputEventType i_type, const XMKey &i_xmkey) {
   if (i_type == INPUT_DOWN &&
-      i_xmkey ==
-        (*InputHandler::instance()->getGlobalKey(INPUT_PLAYINGPAUSE))) {
+      (i_xmkey == (*Input::instance()->getGlobalKey(INPUT_PLAYINGPAUSE)) ||
+       i_xmkey.getJoyButton() == SDL_CONTROLLER_BUTTON_START)) {
     if (isLockedScene() == false) {
       /* Escape pauses */
       m_displayStats = true;
@@ -224,7 +225,7 @@ void StatePlayingLocal::xmKey(InputEventType i_type, const XMKey &i_xmkey) {
     }
   }
 #if defined(ENABLE_DEV)
-  else if (i_type == INPUT_DOWN && i_xmkey == XMKey(SDLK_KP0, KMOD_LCTRL)) {
+  else if (i_type == INPUT_DOWN && i_xmkey == XMKey(SDLK_KP_0, KMOD_LCTRL)) {
     if (m_universe != NULL) {
       for (unsigned int j = 0; j < m_universe->getScenes().size(); j++) {
         for (unsigned int i = 0;
@@ -244,7 +245,7 @@ void StatePlayingLocal::xmKey(InputEventType i_type, const XMKey &i_xmkey) {
     }
   }
 
-  else if (i_type == INPUT_DOWN && i_xmkey == XMKey(SDLK_KP0, KMOD_NONE)) {
+  else if (i_type == INPUT_DOWN && i_xmkey == XMKey(SDLK_KP_0, KMOD_NONE)) {
     if (m_universe != NULL) {
       for (unsigned int j = 0; j < m_universe->getScenes().size(); j++) {
         Trainer::instance()->storePosition(
@@ -330,7 +331,7 @@ void StatePlayingLocal::xmKey(InputEventType i_type, const XMKey &i_xmkey) {
 #endif
 
   else if (i_type == INPUT_DOWN &&
-           i_xmkey == (*InputHandler::instance()->getGlobalKey(
+           i_xmkey == (*Input::instance()->getGlobalKey(
                         INPUT_RESTARTCHECKPOINT))) {
 
     bool v_isCheckpoint = false;
@@ -342,6 +343,15 @@ void StatePlayingLocal::xmKey(InputEventType i_type, const XMKey &i_xmkey) {
     }
     if (v_isCheckpoint) {
       StateScene::playToCheckpoint();
+    }
+  }
+
+  else if (i_type == INPUT_DOWN &&
+      i_xmkey == (*Input::instance()->getGlobalKey(INPUT_LEVELINFO))) {
+    if (!isLockedScene()) {
+      m_displayStats = true;
+      StateManager::instance()->pushState(new StateLevelInfoViewer(
+            m_universe->getScenes()[0]->getLevelSrc()->Id(), true, false));
     }
   }
 

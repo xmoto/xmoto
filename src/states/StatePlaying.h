@@ -22,7 +22,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #define __STATEPLAYING_H__
 
 #include "StateScene.h"
-#include "xmoto/Input.h"
+#include "xmoto/input/Input.h"
 
 class StatePlaying : public StateScene {
 public:
@@ -34,10 +34,11 @@ public:
   virtual void executeOneCommand(std::string cmd, std::string args);
   virtual bool renderOverShadow();
 
+  void dealWithActivedKeys(); // apply already pressed keys
+
 protected:
   void handleControllers(InputEventType Type, const XMKey &i_xmkey);
   void handleScriptKeys(InputEventType Type, const XMKey &i_xmkey);
-  void dealWithActivedKeys(); // apply already pressed keys
   void updateWithOptions();
 
   bool m_displayStats;

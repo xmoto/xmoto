@@ -94,7 +94,8 @@ void StateHelp::xmKey(InputEventType i_type, const XMKey &i_xmkey) {
 
   if (i_type == INPUT_DOWN &&
       (i_xmkey == XMKey(SDLK_ESCAPE, KMOD_NONE) ||
-       i_xmkey == (*InputHandler::instance()->getGlobalKey(INPUT_HELP)))) {
+       i_xmkey.getJoyButton() == SDL_CONTROLLER_BUTTON_B ||
+       i_xmkey == (*Input::instance()->getGlobalKey(INPUT_HELP)))) {
     m_requestForEnd = true;
   }
 }
@@ -132,117 +133,120 @@ void StateHelp::createGUI() {
       ?
 
       GAMETEXT_HELPTEXT_PLAYINGLEVEL(
-        InputHandler::instance()->getPlayerKey(INPUT_DRIVE, 0)->toFancyString(),
-        InputHandler::instance()->getPlayerKey(INPUT_BRAKE, 0)->toFancyString(),
-        InputHandler::instance()
+        Input::instance()->getPlayerKey(INPUT_DRIVE, 0)->toFancyString(),
+        Input::instance()->getPlayerKey(INPUT_BRAKE, 0)->toFancyString(),
+        Input::instance()
           ->getPlayerKey(INPUT_FLIPLEFT, 0)
           ->toFancyString(),
-        InputHandler::instance()
+        Input::instance()
           ->getPlayerKey(INPUT_FLIPRIGHT, 0)
           ->toFancyString(),
-        InputHandler::instance()
+        Input::instance()
           ->getPlayerKey(INPUT_CHANGEDIR, 0)
           ->toFancyString(),
-        InputHandler::instance()
+        Input::instance()
           ->getGlobalKey(INPUT_RESTARTLEVEL)
           ->toFancyString(),
-        InputHandler::instance()
+        Input::instance()
           ->getGlobalKey(INPUT_PREVIOUSLEVEL)
           ->toFancyString(),
-        InputHandler::instance()
+        Input::instance()
           ->getGlobalKey(INPUT_NEXTLEVEL)
           ->toFancyString(),
-        InputHandler::instance()
+        Input::instance()
           ->getGlobalKey(INPUT_SWITCHWWWACCESS)
           ->toFancyString(),
-        InputHandler::instance()
+        Input::instance()
           ->getGlobalKey(INPUT_SCREENSHOT)
           ->toFancyString(),
-        InputHandler::instance()
+        Input::instance()
+          ->getGlobalKey(INPUT_LEVELINFO)
+          ->toFancyString(),
+        Input::instance()
           ->getGlobalKey(INPUT_SWITCHFPS)
           ->toFancyString(),
-        InputHandler::instance()
+        Input::instance()
           ->getGlobalKey(INPUT_SWITCHUGLYMODE)
           ->toFancyString(),
-        InputHandler::instance()
+        Input::instance()
           ->getGlobalKey(INPUT_SWITCHPLAYER)
           ->toFancyString(),
-        InputHandler::instance()
+        Input::instance()
           ->getGlobalKey(INPUT_SWITCHFAVORITE)
           ->toFancyString(),
-        InputHandler::instance()->getGlobalKey(INPUT_HELP)->toFancyString(),
-        InputHandler::instance()
+        Input::instance()->getGlobalKey(INPUT_HELP)->toFancyString(),
+        Input::instance()
           ->getGlobalKey(INPUT_RELOADFILESTODB)
           ->toFancyString(),
-        InputHandler::instance()
+        Input::instance()
           ->getGlobalKey(INPUT_PLAYINGPAUSE)
           ->toFancyString(),
-        InputHandler::instance()
+        Input::instance()
           ->getGlobalKey(INPUT_SWITCHTRACKINGSHOTMODE)
           ->toFancyString(),
-        InputHandler::instance()
+        Input::instance()
           ->getGlobalKey(INPUT_SWITCHGFXQUALITYMODE)
           ->toFancyString(),
-        InputHandler::instance()
+        Input::instance()
           ->getGlobalKey(INPUT_SWITCHGFXMODE)
           ->toFancyString())
       : GAMETEXT_HELPTEXT(
-          InputHandler::instance()
+          Input::instance()
             ->getPlayerKey(INPUT_DRIVE, 0)
             ->toFancyString(),
-          InputHandler::instance()
+          Input::instance()
             ->getPlayerKey(INPUT_BRAKE, 0)
             ->toFancyString(),
-          InputHandler::instance()
+          Input::instance()
             ->getPlayerKey(INPUT_FLIPLEFT, 0)
             ->toFancyString(),
-          InputHandler::instance()
+          Input::instance()
             ->getPlayerKey(INPUT_FLIPRIGHT, 0)
             ->toFancyString(),
-          InputHandler::instance()
+          Input::instance()
             ->getPlayerKey(INPUT_CHANGEDIR, 0)
             ->toFancyString(),
-          InputHandler::instance()
+          Input::instance()
             ->getGlobalKey(INPUT_RESTARTLEVEL)
             ->toFancyString(),
-          InputHandler::instance()
+          Input::instance()
             ->getGlobalKey(INPUT_PREVIOUSLEVEL)
             ->toFancyString(),
-          InputHandler::instance()
+          Input::instance()
             ->getGlobalKey(INPUT_NEXTLEVEL)
             ->toFancyString(),
-          InputHandler::instance()
+          Input::instance()
             ->getGlobalKey(INPUT_SWITCHWWWACCESS)
             ->toFancyString(),
-          InputHandler::instance()
+          Input::instance()
             ->getGlobalKey(INPUT_SCREENSHOT)
             ->toFancyString(),
-          InputHandler::instance()
+          Input::instance()
             ->getGlobalKey(INPUT_SWITCHFPS)
             ->toFancyString(),
-          InputHandler::instance()
+          Input::instance()
             ->getGlobalKey(INPUT_SWITCHUGLYMODE)
             ->toFancyString(),
-          InputHandler::instance()
+          Input::instance()
             ->getGlobalKey(INPUT_SWITCHPLAYER)
             ->toFancyString(),
-          InputHandler::instance()
+          Input::instance()
             ->getGlobalKey(INPUT_SWITCHFAVORITE)
             ->toFancyString(),
-          InputHandler::instance()->getGlobalKey(INPUT_HELP)->toFancyString(),
-          InputHandler::instance()
+          Input::instance()->getGlobalKey(INPUT_HELP)->toFancyString(),
+          Input::instance()
             ->getGlobalKey(INPUT_RELOADFILESTODB)
             ->toFancyString(),
-          InputHandler::instance()
+          Input::instance()
             ->getGlobalKey(INPUT_PLAYINGPAUSE)
             ->toFancyString(),
-          InputHandler::instance()
+          Input::instance()
             ->getGlobalKey(INPUT_SWITCHTRACKINGSHOTMODE)
             ->toFancyString(),
-          InputHandler::instance()
+          Input::instance()
             ->getGlobalKey(INPUT_SWITCHGFXQUALITYMODE)
             ->toFancyString(),
-          InputHandler::instance()
+          Input::instance()
             ->getGlobalKey(INPUT_SWITCHGFXMODE)
             ->toFancyString()),
     v_frame->getPosition().nWidth - 20,

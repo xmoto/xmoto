@@ -50,9 +50,6 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include <algorithm>
 #include <sstream>
 
-#define ABS(x) ((x) > 0.0 ? (x) : -(x))
-#define SIGNE(x) ((x) >= 0.0 ? 1.0 : -1.0)
-
 #ifdef ENABLE_OPENGL
 #include "drawlib/DrawLibOpenGL.h"
 #endif
@@ -3922,7 +3919,7 @@ void GameRenderer::calculateCameraScaleAndScreenAABB(Camera *pCamera,
   float newXCamOffset2 = cos(alpha2 + a) * r;
 
   float newXCamOffset = newXCamOffset1, newYCamOffset = newYCamOffset2;
-  if (a < PI / 2 || (a > PI && a < 1.5 * PI)) {
+  if (a < M_PI / 2 || (a > M_PI && a < 1.5 * M_PI)) {
     newXCamOffset = -newXCamOffset2;
     newYCamOffset = -newYCamOffset1;
   }

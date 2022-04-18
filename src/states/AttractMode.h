@@ -37,7 +37,7 @@ public:
 
   bool inAttractMode();
 
-  void attractModeKeyDown(SDLKey nKey);
+  void attractModeKeyDown(SDL_Keycode nKey);
 
 protected:
   bool m_inAttractMode;

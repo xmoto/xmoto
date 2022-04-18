@@ -1042,7 +1042,8 @@ void XMFS::deleteFile(FileDataType i_fdt, const std::string &File) {
 bool XMFS::copyFile(FileDataType i_fdt,
                     const std::string &From,
                     const std::string &To,
-                    std::string &To_really_done) {
+                    std::string &To_really_done,
+                    bool mkdirs) {
   /* All file copying must happen inside the user directory... */
   if (getUserDir(i_fdt) == "") {
     LogWarning("No user directory, can't copy file '%s' to '%s'",
@@ -1053,6 +1054,10 @@ bool XMFS::copyFile(FileDataType i_fdt,
 
   std::string FullFrom = getUserDir(i_fdt) + std::string("/") + From;
   std::string FullTo = getUserDir(i_fdt) + std::string("/") + To;
+
+  if (mkdirs) {
+    mkArborescence(FullTo);
+  }
 
   /* Does the destination file already exist? */
   FILE *fp = fopen(FullTo.c_str(), "rb");
@@ -1686,7 +1691,8 @@ void XMFS::migrateFSToXdgBaseDirIfRequired(const std::string &AppDir) {
   }
 
   try {
-    migrateFSToXdgBaseDirFile(v_oldUserDir + "/xm.db", DATABASE_FILE);
+    migrateFSToXdgBaseDirFile(v_oldUserDir + "/xm.db",
+                              XMFS::getUserDir(FDT_DATA) + "/" + DATABASE_FILE);
     migrateFSToXdgBaseDirFile(v_oldUserDir + "/config.dat",
                               XMFS::getUserDir(FDT_CONFIG) + "/" +
                                 std::string(XM_CONFIGFILE));

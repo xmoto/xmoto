@@ -27,6 +27,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "xmscene/Entity.h"
 #include "xmscene/PhysicsSettings.h"
 #include "xmscene/Zone.h"
+#include <algorithm>
 
 /*
    Prior to version 0.1.11, the far largest time sink in the game was the
@@ -41,9 +42,6 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
       last sample position and the current. (no falling through the ground)
     * Static level geometry is stored in grid-structure for faster access.
 */
-
-#define CD_MIN(a, b) ((a) > (b) ? (b) : (a))
-#define CD_MAX(a, b) ((a) < (b) ? (b) : (a))
 
 #define CD_EPSILON 0.01f
 
@@ -167,10 +165,10 @@ void CollisionSystem::defineLine(float x1,
                                  float y2,
                                  float grip) {
   /* Define bounding box of line */
-  float fLineMinX = CD_MIN(x1, x2);
-  float fLineMinY = CD_MIN(y1, y2);
-  float fLineMaxX = CD_MAX(x1, x2);
-  float fLineMaxY = CD_MAX(y1, y2);
+  float fLineMinX = std::min(x1, x2);
+  float fLineMinY = std::min(y1, y2);
+  float fLineMaxX = std::max(x1, x2);
+  float fLineMaxY = std::max(y1, y2);
 
   /* Add line */
   Line *pNewLine = new Line;
@@ -421,10 +419,10 @@ int CollisionSystem::collideLine(float x1,
   int nNumC = 0;
 
   /* Calculate bounding box of line */
-  float fMinX = CD_MIN(x1, x2);
-  float fMinY = CD_MIN(y1, y2);
-  float fMaxX = CD_MAX(x1, x2);
-  float fMaxY = CD_MAX(y1, y2);
+  float fMinX = std::min(x1, x2);
+  float fMinY = std::min(y1, y2);
+  float fMaxX = std::max(x1, x2);
+  float fMaxY = std::max(y1, y2);
 
   /* Calculate cell coordinates */
   int nMinCX =

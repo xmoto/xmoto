@@ -168,8 +168,8 @@ unsigned int utf8::utf8_length(const std::string &i_a) {
 }
 
 std::string utf8::utf8_substring(const std::string &i_a,
-                                 unsigned int i_numChar,
-                                 unsigned int i_nbChars) {
+                                 size_t i_numChar,
+                                 size_t i_nbChars) {
   std::string v_res;
   unsigned int n_begin = 0;
   unsigned int n_end;
@@ -180,6 +180,10 @@ std::string utf8::utf8_substring(const std::string &i_a,
     } else {
       throw Exception("Invalid utf-8 char splitting");
     }
+  }
+
+  if (i_nbChars == std::string::npos) {
+    return i_a.substr(n_begin, i_nbChars);
   }
 
   n_end = n_begin;
@@ -193,6 +197,14 @@ std::string utf8::utf8_substring(const std::string &i_a,
 
   return i_a.substr(n_begin, n_end - n_begin);
 }
+
+std::string utf8::utf8_substring_abs(const std::string &str,
+                                     size_t start,
+                                     size_t end) {
+  return utf8::utf8_substring(str, start,
+      (end == std::string::npos) ? end : (end - start));
+}
+
 
 void utf8::utf8_split(const std::string &i_line,
                       const std::string &i_char,

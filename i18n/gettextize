@@ -16,5 +16,5 @@ sed -i "s/license as the PACKAGE package/license as the xmoto package/" i18n/po/
 
 # XXX: Disabled now that we use Transifex (the tool will handle this automatically).
 for PO in ./i18n/po/*.po; do
-  msgmerge --quiet --update --backup=none -s $PO ./i18n/po/xmoto.pot
+  msgmerge --quiet --update --no-fuzzy-matching --backup=none -s $PO ./i18n/po/xmoto.pot
 done

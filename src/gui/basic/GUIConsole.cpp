@@ -23,6 +23,10 @@
 #include "helpers/utf8.h"
 #include "include/xm_SDL.h"
 #include "xmoto/Game.h"
+#include "common/TextEdit.h"
+
+#include <algorithm>
+#include <tuple> // std::tie
 
 #define UIC_PROMPT "$ "
 #define UIC_CURSOR "_"
@@ -176,7 +180,30 @@ void UIConsole::addNewLine(const std::string &i_line) {
   m_lines.push_back(i_line);
 }
 
-bool UIConsole::keyDown(int nKey, SDLMod mod, const std::string &i_utf8Char) {
+bool UIConsole::textInput(int nKey, SDL_Keymod mod, const std::string &i_utf8Char) {
+  // add the key
+  if (utf8::utf8_length(i_utf8Char) ==
+      1) { // alt/... and special keys must not be kept
+    if (m_cursorChar == (int)utf8::utf8_length(m_lines[m_lines.size() - 1])) {
+      m_lines[m_lines.size() - 1] += i_utf8Char;
+    } else {
+      std::string s;
+      s = utf8::utf8_substring(m_lines[m_lines.size() - 1], 0, m_cursorChar);
+      s += i_utf8Char;
+      s += utf8::utf8_substring(m_lines[m_lines.size() - 1],
+                                m_cursorChar,
+                                utf8::utf8_length(m_lines[m_lines.size() - 1]) -
+                                  m_cursorChar);
+      m_lines[m_lines.size() - 1] = s;
+    }
+    m_cursorChar++;
+    m_lastEdit = m_lines[m_lines.size() - 1];
+  }
+
+  return true;
+}
+
+bool UIConsole::keyDown(int nKey, SDL_Keymod mod, const std::string &i_utf8Char) {
   if (nKey == SDLK_d && (mod & KMOD_LCTRL) == KMOD_LCTRL) {
     execInternal("exit");
     return true;
@@ -202,10 +229,30 @@ bool UIConsole::keyDown(int nKey, SDLMod mod, const std::string &i_utf8Char) {
   }
 
   if (nKey == SDLK_BACKSPACE) {
-    if (m_cursorChar > (int)utf8::utf8_length(UIC_PROMPT)) {
-      m_lines[m_lines.size() - 1] =
-        utf8::utf8_delete(m_lines[m_lines.size() - 1], m_cursorChar);
-      m_cursorChar--;
+    size_t bound = utf8::utf8_length(UIC_PROMPT);
+
+    if (mod & KMOD_CTRL) {
+      std::string &line = m_lines[m_lines.size() - 1];
+      std::tie(line, m_cursorChar) = TextEdit::deleteWordLeft(line, m_cursorChar, bound);
+    } else {
+      if (m_cursorChar > (int)bound) {
+        m_lines[m_lines.size() - 1] =
+          utf8::utf8_delete(m_lines[m_lines.size() - 1], m_cursorChar);
+        m_cursorChar--;
+      }
+    }
+    return true;
+  }
+
+  if (nKey == SDLK_DELETE) {
+    if (mod & KMOD_CTRL) {
+      std::string &line = m_lines[m_lines.size() - 1];
+      std::tie(line, m_cursorChar) = TextEdit::deleteWordRight(line, m_cursorChar);
+    } else {
+      if (m_cursorChar < (int)utf8::utf8_length(m_lines[m_lines.size() - 1])) {
+        m_lines[m_lines.size() - 1] =
+          utf8::utf8_delete(m_lines[m_lines.size() - 1], m_cursorChar + 1);
+      }
     }
     return true;
   }
@@ -232,23 +279,27 @@ bool UIConsole::keyDown(int nKey, SDLMod mod, const std::string &i_utf8Char) {
   }
 
   if (nKey == SDLK_LEFT) {
-    if (m_cursorChar > (int)utf8::utf8_length(UIC_PROMPT)) {
-      m_cursorChar--;
+    size_t bound = utf8::utf8_length(UIC_PROMPT);
+
+    if (mod & KMOD_CTRL) {
+      m_cursorChar -= TextEdit::jumpWordLeft(m_lines[m_lines.size() - 1], m_cursorChar, bound);
+    } else {
+      if (m_cursorChar > (int)bound) {
+        m_cursorChar--;
+      }
     }
     return true;
   }
 
   if (nKey == SDLK_RIGHT) {
-    if (m_cursorChar < (int)utf8::utf8_length(m_lines[m_lines.size() - 1])) {
-      m_cursorChar++;
-    }
-    return true;
-  }
+    size_t bound = utf8::utf8_length(m_lines[m_lines.size() - 1]);
 
-  if (nKey == SDLK_DELETE) {
-    if (m_cursorChar < (int)utf8::utf8_length(m_lines[m_lines.size() - 1])) {
-      m_lines[m_lines.size() - 1] =
-        utf8::utf8_delete(m_lines[m_lines.size() - 1], m_cursorChar + 1);
+    if (mod & KMOD_CTRL) {
+      m_cursorChar += TextEdit::jumpWordRight(m_lines[m_lines.size() - 1], m_cursorChar, bound);
+    } else {
+      if (m_cursorChar < (int)bound) {
+        m_cursorChar++;
+      }
     }
     return true;
   }
@@ -265,26 +316,6 @@ bool UIConsole::keyDown(int nKey, SDLMod mod, const std::string &i_utf8Char) {
   if (nKey == SDLK_HOME) {
     m_cursorChar = utf8::utf8_length(UIC_PROMPT);
   }
-
-  // add the key
-  if (utf8::utf8_length(i_utf8Char) ==
-      1) { // alt/... and special keys must not be kept
-    if (m_cursorChar == (int)utf8::utf8_length(m_lines[m_lines.size() - 1])) {
-      m_lines[m_lines.size() - 1] += i_utf8Char;
-    } else {
-      std::string s;
-      s = utf8::utf8_substring(m_lines[m_lines.size() - 1], 0, m_cursorChar);
-      s += i_utf8Char;
-      s += utf8::utf8_substring(m_lines[m_lines.size() - 1],
-                                m_cursorChar,
-                                utf8::utf8_length(m_lines[m_lines.size() - 1]) -
-                                  m_cursorChar);
-      m_lines[m_lines.size() - 1] = s;
-    }
-    m_cursorChar++;
-    m_lastEdit = m_lines[m_lines.size() - 1];
-  }
-
   return true;
 }
 

@@ -33,6 +33,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "StateUploadHighscore.h"
 #include "StateViewHighscore.h"
 #include "StateWaitServerInstructions.h"
+#include "common/VFileIO.h"
 #include "common/XMSession.h"
 #include "drawlib/DrawLib.h"
 #include "gui/specific/GUIXMoto.h"
@@ -112,6 +113,7 @@ StateMainMenu::StateMainMenu(bool drawStateBehind, bool updateStatesBehind)
   StateManager::instance()->registerAsObserver("CONFIGURE_WWW_ACCESS", this);
   StateManager::instance()->registerAsObserver("CLIENT_STATUS_CHANGED", this);
   StateManager::instance()->registerAsObserver("CLIENT_MODE_CHANGED", this);
+  StateManager::instance()->registerAsObserver("OPEN_OPTIONS", this);
 
   if (XMSession::instance()->debug() == true) {
     StateManager::instance()->registerAsEmitter("REPLAYS_UPDATED");
@@ -160,6 +162,7 @@ StateMainMenu::~StateMainMenu() {
   StateManager::instance()->unregisterAsObserver("CONFIGURE_WWW_ACCESS", this);
   StateManager::instance()->unregisterAsObserver("CLIENT_STATUS_CHANGED", this);
   StateManager::instance()->unregisterAsObserver("CLIENT_MODE_CHANGED", this);
+  StateManager::instance()->unregisterAsObserver("OPEN_OPTIONS", this);
 }
 
 void StateMainMenu::enter() {
@@ -754,13 +757,13 @@ void StateMainMenu::xmKey(InputEventType i_type, const XMKey &i_xmkey) {
   UILevelList *v_list;
 
   if (i_type == INPUT_DOWN &&
-      i_xmkey == (*InputHandler::instance()->getGlobalKey(INPUT_HELP))) {
+      i_xmkey == (*Input::instance()->getGlobalKey(INPUT_HELP))) {
     StateManager::instance()->pushState(new StateHelp());
   }
 
   else if (i_type == INPUT_DOWN &&
            i_xmkey ==
-             (*InputHandler::instance()->getGlobalKey(INPUT_SWITCHFAVORITE))) {
+             (*Input::instance()->getGlobalKey(INPUT_SWITCHFAVORITE))) {
     /* switch favorites */
     v_newLevelsList = (UILevelList *)m_GUI->getChild(
       "MAIN:FRAME_LEVELS:TABS:NEWLEVELS_TAB:NEWLEVELS_LIST");
@@ -784,21 +787,61 @@ void StateMainMenu::xmKey(InputEventType i_type, const XMKey &i_xmkey) {
     }
   }
 
-  else if (i_type == INPUT_DOWN && i_xmkey == XMKey(SDLK_ESCAPE, KMOD_NONE)) {
+  else if (i_type == INPUT_DOWN && (i_xmkey == XMKey(SDLK_ESCAPE, KMOD_NONE) ||
+                                    i_xmkey.getJoyButton() == SDL_CONTROLLER_BUTTON_B)) {
     UIWindow *v_windowLevels =
       reinterpret_cast<UIWindow *>(m_GUI->getChild("MAIN:FRAME_LEVELS"));
     UIWindow *v_windowReplays =
       reinterpret_cast<UIWindow *>(m_GUI->getChild("MAIN:FRAME_REPLAYS"));
+    UIFrame *v_stats =
+      reinterpret_cast<UIFrame *>(m_GUI->getChild("MAIN:STATS"));
 
     if (v_windowLevels->isHidden() == false) {
       v_windowLevels->showWindow(false);
     } else if (v_windowReplays->isHidden() == false) {
       v_windowReplays->showWindow(false);
     }
+    if (!v_stats->isMinimized()) {
+      v_stats->toggle();
+    }
+  }
+
+  /* the "Back" button is the one on the left side of the guide button */
+  else if (i_type == INPUT_DOWN && i_xmkey.getJoyButton() == SDL_CONTROLLER_BUTTON_BACK) {
+    UIFrame *v_stats = reinterpret_cast<UIFrame *>(m_GUI->getChild("MAIN:STATS"));
+    v_stats->toggle();
   }
 
   else {
     StateMenu::xmKey(i_type, i_xmkey);
+  }
+}
+
+void StateMainMenu::fileDrop(const std::string &path) {
+  std::string ext = XMFS::getFileExtension(path);
+  std::string levelId;
+
+  if (ext == "lvl") {
+    try {
+      levelId = LevelsManager::instance()->addExternalLevel(
+          path, xmDatabase::instance("main"), false);
+      if (levelId.empty())
+        levelId = LevelsManager::instance()->LevelByFileName(
+            path, xmDatabase::instance("main"));
+    } catch (Exception &e) {
+      levelId = path;
+    }
+
+    GameApp::instance()->playLevel(levelId);
+  } else if (ext == "rpl") {
+    GameApp::instance()->playReplay(path);
+  } else if (ext == "dmo") {
+    try {
+      std::string demoReplay = GameApp::instance()->loadDemoReplay(path);
+      GameApp::instance()->playReplay(demoReplay);
+    } catch (Exception &e) {
+      LogError("Unable to load the demo file");
+    }
   }
 }
 
@@ -1985,6 +2028,15 @@ void StateMainMenu::executeOneCommand(std::string cmd, std::string args) {
 
   else if (cmd == "CLIENT_MODE_CHANGED") {
     updateClientStrings();
+  }
+
+  else if (cmd == "OPEN_OPTIONS") {
+    StateOptions *stateOptions = new StateOptions("MAIN:OPTIONS:GENERAL_TAB:TABS:CONTROLS_TAB");
+    StateManager::instance()->pushState(stateOptions);
+
+    UITabView *v_tabView = reinterpret_cast<UITabView *>(
+          stateOptions->getGUI()->getChild("MAIN:TABS:GENERAL_TAB:TABS"));
+    v_tabView->selectChildrenById("CONTROLS_TAB");
   }
 
   else {

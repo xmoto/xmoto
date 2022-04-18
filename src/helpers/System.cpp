@@ -24,62 +24,69 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "common/VCommon.h"
 #include "include/xm_SDL.h"
 #include <sstream>
+#include <utility>
+#include <algorithm>
 
-#if defined(WIN32) || defined(__APPLE__)
-#else
+#if !(defined(WIN32) || defined(__APPLE__))
 #include <sys/types.h>
 #include <unistd.h>
 #endif
 
+struct DisplayMode { int w; int h; };
+
 std::vector<std::string> *System::getDisplayModes(int windowed) {
-  std::vector<std::string> *modes = new std::vector<std::string>;
-  SDL_Rect **sdl_modes;
-  int i, nFlags;
+  auto dispModes = std::vector<DisplayMode>({
+    /* Always include these in the modes */
+    { 800, 600 }, { 1024, 768 }, { 1280, 1024 }, { 1600, 1200 }
+  });
 
   /* Always use the fullscreen flags to be sure to
      always get a result (no any modes available like in windowed) */
-  nFlags = SDL_OPENGL | SDL_FULLSCREEN;
+  //nFlags = SDL_WINDOW_OPENGL | SDL_WINDOW_FULLSCREEN;
 
-  /* Get available fullscreen/hardware modes */
-  sdl_modes = SDL_ListModes(NULL, nFlags);
+  const int displayIndex = 0;
+  int displayModeCount = 0;
+  if ((displayModeCount = SDL_GetNumDisplayModes(displayIndex)) < 1) {
+    throw Exception("getDisplayModes: No display modes found.");
+  }
+  //std::vector<SDL_DisplayMode> modes(displayModeCount);
 
-  /* Check is there are any modes available */
-  if (sdl_modes == (SDL_Rect **)0) {
-    LogWarning("No display modes available.");
-    delete modes;
-    throw Exception("getDisplayModes : No modes available.");
+  for (int modeIndex = 0; modeIndex < displayModeCount; ++modeIndex) {
+    SDL_DisplayMode mode;
+    if (SDL_GetDisplayMode(displayIndex, modeIndex, &mode) != 0) {
+      throw Exception("getDisplayModes: SDL_GetDisplayMode failed: "
+          + std::string(SDL_GetError()));
+    }
+    dispModes.push_back({ mode.w, mode.h });
   }
 
-  /* Always include these to modes */
-  modes->push_back("800 X 600");
-  modes->push_back("1024 X 768");
-  modes->push_back("1280 X 1024");
-  modes->push_back("1600 X 1200");
+  /* Create a string-list of the display modes */
+  std::sort(dispModes.begin(), dispModes.end(),
+      [](const DisplayMode &a, const DisplayMode &b) {
+        return (a.w * a.h) < (b.w * b.h);
+      });
 
-  for (i = 0; sdl_modes[i]; i++) {
+  // de-duplicate
+  dispModes.erase(std::unique(dispModes.begin(), dispModes.end(),
+        [](const DisplayMode &a, const DisplayMode& b) {
+          return a.w == b.w && a.h == b.h;
+        }), dispModes.end());
+
+  std::vector<std::string> *strModes = new std::vector<std::string>;
+  for (auto &mode : dispModes) {
     char tmp[128];
 
     /* Menus don't fit under 800x600 */
-    if (sdl_modes[i]->w < 800 || sdl_modes[i]->h < 600)
+    if (mode.w < 800 || mode.h < 600)
       continue;
 
-    snprintf(tmp, 126, "%d X %d", sdl_modes[i]->w, sdl_modes[i]->h);
+    snprintf(tmp, 126, "%d X %d", mode.w, mode.h);
     tmp[127] = '\0';
 
-    /* Only single */
-    bool findDouble = false;
-    for (unsigned int j = 0; j < modes->size(); j++)
-      if (!strcmp(tmp, (*modes)[j].c_str())) {
-        findDouble = true;
-        break;
-      }
-
-    if (!findDouble) {
-      modes->push_back(tmp);
-    }
+    strModes->push_back(tmp);
   }
 
-  return modes;
+  return strModes;
 }
 
 std::string System::getMemoryInfo() {

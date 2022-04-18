@@ -383,7 +383,8 @@ void StateFinished::executeOneCommand(std::string cmd, std::string args) {
 }
 
 void StateFinished::xmKey(InputEventType i_type, const XMKey &i_xmkey) {
-  if (i_type == INPUT_DOWN && i_xmkey == XMKey(SDLK_ESCAPE, KMOD_NONE)) {
+  if (i_type == INPUT_DOWN && (i_xmkey == XMKey(SDLK_ESCAPE, KMOD_NONE) ||
+                               i_xmkey.getJoyButton() == SDL_CONTROLLER_BUTTON_B)) {
     /* quit this state */
     m_requestForEnd = true;
     StateManager::instance()->sendAsynchronousMessage("FINISH", m_parentId);
@@ -391,7 +392,7 @@ void StateFinished::xmKey(InputEventType i_type, const XMKey &i_xmkey) {
 
   else if (i_type == INPUT_DOWN &&
            i_xmkey ==
-             (*InputHandler::instance()->getGlobalKey(INPUT_SWITCHFAVORITE))) {
+             (*Input::instance()->getGlobalKey(INPUT_SWITCHFAVORITE))) {
     if (m_universe != NULL) {
       if (m_universe->getScenes().size() > 0) { // just add the first world
         GameApp::instance()->switchLevelToFavorite(
@@ -403,7 +404,7 @@ void StateFinished::xmKey(InputEventType i_type, const XMKey &i_xmkey) {
 
   else if (i_type == INPUT_DOWN &&
            i_xmkey ==
-             (*InputHandler::instance()->getGlobalKey(INPUT_SWITCHBLACKLIST))) {
+             (*Input::instance()->getGlobalKey(INPUT_SWITCHBLACKLIST))) {
     if (m_universe != NULL) {
       if (m_universe->getScenes().size() >
           0) { // just blacklist the first world

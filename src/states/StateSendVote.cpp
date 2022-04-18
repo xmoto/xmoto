@@ -21,7 +21,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "StateSendVote.h"
 #include "common/XMSession.h"
 #include "thread/SendVoteThread.h"
-#include "xmoto/Input.h"
+#include "xmoto/input/Input.h"
 
 StateSendVote::StateSendVote(const std::string &i_idlevel,
                              const std::string &i_difficulty_value,
@@ -35,8 +35,7 @@ StateSendVote::StateSendVote(const std::string &i_idlevel,
     i_quality_value,
     XMSession::instance()->adminMode(),
     XMSession::instance()->adminMode() ? XMSession::instance()->profile() : "",
-    XMSession::instance()->adminMode() ? XMSession::instance()->wwwPassword()
-                                       : "");
+    XMSession::instance()->adminMode() ? XMSession::instance()->wwwPassword() : "");
   m_name = "StateSendVote";
 
   m_messageOnSuccess = true;
@@ -55,7 +54,7 @@ void StateSendVote::callAfterThreadFinished(int threadResult) {
 
 void StateSendVote::xmKey(InputEventType i_type, const XMKey &i_xmkey) {
   if (i_type == INPUT_DOWN &&
-      i_xmkey == (*InputHandler::instance()->getGlobalKey(INPUT_KILLPROCESS))) {
+      i_xmkey == (*Input::instance()->getGlobalKey(INPUT_KILLPROCESS))) {
     if (m_threadStarted == true) {
       m_pThread->safeKill();
     }

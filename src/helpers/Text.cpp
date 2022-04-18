@@ -20,6 +20,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
 #include "Text.h"
 #include <cstdio>
+#include <sstream>
 
 std::string txtToLower(const std::string &i_str) {
   std::string v_res;
@@ -106,4 +107,28 @@ std::string &replaceAll(std::string &context,
     lookHere = foundHere + to.size();
   }
   return context;
+}
+
+std::vector<std::string> splitStr(const std::string &str, char delim) {
+  std::vector<std::string> elems;
+  std::stringstream stream(str);
+
+  if (str.length() < 1)
+    return {};
+
+  if (str.find(delim) == std::string::npos) {
+    elems.push_back(str);
+    return elems;
+  }
+
+  std::string next;
+  while (std::getline(stream, next, delim)) {
+    elems.push_back(next);
+  }
+  // To make counting work, we need an additional empty
+  // element at the end if the last char is the delimiter
+  if (str[str.length() - 1] == delim)
+    elems.push_back("");
+
+  return elems;
 }

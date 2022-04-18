@@ -23,7 +23,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
 #include "StateMessageBoxReceiver.h"
 #include "helpers/RenderSurface.h"
-#include "xmoto/XMKey.h"
+#include "xmoto/input/XMKey.h"
 #include <queue>
 #include <string>
 #include <utility>
@@ -38,9 +38,10 @@ public:
 
   virtual void enter();
   virtual void leave() {}
-  virtual void leaveType() {
-  } // you can give a type to states ; if a state is leaved but not replaced by
+  // you can give a type to states; if a state is left but not replaced by
   // a state of the same type, this method is called
+  virtual void leaveType() {}
+
   /* called when a new state is pushed or poped on top of the
      current one */
   virtual void enterAfterPop();
@@ -55,6 +56,8 @@ public:
 
   /* input */
   virtual void xmKey(InputEventType i_type, const XMKey &i_xmkey);
+
+  virtual void fileDrop(const std::string &path) {};
 
   bool isHide() { return m_isHide; }
   void setHide(bool isHide) { m_isHide = isHide; }

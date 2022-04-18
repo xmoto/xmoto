@@ -23,6 +23,7 @@
  */
 #include "DrawLibOpenGL.h"
 #include "common/Image.h"
+#include "common/XMBuild.h"
 #include "common/VFileIO.h"
 #include "common/VFileIO_types.h"
 #include "common/VTexture.h"
@@ -205,6 +206,8 @@ DrawLibOpenGL::DrawLibOpenGL()
     XMFS::FullPath(FDT_DATA, FontManager::getDrawFontFile()), 60);
   m_fontMonospace = getFontManager(
     XMFS::FullPath(FDT_DATA, FontManager::getMonospaceFontFile()), 12, 7);
+
+  m_glContext = NULL;
 };
 
 /*===========================================================================
@@ -266,27 +269,43 @@ void DrawLibOpenGL::setLineWidth(float width) {
   glLineWidth(width);
 }
 
+#include <cassert>
 void DrawLibOpenGL::init(unsigned int nDispWidth,
                          unsigned int nDispHeight,
-                         unsigned int nDispBPP,
                          bool bWindowed) {
-  DrawLib::init(nDispWidth, nDispHeight, nDispBPP, bWindowed);
+  DrawLib::init(nDispWidth, nDispHeight, bWindowed);
 
   /* Set suggestions */
   m_nDispWidth = nDispWidth;
   m_nDispHeight = nDispHeight;
-  m_nDispBPP = nDispBPP;
   m_bWindowed = bWindowed;
 
   /* Get some video info */
-  const SDL_VideoInfo *pVidInfo = SDL_GetVideoInfo();
+  const SDL_RendererInfo *pVidInfo = NULL;
+  /* Need to create the `renderer` object first!
+  SDL_Renderer* renderer;
+  // Could use SDL_GetRenderDriverInfo *in addition* to this
+  SDL_GetRendererInfo(renderer, pVidInfo);
+
   if (pVidInfo == NULL)
     throw Exception("(1) SDL_GetVideoInfo : " + std::string(SDL_GetError()));
+  */
 
-  /* Determine target bit depth */
-  if (m_bWindowed == true)
-    /* In windowed mode we can't tinker with the bit-depth */
-    m_nDispBPP = pVidInfo->vfmt->BitsPerPixel;
+  const int displayIndex = 0;
+  int displayModeCount = 0;
+  if ((displayModeCount = SDL_GetNumDisplayModes(displayIndex)) < 1) {
+    throw Exception("DrawLib: No display modes found.");
+  }
+  std::vector<SDL_DisplayMode> modes(displayModeCount);
+
+  for (int modeIndex = 0; modeIndex < displayModeCount; ++modeIndex) {
+    SDL_DisplayMode mode;
+    if (SDL_GetDisplayMode(displayIndex, modeIndex, &mode) != 0) {
+      throw Exception("getDisplayModes: SDL_GetDisplayMode failed: "
+          + std::string(SDL_GetError()));
+    }
+    modes[modeIndex] = mode;
+  }
 
   /* Setup GL stuff */
   /* 2005-10-05 ... note that we no longer ask for explicit settings... it's
@@ -294,49 +313,60 @@ void DrawLibOpenGL::init(unsigned int nDispWidth,
   SDL_GL_SetAttribute(SDL_GL_DOUBLEBUFFER, 1);
 
   /* Create video flags */
-  int nFlags = SDL_OPENGL;
+  int nFlags = SDL_WINDOW_SHOWN | SDL_WINDOW_OPENGL;
   if (m_bWindowed == false)
-    nFlags |= SDL_FULLSCREEN;
+    nFlags |= SDL_WINDOW_FULLSCREEN;
 
   /* At last, try to "set the video mode" */
-  if ((m_screen = SDL_SetVideoMode(
-         m_nDispWidth, m_nDispHeight, m_nDispBPP, nFlags)) == NULL) {
+  std::string title = std::string("X-Moto ") + XMBuild::getVersionString(true);
+  if ((m_window = SDL_CreateWindow(title.c_str(),
+          SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED,
+          m_nDispWidth, m_nDispHeight, nFlags)) == NULL) {
     LogWarning(
-      "Tried to set video mode %ix%i @ %i-bit, but SDL failed (%s)\n"
-      "                Now SDL will try determining a proper mode itself.",
+      "Tried with a resolution of %ix%i, but SDL failed (%s)",
       m_nDispWidth,
       m_nDispHeight,
-      m_nDispBPP,
       SDL_GetError());
-    m_nDispBPP = 0;
 
-    /* Hmm, try letting it decide the BPP automatically */
-    if ((m_screen = SDL_SetVideoMode(m_nDispWidth, m_nDispHeight, 0, nFlags)) ==
-        NULL) {
-      /* Still no luck */
-      LogWarning("Still no luck, now we'll try 800x600 in a window.");
-      m_nDispWidth = 800;
-      m_nDispHeight = 600;
-      m_nDispBPP = 0;
-      m_bWindowed = true;
-      m_screen = SDL_SetVideoMode(m_nDispWidth, m_nDispHeight, 0, SDL_OPENGL);
-      if (m_screen == NULL) {
-        throw Exception("SDL_SetVideoMode : " + std::string(SDL_GetError()));
-      }
+    m_nDispWidth = 800;
+    m_nDispHeight = 600;
+    m_bWindowed = true;
+    LogWarning("Trying %ix%i in windowed mode", m_nDispWidth, m_nDispHeight);
+
+    if ((m_window = SDL_CreateWindow(title.c_str(),
+            SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED,
+            800, 600, SDL_WINDOW_SHOWN | SDL_WINDOW_OPENGL)) == NULL) {
+      throw Exception("SDL_CreateWindow: " + std::string(SDL_GetError()));
     }
   }
 
-  /* Retrieve actual configuration */
-  pVidInfo = SDL_GetVideoInfo();
-  if (pVidInfo == NULL)
-    throw Exception("(2) SDL_GetVideoInfo : " + std::string(SDL_GetError()));
+  SDL_SetWindowTitle(m_window, title.c_str());
 
-  m_nDispBPP = pVidInfo->vfmt->BitsPerPixel;
+#if !defined(WIN32) && !defined(__APPLE__) && !defined(__amigaos4__)
+  /* This probably doesn't work */
+  SDL_Surface *v_icon = SDL_LoadBMP(
+    (XMFS::getSystemDataDir() + std::string("/xmoto_icone_x.ico")).c_str());
+  if (v_icon != NULL) {
+    SDL_SetSurfaceBlendMode(v_icon, SDL_BLENDMODE_BLEND);
+    SDL_SetColorKey(
+      v_icon, SDL_TRUE, SDL_MapRGB(v_icon->format, 236, 45, 211));
+    SDL_SetWindowIcon(m_window, v_icon);
+    SDL_FreeSurface(v_icon);
+  }
+#endif
 
-  if (!gladLoadGL()) {
-    const char* err = "Failed to load OpenGL functions!";
-    LogError("%s", err);
-    throw Exception(err);
+  SDL_EventState(SDL_DROPFILE, SDL_ENABLE);
+
+  /* Create an OpenGL context */
+  SDL_GLContext m_glContext = SDL_GL_CreateContext(m_window);
+
+  if (!gladLoadGLLoader((GLADloadproc)SDL_GL_GetProcAddress)) {
+    /* Try without SDL's loader */
+    if (!gladLoadGL()) {
+      const char* err = "Failed to load OpenGL functions!";
+      LogError("%s", err);
+      throw Exception(err);
+    }
   }
 
   /* OpenGL fully initialized */
@@ -408,10 +438,15 @@ void DrawLibOpenGL::init(unsigned int nDispWidth,
   /* Set background color to black */
   glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
   glClear(GL_COLOR_BUFFER_BIT);
-  SDL_GL_SwapBuffers();
+  SDL_GL_SwapWindow(m_window);
 }
 
-void DrawLibOpenGL::unInit() {}
+void DrawLibOpenGL::unInit() {
+  if (m_glContext) {
+    SDL_GL_DeleteContext(m_glContext);
+    m_glContext = NULL;
+  }
+}
 
 /*===========================================================================
   Check for OpenGL extension
@@ -575,7 +610,7 @@ void DrawLibOpenGL::clearGraphics() {
  **/
 void DrawLibOpenGL::flushGraphics() {
   /* Swap buffers */
-  SDL_GL_SwapBuffers();
+  SDL_GL_SwapWindow(m_window);
 }
 
 // little helper to avoid code duplication
@@ -755,7 +790,10 @@ GLFontGlyphLetter::GLFontGlyphLetter(const std::string &i_value,
       throw Exception("GLFontGlyphLetter: " + std::string(TTF_GetError()));
     }
   }
-  SDL_SetAlpha(v_surf, 0, 0);
+  SDL_SetSurfaceAlphaMod(v_surf, 255);
+
+  // This gets rid of aliasing, don't know why
+  SDL_SetSurfaceBlendMode(v_surf, SDL_BLENDMODE_NONE);
 
   int v_realWidth, v_realHeight;
   TTF_SizeUTF8(i_ttf, i_value.c_str(), &v_realWidth, &v_realHeight);
@@ -997,7 +1035,6 @@ FontGlyph *GLFontManager::getGlyph(const std::string &i_string) {
       }
     }
   }
-  /* */
 
   v_glyph = new GLFontGlyph(i_string, m_glyphsLetters);
   m_glyphsKeys.push_back(i_string);
@@ -1054,6 +1091,8 @@ void GLFontManager::printStringGradOne(DrawLib *pDrawLib,
   unsigned int v_current_linesize;
   unsigned int v_size;
 
+  bool prevNewline = false; // indicates whether the previous char was a newline
+
   int oldTextureId = -1;
   int newTextureId;
 
@@ -1103,7 +1142,7 @@ void GLFontManager::printStringGradOne(DrawLib *pDrawLib,
       i_x +
       (v_longuest_linesize - v_current_linesize) / 2 * (i_perCentered + 1.0);
 
-    /* la taille de la 1ere ligne */
+    /* vertical position of the first line */
     v_y = -i_y + pDrawLib->getRenderSurface()->size().y -
           v_glyph->firstLineDrawHeight();
     v_lineHeight = 0;
@@ -1118,8 +1157,16 @@ void GLFontManager::printStringGradOne(DrawLib *pDrawLib,
               (v_longuest_linesize - v_current_linesize) / 2 *
                 (i_perCentered + 1.0);
         v_y -= v_lineHeight + UTF8_INTERLINE_SPACE;
+        /* check if the previous character was a newline too */
+        if (prevNewline) {
+          v_glyphLetter = m_glyphsLetters[" "];
+          v_lineHeight = v_glyphLetter->realHeight();
+          v_y -= v_lineHeight;
+        }
+        prevNewline = true;
         v_lineHeight = 0;
       } else {
+        prevNewline = false;
         v_glyphLetter = m_glyphsLetters[v_char];
         if (v_glyphLetter != NULL) {
           if (v_glyphLetter->realHeight() > v_lineHeight)

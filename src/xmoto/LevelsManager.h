@@ -96,7 +96,7 @@ public:
                  bool i_bDebugMode,
                  bool i_bAdminMode,
                  xmDatabase *i_db);
-  void addExternalLevel(std::string i_levelFile,
+  std::string addExternalLevel(std::string i_levelFile,
                         xmDatabase *i_db,
                         bool i_loadMainLayerOnly);
   void reloadLevelsFromLvl(

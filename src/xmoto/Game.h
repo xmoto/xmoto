@@ -21,7 +21,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #ifndef __GAME_H__
 #define __GAME_H__
 
-#include "Input.h"
+#include "input/Input.h"
 #include "LevelsManager.h"
 #include "common/VCommon.h"
 #include "common/WWW.h"
@@ -138,6 +138,10 @@ public:
                          std::string *io_url,
                          bool *o_isAccessible);
 
+  void playLevel(const std::string &levelId);
+  void playReplay(const std::string &replayId);
+  std::string loadDemoReplay(const std::string &demoFile);
+
   void addLevelToFavorite(const std::string &i_levelId);
 
   // list played
@@ -173,6 +177,10 @@ public:
   NetServer *standAloneServer();
 
   static void wait(int &io_lastFrameTimeStamp, int &io_frameLate, int i_maxFps);
+
+  bool hasMouseFocus() const { return m_hasMouseFocus; }
+  bool hasKeyboardFocus() const { return m_hasKeyboardFocus; }
+  bool isIconified() const { return m_isIconified; }
 
 protected:
   void createDefaultConfig();
@@ -288,9 +296,6 @@ private:
   bool m_hasMouseFocus;
   bool m_hasKeyboardFocus;
   bool m_isIconified;
-
-  // Window icon
-  SDL_Surface *m_icon;
 
   // demo
   XMDemo *m_xmdemo;
