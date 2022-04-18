@@ -4,7 +4,6 @@ option(USE_SDLGFX "Build with SDL2 for graphics" OFF)
 option(USE_GETTEXT "Build with Gettext for internationalization" ON)
 option(PREFER_SYSTEM_BZip2 "Prefer system BZip2" ON)
 option(PREFER_SYSTEM_Lua "Prefer system Lua" ON)
-option(PREFER_SYSTEM_ODE "Prefer system ODE" ON)
 option(PREFER_SYSTEM_XDG "Prefer system XDG" ON)
 option(ALLOW_DEV "Enable some development/debug features" OFF)
 option(BUILD_MACOS_BUNDLE "Build xmoto as a macOS Bundle" OFF)
@@ -33,8 +32,6 @@ find_package(JPEG REQUIRED)
 find_package(LibLZMA)
 find_package(LibXml2 REQUIRED)
 
-find_package(ODE)
-set(USE_SYSTEM_ODE $<AND:$<BOOL:${PREFER_SYSTEM_ODE}>,$<BOOL:${ODE_FOUND}>>)
 if(USE_OPENGL)
   find_package(OpenGL REQUIRED)
 endif()
@@ -463,8 +460,7 @@ target_link_libraries(xmoto PUBLIC
   "$<${USE_SYSTEM_Lua}:${LUA_LIBRARIES}>"
   $<$<NOT:${USE_SYSTEM_Lua}>:lua>
   md5sum
-  $<${USE_SYSTEM_ODE}:${ODE_LIBRARY}>
-  $<$<NOT:${USE_SYSTEM_ODE}>:ode>
+  ode
   glad
   ${CMAKE_DL_LIBS}
   ${OPENGL_LIBRARIES}
@@ -662,7 +658,6 @@ message("Jpeg       libraries: ${JPEG_LIBRARIES}")
 message("LibXml2    libraries: ${LIBXML2_LIBRARIES}")
 message("LibLZMA    libraries: ${LIBLZMA_LIBRARIES}")
 message("Lua        librarues: ${LUA_LIBRARIES}")
-message("Ode        libraries: ${ODE_LIBRARY}")
 message("OpenGL     libraries: ${OPENGL_LIBRARIES}")
 message("Png        libraries: ${PNG_LIBRARY}")
 message("SDL2       libraries: ${SDL2_LIBRARIES}")
