@@ -1,8 +1,5 @@
-#!/bin/sh
+#!/bin/bash -xe
 
-set -ex
-
-export HOMEBREW_NO_AUTO_UPDATE=1
 export HOMEBREW_NO_ANALYTICS=1
 
 # packages to be checked for before installing them

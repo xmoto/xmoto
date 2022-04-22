@@ -1,0 +1,50 @@
+name: CI
+
+on:
+  push:
+    branches:
+      - '*'
+  pull_request:
+    branches:
+      - master
+
+jobs:
+  build:
+    runs-on: ubuntu-18.04
+
+    env:
+      CCACHE_MAXSIZE: 400M
+      CCACHE_DIR: ${{ github.workspace }}/.ccache
+      CCACHE_COMPRESS: 1
+
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Install dependencies
+        run: ./.github/workflows/deps/linux.sh
+
+      - name: Retrieve cache
+        uses: actions/cache@v3
+        with:
+          path: ${{ env.CCACHE_DIR }}
+          key: ${{ runner.os }}-ccache-${{ github.sha }}
+          restore-keys: ${{ runner.os }}-ccache-
+
+      - name: Configure build
+        run: |
+          mkdir build
+          cd build
+
+          cmake \
+            -DCMAKE_C_COMPILER_LAUNCHER=ccache \
+            -DCMAKE_CXX_COMPILER_LAUNCHER=ccache \
+            -DCMAKE_BUILD_TYPE=Debug \
+            -G Ninja \
+            ..
+
+      - name: Build
+        run: |
+          cd build
+          cmake --build .
+
+          ccache -s
