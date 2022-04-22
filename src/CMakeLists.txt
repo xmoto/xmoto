@@ -429,10 +429,16 @@ target_include_directories(xmoto
   PRIVATE
 
   "${PROJECT_SOURCE_DIR}/src"
+
   "${CURL_INCLUDE_DIR}"
   "${LIBXML2_INCLUDE_DIR}"
   "${Intl_INCLUDE_DIRS}"
+
   "${SDL2_INCLUDE_DIRS}"
+  "${SDL2_MIXER_INCLUDE_DIR}"
+  "${SDL2_NET_INCLUDE_DIR}"
+  "${SDL2_TTF_INCLUDE_DIR}"
+
   "$<${USE_SYSTEM_Lua}:${LUA_INCLUDE_DIR}>"
   "$<$<NOT:${USE_SYSTEM_Lua}>:${PROJECT_SOURCE_DIR}/vendor/lua/lua>"
 )

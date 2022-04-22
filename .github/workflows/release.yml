@@ -1,0 +1,217 @@
+name: Release
+
+on:
+  push:
+    tags:
+      - "*"
+
+jobs:
+  linux:
+    runs-on: ubuntu-18.04
+
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Install dependencies
+        run: ./.github/workflows/deps/linux.sh
+
+      - name: Configure build
+        run: |
+          mkdir build
+          cd build
+
+          cmake \
+            -DCMAKE_INSTALL_PREFIX=/usr \
+            -DCMAKE_BUILD_TYPE=Release \
+            -G Ninja \
+            ..
+
+      - name: Build
+        run: |
+          cd build
+          cmake --build .
+
+      - name: Package
+        run: |
+          cd build
+
+          # version numbers are wrong
+
+          wget https://github.com/linuxdeploy/linuxdeploy/releases/download/continuous/linuxdeploy-x86_64.AppImage
+          wget https://github.com/AppImage/AppImageKit/releases/download/continuous/appimagetool-x86_64.AppImage
+          chmod +x linuxdeploy-x86_64.AppImage \
+                   appimagetool-x86_64.AppImage
+
+          DESTDIR=AppDir cmake --install .
+
+          # run cpack so we can get the version information
+          cpack -G External
+          version="$(jq -r '.packageVersion' xmoto-*.json)"
+
+          release_dir="${{ github.workspace }}/release/linux"
+          mkdir -p "$release_dir"
+
+          ./linuxdeploy-x86_64.AppImage \
+            --appdir="AppDir" \
+            --desktop-file="AppDir/usr/share/applications/xmoto.desktop" \
+            --icon-file="AppDir/usr/share/pixmaps/xmoto.xpm"
+
+          ./appimagetool-x86_64.AppImage \
+            AppDir \
+            "$release_dir/xmoto-${version}-linux.AppImage"
+
+      - uses: softprops/action-gh-release@v1
+        with:
+          files:
+            ${{ github.workspace }}/release/**/*
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+
+  win32:
+    runs-on: ubuntu-18.04
+
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Set env variables
+        run: ./.github/workflows/env-mxe.sh
+
+      - name: Install dependencies
+        run: ./.github/workflows/deps/win32-mxe.sh
+
+      - name: Configure build
+        run: |
+          env
+
+          echo "PATH:"
+          echo "$PATH"
+          echo "/usr/lib/mxe/usr/bin:"
+          ls "/usr/lib/mxe/usr/bin"
+
+          mkdir build
+          cd build
+
+          "$CMAKE_BINARY" \
+            -DCMAKE_INSTALL_PREFIX=/usr \
+            -DCMAKE_BUILD_TYPE=Release \
+            -DXMOTO_PACK=manual \
+            ..
+
+      - name: Build
+        run: |
+          cd build
+          make -j"$(nproc)"
+
+          is_broken_symlink() {
+            [ -L "$1" ] && [ ! -e "$1" ]
+          }
+
+          relink() {
+            for prog in "$@"; do
+              if is_broken_symlink "$MXE_HOST_BIN-$prog"; then
+                rm "$MXE_HOST_BIN-$prog"
+                ln -s "$MXE_CROSS_BIN-$prog" "$MXE_HOST_BIN-$prog"
+              fi
+            done
+          }
+
+          wait_for_xvfb() {
+            count=0
+            max=20
+            while [ ! -e /tmp/.X11-unix/X0 ]; do
+              sleep 0.5
+              count=$((count+1))
+              if [ "$count" -ge "$max" ]; then
+                >&2 echo "xvfb timed out"
+                exit 1
+              fi
+            done
+          }
+
+          relink gcc g++
+
+          # Xvfb is needed to run xmoto.exe during the xmoto_pack target
+          Xvfb :0 -screen 0 1024x768x16 &
+          xvfb_pid=$!
+
+          wait_for_xvfb
+
+          make -j"$(nproc)"
+
+          # kill xvfb
+          kill -15 "$xvfb_pid"
+          jobs -p | xargs -r kill -9
+
+          make xmoto_pack
+
+      - name: Package
+        run: |
+          cd build
+          "$CPACK_BINARY" -G NSIS
+          "$CPACK_BINARY" -G ZIP
+
+          source ${{ github.workspace }}/.github/workflows/pkg.sh
+
+          release_dir="${{ github.workspace }}/release/win32"
+          mkdir -p "$release_dir"
+
+          mv -- xmoto-*.zip xmoto-*.exe "$release_dir/"
+
+          cd "$release_dir"
+
+          for pkg in xmoto-*.zip; do append_pkg_name "$pkg" "win32"; done
+          for pkg in xmoto-*.exe; do append_pkg_name "$pkg" "win32-setup"; done
+
+      - uses: softprops/action-gh-release@v1
+        with:
+          files:
+            ${{ github.workspace }}/release/**/*
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+
+  macos:
+    runs-on: macos-10.15
+
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Install dependencies
+        run: ./.github/workflows/deps/macos.sh
+
+      - name: Configure build
+        run: |
+          mkdir build
+          cd build
+
+          cmake \
+            -DCMAKE_BUILD_TYPE=Release \
+            -G Ninja \
+            ..
+
+      - name: Build
+        run: |
+          cd build
+          cmake --build .
+
+      - name: Package
+        run: |
+          cd build
+
+          release_dir="${{ github.workspace }}/release/macos"
+          mkdir -p "$release_dir"
+
+          source ${{ github.workspace }}/.github/workflows/pkg.sh
+
+          cpack -G DragNDrop
+          for pkg in xmoto-*.dmg; do append_pkg_name "$pkg" "macos"; done
+          mv -- xmoto-*.dmg "$release_dir/"
+
+      - uses: softprops/action-gh-release@v1
+        with:
+          files:
+            ${{ github.workspace }}/release/**/*
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+

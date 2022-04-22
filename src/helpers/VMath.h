@@ -24,6 +24,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "VExcept.h"
 #include "common/VCommon.h"
 #include <math.h>
+#include <cmath>
 #include <stdlib.h> // for rand
 #include <algorithm>
 

@@ -336,9 +336,13 @@ std::string XMKey::toFancyString() const {
     }
     v_res << "[" << GAMETEXT_MOUSE << "] " << v_button;
   } else if (m_type == XMK_JOYSTICKAXIS || m_type == XMK_JOYSTICKBUTTON) {
-    int playerIndex = SDL_GameControllerGetPlayerIndex(m_joystick->handle);
     v_res << "[" << GAMETEXT_JOYSTICK << "] "
-          << m_joystick->name << " - player " << playerIndex << " - ";
+          << m_joystick->name
+#if SDL_VERSION_ATLEAST(2, 0, 9)
+          << " - player "
+          << SDL_GameControllerGetPlayerIndex(m_joystick->handle)
+#endif
+          << " - ";
 
     if (m_type == XMK_JOYSTICKAXIS) {
       std::string v_direction;
