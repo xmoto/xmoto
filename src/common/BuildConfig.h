@@ -53,7 +53,7 @@ Build configuration
 #endif
 
 #if HAVE_GETTEXT == 1
-#define USE_GETTEXT
+#define USE_GETTEXT 1
 #endif
 
 #endif

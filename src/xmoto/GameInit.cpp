@@ -330,7 +330,7 @@ void GameApp::run_load(int nNumArgs, char **ppcArgs) {
 
   LogInfo("SiteKey: %s", XMSession::instance()->sitekey().c_str());
 
-#ifdef USE_GETTEXT
+#if USE_GETTEXT
   std::string v_locale = Locales::init(XMSession::instance()->language());
   LogInfo("Locales set to '%s' (directory '%s')",
           v_locale.c_str(),
