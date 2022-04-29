@@ -61,6 +61,7 @@ private:
   void updateLevelInfoViewerReplays();
 
   std::string m_level;
+  std::string m_levelFullPath;
 };
 
 #endif

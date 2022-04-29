@@ -512,9 +512,14 @@ Central place to keep many in-game text strings
 #define GAMETEXT_LEVEL_DELETED_FROM_BLACKLIST _("Deleted from blacklist")
 #define GAMETEXT_LEVELINFO _("Level Info")
 #define GAMETEXT_LEVELNAME _("Level Name")
+#define GAMETEXT_LEVELFILE _("Level File")
+#define GAMETEXT_LEVELID _("Level ID")
+#define GAMETEXT_LEVELCOPYPATH _("Copy path")
+#define GAMETEXT_LEVELPATHBUILTIN _("Built-in")
 #define GAMETEXT_LEVELCANNOTBELOADED _("Level '%s' cannot be loaded")
 #define GAMETEXT_LEVELLOADINGFAILURE \
   _("The level failed while loading with the following error :")
+#define GAMETEXT_COPYTOCLIPBOARDFAILED _("Failed to copy to clipboard")
 #define GAMETEXT_SENDMSGTOADMINS \
   _("Do you want to send a report to website administrators ?")
 #define GAMETEXT_SENDING_REPORT _("Sending the report...")

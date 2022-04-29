@@ -22,6 +22,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "StateMessageBox.h"
 #include "StatePreplayingReplay.h"
 #include "StateReplaying.h"
+#include "common/VFileIO.h"
 #include "common/XMSession.h"
 #include "drawlib/DrawLib.h"
 #include "helpers/Log.h"
@@ -76,6 +77,9 @@ void StateLevelInfoViewer::checkEvents() {
   UIButton *pLV_BestTimes_All = reinterpret_cast<UIButton *>(
     m_GUI->getChild("LEVEL_VIEWER_FRAME:LEVEL_VIEWER_TABS:LEVEL_VIEWER_"
                     "BESTTIMES_TAB:LEVEL_VIEWER_BESTTIMES_ALL"));
+  UIButton *pLV_Info_CopyLevelPath = reinterpret_cast<UIButton *>(
+    m_GUI->getChild("LEVEL_VIEWER_FRAME:LEVEL_VIEWER_TABS:LEVEL_VIEWER_"
+                    "GENERALINFO_TAB:LEVEL_VIEWER_INFO_COPYLEVELPATH"));
   UIButton *pLV_Replays_Personal = reinterpret_cast<UIButton *>(
     m_GUI->getChild("LEVEL_VIEWER_FRAME:LEVEL_VIEWER_TABS:LEVEL_VIEWER_REPLAYS_"
                     "TAB:LEVEL_VIEWER_REPLAYS_PERSONAL"));
@@ -102,6 +106,14 @@ void StateLevelInfoViewer::checkEvents() {
     pLV_BestTimes_All->setClicked(false);
     pLV_BestTimes_Personal->setClicked(false);
     updateLevelInfoViewerBestTimes();
+  }
+
+  if (pLV_Info_CopyLevelPath->isClicked()) {
+    pLV_Info_CopyLevelPath->setClicked(false);
+
+    if (SDL_SetClipboardText(m_levelFullPath.c_str()) != 0) {
+      LogWarning("%s:\n%s", GAMETEXT_COPYTOCLIPBOARDFAILED, SDL_GetError());
+    }
   }
 
   if (pLV_Replays_All->isClicked() || pLV_Replays_Personal->isClicked()) {
@@ -323,9 +335,49 @@ void StateLevelInfoViewer::createGUIIfNeeded(RenderSurface *i_screen) {
   pLV_Info_LevelName->setVAlign(UI_ALIGN_TOP);
   pLV_Info_LevelName->setFont(drawLib->getFontSmall());
 
+  UIStatic *pLV_Info_LevelId = new UIStatic(pLVTab_Info,
+                                              0,
+                                              80,
+                                              "",
+                                              pLVTab_Info->getPosition().nWidth,
+                                              40);
+  pLV_Info_LevelId->setID("LEVEL_VIEWER_INFO_LEVELID");
+  pLV_Info_LevelId->showWindow(true);
+  pLV_Info_LevelId->setHAlign(UI_ALIGN_LEFT);
+  pLV_Info_LevelId->setVAlign(UI_ALIGN_TOP);
+  pLV_Info_LevelId->setFont(drawLib->getFontSmall());
+
+  UIStatic *pLV_Info_LevelFile = new UIStatic(pLVTab_Info,
+                                              0,
+                                              120,
+                                              "",
+                                              pLVTab_Info->getPosition().nWidth,
+                                              40);
+  pLV_Info_LevelFile->setID("LEVEL_VIEWER_INFO_LEVELFILE");
+  pLV_Info_LevelFile->showWindow(true);
+  pLV_Info_LevelFile->setHAlign(UI_ALIGN_LEFT);
+  pLV_Info_LevelFile->setVAlign(UI_ALIGN_TOP);
+  pLV_Info_LevelFile->setFont(drawLib->getFontSmall());
+
+
+  UIButton *pLV_Info_CopyLevelPath = new UIButton(pLVTab_Info,
+                                              0,
+                                              160 - 28+6,
+                                              GAMETEXT_LEVELCOPYPATH,
+                                              160,
+                                              40);
+  pLV_Info_CopyLevelPath->setID("LEVEL_VIEWER_INFO_COPYLEVELPATH");
+  pLV_Info_CopyLevelPath->enableWindow(false);
+  pLV_Info_CopyLevelPath->setType(UI_BUTTON_TYPE_LARGE);
+  pLV_Info_CopyLevelPath->setFont(drawLib->getFontSmall());
+
+
+
+
+
   UIStatic *pLV_Info_Author = new UIStatic(pLVTab_Info,
                                            0,
-                                           80,
+                                           200,
                                            "(author goes here)",
                                            pLVTab_Info->getPosition().nWidth,
                                            40);
@@ -337,7 +389,7 @@ void StateLevelInfoViewer::createGUIIfNeeded(RenderSurface *i_screen) {
 
   UIStatic *pLV_Info_Date = new UIStatic(pLVTab_Info,
                                          0,
-                                         120,
+                                         240,
                                          "(date goes here)",
                                          pLVTab_Info->getPosition().nWidth,
                                          40);
@@ -350,7 +402,7 @@ void StateLevelInfoViewer::createGUIIfNeeded(RenderSurface *i_screen) {
   UIStatic *pLV_Info_Description =
     new UIStatic(pLVTab_Info,
                  0,
-                 160,
+                 280,
                  "(description goes here)",
                  pLVTab_Info->getPosition().nWidth,
                  200);
@@ -489,6 +541,8 @@ void StateLevelInfoViewer::createGUIIfNeeded(RenderSurface *i_screen) {
 void StateLevelInfoViewer::updateGUI() {
   char **v_result;
   unsigned int nrow;
+  std::string v_levelId = m_level;
+  std::string v_levelFile;
   std::string v_levelName;
   std::string v_levelDescription;
   std::string v_levelAuthor;
@@ -496,26 +550,33 @@ void StateLevelInfoViewer::updateGUI() {
   std::string v_levelDateStr;
 
   v_result = xmDatabase::instance("main")->readDB(
-    "SELECT a.name, a.author, a.description, b.packName, a.date_str "
+    "SELECT a.name, a.filepath, a.author, a.description, b.packName, a.date_str "
     "FROM levels AS a LEFT OUTER JOIN weblevels AS b ON "
     "(a.id_level=b.id_level) WHERE a.id_level=\"" +
-      xmDatabase::protectString(m_level) + "\";",
+      xmDatabase::protectString(v_levelId) + "\";",
     nrow);
   if (nrow == 0) {
     xmDatabase::instance("main")->read_DB_free(v_result);
     return;
   }
 
-  v_levelName = xmDatabase::instance("main")->getResult(v_result, 5, 0, 0);
-  v_levelAuthor = xmDatabase::instance("main")->getResult(v_result, 5, 0, 1);
+  v_levelName = xmDatabase::instance("main")->getResult(v_result, 6, 0, 0);
+  v_levelFile = xmDatabase::instance("main")->getResult(v_result, 6, 0, 1);
+  v_levelAuthor = xmDatabase::instance("main")->getResult(v_result, 6, 0, 2);
   v_levelDescription =
-    xmDatabase::instance("main")->getResult(v_result, 5, 0, 2);
+    xmDatabase::instance("main")->getResult(v_result, 6, 0, 3);
   v_levelPack =
-    xmDatabase::instance("main")->getResult(v_result, 5, 0, 3) == NULL
+    xmDatabase::instance("main")->getResult(v_result, 6, 0, 4) == NULL
       ? ""
-      : xmDatabase::instance("main")->getResult(v_result, 5, 0, 3);
-  v_levelDateStr = xmDatabase::instance("main")->getResult(v_result, 5, 0, 4);
+      : xmDatabase::instance("main")->getResult(v_result, 6, 0, 4);
+  v_levelDateStr = xmDatabase::instance("main")->getResult(v_result, 6, 0, 5);
   xmDatabase::instance("main")->read_DB_free(v_result);
+
+  if (XMFS::isPathAbsolute(v_levelFile) &&
+      XMFS::doesRealFileOrDirectoryExists(v_levelFile) &&
+      !XMFS::isDir(v_levelFile)) {
+    m_levelFullPath = v_levelFile;
+  }
 
   /* Set information */
 
@@ -531,6 +592,15 @@ void StateLevelInfoViewer::updateGUI() {
   UIStatic *pGeneralInfo_LevelName = reinterpret_cast<UIStatic *>(
     m_GUI->getChild("LEVEL_VIEWER_FRAME:LEVEL_VIEWER_TABS:LEVEL_VIEWER_"
                     "GENERALINFO_TAB:LEVEL_VIEWER_INFO_LEVELNAME"));
+  UIStatic *pGeneralInfo_LevelId = reinterpret_cast<UIStatic *>(
+    m_GUI->getChild("LEVEL_VIEWER_FRAME:LEVEL_VIEWER_TABS:LEVEL_VIEWER_"
+                    "GENERALINFO_TAB:LEVEL_VIEWER_INFO_LEVELID"));
+  UIStatic *pGeneralInfo_LevelFile = reinterpret_cast<UIStatic *>(
+    m_GUI->getChild("LEVEL_VIEWER_FRAME:LEVEL_VIEWER_TABS:LEVEL_VIEWER_"
+                    "GENERALINFO_TAB:LEVEL_VIEWER_INFO_LEVELFILE"));
+  UIButton *pGeneralInfo_CopyLevelPath = reinterpret_cast<UIButton *>(
+    m_GUI->getChild("LEVEL_VIEWER_FRAME:LEVEL_VIEWER_TABS:LEVEL_VIEWER_"
+                    "GENERALINFO_TAB:LEVEL_VIEWER_INFO_COPYLEVELPATH"));
   UIStatic *pGeneralInfo_Author = reinterpret_cast<UIStatic *>(
     m_GUI->getChild("LEVEL_VIEWER_FRAME:LEVEL_VIEWER_TABS:LEVEL_VIEWER_"
                     "GENERALINFO_TAB:LEVEL_VIEWER_INFO_AUTHOR"));
@@ -542,17 +612,30 @@ void StateLevelInfoViewer::updateGUI() {
                     "GENERALINFO_TAB:LEVEL_VIEWER_INFO_DESCRIPTION"));
 
   if (pGeneralInfo_LevelPack != NULL)
-    pGeneralInfo_LevelPack->setCaption(std::string(GAMETEXT_LEVELPACK) + ": " +
-                                       v_levelPack);
+    pGeneralInfo_LevelPack->setCaption(std::string(GAMETEXT_LEVELPACK) + ": " + v_levelPack);
+
   if (pGeneralInfo_LevelName != NULL)
-    pGeneralInfo_LevelName->setCaption(std::string(GAMETEXT_LEVELNAME) + ": " +
-                                       v_levelName);
+    pGeneralInfo_LevelName->setCaption(std::string(GAMETEXT_LEVELNAME) + ": " + v_levelName);
+
+  if (pGeneralInfo_LevelId != NULL)
+    pGeneralInfo_LevelId->setCaption(std::string(GAMETEXT_LEVELID) + ": " + v_levelId);
+
+  if (pGeneralInfo_LevelFile != NULL)
+    pGeneralInfo_LevelFile->setCaption(std::string(GAMETEXT_LEVELFILE) +
+                                       ": " +
+                                       (m_levelFullPath == ""
+                                          ? GAMETEXT_LEVELPATHBUILTIN
+                                          : m_levelFullPath));
+
+  if (pGeneralInfo_CopyLevelPath != NULL)
+    pGeneralInfo_CopyLevelPath->enableWindow(m_levelFullPath != "");
+
   if (pGeneralInfo_Author != NULL)
-    pGeneralInfo_Author->setCaption(std::string(GAMETEXT_AUTHOR) + ": " +
-                                    v_levelAuthor);
+    pGeneralInfo_Author->setCaption(std::string(GAMETEXT_AUTHOR) + ": " + v_levelAuthor);
+
   if (pGeneralInfo_Date != NULL)
-    pGeneralInfo_Date->setCaption(std::string(GAMETEXT_DATE) + ": " +
-                                  v_levelDateStr);
+    pGeneralInfo_Date->setCaption(std::string(GAMETEXT_DATE) + ": " + v_levelDateStr);
+
   if (pGeneralInfo_Description != NULL) {
     if (v_levelDescription.size() <= 50) {
       pGeneralInfo_Description->setCaption(std::string(GAMETEXT_DESCRIPTION) +
