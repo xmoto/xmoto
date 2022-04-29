@@ -49,6 +49,7 @@ private:
   static void createProfileList();
 
   void updateOptions();
+  void highlightSelectedProfile();
 
   /* GUI */
   static UIRoot *m_sGUI;

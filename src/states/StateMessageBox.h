@@ -58,6 +58,9 @@ public:
   std::string getMsgBxId() const;
   void setMsgBxId(const std::string &i_id);
 
+  bool isExitable() const { return m_exitable; }
+  void setExitable(bool value) { m_exitable = value; }
+
   /* input */
   virtual void xmKey(InputEventType i_type, const XMKey &i_xmkey);
   void makeActiveButton(UIMsgBoxButton i_button);
@@ -96,6 +99,7 @@ private:
   std::vector<std::string> m_completionList;
   std::string m_custom1, m_custom2;
   std::string m_help;
+  bool m_exitable;
 };
 
 #endif

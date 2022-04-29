@@ -355,11 +355,7 @@ void StateMainMenu::checkEventsMainWindow() {
   v_button = reinterpret_cast<UIButton *>(m_GUI->getChild("MAIN:QUIT"));
   if (v_button->isClicked()) {
     v_button->setClicked(false);
-    StateMessageBox *v_msgboxState = new StateMessageBox(
-      this, GAMETEXT_QUITMESSAGE, UI_MSGBOX_YES | UI_MSGBOX_NO);
-    StateManager::instance()->pushState(v_msgboxState);
-    v_msgboxState->setMsgBxId("QUIT");
-    v_msgboxState->makeActiveButton(UI_MSGBOX_YES);
+    promptForQuit();
   }
 
   // help
@@ -796,14 +792,27 @@ void StateMainMenu::xmKey(InputEventType i_type, const XMKey &i_xmkey) {
     UIFrame *v_stats =
       reinterpret_cast<UIFrame *>(m_GUI->getChild("MAIN:STATS"));
 
-    if (v_windowLevels->isHidden() == false) {
+    if (!v_windowLevels->isHidden()) {
       v_windowLevels->showWindow(false);
-    } else if (v_windowReplays->isHidden() == false) {
-      v_windowReplays->showWindow(false);
+      return;
     }
+
+    if (!v_windowReplays->isHidden()) {
+      v_windowReplays->showWindow(false);
+      return;
+    }
+
     if (!v_stats->isMinimized()) {
       v_stats->toggle();
+      return;
     }
+
+    StateMessageBox *v_msgboxState = new StateMessageBox(
+      this, GAMETEXT_QUITMESSAGE, UI_MSGBOX_YES | UI_MSGBOX_NO);
+    StateManager::instance()->pushState(v_msgboxState);
+    v_msgboxState->setMsgBxId("QUIT");
+    v_msgboxState->setExitable(true);
+    v_msgboxState->makeActiveButton(UI_MSGBOX_YES);
   }
 
   /* the "Back" button is the one on the left side of the guide button */
@@ -2472,6 +2481,15 @@ void StateMainMenu::updateReplaysRights() {
   v_button = reinterpret_cast<UIButton *>(
     m_GUI->getChild("MAIN:FRAME_REPLAYS:REPLAYS_DELETE_BUTTON"));
   v_button->enableWindow(v_list->nbVisibleItems() > 0);
+}
+
+void StateMainMenu::promptForQuit() {
+  StateMessageBox *v_msgboxState = new StateMessageBox(
+    this, GAMETEXT_QUITMESSAGE, UI_MSGBOX_YES | UI_MSGBOX_NO);
+  StateManager::instance()->pushState(v_msgboxState);
+  v_msgboxState->setMsgBxId("QUIT");
+  v_msgboxState->setExitable(true);
+  v_msgboxState->makeActiveButton(UI_MSGBOX_YES);
 }
 
 UILevelList *StateMainMenu::getInfoFrameLevelsList() {

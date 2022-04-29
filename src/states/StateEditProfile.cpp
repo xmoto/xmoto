@@ -53,6 +53,19 @@ void StateEditProfile::enter() {
   StateMenu::enter();
 }
 
+void StateEditProfile::highlightSelectedProfile() {
+  const auto &selected = XMSession::instance()->profile();
+  UIList *pList = reinterpret_cast<UIList *>(
+    m_sGUI->getChild("EDITPROFILE_FRAME:PROFILE_LIST"));
+
+  for (int i = 0; i < pList->getEntries().size(); i++) {
+    if (pList->getEntries()[i]->Text[0] != selected)
+      continue;
+    pList->setRealSelected(i);
+    break;
+  }
+}
+
 void StateEditProfile::updateOptions() {
   UIButton *v_button;
 
@@ -72,6 +85,7 @@ void StateEditProfile::updateOptions() {
     m_sGUI->getChild("EDITPROFILE_FRAME:PROFILE_LIST"));
   if (list->getEntries().size() > 0 && XMSession::instance()->profile() != "") {
     pCloseButton->enableWindow(true);
+    highlightSelectedProfile();
   }
 }
 
@@ -166,6 +180,12 @@ void StateEditProfile::checkEvents() {
 }
 
 void StateEditProfile::xmKey(InputEventType i_type, const XMKey &i_xmkey) {
+  if (i_type == INPUT_DOWN && (i_xmkey == XMKey(SDLK_ESCAPE, KMOD_NONE) ||
+                               i_xmkey.getJoyButton() == SDL_CONTROLLER_BUTTON_B)) {
+    m_requestForEnd = true;
+    return;
+  }
+
   StateMenu::xmKey(i_type, i_xmkey);
 }
 
@@ -340,18 +360,11 @@ void StateEditProfile::sendFromMessageBox(const std::string &i_id,
             XMSession::instance()->sitekey(), PlayerName);
         } catch (Exception &e) {
           LogWarning("Unable to create the profile");
+          break;
         }
 
         createProfileList();
-
-        UIList *pList = reinterpret_cast<UIList *>(
-          m_sGUI->getChild("EDITPROFILE_FRAME:PROFILE_LIST"));
-
-        for (int i = 0; i < pList->getEntries().size(); i++) {
-          if (pList->getEntries()[i]->Text[0] != PlayerName)
-            continue;
-          pList->setRealSelected(i);
-        }
+        highlightSelectedProfile();
         break;
       }
       default:
