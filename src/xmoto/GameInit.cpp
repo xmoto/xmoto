@@ -72,8 +72,6 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include <signal.h>
 #endif
 
-#include <cassert>
-
 #define MOUSE_DBCLICK_TIME 0.250f
 
 #define XM_MAX_NB_LOOPS_WITH_NONETWORK 3
@@ -812,31 +810,29 @@ void GameApp::manageEvent(SDL_Event *Event) {
     }
 
     case SDL_WINDOWEVENT: {
+      bool hasFocus = false;
+
       switch (Event->window.event) {
         case SDL_WINDOWEVENT_ENTER:
         case SDL_WINDOWEVENT_LEAVE: {
-          bool hasFocus = false;
           switch (Event->window.event) {
             case SDL_WINDOWEVENT_ENTER: hasFocus = true;  break;
             case SDL_WINDOWEVENT_LEAVE: hasFocus = false; break;
-            /* never hit */
-            default: hasFocus = StateManager::instance()->hasFocus(); break;
           }
-          if (!m_hasKeyboardFocus) {
+
+          if (!m_hasKeyboardFocus)
             StateManager::instance()->changeFocus(hasFocus);
-          }
+
           m_hasMouseFocus = hasFocus;
           break;
         }
         case SDL_WINDOWEVENT_FOCUS_GAINED: /* fall through */
         case SDL_WINDOWEVENT_FOCUS_LOST: {
-          bool hasFocus;
           switch (Event->window.event) {
             case SDL_WINDOWEVENT_FOCUS_GAINED: hasFocus = true;  break;
             case SDL_WINDOWEVENT_FOCUS_LOST:   hasFocus = false; break;
-            /* never hit */
-            default: assert(false); hasFocus = StateManager::instance()->hasFocus(); break;
           }
+
           if (hasFocus) {
             // Pending keydown events need to be flushed after gaining focus
             // because SDL2 will send them for keys that were pressed outside the game
@@ -850,36 +846,14 @@ void GameApp::manageEvent(SDL_Event *Event) {
              */
             StatePlayingLocal *state = dynamic_cast<StatePlayingLocal *>(
                 StateManager::instance()->getTopState());
-            if (state) {
+            if (state)
               state->dealWithActivedKeys();
-            }
           }
 
-          if (!m_hasMouseFocus) {
+          if (!m_hasMouseFocus)
             StateManager::instance()->changeFocus(hasFocus);
-          }
+
           m_hasKeyboardFocus = hasFocus;
-
-          if (!hasFocus) {
-            int numkeys = 0;
-            const uint8_t* keys = SDL_GetKeyboardState(&numkeys);
-            bool b = Input::instance()->getPlayerKey(INPUT_DRIVE, 0)->isPressed(keys, 0, numkeys);
-
-#if 0
-            // invalidate all pressed keys
-            {
-              for (unsigned int player = 0; player < INPUT_NB_PLAYERS; ++player) {
-                for (unsigned int i = 0; i < INPUT_NB_PLAYERKEYS; ++i) {
-                  StateManager::instance()->xmKey(INPUT_UP, *Input::instance()->getPlayerKey(i, player));
-                }
-              }
-              for (unsigned int i = 0; i < INPUT_NB_GLOBALKEYS; ++i) {
-                StateManager::instance()->xmKey(INPUT_UP, *Input::instance()->getGlobalKey(i));
-              }
-            }
-#endif
-          }
-
           break;
         }
         case SDL_WINDOWEVENT_EXPOSED:
@@ -894,11 +868,7 @@ void GameApp::manageEvent(SDL_Event *Event) {
           m_isIconified = true;
           break;
       }
-      printf("focus: %s | kbd: %s | mouse: %s\n",
-              StateManager::instance()->hasFocus() ? "yes" : "no",
-              m_hasKeyboardFocus ? "yes" : "no",
-              m_hasMouseFocus ? "yes" : "no"
-            );
+
       break;
     }
     case SDL_DROPFILE: {
