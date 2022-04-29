@@ -253,10 +253,10 @@ void GameApp::run_load(int nNumArgs, char **ppcArgs) {
   }
 
   XMSession::setDefaultInstance("live");
-  XMSession::instance()->load(
+  XMSession::instance()->loadConfig(
     m_userConfig); /* overload default session by userConfig */
 
-  XMSession::instance()->load(
+  XMSession::instance()->loadArgs(
     &v_xmArgs); /* overload default session by xmargs     */
 
   Logger::setVerbose(
@@ -318,12 +318,12 @@ void GameApp::run_load(int nNumArgs, char **ppcArgs) {
     pDb->setTrace(XMSession::instance()->sqlTrace());
   }
 
-  XMSession::instance("file")->load(m_userConfig);
+  XMSession::instance("file")->loadConfig(m_userConfig);
   XMSession::instance("file")->loadProfile(
     XMSession::instance("file")->profile(), pDb);
   (*XMSession::instance()) = (*XMSession::instance("file"));
 
-  XMSession::instance()->load(
+  XMSession::instance()->loadArgs(
     &v_xmArgs); /* overload default session by xmargs */
   // enable propagation only after overloading by command args
   XMSession::enablePropagation("file");

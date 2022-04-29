@@ -97,8 +97,8 @@ private:
   virtual ~XMSession(){};
 
 public:
-  void load(const XMArguments *i_xmargs);
-  void load(UserConfig *m_Config);
+  void loadArgs(const XMArguments *i_xmargs);
+  void loadConfig(UserConfig *m_Config, bool loadProfile = true);
   void loadProfile(const std::string &i_id_profile,
                    xmDatabase *pDb); /* give the database as argument ; to be
                                         use that any developper call it before

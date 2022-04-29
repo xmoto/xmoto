@@ -120,6 +120,12 @@ void StateEditProfile::checkEvents() {
       XMSession::instance()->setToDefault();
       XMSession::instance()->loadProfile(pEntry->Text[0],
                                          xmDatabase::instance("main"));
+
+      XMSession::instance()->loadConfig(
+          GameApp::instance()->getUserConfig(),
+          /* don't reload the default profile because that breaks profile selection */
+          false);
+
       XMSession::instance()->setChildrenCompliant(v_ccButton->getChecked());
 
       xmDatabase::instance("main")->stats_xmotoStarted(
@@ -180,8 +186,10 @@ void StateEditProfile::checkEvents() {
 }
 
 void StateEditProfile::xmKey(InputEventType i_type, const XMKey &i_xmkey) {
-  if (i_type == INPUT_DOWN && (i_xmkey == XMKey(SDLK_ESCAPE, KMOD_NONE) ||
-                               i_xmkey.getJoyButton() == SDL_CONTROLLER_BUTTON_B)) {
+  if (XMSession::instance()->profile() != "" &&
+      i_type == INPUT_DOWN && (
+        i_xmkey == XMKey(SDLK_ESCAPE, KMOD_NONE) ||
+        i_xmkey.getJoyButton() == SDL_CONTROLLER_BUTTON_B)) {
     m_requestForEnd = true;
     return;
   }
@@ -381,7 +389,13 @@ void StateEditProfile::sendFromMessageBox(const std::string &i_id,
           if (nIdx >= 0 && nIdx < pList->getEntries().size()) {
             UIListEntry *pEntry = pList->getEntries()[nIdx];
 
-            xmDatabase::instance("main")->stats_destroyProfile(pEntry->Text[0]);
+            auto &profile = pEntry->Text[0];
+            bool isActive = profile == XMSession::instance()->profile();
+            xmDatabase::instance("main")->stats_destroyProfile(profile);
+
+            if (isActive)
+              XMSession::instance()->setProfile("");
+
             pList->setRealSelected(0);
             createProfileList();
           }
