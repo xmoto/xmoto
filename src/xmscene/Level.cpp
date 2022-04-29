@@ -767,7 +767,8 @@ std::string Level::getNameInCache(bool i_loadMainLayerOnly) const {
          ".blv";
 }
 
-void Level::removeFromCache(xmDatabase *i_db, const std::string &i_id_level) {
+std::string Level::getCacheFilePath(xmDatabase *i_db, const std::string &i_id_level) {
+  std::string path;
   char **v_result;
   unsigned int nrow;
   v_result =
@@ -778,14 +779,24 @@ void Level::removeFromCache(xmDatabase *i_db, const std::string &i_id_level) {
     try {
       std::string v_checkSum = i_db->getResult(v_result, 2, 0, 0);
       std::string v_filePath = i_db->getResult(v_result, 2, 0, 1);
-      XMFS::deleteFile(FDT_CACHE,
-                       "LCache/" + v_checkSum +
-                         XMFS::getFileBaseName(v_filePath) + ".blv");
-    } catch (Exception &e) {
-      /* ok, it was perhaps not in cache */
-    }
+      path = "LCache/" + v_checkSum + XMFS::getFileBaseName(v_filePath) + ".blv";
+    } catch (Exception &e) {}
   }
   i_db->read_DB_free(v_result);
+  return path;
+}
+
+bool Level::isInCache(xmDatabase *i_db, const std::string &i_id_level) {
+  return XMFS::isFileReadable(FDT_CACHE, getCacheFilePath(i_db, i_id_level));
+}
+
+void Level::removeFromCache(xmDatabase *i_db, const std::string &i_id_level) {
+  auto path = getCacheFilePath(i_db, i_id_level);
+
+  if (path == "")
+    return;
+
+  XMFS::deleteFile(FDT_CACHE, path);
 }
 
 /*===========================================================================

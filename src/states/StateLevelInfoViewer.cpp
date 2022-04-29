@@ -30,6 +30,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "xmoto/Game.h"
 #include "xmoto/GameText.h"
 #include "xmoto/Replay.h"
+#include "xmoto/SysMessage.h"
 
 /* static members */
 UIRoot *StateLevelInfoViewer::m_sGUI = NULL;
@@ -71,6 +72,8 @@ void StateLevelInfoViewer::enterAfterPop() {
 void StateLevelInfoViewer::checkEvents() {
   UIButton *pOKButton = reinterpret_cast<UIButton *>(
     m_GUI->getChild("LEVEL_VIEWER_FRAME:LEVEL_VIEWER_OK_BUTTON"));
+  UIButton *pDeleteCacheFileBtn = reinterpret_cast<UIButton *>(
+    m_GUI->getChild("LEVEL_VIEWER_FRAME:LEVEL_VIEWER_DELETE_CACHE_FILE_BUTTON"));
   UIButton *pLV_BestTimes_Personal = reinterpret_cast<UIButton *>(
     m_GUI->getChild("LEVEL_VIEWER_FRAME:LEVEL_VIEWER_TABS:LEVEL_VIEWER_"
                     "BESTTIMES_TAB:LEVEL_VIEWER_BESTTIMES_PERSONAL"));
@@ -100,6 +103,13 @@ void StateLevelInfoViewer::checkEvents() {
   if (pOKButton->isClicked()) {
     pOKButton->setClicked(false);
     m_requestForEnd = true;
+  }
+
+  if (pDeleteCacheFileBtn->isClicked()) {
+    pDeleteCacheFileBtn->setClicked(false);
+    pDeleteCacheFileBtn->enableWindow(false);
+    Level::removeFromCache(xmDatabase::instance("main"), m_level);
+    SysMessage::instance()->displayInformation(GAMETEXT_LEVELCACHEFILEDELETED);
   }
 
   if (pLV_BestTimes_All->isClicked() || pLV_BestTimes_Personal->isClicked()) {
@@ -309,6 +319,14 @@ void StateLevelInfoViewer::createGUIIfNeeded(RenderSurface *i_screen) {
   pOKButton->setType(UI_BUTTON_TYPE_SMALL);
   pOKButton->setID("LEVEL_VIEWER_OK_BUTTON");
   pOKButton->setContextHelp(CONTEXTHELP_BACK_TO_MAIN_MENU);
+
+  UIButton *pDeleteCacheFileBtn = new UIButton(
+    v_frame, v_frame->getPosition().nWidth - 115*2 - 10, v_frame->getPosition().nHeight - 68, GAMETEXT_DELETELEVELCACHEFILE, 115*2, 57);
+  pDeleteCacheFileBtn->enableWindow(false);
+  pDeleteCacheFileBtn->setFont(drawLib->getFontSmall());
+  pDeleteCacheFileBtn->setType(UI_BUTTON_TYPE_LARGE);
+  pDeleteCacheFileBtn->setID("LEVEL_VIEWER_DELETE_CACHE_FILE_BUTTON");
+  pDeleteCacheFileBtn->setContextHelp(CONTEXTHELP_DELETE_CACHED_LEVEL_FILE);
 
   /* Level info viewer - general info */
   UIStatic *pLV_Info_LevelPack = new UIStatic(pLVTab_Info,
@@ -572,6 +590,8 @@ void StateLevelInfoViewer::updateGUI() {
   v_levelDateStr = xmDatabase::instance("main")->getResult(v_result, 6, 0, 5);
   xmDatabase::instance("main")->read_DB_free(v_result);
 
+  bool levelInCache = Level::isInCache(xmDatabase::instance("main"), m_level);
+
   if (XMFS::isPathAbsolute(v_levelFile) &&
       XMFS::doesRealFileOrDirectoryExists(v_levelFile) &&
       !XMFS::isDir(v_levelFile)) {
@@ -585,6 +605,10 @@ void StateLevelInfoViewer::updateGUI() {
   if (pLevelName != NULL) {
     pLevelName->setCaption(v_levelName);
   }
+
+  UIButton *pDeleteCacheFileBtn = reinterpret_cast<UIButton *>(
+    m_GUI->getChild("LEVEL_VIEWER_FRAME:LEVEL_VIEWER_DELETE_CACHE_FILE_BUTTON"));
+  pDeleteCacheFileBtn->enableWindow(levelInCache);
 
   UIStatic *pGeneralInfo_LevelPack = reinterpret_cast<UIStatic *>(
     m_GUI->getChild("LEVEL_VIEWER_FRAME:LEVEL_VIEWER_TABS:LEVEL_VIEWER_"

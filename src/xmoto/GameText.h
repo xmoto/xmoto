@@ -1063,7 +1063,13 @@ Central place to keep many in-game text strings
 #define GAMETEXT_LEVELCACHECLEARED _("Level cache cleared")
 #define GAMETEXT_CONFIRMCLEARLEVELCACHE \
   _("Are you sure you want to clear the level cache?")
+
+#define GAMETEXT_DELETELEVELCACHEFILE _("Delete cache file")
+#define GAMETEXT_LEVELCACHEFILEDELETED _("Cache file deleted")
+
 #define CONTEXTHELP_CLEARLEVELCACHE _("Clear level cache")
+#define CONTEXTHELP_DELETE_CACHED_LEVEL_FILE \
+  _("Delete cached level file from disk to force a clean state (safe)")
 
 #define CONTEXTHELP_NOIDEA _("You don't want to vote")
 #define CONTEXTHELP_DBEGINNER _("Really easy")
