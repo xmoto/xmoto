@@ -799,6 +799,8 @@ Central place to keep many in-game text strings
 #define GAMETEXT_CLIENTDISCONNECTSERVER _("%s left the game")
 #define GAMETEXT_CLIENTPLAYING _("%s is playing level %s")
 #define GAMETEXT_CLIENTSTARTUPCONNEXION _("Connexion at startup")
+#define GAMETEXT_CLIENTCONNECTDISCONNECT \
+  _("Connect to/disconnect from the server")
 #define UNTRANSLATED_GAMETEXT_TOO_MUCH_CLIENTS \
   "Sorry, there are already too much clients connected"
 #define UNTRANSLATED_GAMETEXT_SERVER_PROTOCOL_VERSION_INCOMPATIBLE \

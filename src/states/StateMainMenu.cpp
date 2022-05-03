@@ -571,26 +571,7 @@ void StateMainMenu::checkEventsNetworkTab() {
   if (v_button->isClicked()) {
     v_button->setClicked(false);
 
-    if (NetClient::instance()->isConnected()) {
-      NetClient::instance()->disconnect();
-    } else {
-      try {
-        NetClient::instance()->connect(
-          XMSession::instance()->clientServerName(),
-          XMSession::instance()->clientServerPort());
-        NetClient::instance()->changeMode(
-          XMSession::instance()->clientGhostMode() ? NETCLIENT_GHOST_MODE
-                                                   : NETCLIENT_SLAVE_MODE);
-        if (XMSession::instance()->clientGhostMode() == false) {
-          StateManager::instance()->pushState(
-            new StateWaitServerInstructions());
-        }
-      } catch (Exception &e) {
-        SysMessage::instance()->displayError(
-          GAMETEXT_UNABLETOCONNECTONTHESERVER);
-        LogError("Unable to connect to the server");
-      }
-    }
+    StateManager::instance()->connectOrDisconnect();
   }
 
   // play same levels of people connected
@@ -819,6 +800,11 @@ void StateMainMenu::xmKey(InputEventType i_type, const XMKey &i_xmkey) {
   else if (i_type == INPUT_DOWN && i_xmkey.getJoyButton() == SDL_CONTROLLER_BUTTON_BACK) {
     UIFrame *v_stats = reinterpret_cast<UIFrame *>(m_GUI->getChild("MAIN:STATS"));
     v_stats->toggle();
+  }
+
+  else if (i_type == INPUT_DOWN &&
+           i_xmkey == (*Input::instance()->getGlobalKey(INPUT_TOGGLESERVERCONN))) {
+    StateManager::instance()->connectOrDisconnect();
   }
 
   else {

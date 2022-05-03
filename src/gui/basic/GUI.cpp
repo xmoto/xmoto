@@ -1288,22 +1288,17 @@ bool UIRoot::_RootKeyEvent(UIWindow *pWindow, UIRootKeyEvent Event) {
   }
 
   /* Try this */
-  if (pWindow != this && pWindow->isActive()) {
-    bool b = false;
+  if (pWindow == this || !pWindow->isActive()) {
+    return false;
+  }
 
-    switch (Event.type) {
-      case UI_ROOT_KEY_DOWN:
-        b = pWindow->keyDown(Event.nKey, Event.mod, Event.utf8Char);
-        break;
-      case UI_ROOT_KEY_UP:
-        b = pWindow->keyUp(Event.nKey, Event.mod, Event.utf8Char);
-        break;
-      case UI_ROOT_TEXT_INPUT:
-        b = pWindow->textInput(Event.nKey, Event.mod, Event.utf8Char);
-        break;
-    }
-
-    return b;
+  switch (Event.type) {
+    case UI_ROOT_KEY_DOWN:
+      return pWindow->keyDown(Event.nKey, Event.mod, Event.utf8Char);
+    case UI_ROOT_KEY_UP:
+      return pWindow->keyUp(Event.nKey, Event.mod, Event.utf8Char);
+    case UI_ROOT_TEXT_INPUT:
+      return pWindow->textInput(Event.nKey, Event.mod, Event.utf8Char);
   }
 
   return false;

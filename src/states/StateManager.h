@@ -113,6 +113,8 @@ public:
 
   void setCursorVisible(bool visible);
 
+  void connectOrDisconnect();
+
 private:
   GameState *popState();
 
@@ -178,12 +180,11 @@ private:
   std::map<std::string, std::vector<GameState *>> m_registeredStates;
 
   // db stats thread
-  XMThreadStats *m_xmtstas;
+  XMThreadStats *m_xmstats;
 
   // replays downloader
   DownloadReplaysThread *m_drt;
 
-  //
   int m_currentUniqueId;
 
   RenderSurface m_screen;
