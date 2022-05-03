@@ -31,14 +31,17 @@ bool Logger::m_isInitialized = false;
 bool Logger::m_activ = true;
 bool Logger::m_verbose = false;
 FILE *Logger::m_fd = NULL;
+std::string Logger::m_logName;
 
 void Logger::init() {
   assert(XMFS::isInitialized());
 
   m_verbose = false;
 
+  m_logName = iso8601Date() + ".log";
+
   auto logDir = XMFS::getUserDir(FDT_CACHE) + "/logs";
-  auto logFile = logDir + "/" + iso8601Date() + ".log";
+  auto logFile = logDir + "/" + m_logName;
   XMFS::mkArborescenceDir(logDir);
 
   m_fd = fopen(logFile.c_str(), "w");
@@ -127,4 +130,20 @@ void Logger::LogData(void *data, unsigned int len) {
 void Logger::deleteLegacyLog() {
   if (XMFS::fileExists(FDT_CACHE, "xmoto.log"))
     XMFS::deleteFile(FDT_CACHE, "xmoto.log");
+}
+
+int Logger::deleteOldFiles() {
+  int deleted = 0;
+  std::vector<std::string> files = XMFS::findPhysFiles(FDT_CACHE, "logs/*.log");
+  for (auto &file : files) {
+    file = XMFS::getFileBaseName(file, true);
+
+    if (file == m_logName || file == "latest.log")
+      continue;
+
+    XMFS::deleteFile(FDT_CACHE, "logs/" + file);
+    deleted++;
+  }
+
+  return deleted;
 }

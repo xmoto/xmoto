@@ -52,12 +52,15 @@ public:
   static void LogData(void *data, unsigned int len);
 
   static void deleteLegacyLog();
+  static int deleteOldFiles();
 
 private:
   static bool m_isInitialized;
   static bool m_verbose;
   static bool m_activ;
   static FILE *m_fd;
+
+  static std::string m_logName;
 
   static void LogRaw(const std::string &s);
 };

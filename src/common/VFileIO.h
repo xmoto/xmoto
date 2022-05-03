@@ -161,7 +161,7 @@ public:
 
   /* File name mangling */
   static std::string getFileDir(const std::string &Path);
-  static std::string getFileBaseName(const std::string &Path);
+  static std::string getFileBaseName(const std::string &Path, bool withExt = false);
   static std::string getFileExtension(
     const std::string &Path); // do not require FS initialization
 

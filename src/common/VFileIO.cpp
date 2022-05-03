@@ -930,21 +930,27 @@ std::string XMFS::getFileDir(const std::string &Path) {
 }
 
 /*===========================================================================
-  Extract file name (with no extension) from path
+  Extract file name (optionally with extension) from path
   ===========================================================================*/
-std::string XMFS::getFileBaseName(const std::string &Path) {
+std::string XMFS::getFileBaseName(const std::string &Path, bool withExt) {
   int n = Path.find_last_of("/");
   if (n < 0)
     n = Path.find_last_of("\\");
   std::string FName;
+
   if (n >= 0) {
     FName = Path.substr(n + 1, Path.length() - n - 1);
   } else {
     FName = Path;
   }
+
+  if (withExt)
+    return FName;
+
   n = FName.find_last_of(".");
   if (n < 0)
     return FName;
+
   return FName.substr(0, n);
 }
 

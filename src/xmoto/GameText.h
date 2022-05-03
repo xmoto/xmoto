@@ -748,6 +748,8 @@ Central place to keep many in-game text strings
 #define GAMETEXT_WWWROOMSTAB_REFERENCE _("Reference room")
 #define GAMETEXT_WWWROOMSTAB_OTHER _("Room %i")
 
+#define GAMETEXT_XFILES(A) ngettext("%d file", "%d files", A)
+
 #define GAMETEXT_XHOURS _("%d hours")
 #define GAMETEXT_XMINUTES _("%d minutes")
 #define GAMETEXT_XONLY(A) ngettext("only %i", "only %i", A)
@@ -1058,6 +1060,13 @@ Central place to keep many in-game text strings
 #define GAMETEXT_SWITCHPLAYER _("Switch player")
 #define GAMETEXT_SWITCHTRACKINGSHOTMODE _("Switch trackingshot mode")
 #define GAMETEXT_SWITCHREDERGHOSTTRAIL _("Switch ghosttrail rendering")
+
+#define GAMETEXT_CLEAROLDLOGS _("Clear old logs")
+#define GAMETEXT_LOGSCLEARED _("Logs cleared")
+#define GAMETEXT_CONFIRMCLEAROLDLOGS \
+  _("Are you sure you want to clear old logs?")
+
+#define CONTEXTHELP_CLEAROLDLOGS _("Delete all previous log files from disk")
 
 #define GAMETEXT_CLEARLEVELCACHE _("Clear level cache")
 #define GAMETEXT_LEVELCACHECLEARED _("Level cache cleared")
