@@ -188,8 +188,9 @@ set(helpers_src
   helpers/Singleton.h
   helpers/SwapEndian.cpp helpers/SwapEndian.h
   helpers/System.cpp helpers/System.h
-  helpers/TFunctor.h
   helpers/Text.cpp helpers/Text.h
+  helpers/TFunctor.h
+  helpers/Time.cpp helpers/Time.h
   helpers/VExcept.h
   helpers/VMath.cpp helpers/VMath.h
   helpers/iqsort.h

@@ -131,7 +131,7 @@ int main(int nNumArgs, char **ppcArgs) {
     snprintf(cBuf,
              1024,
              "Fatal exception occurred: %s\n"
-             "Consult the file xmoto.log for more information about what\n"
+             "Consult the logs/latest.log file for more information about what\n"
              "might has occurred.\n",
              e.getMsg().c_str());
     MessageBox(NULL, cBuf, "X-Moto Error", MB_OK | MB_ICONERROR);
@@ -225,14 +225,13 @@ void GameApp::run_load(int nNumArgs, char **ppcArgs) {
   if (v_xmArgs.isOptConfigPath()) {
     XMFS::init("xmoto",
                "xmoto.bin",
-               "xmoto.log",
                v_xmArgs.isOptServerOnly() == false,
                v_xmArgs.getOpt_configPath_path());
   } else {
     XMFS::init(
-      "xmoto", "xmoto.bin", "xmoto.log", v_xmArgs.isOptServerOnly() == false);
+      "xmoto", "xmoto.bin", v_xmArgs.isOptServerOnly() == false);
   }
-  Logger::init("xmoto.log");
+  Logger::init();
 
   /* c xmoto files */
   if (v_xmArgs.isOptBuildQueries()) {
@@ -263,11 +262,9 @@ void GameApp::run_load(int nNumArgs, char **ppcArgs) {
                    false); /* apply log activ mode */
 
   LogInfo(std::string("X-Moto " + XMBuild::getVersionString(true)).c_str());
-  if (SwapEndian::bigendien) {
-    LogInfo("Systeme is bigendien");
-  } else {
-    LogInfo("Systeme is littleendien");
-  }
+  auto endianness = SwapEndian::bigendien ? "big" : "little";
+  LogInfo("System is %s-endian", endianness);
+
   LogInfo("User data   directory: %s", XMFS::getUserDir(FDT_DATA).c_str());
   LogInfo("User config directory: %s", XMFS::getUserDir(FDT_CONFIG).c_str());
   LogInfo("User cache  directory: %s", XMFS::getUserDir(FDT_CACHE).c_str());

@@ -1171,7 +1171,6 @@ std::vector<PackFile> XMFS::m_PackFiles;
 
 void XMFS::init(const std::string &AppDir,
                 const std::string &i_binFile,
-                const std::string &i_logFile,
                 bool i_graphics,
                 const std::string &i_userCustomDirPath) {
   m_bGotSystemDataDir = false;
@@ -1370,9 +1369,6 @@ void XMFS::init(const std::string &AppDir,
     mkArborescenceDir(m_UserCacheDir);
   }
 
-  /* Delete old log */
-  remove((m_UserCacheDir + "/" + i_logFile).c_str());
-
   /* Info */
   if (m_bGotSystemDataDir) {
     m_BinDataFile = m_SystemDataDir + "/" + i_binFile;
@@ -1494,6 +1490,14 @@ int XMFS::mkDir(const char *pcPath) {
   return _mkdir(pcPath);
 #else
   return mkdir(pcPath, S_IRUSR | S_IWUSR | S_IRWXU);
+#endif
+}
+
+bool XMFS::mklink(const std::string &source, const std::string &dest) {
+#ifdef WIN32
+  return CreateHardLinkA(dest.c_str(), source.c_str(), nullptr);
+#else
+  return symlink(source.c_str(), dest.c_str()) == 0;
 #endif
 }
 
