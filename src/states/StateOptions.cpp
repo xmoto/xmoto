@@ -98,6 +98,12 @@ void StateOptions::xmKey(InputEventType i_type, const XMKey &i_xmkey) {
     m_requestForEnd = true;
     return;
   }
+
+  else if (i_type == INPUT_DOWN &&
+           i_xmkey == (*Input::instance()->getGlobalKey(INPUT_TOGGLESERVERCONN)) &&
+           i_xmkey.getRepetition() == 0) {
+    StateManager::instance()->connectOrDisconnect();
+  }
 }
 
 void StateOptions::checkEvents() {

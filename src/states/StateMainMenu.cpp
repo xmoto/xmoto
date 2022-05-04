@@ -803,7 +803,8 @@ void StateMainMenu::xmKey(InputEventType i_type, const XMKey &i_xmkey) {
   }
 
   else if (i_type == INPUT_DOWN &&
-           i_xmkey == (*Input::instance()->getGlobalKey(INPUT_TOGGLESERVERCONN))) {
+           i_xmkey == (*Input::instance()->getGlobalKey(INPUT_TOGGLESERVERCONN)) &&
+           i_xmkey.getRepetition() == 0) {
     StateManager::instance()->connectOrDisconnect();
   }
 

@@ -735,7 +735,7 @@ void GameApp::manageEvent(SDL_Event *Event) {
 
       StateManager::instance()->xmKey(
         INPUT_DOWN,
-        XMKey(Event->key.keysym.sym, (SDL_Keymod)Event->key.keysym.mod, utf8Char));
+        XMKey(Event->key.keysym.sym, (SDL_Keymod)Event->key.keysym.mod, utf8Char, Event->key.repeat));
       break;
 
     case SDL_KEYUP:
@@ -759,7 +759,7 @@ void GameApp::manageEvent(SDL_Event *Event) {
           (getXMTime() - fLastMouseClickTime) < MOUSE_DBCLICK_TIME) {
         /* Pass double click */
         StateManager::instance()->xmKey(INPUT_DOWN,
-                                        XMKey(Event->button.button, 2));
+                                        XMKey(Event->button.button, 1));
       } else {
         /* Pass ordinary click */
         StateManager::instance()->xmKey(INPUT_DOWN,
