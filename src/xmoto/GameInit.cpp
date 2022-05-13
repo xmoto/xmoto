@@ -33,6 +33,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "helpers/Environment.h"
 #include "helpers/Log.h"
 #include "helpers/Random.h"
+#include "helpers/Time.h"
 
 #include "Credits.h"
 #include "GeomsManager.h"
@@ -256,12 +257,14 @@ void GameApp::run_load(int nNumArgs, char **ppcArgs) {
   XMSession::instance()->loadArgs(
     &v_xmArgs); /* overload default session by xmargs     */
 
+  Logger::deleteOldFiles(XMSession::instance()->logRetentionCount());
   Logger::setVerbose(
     XMSession::instance()->isVerbose()); /* apply verbose mode */
   Logger::setActiv(XMSession::instance()->noLog() ==
                    false); /* apply log activ mode */
 
   LogInfo(std::string("X-Moto " + XMBuild::getVersionString(true)).c_str());
+  LogInfo("Started at %s", iso8601Date().c_str());
   auto endianness = SwapEndian::bigendien ? "big" : "little";
   LogInfo("System is %s-endian", endianness);
 

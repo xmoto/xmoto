@@ -263,6 +263,8 @@ public:
   bool enableJoysticks() const;
   bool adminMode() const;
   void setAdminMode(bool i_value);
+  int logRetentionCount() const;
+  void setLogRetentionCount(int i_value);
   void setEnableJoysticks(bool i_value);
   bool useCrappyPack() const;
   void setUseCrappyPack(bool i_value);
@@ -447,6 +449,7 @@ private:
   bool m_musicOnAllLevels;
   bool m_noLog;
   bool m_adminMode;
+  int m_logRetentionCount;
 
   bool m_bSafemodeActive;
 

@@ -18,12 +18,13 @@ along with XMOTO; if not, write to the Free Software
 Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 =============================================================================*/
 
+#include "assert.h"
 #include "Log.h"
 #include "Time.h"
 #include "VExcept.h"
 #include "common/VFileIO.h"
 
-#include "assert.h"
+#include <algorithm>
 #include <cstdio>
 #include <stdarg.h>
 
@@ -32,6 +33,8 @@ bool Logger::m_activ = true;
 bool Logger::m_verbose = false;
 FILE *Logger::m_fd = NULL;
 std::string Logger::m_logName;
+
+const std::string latest = "latest.log";
 
 void Logger::init() {
   assert(XMFS::isInitialized());
@@ -49,8 +52,7 @@ void Logger::init() {
     throw Exception("Unable to open log file");
   }
 
-  auto latestFile = "logs/latest.log";
-
+  auto latestFile = "logs/" + latest;
   if (XMFS::fileExists(FDT_CACHE, latestFile))
     XMFS::deleteFile(FDT_CACHE, latestFile);
 
@@ -132,13 +134,26 @@ void Logger::deleteLegacyLog() {
     XMFS::deleteFile(FDT_CACHE, "xmoto.log");
 }
 
-int Logger::deleteOldFiles() {
+int Logger::deleteOldFiles(int retentionCount) {
+  if (retentionCount < 1)
+    return 0;
+
+  const auto reserved = {
+    latest
+  };
+
   int deleted = 0;
   std::vector<std::string> files = XMFS::findPhysFiles(FDT_CACHE, "logs/*.log");
-  for (auto &file : files) {
-    file = XMFS::getFileBaseName(file, true);
+  std::sort(files.begin(), files.end()); // sort lexicographically so we can easily delete the oldest files
 
-    if (file == m_logName || file == "latest.log")
+  for (auto &file : files) {
+    if (retentionCount + reserved.size() >= files.size() - deleted) {
+      break;
+    }
+
+    file = XMFS::getFileBaseName(file, true);
+    if (file == m_logName ||
+        std::find(reserved.begin(), reserved.end(), file) != reserved.end())
       continue;
 
     XMFS::deleteFile(FDT_CACHE, "logs/" + file);
