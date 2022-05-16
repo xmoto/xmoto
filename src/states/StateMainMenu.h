@@ -102,6 +102,8 @@ private:
   void updateInfoFrame();
   void updateReplaysRights();
 
+  void promptForQuit();
+
   UILevelList *getInfoFrameLevelsList();
   std::string getInfoFrameLevelId();
 

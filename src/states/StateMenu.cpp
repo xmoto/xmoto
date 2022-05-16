@@ -110,7 +110,7 @@ void StateMenu::xmKey(InputEventType i_type, const XMKey &i_xmkey) {
   }
 
   else if (i_xmkey.toMouse(nX, nY, nButton)) {
-    if (i_xmkey.getRepetition() == 1) {
+    if (i_xmkey.getRepetition() == 0) {
       if (i_type == INPUT_DOWN) {
         if (nButton == SDL_BUTTON_LEFT) {
           m_GUI->mouseLDown(nX, nY);
@@ -128,7 +128,7 @@ void StateMenu::xmKey(InputEventType i_type, const XMKey &i_xmkey) {
           checkEvents();
         }
       }
-    } else if (i_xmkey.getRepetition() == 2) {
+    } else if (i_xmkey.getRepetition() == 1) {
       if (nButton == SDL_BUTTON_LEFT) {
         m_GUI->mouseLDoubleClick(nX, nY);
         checkEvents();

@@ -23,13 +23,13 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "common/WWW.h"
 #include "common/XMSession.h"
 #include "helpers/Log.h"
+#include "helpers/Time.h"
 #include "helpers/VExcept.h"
 #include "xmoto/Game.h"
 #include "xmoto/GameText.h"
 #include "xmoto/input/Input.h"
 #include "xmoto/input/InputLegacy.h"
 #include <sstream>
-#include <ctime>
 
 #define XMDB_VERSION 37
 #define DB_MAX_SQL_RUNTIME 0.25
@@ -96,7 +96,7 @@ void xmDatabase::preInitForProfileLoading(const std::string &i_dbFileUTF8) {
 
 void xmDatabase::backupXmDb(const std::string &dbFile) {
   std::ostringstream backupName;
-  backupName << "xm-v" << m_openingVersion << "-" << std::time(0) << ".db";
+  backupName << "xm.v" << m_openingVersion << "." << iso8601Date() << ".db";
 
   std::string outputPath;
   if (!XMFS::copyFile(FDT_DATA,
@@ -1016,6 +1016,8 @@ void xmDatabase::upgradeXmDbToVersion(int i_fromVersion,
         Input::instance()->saveConfig(config, this, i_profile);
 
         updateXmDbVersion(37, i_interface);
+
+        Logger::deleteLegacyLog();
       } catch (Exception &e) {
         throw Exception("Unable to update xmDb from 36: " + e.getMsg());
       }

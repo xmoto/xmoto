@@ -54,10 +54,9 @@ class XMKey {
 public:
   XMKey();
   XMKey(SDL_Event &i_event);
-  XMKey(const std::string &i_key,
-        bool i_basicMode = false); /* basic mode is to give a simple letter, for scripts key */
-  XMKey(SDL_Keycode nKey, SDL_Keymod mod, const std::string &i_utf8Char = ""); // keyboard
-  XMKey(Uint8 nButton, unsigned int i_repetition = 1); // mouse
+  XMKey(const std::string &i_key, bool i_basicMode = false); /* basic mode is to give a simple letter, for scripts key */
+  XMKey(SDL_Keycode nKey, SDL_Keymod mod, const std::string &i_utf8Char = "", int repetition = 0); // keyboard
+  XMKey(Uint8 nButton, unsigned int i_repetition = 0); // mouse
   XMKey(Joystick *joystick, Uint8 i_joyButton); // joystick button
   XMKey(Joystick *joystick, Uint8 i_joyAxis, Sint16 i_joyAxisValue); // joystick axis
 

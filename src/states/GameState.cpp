@@ -59,11 +59,10 @@ GameState::GameState(bool drawStateBehind, bool updateStatesBehind) {
 
   m_showCursor = true;
 
-  StateManager::instance()->registerAsObserver("CLIENT_DISCONNECTED_BY_ERROR",
-                                               this);
+  StateManager::instance()->registerAsObserver("CLIENT_DISCONNECTED_BY_ERROR", this);
   StateManager::instance()->registerAsObserver("MYHIGHSCORES_STOLEN", this);
 
-  if (XMSession::instance()->debug() == true) {
+  if (XMSession::instance()->debug()) {
     StateManager::instance()->registerAsEmitter("CHANGE_WWW_ACCESS");
     StateManager::instance()->registerAsEmitter("INTERPOLATION_CHANGED");
     StateManager::instance()->registerAsEmitter("MIRRORMODE_CHANGED");
@@ -74,8 +73,7 @@ GameState::GameState(bool drawStateBehind, bool updateStatesBehind) {
 }
 
 GameState::~GameState() {
-  StateManager::instance()->unregisterAsObserver("CLIENT_DISCONNECTED_BY_ERROR",
-                                                 this);
+  StateManager::instance()->unregisterAsObserver("CLIENT_DISCONNECTED_BY_ERROR", this);
   StateManager::instance()->unregisterAsObserver("MYHIGHSCORES_STOLEN", this);
   SDL_DestroyMutex(m_commandsMutex);
 }
@@ -355,10 +353,9 @@ void GameState::xmKey(InputEventType i_type, const XMKey &i_xmkey) {
   }
 
   else if (i_type == INPUT_DOWN && i_xmkey == XMKey(SDLK_o, KMOD_LCTRL)) {
-    if (StateManager::instance()->isThereASuchState("StateOptions") ==
-        false) { // do not open stateOptions over stateOptions
+    // do not open stateOptions over stateOptions
+    if (!StateManager::instance()->isThereASuchState("StateOptions"))
       StateManager::instance()->pushState(new StateOptions());
-    }
   }
 
   else if (i_type == INPUT_DOWN && i_xmkey == XMKey(SDLK_s, KMOD_LCTRL)) {

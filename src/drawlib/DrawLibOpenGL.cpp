@@ -269,7 +269,6 @@ void DrawLibOpenGL::setLineWidth(float width) {
   glLineWidth(width);
 }
 
-#include <cassert>
 void DrawLibOpenGL::init(unsigned int nDispWidth,
                          unsigned int nDispHeight,
                          bool bWindowed) {
@@ -282,14 +281,6 @@ void DrawLibOpenGL::init(unsigned int nDispWidth,
 
   /* Get some video info */
   const SDL_RendererInfo *pVidInfo = NULL;
-  /* Need to create the `renderer` object first!
-  SDL_Renderer* renderer;
-  // Could use SDL_GetRenderDriverInfo *in addition* to this
-  SDL_GetRendererInfo(renderer, pVidInfo);
-
-  if (pVidInfo == NULL)
-    throw Exception("(1) SDL_GetVideoInfo : " + std::string(SDL_GetError()));
-  */
 
   const int displayIndex = 0;
   int displayModeCount = 0;
@@ -343,7 +334,6 @@ void DrawLibOpenGL::init(unsigned int nDispWidth,
   SDL_SetWindowTitle(m_window, title.c_str());
 
 #if !defined(WIN32) && !defined(__APPLE__) && !defined(__amigaos4__)
-  /* This probably doesn't work */
   SDL_Surface *v_icon = SDL_LoadBMP(
     (XMFS::getSystemDataDir() + std::string("/xmoto_icone_x.ico")).c_str());
   if (v_icon != NULL) {

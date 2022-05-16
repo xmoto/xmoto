@@ -50,7 +50,9 @@ void XMSession::setToDefault() {
   m_verbose = DEFAULT_VERBOSE;
   m_resolutionWidth = DEFAULT_RESOLUTION_WIDTH;
   m_resolutionHeight = DEFAULT_RESOLUTION_HEIGHT;
-  m_maxRenderFps = DEFAULT_MAXRENDERFPS;
+  if (m_maxRenderFps == DEFAULT_MAXRENDERFPS) {
+    m_maxRenderFps = DEFAULT_MAXRENDERFPS;
+  }
   m_windowed = DEFAULT_WINDOWED;
   m_useThemeCursor = DEFAULT_USETHEMECURSOR;
   m_glExts = DEFAULT_GLEXTS;
@@ -153,10 +155,11 @@ void XMSession::setToDefault() {
   m_clientServerPort = DEFAULT_CLIENTSERVERPORT;
   m_clientFramerateUpload = DEFAULT_CLIENTFRAMERATEUPLOAD;
   m_musicOnAllLevels = DEFAULT_MUSICONALLLEVELS;
+  m_logRetentionCount = DEFAULT_LOGRETENTIONCOUNT;
   m_proxySettings.setDefault();
 }
 
-void XMSession::load(const XMArguments *i_xmargs) {
+void XMSession::loadArgs(const XMArguments *i_xmargs) {
   if (i_xmargs->isOptVerbose()) {
     m_verbose = true;
   }
@@ -276,25 +279,28 @@ void XMSession::load(const XMArguments *i_xmargs) {
   }
 }
 
-void XMSession::load(UserConfig *m_Config) {
-  m_profile = m_Config->getString("DefaultProfile");
-  m_resolutionWidth = m_Config->getInteger("DisplayWidth");
-  m_resolutionHeight = m_Config->getInteger("DisplayHeight");
-  m_bpp = m_Config->getInteger("DisplayBPP");
-  m_maxRenderFps = m_Config->getInteger("DisplayMaxRenderFPS");
-  m_windowed = m_Config->getBool("DisplayWindowed");
-  m_drawlib = m_Config->getString("DrawLib");
-  m_useThemeCursor = m_Config->getBool("UseThemeCursor");
+void XMSession::loadConfig(UserConfig *config, bool loadProfile) {
+  if (loadProfile)
+    m_profile = config->getString("DefaultProfile");
 
-  m_screenshotFormat = m_Config->getString("ScreenshotFormat");
-  m_storeReplays = m_Config->getBool("StoreReplays");
-  m_replayFrameRate = m_Config->getFloat("ReplayFrameRate");
+  m_resolutionWidth = config->getInteger("DisplayWidth");
+  m_resolutionHeight = config->getInteger("DisplayHeight");
+  m_bpp = config->getInteger("DisplayBPP");
+  m_maxRenderFps = config->getInteger("DisplayMaxRenderFPS");
+  m_windowed = config->getBool("DisplayWindowed");
+  m_drawlib = config->getString("DrawLib");
+  m_useThemeCursor = config->getBool("UseThemeCursor");
 
-  m_uploadHighscoreUrl = m_Config->getString("WebHighscoreUploadURL");
-  m_webThemesURL = m_Config->getString("WebThemesURL");
-  m_webThemesURLBase = m_Config->getString("WebThemesURLBase");
-  m_webLevelsUrl = m_Config->getString("WebLevelsURL");
-  m_uploadDbSyncUrl = m_Config->getString("WebDbSyncUploadURL");
+  m_screenshotFormat = config->getString("ScreenshotFormat");
+  m_storeReplays = config->getBool("StoreReplays");
+  m_replayFrameRate = config->getFloat("ReplayFrameRate");
+
+  m_uploadHighscoreUrl = config->getString("WebHighscoreUploadURL");
+  m_webThemesURL = config->getString("WebThemesURL");
+  m_webThemesURLBase = config->getString("WebThemesURLBase");
+  m_webLevelsUrl = config->getString("WebLevelsURL");
+  m_uploadDbSyncUrl = config->getString("WebDbSyncUploadURL");
+  m_logRetentionCount = config->getInteger("LogRetentionCount");
 }
 
 void XMSession::loadProfile(const std::string &i_id_profile, xmDatabase *pDb) {
@@ -520,6 +526,7 @@ void XMSession::save(UserConfig *v_config, xmDatabase *pDb) {
   v_config->setString("WebHighscoreUploadURL", m_uploadHighscoreUrl);
   v_config->setString("WebLevelsURL", m_webLevelsUrl);
   v_config->setString("WebDbSyncUploadURL", m_uploadDbSyncUrl);
+  v_config->setInteger("LogRetentionCount", m_logRetentionCount);
 
   v_config->setFloat("ReplayFrameRate", m_replayFrameRate);
   v_config->setBool("StoreReplays", m_storeReplays);
@@ -1371,6 +1378,14 @@ void XMSession::setAdminMode(bool i_value) {
   m_adminMode = i_value;
 }
 
+int XMSession::logRetentionCount() const {
+  return m_logRetentionCount;
+}
+
+void XMSession::setLogRetentionCount(int i_value) {
+  m_logRetentionCount = i_value;
+}
+
 bool XMSession::enableJoysticks() const {
   return m_enableJoysticks;
 }
@@ -1658,4 +1673,5 @@ void XMSession::createDefaultConfig(UserConfig *v_config) {
   v_config->createVar("WebThemesURL", DEFAULT_WEBTHEMES_URL);
   v_config->createVar("WebThemesURLBase", DEFAULT_WEBTHEMES_SPRITESURLBASE);
   v_config->createVar("WebHighscoreUploadURL", DEFAULT_UPLOADREPLAY_URL);
+  v_config->createVar("LogRetentionCount", std::to_string(DEFAULT_LOGRETENTIONCOUNT));
 }

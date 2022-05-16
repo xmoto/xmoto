@@ -29,7 +29,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 XMKey::XMKey() {
   m_type = XMK_NONE;
   m_joyButton = SDL_CONTROLLER_BUTTON_INVALID;
-  m_repetition = 1;
+  m_repetition = 0;
 }
 
 XMKey::XMKey(Uint8 nButton, unsigned int i_repetition) {
@@ -40,7 +40,7 @@ XMKey::XMKey(Uint8 nButton, unsigned int i_repetition) {
 }
 
 XMKey::XMKey(SDL_Event &i_event) {
-  m_repetition = 1;
+  m_repetition = 0;
   m_joyButton = SDL_CONTROLLER_BUTTON_INVALID;
 
   switch (i_event.type) {
@@ -50,6 +50,7 @@ XMKey::XMKey(SDL_Event &i_event) {
       m_keyboard_mod = (SDL_Keymod)(i_event.key.keysym.mod &
                                 (KMOD_CTRL | KMOD_SHIFT | KMOD_ALT |
                                  KMOD_GUI)); // only allow these modifiers
+      m_repetition = i_event.key.repeat;
       break;
 
     case SDL_MOUSEBUTTONDOWN:
@@ -81,21 +82,21 @@ XMKey::XMKey(SDL_Event &i_event) {
   }
 }
 
-XMKey::XMKey(SDL_Keycode nKey, SDL_Keymod mod, const std::string &i_utf8Char) {
+XMKey::XMKey(SDL_Keycode nKey, SDL_Keymod mod, const std::string &i_utf8Char, int repetition) {
   m_type = XMK_KEYBOARD;
   m_keyboard_sym = nKey;
   m_keyboard_mod = (SDL_Keymod)(mod & (KMOD_CTRL | KMOD_SHIFT | KMOD_ALT |
                                        KMOD_GUI)); // only allow these modifiers
   m_keyboard_utf8Char = i_utf8Char;
   m_joyButton = SDL_CONTROLLER_BUTTON_INVALID;
-  m_repetition = 1;
+  m_repetition = repetition;
 }
 
 XMKey::XMKey(Joystick *joystick, Uint8 i_joyButton) {
   m_type = XMK_JOYSTICKBUTTON;
   m_joystick = joystick;
   m_joyButton = i_joyButton;
-  m_repetition = 1;
+  m_repetition = 0;
 }
 
 XMKey::XMKey(Joystick *joystick, Uint8 i_joyAxis, Sint16 i_joyAxisValue) {
@@ -104,14 +105,14 @@ XMKey::XMKey(Joystick *joystick, Uint8 i_joyAxis, Sint16 i_joyAxisValue) {
   m_joyAxis = i_joyAxis;
   m_joyAxisValue = i_joyAxisValue;
   m_joyButton = SDL_CONTROLLER_BUTTON_INVALID;
-  m_repetition = 1;
+  m_repetition = 0;
 }
 
 XMKey::XMKey(const std::string &i_key, bool i_basicMode) {
   size_t pos;
   std::string v_current, v_rest;
 
-  m_repetition = 1;
+  m_repetition = 0;
   m_joyButton = SDL_CONTROLLER_BUTTON_INVALID;
 
   if (i_basicMode) {
@@ -226,7 +227,9 @@ bool XMKey::operator==(const XMKey &i_other) const {
     return false;
   }
 
-  if (m_repetition != i_other.m_repetition) {
+  // The keyboard check is needed to keep old behavior
+  // (before key repeat status was added)
+  if (m_type != XMK_KEYBOARD && m_repetition != i_other.m_repetition) {
     return false;
   }
 

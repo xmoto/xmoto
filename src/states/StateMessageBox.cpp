@@ -41,6 +41,7 @@ void StateMessageBox::initStateMessageBox(StateMessageBoxReceiver *i_receiver,
   m_inputText = i_inputText;
   m_query = i_query;
   m_verticallyLarge = i_verticallyLarge;
+  m_exitable = false;
 }
 
 StateMessageBox::StateMessageBox(StateMessageBoxReceiver *i_receiver,
@@ -121,6 +122,14 @@ void StateMessageBox::checkEvents() {
 }
 
 void StateMessageBox::xmKey(InputEventType i_type, const XMKey &i_xmkey) {
+  if (m_exitable && i_type == INPUT_DOWN && (
+       i_xmkey == XMKey(SDLK_ESCAPE, KMOD_NONE) ||
+       i_xmkey.getJoyButton() == SDL_CONTROLLER_BUTTON_B
+    )) {
+    m_requestForEnd = true;
+    return;
+  }
+
   StateMenu::xmKey(i_type, i_xmkey);
 }
 

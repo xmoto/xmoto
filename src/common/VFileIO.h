@@ -79,7 +79,6 @@ public:
   /* Methods */
   static void init(const std::string &AppDir,
                    const std::string &i_binFile,
-                   const std::string &i_logFile,
                    bool i_graphics,
                    const std::string &i_userCustomDirPath = "");
   static void uninit();
@@ -162,7 +161,7 @@ public:
 
   /* File name mangling */
   static std::string getFileDir(const std::string &Path);
-  static std::string getFileBaseName(const std::string &Path);
+  static std::string getFileBaseName(const std::string &Path, bool withExt = false);
   static std::string getFileExtension(
     const std::string &Path); // do not require FS initialization
 
@@ -173,6 +172,8 @@ public:
   static bool isPathAbsolute(const std::string &Path);
 
   static int mkDir(const char *pcPath);
+
+  static bool mklink(const std::string &source, const std::string &dest);
 
   /* Data interfaces */
   static std::string getUserDir(FileDataType i_fdt);

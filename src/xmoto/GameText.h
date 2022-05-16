@@ -512,9 +512,14 @@ Central place to keep many in-game text strings
 #define GAMETEXT_LEVEL_DELETED_FROM_BLACKLIST _("Deleted from blacklist")
 #define GAMETEXT_LEVELINFO _("Level Info")
 #define GAMETEXT_LEVELNAME _("Level Name")
+#define GAMETEXT_LEVELFILE _("Level File")
+#define GAMETEXT_LEVELID _("Level ID")
+#define GAMETEXT_LEVELCOPYPATH _("Copy path")
+#define GAMETEXT_LEVELPATHBUILTIN _("Built-in")
 #define GAMETEXT_LEVELCANNOTBELOADED _("Level '%s' cannot be loaded")
 #define GAMETEXT_LEVELLOADINGFAILURE \
   _("The level failed while loading with the following error :")
+#define GAMETEXT_COPYTOCLIPBOARDFAILED _("Failed to copy to clipboard")
 #define GAMETEXT_SENDMSGTOADMINS \
   _("Do you want to send a report to website administrators ?")
 #define GAMETEXT_SENDING_REPORT _("Sending the report...")
@@ -743,6 +748,8 @@ Central place to keep many in-game text strings
 #define GAMETEXT_WWWROOMSTAB_REFERENCE _("Reference room")
 #define GAMETEXT_WWWROOMSTAB_OTHER _("Room %i")
 
+#define GAMETEXT_XFILES(A) ngettext("%d file", "%d files", A)
+
 #define GAMETEXT_XHOURS _("%d hours")
 #define GAMETEXT_XMINUTES _("%d minutes")
 #define GAMETEXT_XONLY(A) ngettext("only %i", "only %i", A)
@@ -792,6 +799,8 @@ Central place to keep many in-game text strings
 #define GAMETEXT_CLIENTDISCONNECTSERVER _("%s left the game")
 #define GAMETEXT_CLIENTPLAYING _("%s is playing level %s")
 #define GAMETEXT_CLIENTSTARTUPCONNEXION _("Connexion at startup")
+#define GAMETEXT_CLIENTCONNECTDISCONNECT \
+  _("Connect to/disconnect from the server")
 #define UNTRANSLATED_GAMETEXT_TOO_MUCH_CLIENTS \
   "Sorry, there are already too much clients connected"
 #define UNTRANSLATED_GAMETEXT_SERVER_PROTOCOL_VERSION_INCOMPATIBLE \
@@ -1054,11 +1063,24 @@ Central place to keep many in-game text strings
 #define GAMETEXT_SWITCHTRACKINGSHOTMODE _("Switch trackingshot mode")
 #define GAMETEXT_SWITCHREDERGHOSTTRAIL _("Switch ghosttrail rendering")
 
+#define GAMETEXT_CLEAROLDLOGS _("Clear old logs")
+#define GAMETEXT_LOGSCLEARED _("Logs cleared")
+#define GAMETEXT_CONFIRMCLEAROLDLOGS \
+  _("Are you sure you want to clear old logs?")
+
+#define CONTEXTHELP_CLEAROLDLOGS _("Delete all previous log files from disk")
+
 #define GAMETEXT_CLEARLEVELCACHE _("Clear level cache")
 #define GAMETEXT_LEVELCACHECLEARED _("Level cache cleared")
 #define GAMETEXT_CONFIRMCLEARLEVELCACHE \
   _("Are you sure you want to clear the level cache?")
+
+#define GAMETEXT_DELETELEVELCACHEFILE _("Delete cache file")
+#define GAMETEXT_LEVELCACHEFILEDELETED _("Cache file deleted")
+
 #define CONTEXTHELP_CLEARLEVELCACHE _("Clear level cache")
+#define CONTEXTHELP_DELETE_CACHED_LEVEL_FILE \
+  _("Delete cached level file from disk to force a clean state (safe)")
 
 #define CONTEXTHELP_NOIDEA _("You don't want to vote")
 #define CONTEXTHELP_DBEGINNER _("Really easy")

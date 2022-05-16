@@ -49,10 +49,13 @@ private:
   static void createProfileList();
 
   void updateOptions();
+  void highlightSelectedProfile();
 
   /* GUI */
   static UIRoot *m_sGUI;
   static void createGUIIfNeeded(RenderSurface *i_screen);
+
+  bool m_canClose;
 };
 
 #endif

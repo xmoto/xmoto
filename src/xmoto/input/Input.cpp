@@ -257,6 +257,7 @@ void Input::setDefaultConfig() {
   m_globalControls[INPUT_SWITCHHIGHSCOREINFORMATION] = IFullKey("KeySwitchHighscoreInformation", XMKey(SDLK_w, KMOD_LCTRL), GAMETEXT_SWITCHHIGHSCOREINFORMATION);
   m_globalControls[INPUT_NETWORKADMINCONSOLE] = IFullKey("KeyNetworkAdminConsole", XMKey(SDLK_s, (SDL_Keymod)(KMOD_LCTRL | KMOD_LALT)), GAMETEXT_NETWORKADMINCONSOLE);
   m_globalControls[INPUT_SWITCHSAFEMODE] = IFullKey("KeySafeMode", XMKey(SDLK_F6, KMOD_NONE), GAMETEXT_SWITCHSAFEMODE);
+  m_globalControls[INPUT_TOGGLESERVERCONN] = IFullKey("KeyToggleServerConn", XMKey(), GAMETEXT_CLIENTCONNECTDISCONNECT);
 
   // uncustomizable keys
   m_globalControls[INPUT_HELP] = IFullKey("KeyHelp", XMKey(SDLK_F1, KMOD_NONE), GAMETEXT_HELP, false);

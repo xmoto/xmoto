@@ -23,7 +23,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
 #include "BuildConfig.h"
 
-#ifndef USE_GETTEXT
+#if !USE_GETTEXT
 #define _(A) A
 char *ngettext(char *msgid, char *msgid_plural, unsigned long int n);
 #else

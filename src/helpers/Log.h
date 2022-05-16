@@ -41,7 +41,7 @@ enum LogLevel { LOG_ERROR, LOG_WARNING, LOG_INFO, LOG_DEBUG };
 
 class Logger {
 public:
-  static void init(const std::string &i_logFile);
+  static void init();
   static void uninit();
   static bool isInitialized();
 
@@ -51,11 +51,16 @@ public:
   static void LogLevelMsg(LogLevel i_level, const char *pcFmt, ...);
   static void LogData(void *data, unsigned int len);
 
+  static void deleteLegacyLog();
+  static int deleteOldFiles(int retentionCount = 0);
+
 private:
   static bool m_isInitialized;
   static bool m_verbose;
   static bool m_activ;
   static FILE *m_fd;
+
+  static std::string m_logName;
 
   static void LogRaw(const std::string &s);
 };

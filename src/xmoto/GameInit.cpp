@@ -33,6 +33,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "helpers/Environment.h"
 #include "helpers/Log.h"
 #include "helpers/Random.h"
+#include "helpers/Time.h"
 
 #include "Credits.h"
 #include "GeomsManager.h"
@@ -71,8 +72,6 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #if !defined(WIN32)
 #include <signal.h>
 #endif
-
-#include <cassert>
 
 #define MOUSE_DBCLICK_TIME 0.250f
 
@@ -133,7 +132,7 @@ int main(int nNumArgs, char **ppcArgs) {
     snprintf(cBuf,
              1024,
              "Fatal exception occurred: %s\n"
-             "Consult the file xmoto.log for more information about what\n"
+             "Consult the logs/latest.log file for more information about what\n"
              "might has occurred.\n",
              e.getMsg().c_str());
     MessageBox(NULL, cBuf, "X-Moto Error", MB_OK | MB_ICONERROR);
@@ -227,14 +226,13 @@ void GameApp::run_load(int nNumArgs, char **ppcArgs) {
   if (v_xmArgs.isOptConfigPath()) {
     XMFS::init("xmoto",
                "xmoto.bin",
-               "xmoto.log",
                v_xmArgs.isOptServerOnly() == false,
                v_xmArgs.getOpt_configPath_path());
   } else {
     XMFS::init(
-      "xmoto", "xmoto.bin", "xmoto.log", v_xmArgs.isOptServerOnly() == false);
+      "xmoto", "xmoto.bin", v_xmArgs.isOptServerOnly() == false);
   }
-  Logger::init("xmoto.log");
+  Logger::init();
 
   /* c xmoto files */
   if (v_xmArgs.isOptBuildQueries()) {
@@ -253,23 +251,23 @@ void GameApp::run_load(int nNumArgs, char **ppcArgs) {
   }
 
   XMSession::setDefaultInstance("live");
-  XMSession::instance()->load(
+  XMSession::instance()->loadConfig(
     m_userConfig); /* overload default session by userConfig */
 
-  XMSession::instance()->load(
+  XMSession::instance()->loadArgs(
     &v_xmArgs); /* overload default session by xmargs     */
 
+  Logger::deleteOldFiles(XMSession::instance()->logRetentionCount());
   Logger::setVerbose(
     XMSession::instance()->isVerbose()); /* apply verbose mode */
   Logger::setActiv(XMSession::instance()->noLog() ==
                    false); /* apply log activ mode */
 
   LogInfo(std::string("X-Moto " + XMBuild::getVersionString(true)).c_str());
-  if (SwapEndian::bigendien) {
-    LogInfo("Systeme is bigendien");
-  } else {
-    LogInfo("Systeme is littleendien");
-  }
+  LogInfo("Started at %s", iso8601Date().c_str());
+  auto endianness = SwapEndian::bigendien ? "big" : "little";
+  LogInfo("System is %s-endian", endianness);
+
   LogInfo("User data   directory: %s", XMFS::getUserDir(FDT_DATA).c_str());
   LogInfo("User config directory: %s", XMFS::getUserDir(FDT_CONFIG).c_str());
   LogInfo("User cache  directory: %s", XMFS::getUserDir(FDT_CACHE).c_str());
@@ -318,19 +316,19 @@ void GameApp::run_load(int nNumArgs, char **ppcArgs) {
     pDb->setTrace(XMSession::instance()->sqlTrace());
   }
 
-  XMSession::instance("file")->load(m_userConfig);
+  XMSession::instance("file")->loadConfig(m_userConfig);
   XMSession::instance("file")->loadProfile(
     XMSession::instance("file")->profile(), pDb);
   (*XMSession::instance()) = (*XMSession::instance("file"));
 
-  XMSession::instance()->load(
+  XMSession::instance()->loadArgs(
     &v_xmArgs); /* overload default session by xmargs */
   // enable propagation only after overloading by command args
   XMSession::enablePropagation("file");
 
   LogInfo("SiteKey: %s", XMSession::instance()->sitekey().c_str());
 
-#ifdef USE_GETTEXT
+#if USE_GETTEXT
   std::string v_locale = Locales::init(XMSession::instance()->language());
   LogInfo("Locales set to '%s' (directory '%s')",
           v_locale.c_str(),
@@ -740,7 +738,7 @@ void GameApp::manageEvent(SDL_Event *Event) {
 
       StateManager::instance()->xmKey(
         INPUT_DOWN,
-        XMKey(Event->key.keysym.sym, (SDL_Keymod)Event->key.keysym.mod, utf8Char));
+        XMKey(Event->key.keysym.sym, (SDL_Keymod)Event->key.keysym.mod, utf8Char, Event->key.repeat));
       break;
 
     case SDL_KEYUP:
@@ -764,7 +762,7 @@ void GameApp::manageEvent(SDL_Event *Event) {
           (getXMTime() - fLastMouseClickTime) < MOUSE_DBCLICK_TIME) {
         /* Pass double click */
         StateManager::instance()->xmKey(INPUT_DOWN,
-                                        XMKey(Event->button.button, 2));
+                                        XMKey(Event->button.button, 1));
       } else {
         /* Pass ordinary click */
         StateManager::instance()->xmKey(INPUT_DOWN,
@@ -812,31 +810,29 @@ void GameApp::manageEvent(SDL_Event *Event) {
     }
 
     case SDL_WINDOWEVENT: {
+      bool hasFocus = false;
+
       switch (Event->window.event) {
         case SDL_WINDOWEVENT_ENTER:
         case SDL_WINDOWEVENT_LEAVE: {
-          bool hasFocus = false;
           switch (Event->window.event) {
             case SDL_WINDOWEVENT_ENTER: hasFocus = true;  break;
             case SDL_WINDOWEVENT_LEAVE: hasFocus = false; break;
-            /* never hit */
-            default: hasFocus = StateManager::instance()->hasFocus(); break;
           }
-          if (!m_hasKeyboardFocus) {
+
+          if (!m_hasKeyboardFocus)
             StateManager::instance()->changeFocus(hasFocus);
-          }
+
           m_hasMouseFocus = hasFocus;
           break;
         }
         case SDL_WINDOWEVENT_FOCUS_GAINED: /* fall through */
         case SDL_WINDOWEVENT_FOCUS_LOST: {
-          bool hasFocus;
           switch (Event->window.event) {
             case SDL_WINDOWEVENT_FOCUS_GAINED: hasFocus = true;  break;
             case SDL_WINDOWEVENT_FOCUS_LOST:   hasFocus = false; break;
-            /* never hit */
-            default: assert(false); hasFocus = StateManager::instance()->hasFocus(); break;
           }
+
           if (hasFocus) {
             // Pending keydown events need to be flushed after gaining focus
             // because SDL2 will send them for keys that were pressed outside the game
@@ -850,36 +846,14 @@ void GameApp::manageEvent(SDL_Event *Event) {
              */
             StatePlayingLocal *state = dynamic_cast<StatePlayingLocal *>(
                 StateManager::instance()->getTopState());
-            if (state) {
+            if (state)
               state->dealWithActivedKeys();
-            }
           }
 
-          if (!m_hasMouseFocus) {
+          if (!m_hasMouseFocus)
             StateManager::instance()->changeFocus(hasFocus);
-          }
+
           m_hasKeyboardFocus = hasFocus;
-
-          if (!hasFocus) {
-            int numkeys = 0;
-            const uint8_t* keys = SDL_GetKeyboardState(&numkeys);
-            bool b = Input::instance()->getPlayerKey(INPUT_DRIVE, 0)->isPressed(keys, 0, numkeys);
-
-#if 0
-            // invalidate all pressed keys
-            {
-              for (unsigned int player = 0; player < INPUT_NB_PLAYERS; ++player) {
-                for (unsigned int i = 0; i < INPUT_NB_PLAYERKEYS; ++i) {
-                  StateManager::instance()->xmKey(INPUT_UP, *Input::instance()->getPlayerKey(i, player));
-                }
-              }
-              for (unsigned int i = 0; i < INPUT_NB_GLOBALKEYS; ++i) {
-                StateManager::instance()->xmKey(INPUT_UP, *Input::instance()->getGlobalKey(i));
-              }
-            }
-#endif
-          }
-
           break;
         }
         case SDL_WINDOWEVENT_EXPOSED:
@@ -894,11 +868,7 @@ void GameApp::manageEvent(SDL_Event *Event) {
           m_isIconified = true;
           break;
       }
-      printf("focus: %s | kbd: %s | mouse: %s\n",
-              StateManager::instance()->hasFocus() ? "yes" : "no",
-              m_hasKeyboardFocus ? "yes" : "no",
-              m_hasMouseFocus ? "yes" : "no"
-            );
+
       break;
     }
     case SDL_DROPFILE: {

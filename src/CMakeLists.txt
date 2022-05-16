@@ -18,6 +18,10 @@ else()
   message("-- Using " ${CMAKE_GENERATOR})
 endif()
 
+if(POLICY CMP0072)
+  cmake_policy(SET CMP0072 NEW)
+endif()
+
 # find dependencies
 find_package(BZip2)
 set(USE_SYSTEM_BZip2 $<AND:$<BOOL:${PREFER_SYSTEM_BZip2}>,$<BOOL:${BZIP2_FOUND}>,$<NOT:$<BOOL:${WIN32}>>>)
@@ -185,8 +189,9 @@ set(helpers_src
   helpers/Singleton.h
   helpers/SwapEndian.cpp helpers/SwapEndian.h
   helpers/System.cpp helpers/System.h
-  helpers/TFunctor.h
   helpers/Text.cpp helpers/Text.h
+  helpers/TFunctor.h
+  helpers/Time.cpp helpers/Time.h
   helpers/VExcept.h
   helpers/VMath.cpp helpers/VMath.h
   helpers/iqsort.h
