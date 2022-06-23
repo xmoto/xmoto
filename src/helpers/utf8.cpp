@@ -138,21 +138,21 @@ std::string utf8::utf8_insert(const std::string &i_a,
   return v_res;
 }
 
-std::string utf8::utf8_delete(const std::string &i_a, unsigned int i_numChar) {
-  unsigned int n = 0;
-  unsigned int nbC = 0;
-  std::string v_res;
-  std::string v_current;
+std::string utf8::utf8_delete(const std::string &input, int32_t at) {
+  int32_t pos = 0;
+  int32_t cursor = 0;
+  std::string result;
+  std::string current;
 
-  while (i_a.length() > n) {
-    v_current = getNextChar(i_a, n);
-    nbC++;
-    if (nbC != i_numChar) {
-      v_res += v_current;
-    }
+  while (input.length() > pos) {
+    current = getNextChar(input, (unsigned int &)pos);
+    cursor++;
+
+    if (cursor != at)
+      result += current;
   }
 
-  return v_res;
+  return result;
 }
 
 unsigned int utf8::utf8_length(const std::string &i_a) {

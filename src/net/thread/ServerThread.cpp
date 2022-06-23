@@ -1822,12 +1822,12 @@ void ServerThread::manageSrvCmd(unsigned int i_client,
       char v_clientstr[90];
       std::string v_mode;
 
-      v_answer += "+----+-----------------+----+----------------+---+----------"
-                  "--------------+-----+--------+\n";
-      v_answer += "|  id|login            |mode|              ip|prt|version   "
-                  "              |xmprt|ping(mS)|\n";
-      v_answer += "+----+-----------------+----+----------------+---+----------"
-                  "--------------+-----+--------+\n";
+      v_answer += "+----+-----------------+----+----------------+-----+----------"
+                  "--------------+-------+--------+\n";
+      v_answer += "|  id|login            |mode|              ip|proto|version   "
+                  "              |xmproto|ping(mS)|\n";
+      v_answer += "+----+-----------------+----+----------------+-----+----------"
+                  "--------------+-------+--------+\n";
 
       for (unsigned int i = 0; i < m_clients.size(); i++) {
         std::ostringstream v_ping;
@@ -1851,7 +1851,7 @@ void ServerThread::manageSrvCmd(unsigned int i_client,
 
         snprintf(v_clientstr,
                  90,
-                 "%5u %-17s %-5s %15s %3s %-26s %3i %8s",
+                 "%5u %-17s %-5s %15s %5s %-26s %5i %8s",
                  m_clients[i]->id(),
                  m_clients[i]->name().c_str(),
                  v_mode.c_str(),

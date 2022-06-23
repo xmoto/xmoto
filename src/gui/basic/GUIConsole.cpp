@@ -20,13 +20,13 @@
 
 #include "GUIConsole.h"
 #include "drawlib/DrawLib.h"
+#include "helpers/System.h"
 #include "helpers/utf8.h"
 #include "include/xm_SDL.h"
 #include "xmoto/Game.h"
 #include "common/TextEdit.h"
 
 #include <algorithm>
-#include <tuple> // std::tie
 
 #define UIC_PROMPT "$ "
 #define UIC_CURSOR "_"
@@ -95,12 +95,10 @@ void UIConsole::paint() {
           getPosition().nHeight,
           MAKE_COLOR(0, 0, 0, 220));
 
-  // draw the text
-  v_nbToRemove = 0;
-  for (unsigned int i = 0; i < m_lines.size(); i++) {
-    v_fg = v_fm->getGlyphTabExtended(m_lines[i]);
+  auto drawLine = [&](const std::string &line, bool lastLine) {
+    v_fg = v_fm->getGlyphTabExtended(line);
 
-    // print the line only if that not to much at the bottom
+    // only print the line if there is space at the bottom
     if (v_YOffset + v_fg->realHeight() <
         getPosition().nY + getPosition().nHeight) {
       v_fm->printString(GameApp::instance()->getDrawLib(),
@@ -110,12 +108,15 @@ void UIConsole::paint() {
                         MAKE_COLOR(255, 255, 255, 255));
     }
 
-    // compute the cursor for the last line
-    if (m_lines.size() - 1 == i) {
-      if (m_cursorChar == (int)utf8::utf8_length(m_lines[i])) {
+
+    if (lastLine) {
+      // compute the cursor for the last line
+      if (m_textEdit.cursorPos() >= utf8::utf8_length(line)) {
         v_cursorXOffset = v_XOffset + v_fg->realWidth();
       } else {
-        std::string s = utf8::utf8_substring(m_lines[i], 0, m_cursorChar);
+        auto promptLength = utf8::utf8_length(UIC_PROMPT);
+
+        std::string s = utf8::utf8_substring(line, 0, promptLength + m_textEdit.cursorPos());
         v_cursorXOffset = v_XOffset + v_fm->getGlyph(s)->realWidth();
       }
       v_cursorYOffset = v_YOffset;
@@ -126,23 +127,37 @@ void UIConsole::paint() {
     if (v_YOffset > getPosition().nY + getPosition().nHeight) {
       v_nbToRemove++;
     }
+  };
+
+
+  for (auto &line : m_scrollback) {
+    drawLine(line, false);
   }
 
-  // draw cursor
-  if (m_waitAnswer == false) {
-    if ((GameApp::getXMTimeInt() / 100) % 10 < 5) {
-      v_fg = v_fm->getGlyph(UIC_CURSOR);
-      v_fm->printString(GameApp::instance()->getDrawLib(),
-                        v_fg,
-                        v_cursorXOffset,
-                        v_cursorYOffset,
-                        MAKE_COLOR(255, 255, 255, 255));
-    }
+  std::string line;
+  // only draw the current line when not waiting for a response
+  if (!m_waitForResponse)
+    line = UIC_PROMPT + m_textEdit.text();
+
+  drawLine(line, true);
+
+
+
+  bool blink = (GameApp::getXMTimeInt() / 100) % 10 < 5;
+
+  // draw the cursor when waiting for a response or during a blink
+  if (blink || m_waitForResponse) {
+    v_fg = v_fm->getGlyph(UIC_CURSOR);
+    v_fm->printString(GameApp::instance()->getDrawLib(),
+                      v_fg,
+                      v_cursorXOffset,
+                      v_cursorYOffset,
+                      MAKE_COLOR(255, 255, 255, 255));
   }
 
   // remove lines if on bottom
   if (v_YOffset > getPosition().nY + getPosition().nHeight) {
-    m_lines.erase(m_lines.begin(), m_lines.begin() + v_nbToRemove);
+    m_scrollback.erase(m_scrollback.begin(), m_scrollback.begin() + v_nbToRemove);
   }
 }
 
@@ -151,108 +166,82 @@ bool UIConsole::offerActivation() {
 }
 
 void UIConsole::reset(const std::string &i_cmd) {
-  m_lines.clear();
-  m_waitAnswer = false;
+  m_scrollback.clear();
+  m_waitForResponse = false;
   m_lastEdit = "";
   m_history_n = -1;
 
   if (i_cmd == "") {
-    addNewLine(UIC_PROMPT);
-    m_cursorChar = utf8::utf8_length(UIC_PROMPT);
+    addNewLine();
   } else {
     execCommand(i_cmd);
   }
 }
 
 void UIConsole::giveAnswer(const std::string &i_line) {
-  std::vector<std::string> v_res;
+  std::vector<std::string> lines;
 
-  utf8::utf8_split(i_line, "\n", v_res);
-  for (unsigned int i = 0; i < v_res.size(); i++) {
-    m_lines.push_back(v_res[i]);
+  utf8::utf8_split(i_line, "\n", lines);
+  for (auto &line : lines) {
+    m_scrollback.push_back(line);
   }
-  addNewLine(UIC_PROMPT);
-  m_cursorChar = utf8::utf8_length(UIC_PROMPT);
-  m_waitAnswer = false;
+  addNewLine();
+  m_waitForResponse = false;
 }
 
-void UIConsole::addNewLine(const std::string &i_line) {
-  m_lines.push_back(i_line);
+void UIConsole::addNewLine() {
+  m_textEdit.clear();
 }
 
 bool UIConsole::textInput(int nKey, SDL_Keymod mod, const std::string &i_utf8Char) {
-  // add the key
-  if (utf8::utf8_length(i_utf8Char) ==
-      1) { // alt/... and special keys must not be kept
-    if (m_cursorChar == (int)utf8::utf8_length(m_lines[m_lines.size() - 1])) {
-      m_lines[m_lines.size() - 1] += i_utf8Char;
-    } else {
-      std::string s;
-      s = utf8::utf8_substring(m_lines[m_lines.size() - 1], 0, m_cursorChar);
-      s += i_utf8Char;
-      s += utf8::utf8_substring(m_lines[m_lines.size() - 1],
-                                m_cursorChar,
-                                utf8::utf8_length(m_lines[m_lines.size() - 1]) -
-                                  m_cursorChar);
-      m_lines[m_lines.size() - 1] = s;
-    }
-    m_cursorChar++;
-    m_lastEdit = m_lines[m_lines.size() - 1];
+  // alt/... and special keys must not be kept
+  if (utf8::utf8_length(i_utf8Char) == 1) {
+    m_textEdit.insert(i_utf8Char);
+    m_lastEdit = m_textEdit.text();
   }
 
   return true;
 }
 
 bool UIConsole::keyDown(int nKey, SDL_Keymod mod, const std::string &i_utf8Char) {
-  if (nKey == SDLK_d && (mod & KMOD_LCTRL) == KMOD_LCTRL) {
+  // EOF
+  if (nKey == SDLK_d && (mod & KMOD_CTRL)
+      && m_textEdit.text().empty()) {
     execInternal("exit");
     return true;
   }
 
-  if (nKey == SDLK_l && (mod & KMOD_LCTRL) == KMOD_LCTRL) {
-    if (m_waitAnswer) {
-      m_lines.erase(m_lines.begin(), m_lines.end());
-    } else {
-      m_lines.erase(m_lines.begin(), m_lines.end() - 1);
-    }
+  // clear
+  if (nKey == SDLK_l && (mod & KMOD_CTRL)) {
+    int linesToKeep = m_waitForResponse ? 1 : 0;
+    m_scrollback.erase(m_scrollback.begin(), m_scrollback.end() - linesToKeep);
+
     return true;
   }
 
-  // console is very limited is waiting for an answer
-  if (m_waitAnswer) {
+  if (m_waitForResponse)
     return false;
-  }
+
 
   if (nKey == SDLK_RETURN) {
-    execLine(m_lines[m_lines.size() - 1]);
+    execLine(m_textEdit.text());
     return true;
   }
 
   if (nKey == SDLK_BACKSPACE) {
-    size_t bound = utf8::utf8_length(UIC_PROMPT);
-
     if (mod & KMOD_CTRL) {
-      std::string &line = m_lines[m_lines.size() - 1];
-      std::tie(line, m_cursorChar) = TextEdit::deleteWordLeft(line, m_cursorChar, bound);
+      m_textEdit.deleteWordLeft();
     } else {
-      if (m_cursorChar > (int)bound) {
-        m_lines[m_lines.size() - 1] =
-          utf8::utf8_delete(m_lines[m_lines.size() - 1], m_cursorChar);
-        m_cursorChar--;
-      }
+      m_textEdit.deleteLeft();
     }
     return true;
   }
 
   if (nKey == SDLK_DELETE) {
     if (mod & KMOD_CTRL) {
-      std::string &line = m_lines[m_lines.size() - 1];
-      std::tie(line, m_cursorChar) = TextEdit::deleteWordRight(line, m_cursorChar);
+      m_textEdit.deleteWordRight();
     } else {
-      if (m_cursorChar < (int)utf8::utf8_length(m_lines[m_lines.size() - 1])) {
-        m_lines[m_lines.size() - 1] =
-          utf8::utf8_delete(m_lines[m_lines.size() - 1], m_cursorChar + 1);
-      }
+      m_textEdit.deleteRight();
     }
     return true;
   }
@@ -270,7 +259,7 @@ bool UIConsole::keyDown(int nKey, SDL_Keymod mod, const std::string &i_utf8Char)
       m_history_n--;
 
       if (m_history_n < 0) {
-        changeLine(actionFromLine(m_lastEdit));
+        changeLine(m_lastEdit);
       } else {
         changeLine(m_history[m_history.size() - 1 - m_history_n]);
       }
@@ -279,27 +268,19 @@ bool UIConsole::keyDown(int nKey, SDL_Keymod mod, const std::string &i_utf8Char)
   }
 
   if (nKey == SDLK_LEFT) {
-    size_t bound = utf8::utf8_length(UIC_PROMPT);
-
     if (mod & KMOD_CTRL) {
-      m_cursorChar -= TextEdit::jumpWordLeft(m_lines[m_lines.size() - 1], m_cursorChar, bound);
+      m_textEdit.jumpWordLeft();
     } else {
-      if (m_cursorChar > (int)bound) {
-        m_cursorChar--;
-      }
+      m_textEdit.moveCursor(-1);
     }
     return true;
   }
 
   if (nKey == SDLK_RIGHT) {
-    size_t bound = utf8::utf8_length(m_lines[m_lines.size() - 1]);
-
     if (mod & KMOD_CTRL) {
-      m_cursorChar += TextEdit::jumpWordRight(m_lines[m_lines.size() - 1], m_cursorChar, bound);
+      m_textEdit.jumpWordRight();
     } else {
-      if (m_cursorChar < (int)bound) {
-        m_cursorChar++;
-      }
+      m_textEdit.moveCursor(1);
     }
     return true;
   }
@@ -310,39 +291,35 @@ bool UIConsole::keyDown(int nKey, SDL_Keymod mod, const std::string &i_utf8Char)
   }
 
   if (nKey == SDLK_END) {
-    m_cursorChar = m_lines[m_lines.size() - 1].size();
+    m_textEdit.jumpToEnd();
   }
 
   if (nKey == SDLK_HOME) {
-    m_cursorChar = utf8::utf8_length(UIC_PROMPT);
+    m_textEdit.jumpToStart();
   }
+
+  if (nKey == SDLK_v && (mod & KMOD_CTRL)) {
+    m_textEdit.insert(System::getClipboardText());
+  }
+
   return true;
 }
 
 void UIConsole::changeLine(const std::string &i_action) {
-  m_lines[m_lines.size() - 1] = UIC_PROMPT + i_action;
-  m_cursorChar = utf8::utf8_length(UIC_PROMPT) + utf8::utf8_length(i_action);
-}
-
-std::string UIConsole::actionFromLine(const std::string &i_line) {
-  unsigned int v_prompt_length = utf8::utf8_length(UIC_PROMPT);
-  return utf8::utf8_substring(
-    i_line, v_prompt_length, utf8::utf8_length(i_line) - v_prompt_length);
+  m_textEdit.setText(i_action);
+  m_textEdit.jumpToEnd();
 }
 
 void UIConsole::addHistory(const std::string &i_action) {
-  bool v_samelast = false;
+  if (i_action == "")
+    return;
 
-  if (i_action != "") {
-    if (m_history.size() != 0) {
-      if (i_action == m_history[m_history.size() - 1]) {
-        v_samelast = true;
-      }
-    }
-    if (v_samelast == false) {
-      m_history.push_back(i_action);
-    }
-  }
+  m_scrollback.push_back(UIC_PROMPT + i_action);
+
+  bool sameAsLast = m_history.size() > 0 && i_action == m_history.back();
+
+  if (!sameAsLast)
+    m_history.push_back(i_action);
 }
 
 bool UIConsole::execInternal(const std::string &i_action) {
@@ -350,55 +327,58 @@ bool UIConsole::execInternal(const std::string &i_action) {
     m_hook->exit();
     return true;
   }
+
   return false;
 }
 
 void UIConsole::execCommand(const std::string &i_action) {
-  // call
-  if (i_action != "") {
-    if (execInternal(i_action)) {
-      addNewLine(UIC_PROMPT);
-      m_cursorChar = utf8::utf8_length(UIC_PROMPT);
-    } else {
-      m_hook->exec(i_action);
-      m_waitAnswer = true;
-    }
-  } else { // simple new line without command
-    addNewLine(UIC_PROMPT);
-    m_cursorChar = utf8::utf8_length(UIC_PROMPT);
+  if (i_action == "") { // empty command
+    m_scrollback.push_back(UIC_PROMPT);
+    addNewLine();
+    return;
   }
+
+  if (execInternal(i_action)) {
+    addNewLine();
+    return;
+  }
+
+  m_hook->exec(i_action);
+  m_waitForResponse = true;
 }
 
 void UIConsole::execLine(const std::string &i_line) {
-  std::string v_action = actionFromLine(i_line);
+  std::string v_action = i_line;
 
-  // add in history
+  m_lastEdit = "";
+
   addHistory(v_action);
   m_history_n = -1;
-
-  m_lastEdit = UIC_PROMPT;
 
   execCommand(v_action);
 }
 
 void UIConsole::completeCommand() {
-  int pos_find = m_lines[m_lines.size() - 1].rfind(" ") + 1;
-  std::string last_word = m_lines[m_lines.size() - 1].substr(pos_find);
-  std::vector<std::string> found_list;
-  for (int i = 0, n = m_completionList.size(); i < n; i++) {
-    if (m_completionList[i].find(last_word) == 0) {
-      found_list.push_back(m_completionList[i]);
-    }
+  int lastSpace = m_textEdit.text().rfind(" ");
+  std::string lastWord = m_textEdit.text().substr(lastSpace + 1);
+
+  std::vector<std::string> foundList;
+  for (auto &completion : m_completionList) {
+    if (completion.find(lastWord) == 0)
+      foundList.push_back(completion);
   }
-  if (found_list.size() > 1) {
+
+  if (foundList.size() < 1)
+    return;
+
+  if (foundList.size() > 1) {
     std::string found_list_str;
-    for (int i = 0, n = found_list.size(); i < n; i++) {
-      found_list_str += found_list[i] + "  ";
-    }
-    addNewLine(found_list_str);
-    addNewLine(m_lines[m_lines.size() - 2]);
-  } else if (found_list.size() != 0) {
-    m_lines[m_lines.size() - 1] += found_list[0].substr(last_word.size(), 1000);
-    m_cursorChar = m_lines[m_lines.size() - 1].size();
+
+    for (auto &found : foundList)
+      found_list_str += found + "  ";
+
+    m_scrollback.push_back(found_list_str);
+  } else {
+    m_textEdit.insert(foundList[0].substr(lastWord.size(), 1000));
   }
 }

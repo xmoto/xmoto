@@ -22,6 +22,7 @@
 #define __GUICONSOLE_H__
 
 #include "GUI.h"
+#include "common/TextEdit.h"
 #include <vector>
 
 class UIConsoleHook {
@@ -70,17 +71,17 @@ private:
                    int nHeight);
 
   UIConsoleHook *m_hook;
-  int m_cursorChar;
-  std::vector<std::string> m_lines;
+  //int m_cursorChar;
+  TextEdit m_textEdit;
+  std::vector<std::string> m_scrollback;
   std::vector<std::string> m_history;
   std::vector<std::string> m_completionList;
   int m_history_n;
   std::string m_lastEdit;
-  bool m_waitAnswer;
+  bool m_waitForResponse;
 
   void changeLine(const std::string &i_action);
-  std::string actionFromLine(const std::string &i_line);
-  void addNewLine(const std::string &i_line);
+  void addNewLine();
   void addHistory(const std::string &i_action);
   void execLine(const std::string &i_line);
   bool execInternal(const std::string &i_action);

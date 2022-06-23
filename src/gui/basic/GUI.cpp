@@ -27,6 +27,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "drawlib/DrawLib.h"
 #include "helpers/Log.h"
 #include "helpers/RenderSurface.h"
+#include "helpers/System.h"
 #include "helpers/utf8.h"
 #include "helpers/VMath.h"
 #include "xmoto/Game.h"
@@ -402,8 +403,28 @@ void UIMsgBox::makeActiveButton(UIMsgBoxButton i_button) {
 }
 
 void UIMsgBox::paint(void) {
+  int nCursorOffset = 0;
+  int nCursorWidth = 0;
+
+  std::string s = utf8::utf8_substring(m_textEdit.text(), 0, m_textEdit.cursorPos());
+
+  if (m_textEdit.text() != "") {
+    FontManager *fm = getFont();
+    FontGlyph *fg = fm->getGlyph(s);
+    nCursorOffset = fg->realWidth();
+  }
+
+  if (m_textEdit.cursorPos() >= utf8::utf8_length(m_textEdit.text())) {
+    nCursorWidth = 6;
+  } else {
+    std::string s = utf8::utf8_substring(m_textEdit.text(), m_textEdit.cursorPos(), 1);
+    FontManager *fm = getFont();
+    FontGlyph *fg = fm->getGlyph(s);
+    nCursorWidth = fg->realWidth();
+  }
+
   /* Should the OK button be disabled? (if any) */
-  if (m_bTextInput && m_TextInput_real.empty()) {
+  if (m_bTextInput && m_textEdit.text().empty()) {
     for (unsigned int i = 0; i < m_nNumButtons; i++) {
       if (m_pButtons[i]->getCaption() == GAMETEXT_OK)
         m_pButtons[i]->enableWindow(false);
@@ -420,20 +441,27 @@ void UIMsgBox::paint(void) {
 
   /* Should we do some text? */
   if (m_bTextInput && m_textInputFont != NULL) {
+    int xOffset = 16;
+    int yOffset = 120;
+
+    putRect(xOffset + nCursorOffset,
+            yOffset + 3,
+            nCursorWidth + 1,
+            24,
+            MAKE_COLOR(255, 0, 0, 255));
+
     setFont(m_textInputFont);
-    putText(16, 120, m_TextInput_fake + std::string("|"));
+    putText(xOffset, yOffset, m_textEdit.text());
   }
 }
 
 bool UIMsgBox::textInput(int nKey, SDL_Keymod mod, const std::string &i_utf8Char) {
   // alt/... and special keys must not be kept
-  if (utf8::utf8_length(i_utf8Char) == 1) {
-    // you can generate ascii 10 with ctrl+j or keyboard having new line key
-    if (i_utf8Char[0] != '\n') {
-      m_TextInput_fake = utf8::utf8_concat(m_TextInput_fake, i_utf8Char);
-      m_TextInput_real = m_TextInput_fake;
-    }
-  }
+  if (utf8::utf8_length(i_utf8Char) != 1)
+    return true;
+
+  m_textEdit.insert(i_utf8Char);
+  m_displayText = m_textEdit.text();
 
   return true;
 }
@@ -444,45 +472,77 @@ bool UIMsgBox::keyDown(int nKey, SDL_Keymod mod, const std::string &i_utf8Char) 
       if (!setClicked(GAMETEXT_CANCEL))
         setClicked(GAMETEXT_NO);
       return true;
+
     case SDLK_RETURN:
-      m_TextInput_real = m_TextInput_fake; // valid completion if in competion
-      if (!m_bTextInput || !m_TextInput_real.empty()) {
+      m_displayText = m_textEdit.text();
+
+      if (!m_bTextInput || !m_displayText.empty()) {
         setClicked(GAMETEXT_OK);
         return true;
       }
-      break;
+      return true;
+
+    case SDLK_LEFT:
+      if (mod & KMOD_CTRL) {
+        m_textEdit.jumpWordLeft();
+      } else {
+        m_textEdit.moveCursor(-1);
+      }
+      return true;
+
+    case SDLK_RIGHT:
+      if (mod & KMOD_CTRL) {
+        m_textEdit.jumpWordRight();
+      } else {
+        m_textEdit.moveCursor(1);
+      }
+      return true;
+
+    case SDLK_HOME:
+      m_textEdit.jumpToStart();
+      return true;
+
+    case SDLK_END:
+      m_textEdit.jumpToEnd();
+      return true;
+
+    case SDLK_v:
+      if (mod & KMOD_CTRL) {
+        m_textEdit.insert(System::getClipboardText());
+      }
+
     default:
       if (m_bTextInput) {
         switch (nKey) {
           case SDLK_BACKSPACE:
-            m_TextInput_real = m_TextInput_fake; // valid completion if in competion
-            if (m_TextInput_real != "") {
-              if (mod & KMOD_CTRL) {
-                /* Delete the last word */
-
-                m_TextInput_fake = TextEdit::deleteWordLeft(m_TextInput_fake,
-                    /* This is the cursor pos, but as a cursor has not yet
-                     * been implemented, use the length of the string*/
-                    utf8::utf8_length(m_TextInput_fake)).first;
-              } else {
-                /* Delete the last character */
-                m_TextInput_fake = utf8::utf8_delete(m_TextInput_fake, utf8::utf8_length(m_TextInput_fake));
-              }
-
-              m_TextInput_real = m_TextInput_fake;
+            if (mod & KMOD_CTRL) {
+              m_textEdit.deleteWordLeft();
+            } else {
+              m_textEdit.deleteLeft();
             }
+
+            m_displayText = m_textEdit.text();
+
             return true;
+
           case SDLK_DELETE:
-            // TODO
-            break;
+            if (mod & KMOD_CTRL) {
+              m_textEdit.deleteWordRight();
+            } else {
+              m_textEdit.deleteRight();
+            }
+
+            m_displayText = m_textEdit.text();
+
+            return true;
+
           case SDLK_TAB:
-            if (mod & KMOD_SHIFT)
-              showMatch(true);
-            else
-              showMatch(false);
+            bool show = mod & KMOD_SHIFT;
+            showMatch(show);
             return true;
         }
       }
+
       break;
   }
 
@@ -735,23 +795,26 @@ void UIMsgBox::addCompletionWord(std::vector<std::string> &list) {
  */
 
 void UIMsgBox::showMatch(bool reverse) {
-  int last_word_f_pos = m_TextInput_real.rfind(" ") + 1;
-  std::string last_word_f = m_TextInput_fake.substr(last_word_f_pos);
+  int last_word_f_pos = m_displayText.rfind(" ") + 1;
+  std::string last_word_f = m_textEdit.text().substr(last_word_f_pos);
   std::vector<std::string> matches = findMatches();
 
   for (int i = 0, n = matches.size(); i < n; i++) {
     std::string match = matches[i];
 
     if (match.find(last_word_f) == 0) {
-      std::string s = m_TextInput_fake.substr(0, last_word_f_pos);
+      std::string s = m_textEdit.text().substr(0, last_word_f_pos);
 
       if ((reverse && i == 0) || (!reverse && i == n-1)) {
         s += reverse ? matches[n-1] : matches[0];
-        m_TextInput_fake = s;
+        m_textEdit.setText(s);
+        m_textEdit.jumpToEnd();
+
         break;
       } else {
         s += reverse ? matches[i-1] : matches[i+1];
-        m_TextInput_fake = s;
+        m_textEdit.setText(s);
+        m_textEdit.jumpToEnd();
       }
 
     }
@@ -760,8 +823,8 @@ void UIMsgBox::showMatch(bool reverse) {
 
 std::vector<std::string> UIMsgBox::findMatches() {
   std::vector<std::string> matchesList;
-  int pos_find = m_TextInput_real.rfind(" ") + 1;
-  std::string last_word = m_TextInput_real.substr(pos_find);
+  int pos_find = m_textEdit.text().rfind(" ") + 1;
+  std::string last_word = m_textEdit.text().substr(pos_find);
   std::string last_word_normal = last_word;
 
   for (int i = 0, n = m_completionWords.size(); i < n; i++) {

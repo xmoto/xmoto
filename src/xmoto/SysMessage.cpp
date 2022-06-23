@@ -233,6 +233,7 @@ void SysMessage::render_console() {
        XMSession::instance()->permanentConsole() ||
        StateManager::instance()->isThereASuchState("StateMessageBox")) &&
       NetClient::instance()->isConnected()) {
+
     if ((m_consoleLastShowTime + SYSMSG_CONSOLEDISPLAY_TIME > v_time ||
          XMSession::instance()->permanentConsole() ||
        StateManager::instance()->isThereASuchState("StateMessageBox")) &&
