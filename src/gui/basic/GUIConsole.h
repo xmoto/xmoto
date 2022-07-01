@@ -81,6 +81,7 @@ private:
   void resetScroll(bool end);
   bool isScrollOutside();
   void scroll(int count);
+  void appendScrollback(const std::string &line);
 
   UIConsoleHook *m_hook;
 

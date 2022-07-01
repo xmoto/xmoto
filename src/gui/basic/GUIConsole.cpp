@@ -26,10 +26,12 @@
 #include "xmoto/Game.h"
 #include "common/TextEdit.h"
 
-#include <algorithm>
+#include <algorithm> // std::max
 
-#define UIC_PROMPT "$ "
-#define UIC_CURSOR "_"
+const char *const PROMPT_CHAR = "$ ";
+const char *const CURSOR_CHAR = "_";
+
+const int32_t SCROLLBACK_LIMIT = 1000;
 
 UIConsoleHook::UIConsoleHook() {}
 
@@ -90,7 +92,7 @@ void UIConsole::paint() {
   int v_YOffset = getPosition().nY;
   int v_cursorXOffset = 0;
   int v_cursorYOffset = 0;
-  const uint32_t promptLength = utf8::utf8_length(UIC_PROMPT);
+  const uint32_t promptLength = utf8::utf8_length(PROMPT_CHAR);
 
   v_fm = GameApp::instance()->getDrawLib()->getFontMonospace();
 
@@ -134,7 +136,7 @@ void UIConsole::paint() {
   std::string line;
   // only draw the current line when not waiting for a response
   if (!m_waitForResponse)
-    line = UIC_PROMPT + m_textEdit.text();
+    line = PROMPT_CHAR + m_textEdit.text();
 
   drawTextLine(line, true);
 
@@ -143,7 +145,7 @@ void UIConsole::paint() {
 
   // draw the cursor when waiting for a response or during a blink
   if (blink || m_waitForResponse) {
-    v_fg = v_fm->getGlyph(UIC_CURSOR);
+    v_fg = v_fm->getGlyph(CURSOR_CHAR);
     v_fm->printString(GameApp::instance()->getDrawLib(),
                       v_fg,
                       v_cursorXOffset,
@@ -188,13 +190,20 @@ bool UIConsole::isScrollOutside() {
   return m_scroll + numScreenRows() <= (int32_t)m_scrollback.size();
 }
 
+void UIConsole::appendScrollback(const std::string &line) {
+  m_scrollback.push_back(line);
+
+  if (m_scrollback.size() > SCROLLBACK_LIMIT)
+    m_scrollback.erase(m_scrollback.begin(), m_scrollback.begin() + 1);
+}
+
 void UIConsole::output(const std::string &i_line) {
   std::vector<std::string> lines;
 
   utf8::utf8_split(i_line, "\n", lines);
 
   for (auto &line : lines)
-    m_scrollback.push_back(line);
+    appendScrollback(line);
 
   if (isScrollOutside())
     resetScroll(true);
@@ -405,7 +414,7 @@ void UIConsole::execLine(const std::string &i_line) {
   addHistory(v_action);
   m_history_n = -1;
 
-  m_scrollback.push_back(UIC_PROMPT + v_action);
+  appendScrollback(PROMPT_CHAR + v_action);
 
   if (m_scrollback.size() >= m_scroll + numScreenRows())
     ++m_scroll;
@@ -432,7 +441,7 @@ void UIConsole::completeCommand() {
     for (auto &found : foundList)
       foundListStr += found + "  ";
 
-    m_scrollback.push_back(foundListStr);
+    appendScrollback(foundListStr);
   } else {
     m_textEdit.insert(foundList[0].substr(lastWord.size(), 1000));
   }
