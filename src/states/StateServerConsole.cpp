@@ -99,22 +99,28 @@ void StateServerConsole::createGUIIfNeeded() {
   m_console->setID("SRVCONSOLE");
   m_console->setFont(drawLib->getFontSmall());
 
-  m_console->addCompletionCommand("help");
-  m_console->addCompletionCommand("login");
-  m_console->addCompletionCommand("logout");
-  m_console->addCompletionCommand("changepassword");
-  m_console->addCompletionCommand("lsplayers");
-  m_console->addCompletionCommand("lsscores");
-  m_console->addCompletionCommand("lsbans");
-  m_console->addCompletionCommand("ban");
-  m_console->addCompletionCommand("unban");
-  m_console->addCompletionCommand("lsadmins");
-  m_console->addCompletionCommand("addadmin");
-  m_console->addCompletionCommand("rmadmin");
-  m_console->addCompletionCommand("reloadrules");
-  m_console->addCompletionCommand("stats");
-  m_console->addCompletionCommand("msg");
-  m_console->addCompletionCommand("ping");
+  std::vector<std::string> commands = {
+    "help",
+    "clear",
+    "login",
+    "logout",
+    "changepassword",
+    "lsplayers",
+    "lsscores",
+    "lsbans",
+    "ban",
+    "unban",
+    "lsadmins",
+    "addadmin",
+    "rmadmin",
+    "reloadrules",
+    "stats",
+    "msg",
+    "ping",
+  };
+
+  for (auto &command : commands)
+    m_console->addCompletionCommand(command);
 }
 
 void StateServerConsole::clean() {
@@ -130,10 +136,10 @@ void StateServerConsole::exec(const std::string &i_cmd) {
       NA_srvCmd na(i_cmd);
       NetClient::instance()->send(&na, 0);
     } catch (Exception &e) {
-      m_console->giveAnswer(GAMETEXT_UNABLETOCONNECTONTHESERVER);
+      m_console->output(GAMETEXT_UNABLETOCONNECTONTHESERVER);
     }
   } else {
-    m_console->giveAnswer(GAMETEXT_STATUS_DECONNECTED);
+    m_console->output(GAMETEXT_STATUS_DECONNECTED);
   }
 }
 
@@ -143,7 +149,7 @@ void StateServerConsole::exit() {
 
 void StateServerConsole::executeOneCommand(std::string cmd, std::string args) {
   if (cmd == "NET_SRVCMDASW") {
-    m_console->giveAnswer(args);
+    m_console->output(args);
     return;
   }
 }

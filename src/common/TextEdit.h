@@ -32,6 +32,7 @@ public:
 
   size_t insert(const std::string &str);
   size_t insertAt(const std::string &str, size_t at);
+  size_t insertFromClipboard();
 
   bool isHidden() const { return m_hidden; }
   void setHidden(bool hidden) { m_hidden = hidden; };

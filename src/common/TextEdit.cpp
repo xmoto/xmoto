@@ -1,5 +1,6 @@
 #include "TextEdit.h"
 #include "helpers/utf8.h"
+#include "helpers/System.h"
 #include "helpers/VMath.h"
 
 /* NOTE: This probably does not work properly with utf8 yet */
@@ -84,6 +85,10 @@ size_t TextEdit::insertAt(const std::string &i_str, size_t at) {
   }
 
   return utf8::utf8_length(str);
+}
+
+size_t TextEdit::insertFromClipboard() {
+  return insert(System::getClipboardText());
 }
 
 size_t TextEdit::insert(const std::string &str) {

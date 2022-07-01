@@ -23,7 +23,6 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 #include "GUI.h"
 #include "drawlib/DrawLib.h"
-#include "helpers/System.h"
 #include "helpers/utf8.h"
 #include "xmoto/Game.h"
 #include "common/TextEdit.h"
@@ -149,11 +148,8 @@ bool UIEdit::keyDown(int nKey, SDL_Keymod mod, const std::string &i_utf8Char) {
 
     case SDLK_v:
       if (mod & KMOD_CTRL) {
-        auto clipboardText = System::getClipboardText();
-        if (clipboardText != "") {
-          m_textEdit.insert(clipboardText);
-          updateCaption();
-        }
+        m_textEdit.insertFromClipboard();
+        updateCaption();
       }
       return true;
 
@@ -259,8 +255,6 @@ void UIEdit::updateCaption() {
   if (caption != getCaption()) {
     m_hasChanged = true;
   }
-
-  // cursor position ?
 
   UIWindow::setCaption(caption);
 }

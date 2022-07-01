@@ -20,8 +20,8 @@
 
 #include "GUIConsole.h"
 #include "drawlib/DrawLib.h"
-#include "helpers/System.h"
 #include "helpers/utf8.h"
+#include "helpers/VMath.h"
 #include "include/xm_SDL.h"
 #include "xmoto/Game.h"
 #include "common/TextEdit.h"
@@ -43,6 +43,11 @@ void UIConsole::initConsole(UIWindow *pParent,
                             int nHeight) {
   initW(pParent, x, y, Caption, nWidth, nHeight);
   m_hook = NULL;
+  m_scroll = 0;
+
+  auto fm = GameApp::instance()->getDrawLib()->getFontMonospace();
+  m_lineHeight = fm->getGlyph(" ")->realHeight();
+
   reset();
 }
 
@@ -63,9 +68,9 @@ UIConsole::UIConsole(UIWindow *pParent,
                      int nWidth,
                      int nHeight) {
   initConsole(pParent, x, y, Caption, nWidth, nHeight);
-  for (int i = 0, n = completionList.size(); i < n; i++) {
-    this->addCompletionCommand(completionList[i]);
-  }
+
+  for (auto &completion : completionList)
+    this->addCompletionCommand(completion);
 }
 
 UIConsole::~UIConsole() {}
@@ -85,7 +90,7 @@ void UIConsole::paint() {
   int v_YOffset = getPosition().nY;
   int v_cursorXOffset = 0;
   int v_cursorYOffset = 0;
-  int v_nbToRemove;
+  const uint32_t promptLength = utf8::utf8_length(UIC_PROMPT);
 
   v_fm = GameApp::instance()->getDrawLib()->getFontMonospace();
 
@@ -95,43 +100,35 @@ void UIConsole::paint() {
           getPosition().nHeight,
           MAKE_COLOR(0, 0, 0, 220));
 
-  auto drawLine = [&](const std::string &line, bool lastLine) {
+
+  auto drawTextLine = [&](const std::string &line, bool cursor) {
     v_fg = v_fm->getGlyphTabExtended(line);
 
-    // only print the line if there is space at the bottom
-    if (v_YOffset + v_fg->realHeight() <
-        getPosition().nY + getPosition().nHeight) {
-      v_fm->printString(GameApp::instance()->getDrawLib(),
-                        v_fg,
-                        v_XOffset,
-                        v_YOffset,
-                        MAKE_COLOR(255, 255, 255, 255));
-    }
+    v_fm->printString(GameApp::instance()->getDrawLib(),
+                      v_fg,
+                      v_XOffset,
+                      v_YOffset,
+                      MAKE_COLOR(255, 255, 255, 255));
 
+    if (cursor) {
+      auto glyph = v_fg;
 
-    if (lastLine) {
-      // compute the cursor for the last line
-      if (m_textEdit.cursorPos() >= utf8::utf8_length(line)) {
-        v_cursorXOffset = v_XOffset + v_fg->realWidth();
-      } else {
-        auto promptLength = utf8::utf8_length(UIC_PROMPT);
-
-        std::string s = utf8::utf8_substring(line, 0, promptLength + m_textEdit.cursorPos());
-        v_cursorXOffset = v_XOffset + v_fm->getGlyph(s)->realWidth();
+      if (m_textEdit.cursorPos() < utf8::utf8_length(line)) {
+        auto s = utf8::utf8_substring(line, 0, promptLength + m_textEdit.cursorPos());
+        glyph = v_fm->getGlyph(s);
       }
+
+      v_cursorXOffset = v_XOffset + glyph->realWidth();
       v_cursorYOffset = v_YOffset;
     }
 
-    // update the offset
-    v_YOffset += v_fg->realHeight();
-    if (v_YOffset > getPosition().nY + getPosition().nHeight) {
-      v_nbToRemove++;
-    }
+    v_YOffset += m_lineHeight;
   };
 
 
-  for (auto &line : m_scrollback) {
-    drawLine(line, false);
+  uint32_t start = (uint32_t)std::max<int32_t>(m_scroll, 0);
+  for (uint32_t i = start; i < m_scrollback.size(); i++) {
+    drawTextLine(m_scrollback[i], false);
   }
 
   std::string line;
@@ -139,8 +136,7 @@ void UIConsole::paint() {
   if (!m_waitForResponse)
     line = UIC_PROMPT + m_textEdit.text();
 
-  drawLine(line, true);
-
+  drawTextLine(line, true);
 
 
   bool blink = (GameApp::getXMTimeInt() / 100) % 10 < 5;
@@ -154,11 +150,6 @@ void UIConsole::paint() {
                       v_cursorYOffset,
                       MAKE_COLOR(255, 255, 255, 255));
   }
-
-  // remove lines if on bottom
-  if (v_YOffset > getPosition().nY + getPosition().nHeight) {
-    m_scrollback.erase(m_scrollback.begin(), m_scrollback.begin() + v_nbToRemove);
-  }
 }
 
 bool UIConsole::offerActivation() {
@@ -166,7 +157,7 @@ bool UIConsole::offerActivation() {
 }
 
 void UIConsole::reset(const std::string &i_cmd) {
-  m_scrollback.clear();
+  m_scroll = 0;
   m_waitForResponse = false;
   m_lastEdit = "";
   m_history_n = -1;
@@ -178,44 +169,63 @@ void UIConsole::reset(const std::string &i_cmd) {
   }
 }
 
-void UIConsole::giveAnswer(const std::string &i_line) {
-  std::vector<std::string> lines;
+void UIConsole::clear() {
+  int linesToKeep = m_waitForResponse ? 1 : 0;
+  resetScroll(false);
+  m_scroll -= linesToKeep;
+}
 
-  utf8::utf8_split(i_line, "\n", lines);
-  for (auto &line : lines) {
-    m_scrollback.push_back(line);
-  }
-  addNewLine();
-  m_waitForResponse = false;
+void UIConsole::resetScroll(bool end) {
+  int offset = end ? (-numScreenRows() + 1) : 0;
+  m_scroll = m_scrollback.size() + offset;
 }
 
 void UIConsole::addNewLine() {
   m_textEdit.clear();
 }
 
+bool UIConsole::isScrollOutside() {
+  return m_scroll + numScreenRows() <= (int32_t)m_scrollback.size();
+}
+
+void UIConsole::output(const std::string &i_line) {
+  std::vector<std::string> lines;
+
+  utf8::utf8_split(i_line, "\n", lines);
+
+  for (auto &line : lines)
+    m_scrollback.push_back(line);
+
+  if (isScrollOutside())
+    resetScroll(true);
+
+  addNewLine();
+  m_waitForResponse = false;
+}
+
 bool UIConsole::textInput(int nKey, SDL_Keymod mod, const std::string &i_utf8Char) {
   // alt/... and special keys must not be kept
-  if (utf8::utf8_length(i_utf8Char) == 1) {
-    m_textEdit.insert(i_utf8Char);
-    m_lastEdit = m_textEdit.text();
-  }
+  if (utf8::utf8_length(i_utf8Char) != 1)
+    return true;
+
+  if (isScrollOutside())
+    resetScroll(true);
+
+  m_textEdit.insert(i_utf8Char);
+  m_lastEdit = m_textEdit.text();
 
   return true;
 }
 
 bool UIConsole::keyDown(int nKey, SDL_Keymod mod, const std::string &i_utf8Char) {
   // EOF
-  if (nKey == SDLK_d && (mod & KMOD_CTRL)
-      && m_textEdit.text().empty()) {
+  if (nKey == SDLK_d && (mod & KMOD_CTRL) && m_textEdit.text().empty()) {
     execInternal("exit");
     return true;
   }
 
-  // clear
   if (nKey == SDLK_l && (mod & KMOD_CTRL)) {
-    int linesToKeep = m_waitForResponse ? 1 : 0;
-    m_scrollback.erase(m_scrollback.begin(), m_scrollback.end() - linesToKeep);
-
+    clear();
     return true;
   }
 
@@ -223,86 +233,124 @@ bool UIConsole::keyDown(int nKey, SDL_Keymod mod, const std::string &i_utf8Char)
     return false;
 
 
-  if (nKey == SDLK_RETURN) {
-    execLine(m_textEdit.text());
-    return true;
-  }
+  bool needScrollReset = true;
 
-  if (nKey == SDLK_BACKSPACE) {
-    if (mod & KMOD_CTRL) {
-      m_textEdit.deleteWordLeft();
-    } else {
-      m_textEdit.deleteLeft();
+  switch (nKey) {
+    case SDLK_RETURN: {
+      execLine(m_textEdit.text());
+      break;
     }
-    return true;
-  }
 
-  if (nKey == SDLK_DELETE) {
-    if (mod & KMOD_CTRL) {
-      m_textEdit.deleteWordRight();
-    } else {
-      m_textEdit.deleteRight();
+    case SDLK_BACKSPACE: {
+      if (mod & KMOD_CTRL)
+        m_textEdit.deleteWordLeft();
+      else
+        m_textEdit.deleteLeft();
+
+      break;
     }
-    return true;
-  }
 
-  if (nKey == SDLK_UP) {
-    if (m_history_n < (int)m_history.size() - 1) {
-      m_history_n++;
-      changeLine(m_history[m_history.size() - 1 - m_history_n]);
+    case SDLK_DELETE: {
+      if (mod & KMOD_CTRL)
+        m_textEdit.deleteWordRight();
+      else
+        m_textEdit.deleteRight();
+
+      break;
     }
-    return true;
-  }
 
-  if (nKey == SDLK_DOWN) {
-    if (m_history_n >= 0) {
-      m_history_n--;
+    case SDLK_PAGEUP: {
+      needScrollReset = false;
+      scroll(-15);
+      break;
+    }
 
-      if (m_history_n < 0) {
-        changeLine(m_lastEdit);
-      } else {
+    case SDLK_PAGEDOWN: {
+      needScrollReset = false;
+      scroll(15);
+      break;
+    }
+
+    case SDLK_UP: {
+      if (m_history_n < (int)m_history.size() - 1) {
+        m_history_n++;
         changeLine(m_history[m_history.size() - 1 - m_history_n]);
       }
+
+      break;
     }
-    return true;
-  }
 
-  if (nKey == SDLK_LEFT) {
-    if (mod & KMOD_CTRL) {
-      m_textEdit.jumpWordLeft();
-    } else {
-      m_textEdit.moveCursor(-1);
+    case SDLK_DOWN: {
+      if (m_history_n >= 0) {
+        m_history_n--;
+
+        if (m_history_n < 0) {
+          changeLine(m_lastEdit);
+        } else {
+          changeLine(m_history[m_history.size() - 1 - m_history_n]);
+        }
+      }
+
+      break;
     }
-    return true;
-  }
 
-  if (nKey == SDLK_RIGHT) {
-    if (mod & KMOD_CTRL) {
-      m_textEdit.jumpWordRight();
-    } else {
-      m_textEdit.moveCursor(1);
+    case SDLK_LEFT: {
+      if (mod & KMOD_CTRL)
+        m_textEdit.jumpWordLeft();
+      else
+        m_textEdit.moveCursor(-1);
+
+      break;
     }
-    return true;
+
+    case SDLK_RIGHT: {
+      if (mod & KMOD_CTRL)
+        m_textEdit.jumpWordRight();
+      else
+        m_textEdit.moveCursor(1);
+
+      break;
+    }
+
+    case SDLK_TAB: {
+      completeCommand();
+      break;
+    }
+
+    case SDLK_END: {
+      m_textEdit.jumpToEnd();
+      break;
+    }
+
+    case SDLK_HOME: {
+      m_textEdit.jumpToStart();
+      break;
+    }
+
+    case SDLK_v: {
+      if (mod & KMOD_CTRL)
+        m_textEdit.insertFromClipboard();
+
+      break;
+    }
   }
 
-  if (nKey == SDLK_TAB) {
-    completeCommand();
-    return true;
-  }
-
-  if (nKey == SDLK_END) {
-    m_textEdit.jumpToEnd();
-  }
-
-  if (nKey == SDLK_HOME) {
-    m_textEdit.jumpToStart();
-  }
-
-  if (nKey == SDLK_v && (mod & KMOD_CTRL)) {
-    m_textEdit.insert(System::getClipboardText());
-  }
+  if (needScrollReset && isScrollOutside())
+    resetScroll(true);
 
   return true;
+}
+
+void UIConsole::scroll(int count) {
+  m_scroll = clamp<int32_t>(m_scroll + count, 0, (int32_t)m_scrollback.size());
+}
+
+void UIConsole::mouseWheelUp(int x, int y) {
+  scroll(-1);
+}
+
+void UIConsole::mouseWheelDown(int x, int y) {
+  scroll(1);
 }
 
 void UIConsole::changeLine(const std::string &i_action) {
@@ -313,8 +361,6 @@ void UIConsole::changeLine(const std::string &i_action) {
 void UIConsole::addHistory(const std::string &i_action) {
   if (i_action == "")
     return;
-
-  m_scrollback.push_back(UIC_PROMPT + i_action);
 
   bool sameAsLast = m_history.size() > 0 && i_action == m_history.back();
 
@@ -328,12 +374,16 @@ bool UIConsole::execInternal(const std::string &i_action) {
     return true;
   }
 
+  if (i_action == "clear") {
+    clear();
+    return true;
+  }
+
   return false;
 }
 
 void UIConsole::execCommand(const std::string &i_action) {
   if (i_action == "") { // empty command
-    m_scrollback.push_back(UIC_PROMPT);
     addNewLine();
     return;
   }
@@ -355,6 +405,11 @@ void UIConsole::execLine(const std::string &i_line) {
   addHistory(v_action);
   m_history_n = -1;
 
+  m_scrollback.push_back(UIC_PROMPT + v_action);
+
+  if (m_scrollback.size() >= m_scroll + numScreenRows())
+    ++m_scroll;
+
   execCommand(v_action);
 }
 
@@ -372,12 +427,12 @@ void UIConsole::completeCommand() {
     return;
 
   if (foundList.size() > 1) {
-    std::string found_list_str;
+    std::string foundListStr;
 
     for (auto &found : foundList)
-      found_list_str += found + "  ";
+      foundListStr += found + "  ";
 
-    m_scrollback.push_back(found_list_str);
+    m_scrollback.push_back(foundListStr);
   } else {
     m_textEdit.insert(foundList[0].substr(lastWord.size(), 1000));
   }
