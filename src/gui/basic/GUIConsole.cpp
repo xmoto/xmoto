@@ -103,7 +103,7 @@ void UIConsole::paint() {
           MAKE_COLOR(0, 0, 0, 220));
 
 
-  auto drawTextLine = [&](const std::string &line, bool cursor) {
+  auto drawTextLine = [&](const std::string &line, bool isPrompt) {
     v_fg = v_fm->getGlyphTabExtended(line);
 
     v_fm->printString(GameApp::instance()->getDrawLib(),
@@ -112,7 +112,7 @@ void UIConsole::paint() {
                       v_YOffset,
                       MAKE_COLOR(255, 255, 255, 255));
 
-    if (cursor) {
+    if (isPrompt) {
       auto glyph = v_fg;
 
       if (m_textEdit.cursorPos() < utf8::utf8_length(line)) {
@@ -342,6 +342,25 @@ bool UIConsole::keyDown(int nKey, SDL_Keymod mod, const std::string &i_utf8Char)
 
       break;
     }
+
+    case SDLK_c: {
+      if (mod & KMOD_CTRL) {
+        appendScrollback(PROMPT_CHAR + m_textEdit.text() + "^C");
+        addNewLine();
+
+        if (isScrollOutside())
+          ++m_scroll;
+      }
+
+      break;
+    }
+
+    case SDLK_w: {
+      if (mod & KMOD_CTRL)
+        m_textEdit.deleteWordLeft();
+
+      break;
+    }
   }
 
   if (needScrollReset && isScrollOutside())
@@ -416,7 +435,7 @@ void UIConsole::execLine(const std::string &i_line) {
 
   appendScrollback(PROMPT_CHAR + v_action);
 
-  if (m_scrollback.size() >= m_scroll + numScreenRows())
+  if (isScrollOutside())
     ++m_scroll;
 
   execCommand(v_action);
