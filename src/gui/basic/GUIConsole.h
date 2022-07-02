@@ -22,6 +22,7 @@
 #define __GUICONSOLE_H__
 
 #include "GUI.h"
+#include "common/TextEdit.h"
 #include <vector>
 
 class UIConsoleHook {
@@ -52,14 +53,19 @@ public:
   ~UIConsole();
 
   void setHook(UIConsoleHook *i_hook);
-  virtual void paint();
-  virtual bool offerActivation();
-  virtual bool keyDown(int nKey, SDL_Keymod mod, const std::string &i_utf8Char);
-  virtual bool textInput(int nKey, SDL_Keymod mod, const std::string &i_utf8Char);
-  void giveAnswer(const std::string &i_line);
-  void reset(const std::string &i_cmd = ""); /* command to run at startup */
+
+  virtual void paint() override;
+  virtual bool offerActivation() override;
+
+  virtual bool keyDown(int nKey, SDL_Keymod mod, const std::string &i_utf8Char) override;
+  virtual bool textInput(int nKey, SDL_Keymod mod, const std::string &i_utf8Char) override;
+  virtual void mouseWheelUp(int x, int y) override;
+  virtual void mouseWheelDown(int x, int y) override;
+
+  void output(const std::string &i_line);
   void execCommand(const std::string &i_action);
   void addCompletionCommand(const std::string &i_cmd);
+  void reset(const std::string &i_cmd = ""); /* command to run at startup */
 
 private:
   void initConsole(UIWindow *pParent,
@@ -69,18 +75,29 @@ private:
                    int nWidth,
                    int nHeight);
 
+  inline int32_t numScreenRows() { return getPosition().nHeight / m_lineHeight; }
+
+  void clear();
+  void resetScroll(bool end);
+  bool isScrollOutside();
+  void scroll(int count);
+  void appendScrollback(const std::string &line);
+
   UIConsoleHook *m_hook;
-  int m_cursorChar;
-  std::vector<std::string> m_lines;
+
+  int m_lineHeight;
+
+  TextEdit m_textEdit;
+  int32_t m_scroll;
+  std::vector<std::string> m_scrollback;
   std::vector<std::string> m_history;
   std::vector<std::string> m_completionList;
   int m_history_n;
   std::string m_lastEdit;
-  bool m_waitAnswer;
+  bool m_waitForResponse;
 
   void changeLine(const std::string &i_action);
-  std::string actionFromLine(const std::string &i_line);
-  void addNewLine(const std::string &i_line);
+  void addNewLine();
   void addHistory(const std::string &i_action);
   void execLine(const std::string &i_line);
   bool execInternal(const std::string &i_action);

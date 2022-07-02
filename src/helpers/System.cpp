@@ -89,6 +89,17 @@ std::vector<std::string> *System::getDisplayModes(int windowed) {
   return strModes;
 }
 
+std::string System::getClipboardText() {
+  if (SDL_HasClipboardText() != SDL_TRUE)
+    return "";
+
+  char *cstr = SDL_GetClipboardText();
+  std::string clipboard(cstr);
+  SDL_free(cstr);
+
+  return clipboard;
+}
+
 std::string System::getMemoryInfo() {
   std::string v_res;
 

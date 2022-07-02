@@ -30,6 +30,7 @@ class Sprite;
 class GameApp;
 class RenderSurface;
 
+#include "common/TextEdit.h"
 #include "common/Theme.h"
 #include "helpers/VMath.h"
 #include "include/xm_SDL.h"
@@ -370,8 +371,7 @@ public:
          int nWidth = 0,
          int nHeight = 0) {
     initW(pParent, x, y, Caption, nWidth, nHeight);
-    m_nCursorPos = 0;
-    m_hideText = false;
+    hideText(false);
     m_hasChanged = false;
   }
 
@@ -383,18 +383,23 @@ public:
   virtual bool joystickButtonDown(Uint8 i_joyNum, Uint8 i_joyButton);
 
   virtual bool offerActivation(void) { return true; }
-  void hideText(bool bHideText) { m_hideText = bHideText; }
+  void hideText(bool bHideText) {
+    m_hideText = bHideText;
+    m_textEdit.setHidden(bHideText);
+  }
 
-  void setCaption(const std::string &Caption);
+  void setCaption(const std::string &Caption) {
+    m_textEdit.setText(Caption);
+    m_textEdit.jumpToEnd();
+  }
+  void updateCaption();
 
   void setHasChanged(bool b_value);
   bool hasChanged();
 
 private:
-  void setCaptionResetCursor(const std::string &Caption, bool i_value = true);
-
   /* Data */
-  unsigned int m_nCursorPos;
+  TextEdit m_textEdit;
   bool m_hideText;
   bool m_hasChanged;
 };
@@ -523,20 +528,16 @@ public:
   virtual void paint(void);
   virtual bool keyDown(int nKey, SDL_Keymod mod, const std::string &i_utf8Char);
   virtual bool textInput(int nKey, SDL_Keymod mod, const std::string &i_utf8Char);
-  virtual bool offerActivation(void) {
-    if (m_bTextInput)
-      return true;
-    return false;
-  }
+  virtual bool offerActivation(void) { return m_bTextInput; }
 
   /* Methods */
   bool setClicked(std::string Text);
   UIMsgBoxButton getClicked(void);
   void enableTextInput(void) { m_bTextInput = true; }
-  std::string getTextInput(void) { return m_TextInput_real; }
-  void setTextInput(std::string s) {
-    m_TextInput_real = s;
-    m_TextInput_fake = s;
+  std::string getTextInput(void) { return m_displayText; }
+  void setTextInput(const std::string &s) {
+    m_displayText = s;
+    m_textEdit.setText(s);
   }
   void setTextInputFont(FontManager *pFont) { m_textInputFont = pFont; }
   void addCompletionWord(std::string &word);
@@ -571,8 +572,9 @@ private:
   std::string m_custom1, m_custom2;
 
   bool m_bTextInput;
-  std::string m_TextInput_real;
-  std::string m_TextInput_fake;
+  TextEdit m_textEdit;
+  std::string m_displayText;
+
   FontManager *m_textInputFont;
   std::vector<std::string> m_completionWords;
 

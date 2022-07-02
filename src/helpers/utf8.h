@@ -40,8 +40,7 @@ public:
   static std::string utf8_insert(const std::string &i_a,
                                  const std::string &i_b,
                                  unsigned int i_numChar);
-  static std::string utf8_delete(const std::string &i_a,
-                                 unsigned int i_numChar);
+  static std::string utf8_delete(const std::string &input, int32_t at);
   static unsigned int utf8_length(const std::string &i_a);
   static std::string utf8_substring(const std::string &i_a,
                                     size_t i_numChar,
