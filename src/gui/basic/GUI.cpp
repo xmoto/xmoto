@@ -507,9 +507,10 @@ bool UIMsgBox::keyDown(int nKey, SDL_Keymod mod, const std::string &i_utf8Char) 
       return true;
 
     case SDLK_v:
-      if (mod & KMOD_CTRL) {
+      if (mod & KMOD_CTRL)
         m_textEdit.insertFromClipboard();
-      }
+
+      return true;
 
     default:
       if (m_bTextInput) {
