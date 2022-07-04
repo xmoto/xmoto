@@ -38,23 +38,23 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
 class ThemeChoice;
 
-#define DEFAULT_WEBHIGHSCORES_URL "http://xmoto.tuxfamily.org/highscores.xml"
+#define DEFAULT_WEBHIGHSCORES_URL "https://xmoto.tuxfamily.org/highscores.xml"
 #define DEFAULT_WEBHIGHSCORES_FILENAME_PREFIX "webhighscores"
 #define DEFAULT_TRANSFERT_TIMEOUT 240
 #define DEFAULT_TRANSFERT_CONNECT_TIMEOUT 15
-#define DEFAULT_WEBLEVELS_URL "http://xmoto.tuxfamily.org/levels.xml"
+#define DEFAULT_WEBLEVELS_URL "https://xmoto.tuxfamily.org/levels.xml"
 #define DEFAULT_UPLOADDBSYNC_URL \
-  "http://xmoto.tuxfamily.org/tools/UploadDbSync.php"
+  "https://xmoto.tuxfamily.org/tools/UploadDbSync.php"
 #define DEFAULT_WEBLEVELS_FILENAME "weblevels.xml"
 #define DEFAULT_WEBLEVELS_DIR "downloaded"
-#define DEFAULT_WEBTHEMES_URL "http://xmoto.tuxfamily.org/themes.xml"
+#define DEFAULT_WEBTHEMES_URL "https://xmoto.tuxfamily.org/themes.xml"
 #define DEFAULT_WEBTHEMES_FILENAME "webthemes.xml"
-#define DEFAULT_WEBTHEMES_SPRITESURLBASE "http://xmoto.tuxfamily.org/sprites"
+#define DEFAULT_WEBTHEMES_SPRITESURLBASE "https://xmoto.tuxfamily.org/sprites"
 #define DEFAULT_UPLOADREPLAY_URL \
-  "http://xmoto.tuxfamily.org/tools/UploadReplay.php"
-#define DEFAULT_SENDVOTE_URL "http://xmoto.tuxfamily.org/tools/SendVote.php"
-#define DEFAULT_SENDREPORT_URL "http://xmoto.tuxfamily.org/tools/SendReport.php"
-#define DEFAULT_WEBROOMS_URL "http://xmoto.tuxfamily.org/rooms.xml"
+  "https://xmoto.tuxfamily.org/tools/UploadReplay.php"
+#define DEFAULT_SENDVOTE_URL "https://xmoto.tuxfamily.org/tools/SendVote.php"
+#define DEFAULT_SENDREPORT_URL "https://xmoto.tuxfamily.org/tools/SendReport.php"
+#define DEFAULT_WEBROOMS_URL "https://xmoto.tuxfamily.org/rooms.xml"
 #define DEFAULT_WEBROOMS_FILENAME "webrooms.xml"
 #define DEFAULT_WEBROOM_NAME "WR"
 

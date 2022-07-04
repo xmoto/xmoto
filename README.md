@@ -1,5 +1,5 @@
-# X-Moto 0.6.1 [![Build Status](https://travis-ci.com/xmoto/xmoto.svg?branch=master)](https://travis-ci.org/xmoto/xmoto) [![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=xmoto_xmoto&metric=alert_status)](https://sonarcloud.io/dashboard?id=xmoto_xmoto)
-Copyright (C) 2005-2021
+# X-Moto 0.6.1 [![Build Status](![example workflow](https://github.com/xmoto/xmoto/actions/workflows/ci.yml/badge.svg)](https://travis-ci.org/xmoto/xmoto) [![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=xmoto_xmoto&metric=alert_status)](https://sonarcloud.io/dashboard?id=xmoto_xmoto)
+Copyright (C) 2005-2022
 
 # Introduction
 
