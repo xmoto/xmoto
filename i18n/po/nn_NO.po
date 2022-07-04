@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: X-MOTO 3.0.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-11-14 23:53+0200\n"
+"POT-Creation-Date: 2022-07-05 01:12+0300\n"
 "PO-Revision-Date: 2007-06-12 17:26+0100\n"
 "Last-Translator: Wilhelm Francke <wilhelm.francke@gmail.com>\n"
 "Language-Team: English <en@li.org>\n"
@@ -21,7 +21,7 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
 
-#: src/xmoto/GameText.h:640
+#: src/xmoto/GameText.h:646
 msgid ""
 "  Stop:\n"
 "    >>\n"
@@ -29,7 +29,7 @@ msgid ""
 " Speed:"
 msgstr ""
 
-#: src/xmoto/GameText.h:643
+#: src/xmoto/GameText.h:649
 msgid ""
 "  Stop:\n"
 "<< >>\n"
@@ -37,56 +37,63 @@ msgid ""
 " Speed:"
 msgstr ""
 
-#: src/xmoto/GameText.h:596
+#: src/xmoto/GameText.h:602
 msgid "# Levels"
 msgstr "# Leveler"
 
-#: src/xmoto/GameText.h:756
+#: src/xmoto/GameText.h:764
 #, c-format
 msgid "%d death"
 msgid_plural "%d deaths"
 msgstr[0] ""
 msgstr[1] ""
 
-#: src/xmoto/GameText.h:753
+#: src/xmoto/GameText.h:761
 #, c-format
 msgid "%d different level"
 msgid_plural "%d different levels"
 msgstr[0] ""
 msgstr[1] ""
 
-#: src/xmoto/GameText.h:758
+#: src/xmoto/GameText.h:751
+#, c-format
+msgid "%d file"
+msgid_plural "%d files"
+msgstr[0] ""
+msgstr[1] ""
+
+#: src/xmoto/GameText.h:766
 #, fuzzy, c-format
 msgid "%d finished"
 msgid_plural "%d finished"
 msgstr[0] "Ikke ferdig"
 msgstr[1] "Ikke ferdig"
 
-#: src/xmoto/GameText.h:745
+#: src/xmoto/GameText.h:753
 #, c-format
 msgid "%d hours"
 msgstr "%d timer"
 
-#: src/xmoto/GameText.h:746
+#: src/xmoto/GameText.h:754
 #, c-format
 msgid "%d minutes"
 msgstr "%d minutter"
 
-#: src/xmoto/GameText.h:755
+#: src/xmoto/GameText.h:763
 #, fuzzy, c-format
 msgid "%d play"
 msgid_plural "%d plays"
 msgstr[0] "Beste spiller"
 msgstr[1] "Beste spiller"
 
-#: src/xmoto/GameText.h:760
+#: src/xmoto/GameText.h:768
 #, c-format
 msgid "%d restart"
 msgid_plural "%d restarts"
 msgstr[0] ""
 msgstr[1] ""
 
-#: src/xmoto/GameText.h:762
+#: src/xmoto/GameText.h:770
 #, c-format
 msgid "%d seconds"
 msgstr "%d sekunder"
@@ -98,31 +105,31 @@ msgid_plural "%i joysticks found"
 msgstr[0] ""
 msgstr[1] ""
 
-#: src/xmoto/GameText.h:573
+#: src/xmoto/GameText.h:579
 #, fuzzy, c-format
 msgid "%i new or updated level available. Download now ?"
 msgid_plural "%i new or updated levels available. Download now ?"
 msgstr[0] "%d ny eller oppdatert level tilgjengelig. Laste ned nå?"
 msgstr[1] "%d ny eller oppdatert level tilgjengelig. Laste ned nå?"
 
-#: src/xmoto/GameText.h:616
+#: src/xmoto/GameText.h:622
 #, fuzzy, c-format
 msgid "%i player"
 msgid_plural "%i players"
 msgstr[0] "Beste spiller"
 msgstr[1] "Beste spiller"
 
-#: src/xmoto/GameText.h:792
+#: src/xmoto/GameText.h:800
 #, c-format
 msgid "%s is playing level %s"
 msgstr ""
 
-#: src/xmoto/GameText.h:790
+#: src/xmoto/GameText.h:798
 #, c-format
 msgid "%s joined the game"
 msgstr ""
 
-#: src/xmoto/GameText.h:791
+#: src/xmoto/GameText.h:799
 #, c-format
 msgid "%s left the game"
 msgstr ""
@@ -157,7 +164,7 @@ msgstr "11 kHz"
 msgid "16-bit"
 msgstr "16-bit"
 
-#: src/xmoto/GameText.h:870
+#: src/xmoto/GameText.h:881
 msgid "16-bit sound samples, good quality"
 msgstr "16-bit lyd kvalitet, god kvalitet"
 
@@ -173,7 +180,7 @@ msgstr "44 kHz"
 msgid "8-bit"
 msgstr "8-bit"
 
-#: src/xmoto/GameText.h:869
+#: src/xmoto/GameText.h:880
 msgid "8-bit sound samples, poor quality"
 msgstr "8-bit lyd samples, dårlig kvalitet"
 
@@ -197,7 +204,7 @@ msgstr ": Roterer den med klokken"
 msgid ": Rotate clockwise"
 msgstr ": Roterer den med klokken"
 
-#: src/xmoto/GameText.h:858
+#: src/xmoto/GameText.h:869
 msgid "A bit more fancy menu graphics"
 msgstr "Lit mer fancy meny grafikk"
 
@@ -228,7 +235,7 @@ msgstr "Aksellererer"
 msgid "Action"
 msgstr "Action"
 
-#: src/xmoto/GameText.h:983
+#: src/xmoto/GameText.h:994
 msgid "Add the level to the favorite levels list"
 msgstr "Legg til levelen til favoritt leveler listen"
 
@@ -241,12 +248,12 @@ msgstr "Legg til i favoritter"
 msgid "Add to favorite"
 msgstr "Legg til i favoritter"
 
-#: src/xmoto/GameText.h:691
+#: src/xmoto/GameText.h:697
 #, fuzzy
 msgid "Add/remove to blacklisted levels"
 msgstr "Legg til levelen til favoritt leveler listen"
 
-#: src/xmoto/GameText.h:689
+#: src/xmoto/GameText.h:695
 #, fuzzy
 msgid "Add/remove to favorite levels"
 msgstr "Legg til levelen til favoritt leveler listen"
@@ -269,23 +276,23 @@ msgstr "Tillegs programmering"
 msgid "All (on this computer)"
 msgstr "Alle (på denne maskinen)"
 
-#: src/xmoto/GameText.h:1134
+#: src/xmoto/GameText.h:1158
 msgid "All X-Moto levels"
 msgstr "Alle X-Moto leveler"
 
-#: src/xmoto/GameText.h:46 src/xmoto/GameText.h:1097
+#: src/xmoto/GameText.h:46 src/xmoto/GameText.h:1121
 msgid "All levels"
 msgstr "Alle leveler"
 
-#: src/xmoto/GameText.h:854
+#: src/xmoto/GameText.h:864
 msgid "Allow X-Moto to ask you your mind about levels"
 msgstr ""
 
-#: src/xmoto/GameText.h:730
+#: src/xmoto/GameText.h:736
 msgid "Allow web forms"
 msgstr ""
 
-#: src/xmoto/GameText.h:722
+#: src/xmoto/GameText.h:728
 #, fuzzy
 msgid ""
 "An unexpected error has occurred. There may be some problems with the web "
@@ -298,7 +305,11 @@ msgstr ""
 msgid "Anyone who has helped in any way"
 msgstr "Alle som har hjulpet oss på noen måte"
 
-#: src/xmoto/GameText.h:1058
+#: src/xmoto/GameText.h:1069
+msgid "Are you sure you want to clear old logs?"
+msgstr ""
+
+#: src/xmoto/GameText.h:1076
 msgid "Are you sure you want to clear the level cache?"
 msgstr ""
 
@@ -309,11 +320,11 @@ msgid_plural "Are you sure you want to delete %i replay"
 msgstr[0] "Ønsker du virkelig å slette replayen?"
 msgstr[1] "Ønsker du virkelig å slette replayen?"
 
-#: src/xmoto/GameText.h:659
+#: src/xmoto/GameText.h:665
 msgid "Are you sure you want to reset config to defaults ?"
 msgstr ""
 
-#: src/xmoto/GameText.h:1064
+#: src/xmoto/GameText.h:1088
 msgid "At least one difficulty"
 msgstr ""
 
@@ -321,12 +332,12 @@ msgstr ""
 msgid "Audio"
 msgstr "Lyd"
 
-#: src/xmoto/GameText.h:1207
+#: src/xmoto/GameText.h:1231
 #, fuzzy
 msgid "Audio disabled"
 msgstr "Ugly mode deaktivert"
 
-#: src/xmoto/GameText.h:1206
+#: src/xmoto/GameText.h:1230
 #, fuzzy
 msgid "Audio enabled"
 msgstr "Ugly mode aktivert"
@@ -347,35 +358,35 @@ msgstr ""
 msgid "Automatic saving of replays"
 msgstr "Automatisk lagring av replays"
 
-#: src/xmoto/GameText.h:1091
+#: src/xmoto/GameText.h:1115
 msgid "Automatically connect to the server at startup"
 msgstr ""
 
-#: src/xmoto/GameText.h:845
+#: src/xmoto/GameText.h:855
 msgid "Automatically download best times off the net when the game starts"
 msgstr "Last ned rekord tidene fra internett automatisk når spillet startes"
 
-#: src/xmoto/GameText.h:971
+#: src/xmoto/GameText.h:982
 msgid "Automatically scroll over the level before starting playing it"
 msgstr "Rull over levelen automatisk før du stater å spille"
 
-#: src/xmoto/GameText.h:699
+#: src/xmoto/GameText.h:705
 msgid "Available"
 msgstr "Tilgjengelig"
 
-#: src/xmoto/GameText.h:814
+#: src/xmoto/GameText.h:824
 msgid "Back to the game"
 msgstr "Tilbake til spillet"
 
-#: src/xmoto/GameText.h:812
+#: src/xmoto/GameText.h:822
 msgid "Back to the main menu"
 msgstr "Tilbake til hovedmenyen"
 
-#: src/xmoto/GameText.h:1067
+#: src/xmoto/GameText.h:1091
 msgid "Basic blocks, no decoration"
 msgstr ""
 
-#: src/xmoto/GameText.h:1068
+#: src/xmoto/GameText.h:1092
 msgid "Basic decoration, not smooth blocks"
 msgstr ""
 
@@ -383,7 +394,7 @@ msgstr ""
 msgid "Beating mode"
 msgstr ""
 
-#: src/xmoto/GameText.h:1036
+#: src/xmoto/GameText.h:1047
 msgid "Beginner"
 msgstr ""
 
@@ -395,11 +406,11 @@ msgstr "Beste tider"
 msgid "Best player"
 msgstr "Beste spiller"
 
-#: src/xmoto/GameText.h:868
+#: src/xmoto/GameText.h:879
 msgid "Best sound quality"
 msgstr "Beste lyd kvalitet"
 
-#: src/xmoto/GameText.h:1100
+#: src/xmoto/GameText.h:1124
 #, fuzzy
 msgid "Blacklisted levels"
 msgstr "Upakkede leveler"
@@ -416,42 +427,50 @@ msgstr "Bremser"
 msgid "Brazilian Portuguese"
 msgstr ""
 
-#: src/xmoto/GameText.h:542 src/xmoto/GameText.h:1118
+#: src/xmoto/GameText.h:548 src/xmoto/GameText.h:1142
 msgid "Bronze"
 msgstr "Bronsje"
 
-#: src/xmoto/GameText.h:822
+#: src/xmoto/GameText.h:832
 msgid "Browse levels available to you"
 msgstr "Bla igjennom alle tilgjengelige leveler"
 
-#: src/xmoto/GameText.h:820
+#: src/xmoto/GameText.h:518
+msgid "Built-in"
+msgstr ""
+
+#: src/xmoto/GameText.h:830
 msgid "Built-in and stand-alone external levels"
 msgstr "Innebygde og eksterne leveler"
 
-#: src/xmoto/GameText.h:603
+#: src/xmoto/GameText.h:609
 msgid "By author"
 msgstr "Etter skaper"
 
-#: src/xmoto/GameText.h:610 src/xmoto/GameText.h:1107
+#: src/xmoto/GameText.h:616 src/xmoto/GameText.h:1131
 msgid "By best driver"
 msgstr "Etter beste spiller"
 
-#: src/xmoto/GameText.h:611
+#: src/xmoto/GameText.h:617
 msgid "By length"
+msgstr ""
+
+#: src/xmoto/GameText.h:1079
+msgid "Cache file deleted"
 msgstr ""
 
 #: src/xmoto/GameText.h:62
 msgid "Camera Active Zoom"
 msgstr ""
 
-#: src/xmoto/GameText.h:1222
+#: src/xmoto/GameText.h:1246
 #, c-format
 msgid "Can't find a highscore in the next %i level"
 msgid_plural "Can't find a highscore in the next %i levels"
 msgstr[0] ""
 msgstr[1] ""
 
-#: src/xmoto/GameText.h:711
+#: src/xmoto/GameText.h:717
 #, fuzzy
 msgid ""
 "Can't update this theme !\n"
@@ -478,11 +497,11 @@ msgstr "Endre tast..."
 msgid "Change direction"
 msgstr "Endre retning"
 
-#: src/xmoto/GameText.h:826
+#: src/xmoto/GameText.h:836
 msgid "Change player profile"
 msgstr "Rediger spiller profil"
 
-#: src/xmoto/GameText.h:1011
+#: src/xmoto/GameText.h:1022
 #, fuzzy
 msgid "Change the X-Moto language"
 msgstr "Velg X-Mot grafikk themet"
@@ -491,23 +510,23 @@ msgstr "Velg X-Mot grafikk themet"
 msgid "Change..."
 msgstr "Endre..."
 
-#: src/xmoto/GameText.h:789
+#: src/xmoto/GameText.h:797
 msgid "Chat message"
 msgstr ""
 
-#: src/xmoto/GameText.h:715
+#: src/xmoto/GameText.h:721
 msgid "Check WWW"
 msgstr "Sjekk WWW"
 
-#: src/xmoto/GameText.h:941
+#: src/xmoto/GameText.h:952
 msgid "Check for new highscores at startup"
 msgstr "Sjekk for nye rekorder under oppstart"
 
-#: src/xmoto/GameText.h:939
+#: src/xmoto/GameText.h:950
 msgid "Check for new levels at startup"
 msgstr "Sjekk for nye leveler under oppstart"
 
-#: src/xmoto/GameText.h:950
+#: src/xmoto/GameText.h:961
 msgid "Check for new themes on the web"
 msgstr "Sjekk for nye themes på internett"
 
@@ -546,15 +565,15 @@ msgstr "Sjekker for nye themes"
 msgid "Choose Level"
 msgstr "Velg level"
 
-#: src/xmoto/GameText.h:949
+#: src/xmoto/GameText.h:960
 msgid "Choose the X-Moto graphics theme"
 msgstr "Velg X-Mot grafikk themet"
 
-#: src/xmoto/GameText.h:988
+#: src/xmoto/GameText.h:999
 msgid "Choose the number of players"
 msgstr "Velg antall spillere"
 
-#: src/xmoto/GameText.h:959
+#: src/xmoto/GameText.h:970
 msgid ""
 "Choose where to upload/download replays, highscore lists (for more "
 "information, check the website)"
@@ -562,11 +581,11 @@ msgstr ""
 "Velg hvor du vil laste opp/laste ned replayer og rekord lister (for mer "
 "informasjon, sjekk websiden)"
 
-#: src/xmoto/GameText.h:919
+#: src/xmoto/GameText.h:930
 msgid "Choose which ghost to display"
 msgstr "Velg hvilken ghost du vil vise"
 
-#: src/xmoto/GameText.h:961
+#: src/xmoto/GameText.h:972
 msgid "Choose your room"
 msgstr "Velg ditt rom"
 
@@ -575,11 +594,15 @@ msgstr "Velg ditt rom"
 msgid "Clean"
 msgstr "Katalansk"
 
-#: src/xmoto/GameText.h:1055 src/xmoto/GameText.h:1059
+#: src/xmoto/GameText.h:1073 src/xmoto/GameText.h:1081
 msgid "Clear level cache"
 msgstr ""
 
-#: src/xmoto/GameText.h:979
+#: src/xmoto/GameText.h:1066
+msgid "Clear old logs"
+msgstr ""
+
+#: src/xmoto/GameText.h:990
 msgid "Click to select screen resolution"
 msgstr "Klikk for å velge skjerm oppløsningen"
 
@@ -587,15 +610,15 @@ msgstr "Klikk for å velge skjerm oppløsningen"
 msgid "Close"
 msgstr "Lukk"
 
-#: src/xmoto/GameText.h:884
+#: src/xmoto/GameText.h:895
 msgid "Close level pack"
 msgstr "Lukk level pakke"
 
-#: src/xmoto/GameText.h:1013
+#: src/xmoto/GameText.h:1024
 msgid "Code of the language"
 msgstr ""
 
-#: src/xmoto/GameText.h:981
+#: src/xmoto/GameText.h:992
 msgid "Completed levels / total number of levels in pack"
 msgstr "Fullførte levler / totalt antall leveler i pakken"
 
@@ -603,55 +626,55 @@ msgstr "Fullførte levler / totalt antall leveler i pakken"
 msgid "Configure Joystick..."
 msgstr "Konfigurer joystick..."
 
-#: src/xmoto/GameText.h:626
+#: src/xmoto/GameText.h:632
 msgid "Configure Proxy..."
 msgstr "Konfigurer Proxy"
 
-#: src/xmoto/GameText.h:824
+#: src/xmoto/GameText.h:834
 msgid "Configure X-Moto preferences"
 msgstr "Still inn X-Moto innstillinger"
 
-#: src/xmoto/GameText.h:837
+#: src/xmoto/GameText.h:847
 msgid "Configure audio options"
 msgstr "Still inn lyd instillinger"
 
-#: src/xmoto/GameText.h:838
+#: src/xmoto/GameText.h:848
 msgid "Configure control options"
 msgstr "Still in kontroll instillinger"
 
-#: src/xmoto/GameText.h:839
+#: src/xmoto/GameText.h:849
 msgid "Configure controls of Player"
 msgstr ""
 
-#: src/xmoto/GameText.h:840
+#: src/xmoto/GameText.h:850
 msgid "Configure general controls"
 msgstr ""
 
-#: src/xmoto/GameText.h:1024
+#: src/xmoto/GameText.h:1035
 msgid "Configure ghosts displayed while playing the game"
 msgstr ""
 
-#: src/xmoto/GameText.h:835
+#: src/xmoto/GameText.h:845
 msgid "Configure graphical options"
 msgstr "Still inn grafiske instillinger"
 
-#: src/xmoto/GameText.h:808
+#: src/xmoto/GameText.h:818
 msgid "Configure how you are connected to the Internet"
 msgstr "Konfigurer hvordan du er koblet til internett"
 
-#: src/xmoto/GameText.h:1026
+#: src/xmoto/GameText.h:1037
 msgid "Configure options linked to your X-Moto database"
 msgstr ""
 
-#: src/xmoto/GameText.h:1022
+#: src/xmoto/GameText.h:1033
 msgid "Configure the X-Moto theme"
 msgstr ""
 
-#: src/xmoto/GameText.h:956
+#: src/xmoto/GameText.h:967
 msgid "Configure the main www options"
 msgstr "Konfigurer hovedinstillingene for internett"
 
-#: src/xmoto/GameText.h:957
+#: src/xmoto/GameText.h:968
 msgid "Configure the www options"
 msgstr ""
 
@@ -659,27 +682,31 @@ msgstr ""
 msgid "Congrats, you're now a master jumper!"
 msgstr "Grattis, du er nå en mesterhopper!"
 
-#: src/xmoto/GameText.h:784
+#: src/xmoto/GameText.h:792
 msgid "Connect"
 msgstr ""
 
-#: src/xmoto/GameText.h:1082
+#: src/xmoto/GameText.h:803
+msgid "Connect to/disconnect from the server"
+msgstr ""
+
+#: src/xmoto/GameText.h:1106
 msgid "Connect/disconnect the client to the server"
 msgstr ""
 
-#: src/xmoto/GameText.h:788
+#: src/xmoto/GameText.h:796
 msgid "Connected players:"
 msgstr ""
 
-#: src/xmoto/GameText.h:793
+#: src/xmoto/GameText.h:801
 msgid "Connexion at startup"
 msgstr ""
 
-#: src/xmoto/GameText.h:551
+#: src/xmoto/GameText.h:557
 msgid "Contrast"
 msgstr ""
 
-#: src/xmoto/GameText.h:1197
+#: src/xmoto/GameText.h:1221
 msgid "Contrast Graphics Mode enabled"
 msgstr ""
 
@@ -687,22 +714,26 @@ msgstr ""
 msgid "Controls"
 msgstr "Kontroller"
 
-#: src/xmoto/GameText.h:1146
+#: src/xmoto/GameText.h:517
+msgid "Copy path"
+msgstr ""
+
+#: src/xmoto/GameText.h:1170
 #, fuzzy
 msgid "Crappiest X-Moto levels according to the web votes"
 msgstr "Dårligste X-Moto leveler i følge web voteringen"
 
-#: src/xmoto/GameText.h:1104
+#: src/xmoto/GameText.h:1128
 #, fuzzy
 msgid "Crappiest levels"
 msgstr "Dårligste leveler"
 
-#: src/xmoto/GameText.h:1121
+#: src/xmoto/GameText.h:1145
 #, fuzzy
 msgid "Crappy levels"
 msgstr "Dårligste leveler"
 
-#: src/xmoto/GameText.h:879
+#: src/xmoto/GameText.h:890
 msgid "Create new player profile"
 msgstr "Opprett en ny spiller profil"
 
@@ -710,7 +741,7 @@ msgstr "Opprett en ny spiller profil"
 msgid "Credits"
 msgstr "Takk til"
 
-#: src/xmoto/GameText.h:778
+#: src/xmoto/GameText.h:786
 msgid "Custom port"
 msgstr ""
 
@@ -739,7 +770,7 @@ msgstr "Døds animasjon"
 msgid "Decrease console history size"
 msgstr ""
 
-#: src/xmoto/GameText.h:777
+#: src/xmoto/GameText.h:785
 msgid "Default port"
 msgstr ""
 
@@ -751,6 +782,18 @@ msgstr "Standard-instillinger"
 msgid "Delete"
 msgstr "Slett"
 
+#: src/xmoto/GameText.h:1071
+msgid "Delete all previous log files from disk"
+msgstr ""
+
+#: src/xmoto/GameText.h:1078
+msgid "Delete cache file"
+msgstr ""
+
+#: src/xmoto/GameText.h:1083
+msgid "Delete cached level file from disk to force a clean state (safe)"
+msgstr ""
+
 #: src/xmoto/GameText.h:261
 #, fuzzy
 msgid "Delete from blacklist"
@@ -760,11 +803,11 @@ msgstr "Slett fra favoritter"
 msgid "Delete from favorite"
 msgstr "Slett fra favoritter"
 
-#: src/xmoto/GameText.h:1015
+#: src/xmoto/GameText.h:1026
 msgid "Delete replays that X-Moto estimates to be not interesting to keep"
 msgstr ""
 
-#: src/xmoto/GameText.h:985
+#: src/xmoto/GameText.h:996
 msgid "Delete the level from the favorite levels list"
 msgstr "Slett level fra favoritt leveler listen"
 
@@ -794,19 +837,19 @@ msgstr "Direkte tilkobling"
 msgid "Disable Animations"
 msgstr ""
 
-#: src/xmoto/GameText.h:932
+#: src/xmoto/GameText.h:943
 msgid "Disable block animations (if X-Moto runs slowly)"
 msgstr ""
 
-#: src/xmoto/GameText.h:861
+#: src/xmoto/GameText.h:872
 msgid "Disable most graphics not important to the gameplay"
 msgstr "Deaktiver det meste av grafikken om ikke er viktig for spillingen"
 
-#: src/xmoto/GameText.h:863
+#: src/xmoto/GameText.h:874
 msgid "Disable some of the most resource-intensive graphics, like particles"
 msgstr "Deaktiver den met krevende grafikken, slik som partikler"
 
-#: src/xmoto/GameText.h:785
+#: src/xmoto/GameText.h:793
 msgid "Disconnect"
 msgstr ""
 
@@ -818,7 +861,7 @@ msgstr "Vis ghost informasjon"
 msgid "Display Ghost time difference"
 msgstr "Vis forskjell på ghost tid"
 
-#: src/xmoto/GameText.h:926
+#: src/xmoto/GameText.h:937
 msgid "Display an arrow to display where are located the bikes on the map"
 msgstr ""
 
@@ -826,7 +869,7 @@ msgstr ""
 msgid "Display bike arrow indication"
 msgstr ""
 
-#: src/xmoto/GameText.h:928
+#: src/xmoto/GameText.h:939
 msgid "Display the time difference between the ghost and you"
 msgstr "Vis tidsforskjellen mellom ghosten og deg"
 
@@ -838,7 +881,7 @@ msgstr "Ønsker du virkelig å slette spilleren?"
 msgid "Do you really want to delete replay?"
 msgstr "Ønsker du virkelig å slette replayen?"
 
-#: src/xmoto/GameText.h:633
+#: src/xmoto/GameText.h:639
 msgid "Do you really want to quit?"
 msgstr "Ønsker du virkelid å avslutte?"
 
@@ -851,20 +894,20 @@ msgstr ""
 "Ønsker du å la X-Moto å koble til internett\n"
 "for å se etter flere leveler og verdensrekorder?"
 
-#: src/xmoto/GameText.h:519
+#: src/xmoto/GameText.h:524
 msgid "Do you want to send a report to website administrators ?"
 msgstr ""
 
-#: src/xmoto/GameText.h:738
+#: src/xmoto/GameText.h:744
 #, c-format
 msgid "Do you want to update level \"%s\"?"
 msgstr "Ønsker du å oppdatere levelen \"%s\"?"
 
-#: src/xmoto/GameText.h:1073
+#: src/xmoto/GameText.h:1097
 msgid "Don't send this report on the webserver"
 msgstr ""
 
-#: src/xmoto/GameText.h:1009
+#: src/xmoto/GameText.h:1020
 #, fuzzy
 msgid "Don't show the ghosts while playing"
 msgstr "Vis speedometeret i spillet"
@@ -876,11 +919,11 @@ msgid ""
 "around you, so you know where you're heading."
 msgstr "Her nede, er det ett minikart, som viser banen"
 
-#: src/xmoto/GameText.h:951
+#: src/xmoto/GameText.h:962
 msgid "Download or update the selected theme"
 msgstr "Last ned eller oppdater det valgte themet"
 
-#: src/xmoto/GameText.h:806
+#: src/xmoto/GameText.h:816
 msgid "Download the latest X-Moto world records and check for new levels"
 msgstr "Last ned de siste X-Moto verdensrekordene og sjekk for nye leveler"
 
@@ -943,11 +986,11 @@ msgstr ""
 msgid "Dutch"
 msgstr ""
 
-#: src/xmoto/GameText.h:1144
+#: src/xmoto/GameText.h:1168
 msgid "Easiest X-Moto levels according to the web votes"
 msgstr "Letteste X-Moto leveler i følge web voteringen"
 
-#: src/xmoto/GameText.h:1103
+#: src/xmoto/GameText.h:1127
 msgid "Easiest levels"
 msgstr "Letteste leveler"
 
@@ -971,11 +1014,11 @@ msgstr "Aktiver Ghost"
 msgid "Enable WWW Access"
 msgstr "Aktiver WWW tilgang"
 
-#: src/xmoto/GameText.h:864
+#: src/xmoto/GameText.h:875
 msgid "Enable all graphical effects"
 msgstr "Aktiver alle grafiske effekter"
 
-#: src/xmoto/GameText.h:969
+#: src/xmoto/GameText.h:980
 msgid "Enable animation of bike falling apart when dead"
 msgstr "Aktiver animasjon av at sykkelen faller sammen når du dør"
 
@@ -987,7 +1030,7 @@ msgstr ""
 msgid "Enable joysticks"
 msgstr ""
 
-#: src/xmoto/GameText.h:1030
+#: src/xmoto/GameText.h:1041
 msgid "Enable joysticks events"
 msgstr ""
 
@@ -995,7 +1038,7 @@ msgstr ""
 msgid "Enable menu music"
 msgstr ""
 
-#: src/xmoto/GameText.h:1018
+#: src/xmoto/GameText.h:1029
 #, fuzzy
 msgid "Enable this room"
 msgstr "Aktiver lyd"
@@ -1008,7 +1051,7 @@ msgstr ""
 msgid "Enable/disable audio"
 msgstr ""
 
-#: src/xmoto/GameText.h:474 src/xmoto/GameText.h:688
+#: src/xmoto/GameText.h:474 src/xmoto/GameText.h:694
 msgid "Enable/disable ugly mode"
 msgstr ""
 
@@ -1016,16 +1059,16 @@ msgstr ""
 msgid "Enable/disable web"
 msgstr ""
 
-#: src/xmoto/GameText.h:1086
+#: src/xmoto/GameText.h:1110
 msgid ""
 "Enables background music for levels that do not have their own music track"
 msgstr ""
 
-#: src/xmoto/GameText.h:946
+#: src/xmoto/GameText.h:957
 msgid "Enables background music in the main menu"
 msgstr "Aktiverer bakgrunnsmusikk i hovedmenyen"
 
-#: src/xmoto/GameText.h:947
+#: src/xmoto/GameText.h:958
 msgid "Enables background music while playing"
 msgstr ""
 
@@ -1041,17 +1084,17 @@ msgstr "Skriv inn navn på replayen"
 msgid "Enter player name"
 msgstr "Skriv inn navn på spilleren"
 
-#: src/xmoto/GameText.h:987
+#: src/xmoto/GameText.h:998
 #, fuzzy
 msgid "Enter text to filter the level list"
 msgstr "Skriv in teskt for å filtrere level listen"
 
-#: src/xmoto/GameText.h:991
+#: src/xmoto/GameText.h:1002
 #, fuzzy
 msgid "Enter text to filter the replay list"
 msgstr "Skriv in teskt for å filtrere level listen"
 
-#: src/xmoto/GameText.h:992
+#: src/xmoto/GameText.h:1003
 msgid "Enter text to filter the rooms list"
 msgstr ""
 
@@ -1059,11 +1102,11 @@ msgstr ""
 msgid "Everyone who have made levels"
 msgstr "Alle som har laget leveler"
 
-#: src/xmoto/GameText.h:1037
+#: src/xmoto/GameText.h:1048
 msgid "Expert"
 msgstr ""
 
-#: src/xmoto/GameText.h:1174
+#: src/xmoto/GameText.h:1198
 msgid "External levels (the one you put into the 'My levels' directory)"
 msgstr "Eksterne leveler (de du putter i \"My Levels\" mappen)"
 
@@ -1071,6 +1114,10 @@ msgstr "Eksterne leveler (de du putter i \"My Levels\" mappen)"
 #, fuzzy
 msgid "Failed to check for levels."
 msgstr "Initialiseringen av levelen mislyktes!"
+
+#: src/xmoto/GameText.h:522
+msgid "Failed to copy to clipboard"
+msgstr ""
 
 #: src/xmoto/GameText.h:301
 #, fuzzy
@@ -1120,11 +1167,11 @@ msgstr ""
 msgid "Failed to update the theme list"
 msgstr "Oppdater theme listen"
 
-#: src/xmoto/GameText.h:859
+#: src/xmoto/GameText.h:870
 msgid "Fanciest menu graphics"
 msgstr "Mest fancy meny grafikk"
 
-#: src/xmoto/GameText.h:1099
+#: src/xmoto/GameText.h:1123
 msgid "Favorite levels"
 msgstr "Favoritt leveler"
 
@@ -1168,24 +1215,24 @@ msgstr "Vipp til venstre"
 msgid "Flip right"
 msgstr "Vipp til høyre"
 
-#: src/xmoto/GameText.h:560
+#: src/xmoto/GameText.h:566
 msgid "Following are your most played levels"
 msgstr "Følgende er dine mest spilte leveler"
 
-#: src/xmoto/GameText.h:1228
+#: src/xmoto/GameText.h:1252
 msgid "FontGroup:GENERAL"
 msgstr ""
 
-#: src/xmoto/GameText.h:651
+#: src/xmoto/GameText.h:657
 msgid "Forward while replaying"
 msgstr ""
 
-#: src/xmoto/GameText.h:1205
+#: src/xmoto/GameText.h:1229
 #, fuzzy
 msgid "Fps disabled"
 msgstr "Ugly mode deaktivert"
 
-#: src/xmoto/GameText.h:1204
+#: src/xmoto/GameText.h:1228
 msgid "Fps enabled"
 msgstr ""
 
@@ -1193,11 +1240,11 @@ msgstr ""
 msgid "French"
 msgstr "Fransk"
 
-#: src/xmoto/GameText.h:553
+#: src/xmoto/GameText.h:559
 msgid "Full"
 msgstr ""
 
-#: src/xmoto/GameText.h:1199
+#: src/xmoto/GameText.h:1223
 msgid "Full Graphics Mode enabled"
 msgstr ""
 
@@ -1217,11 +1264,11 @@ msgstr "Generelt"
 msgid "General Info"
 msgstr "Generell info"
 
-#: src/xmoto/GameText.h:834
+#: src/xmoto/GameText.h:844
 msgid "General X-Moto preferences"
 msgstr "Generelle X-Moto instillinger"
 
-#: src/xmoto/GameText.h:885
+#: src/xmoto/GameText.h:896
 msgid "General information about the level"
 msgstr "Generell informasjon om levelen"
 
@@ -1233,7 +1280,7 @@ msgstr "Tysk"
 msgid "Get More Levels!"
 msgstr "Få flere leveler!"
 
-#: src/xmoto/GameText.h:962
+#: src/xmoto/GameText.h:973
 msgid "Get the rooms list from the web"
 msgstr "Få romlisten fra internett"
 
@@ -1245,15 +1292,15 @@ msgstr "Få dette theme"
 msgid "Ghost"
 msgstr "Ghost"
 
-#: src/xmoto/GameText.h:1211
+#: src/xmoto/GameText.h:1235
 msgid "Ghost Trail Rendering activated"
 msgstr ""
 
-#: src/xmoto/GameText.h:1212
+#: src/xmoto/GameText.h:1236
 msgid "Ghost Trail Rendering deactivated"
 msgstr ""
 
-#: src/xmoto/GameText.h:1210
+#: src/xmoto/GameText.h:1234
 msgid "Ghost Trail is not available"
 msgstr ""
 
@@ -1262,19 +1309,19 @@ msgstr ""
 msgid "Ghost of %s"
 msgstr "Ghost av"
 
-#: src/xmoto/GameText.h:1034
+#: src/xmoto/GameText.h:1045
 msgid "Give your mind about this level"
 msgstr ""
 
-#: src/xmoto/GameText.h:1040
+#: src/xmoto/GameText.h:1051
 msgid "Go !"
 msgstr ""
 
-#: src/xmoto/GameText.h:1039
+#: src/xmoto/GameText.h:1050
 msgid "God"
 msgstr ""
 
-#: src/xmoto/GameText.h:543 src/xmoto/GameText.h:1116
+#: src/xmoto/GameText.h:549 src/xmoto/GameText.h:1140
 msgid "Gold"
 msgstr "Gull"
 
@@ -1286,11 +1333,11 @@ msgstr "Godt jobba! Den neste er enda vanskeligere..."
 msgid "Graphics"
 msgstr "Grafikk"
 
-#: src/xmoto/GameText.h:1142
+#: src/xmoto/GameText.h:1166
 msgid "Hardest X-Moto levels according to the web votes"
 msgstr "Vanskeligste X-Moto leveler i følge web voteringen"
 
-#: src/xmoto/GameText.h:1102
+#: src/xmoto/GameText.h:1126
 msgid "Hardest levels"
 msgstr "Vanskeligste leveler"
 
@@ -1318,7 +1365,7 @@ msgstr "Høy"
 msgid "Highscore of the room"
 msgstr ""
 
-#: src/xmoto/GameText.h:1172
+#: src/xmoto/GameText.h:1196
 #, fuzzy, c-format
 msgid "Highscores by %s"
 msgstr "Rekorder av"
@@ -1331,7 +1378,7 @@ msgstr ""
 msgid "I'm a child"
 msgstr ""
 
-#: src/xmoto/GameText.h:930
+#: src/xmoto/GameText.h:941
 msgid "If you make a highscore it will automatically be saved as a replay"
 msgstr "Om du lager en rekord, il den automatisk bli lagret som en replay"
 
@@ -1343,8 +1390,7 @@ msgid ""
 "copies you did."
 msgstr ""
 
-#: src/xmoto/GameText.h:586
-#, fuzzy
+#: src/xmoto/GameText.h:592
 msgid ""
 "Important note!\n"
 "\n"
@@ -1354,22 +1400,11 @@ msgid ""
 "Mail bugs, ideas, comments, feature requests, hatemail, etc\n"
 "to xmoto@tuxfamily.org\n"
 "\n"
-"Also visit http://xmoto.tuxfamily.org to make sure you've\n"
+"Also visit https://xmoto.tuxfamily.org to make sure you've\n"
 "got the latest version."
 msgstr ""
-"Viktig beskjed!\n"
-"\n"
-"Dette er en utviklings version av X-Moto!\n"
-"Vi blir veldig glade for alle former for tilbakemelding, slik at\n"
-"spillet kan bli bedre.\n"
-"Send in feil (bugs), idéer, kommentarer, framtidige ønsker\n"
-", drapstrusler og lignende\n"
-"til nicolas krøllalfa adenis-lamarre punktum fr\n"
-"\n"
-"Besøk også http://xmoto.tuxfamily.org for å forsikre deg\n"
-"om at du har siste version av spillet."
 
-#: src/xmoto/GameText.h:1066
+#: src/xmoto/GameText.h:1090
 msgid "Impossible"
 msgstr ""
 
@@ -1381,17 +1416,17 @@ msgstr "Øverst i venstre hjørne, har du tidtakeren"
 msgid "Increase console history size"
 msgstr ""
 
-#: src/xmoto/GameText.h:997
+#: src/xmoto/GameText.h:1008
 #, fuzzy
 msgid "Increase or decrease the difficulty of the levels selected"
 msgstr "Hev eller senk vanskelighetsgraden av valgte leveler"
 
-#: src/xmoto/GameText.h:995
+#: src/xmoto/GameText.h:1006
 #, fuzzy
 msgid "Increase or decrease the quality of the levels selected"
 msgstr "Hev eller senk kvaliteten av valgte leveler"
 
-#: src/xmoto/GameText.h:676
+#: src/xmoto/GameText.h:682
 msgid "Info..."
 msgstr "Info..."
 
@@ -1406,7 +1441,7 @@ msgid ""
 "keeping the bike as steady as possible..."
 msgstr ""
 
-#: src/xmoto/GameText.h:825
+#: src/xmoto/GameText.h:835
 msgid "Instructions of how to play X-Moto"
 msgstr "Introduksjon til hvordan du spiller X-Moto"
 
@@ -1426,7 +1461,7 @@ msgstr "Joystick"
 msgid "Key"
 msgstr "Tast"
 
-#: src/xmoto/GameText.h:687
+#: src/xmoto/GameText.h:693
 #, c-format
 msgid "Key '%s' of Player '%i' has been switched to '%s'"
 msgstr ""
@@ -1447,23 +1482,23 @@ msgstr ""
 msgid "Language name"
 msgstr ""
 
-#: src/xmoto/GameText.h:1157
+#: src/xmoto/GameText.h:1181
 msgid "Last created X-Moto levels"
 msgstr "Siste X-Moto leveler"
 
-#: src/xmoto/GameText.h:1112
+#: src/xmoto/GameText.h:1136
 msgid "Last highscores"
 msgstr "Nyeste rekorder"
 
-#: src/xmoto/GameText.h:1113
+#: src/xmoto/GameText.h:1137
 msgid "Last levels"
 msgstr "Nyeste leveler"
 
-#: src/xmoto/GameText.h:1149
+#: src/xmoto/GameText.h:1173
 msgid "Last levels you have played"
 msgstr "Siste leveler du har spilt"
 
-#: src/xmoto/GameText.h:1108
+#: src/xmoto/GameText.h:1132
 msgid "Last played levels"
 msgstr "Sist spilte leveler"
 
@@ -1471,7 +1506,7 @@ msgstr "Sist spilte leveler"
 msgid "Latvian"
 msgstr ""
 
-#: src/xmoto/GameText.h:772
+#: src/xmoto/GameText.h:780
 msgid "Launch at startup"
 msgstr ""
 
@@ -1479,11 +1514,11 @@ msgstr ""
 msgid "Lead Programming"
 msgstr "Hoved programmering"
 
-#: src/xmoto/GameText.h:1111
+#: src/xmoto/GameText.h:1135
 msgid "Less played levels (but played)"
 msgstr "Nesten ikke spilte leveler (men spilt)"
 
-#: src/xmoto/GameText.h:900
+#: src/xmoto/GameText.h:911
 msgid ""
 "Let X-Moto look for more levels on the net, and install them automatically"
 msgstr ""
@@ -1493,15 +1528,23 @@ msgstr ""
 msgid "Level"
 msgstr "Level"
 
-#: src/xmoto/GameText.h:515
+#: src/xmoto/GameText.h:519
 #, c-format
 msgid "Level '%s' cannot be loaded"
 msgstr "Level '%s' kan ikke lastes"
 
-#: src/xmoto/GameText.h:524
+#: src/xmoto/GameText.h:529
 #, c-format
 msgid "Level '%s' required by replay!"
 msgstr "Level '%s' trengs av replayen!"
+
+#: src/xmoto/GameText.h:515
+msgid "Level File"
+msgstr ""
+
+#: src/xmoto/GameText.h:516
+msgid "Level ID"
+msgstr ""
 
 #: src/xmoto/GameText.h:513
 msgid "Level Info"
@@ -1511,32 +1554,32 @@ msgstr "Level info"
 msgid "Level Name"
 msgstr "Level navn"
 
-#: src/xmoto/GameText.h:522
+#: src/xmoto/GameText.h:527
 msgid "Level Pack"
 msgstr "Level pakke"
 
-#: src/xmoto/GameText.h:523
+#: src/xmoto/GameText.h:528
 msgid "Level Packs"
 msgstr "Level pakker"
 
-#: src/xmoto/GameText.h:1056
+#: src/xmoto/GameText.h:1074
 msgid "Level cache cleared"
 msgstr ""
 
-#: src/xmoto/GameText.h:1171
+#: src/xmoto/GameText.h:1195
 #, fuzzy, c-format
 msgid "Level pack \"%s\""
 msgstr "Level pakke"
 
-#: src/xmoto/GameText.h:977
+#: src/xmoto/GameText.h:988
 msgid "Level played in replay"
 msgstr "Level spilt i replayen"
 
-#: src/xmoto/GameText.h:557
+#: src/xmoto/GameText.h:563
 msgid "Level references unknown textures, it could be unplayable!"
 msgstr "Levelen refererer til ukjente teksturer, den kan være uspillbar!"
 
-#: src/xmoto/GameText.h:525
+#: src/xmoto/GameText.h:530
 msgid "Levels"
 msgstr "Leveler"
 
@@ -1544,44 +1587,44 @@ msgstr "Leveler"
 msgid "Levels are being added into the database. Please wait."
 msgstr "Leveler blir lagt inn i databasen. Vennligs vent."
 
-#: src/xmoto/GameText.h:1186
+#: src/xmoto/GameText.h:1210
 msgid "Levels for which you owned the highscore"
 msgstr ""
 
-#: src/xmoto/GameText.h:821
+#: src/xmoto/GameText.h:831
 msgid "Levels grouped together in level packs"
 msgstr "Leveler gruppert sammen i level pakker"
 
-#: src/xmoto/GameText.h:1188
+#: src/xmoto/GameText.h:1212
 msgid "Levels having votes unlocked"
 msgstr ""
 
-#: src/xmoto/GameText.h:1176
+#: src/xmoto/GameText.h:1200
 msgid "Levels marked 'crappy' are hidden in all other packs"
 msgstr ""
 
-#: src/xmoto/GameText.h:1093
+#: src/xmoto/GameText.h:1117
 msgid "Levels with no highscore"
 msgstr "Leveler uten rekord"
 
-#: src/xmoto/GameText.h:1130
+#: src/xmoto/GameText.h:1154
 #, fuzzy
 msgid "Levels with no highscore in your room"
 msgstr "Leveler uten rekord i ditt rom"
 
-#: src/xmoto/GameText.h:1094 src/xmoto/GameText.h:1131
+#: src/xmoto/GameText.h:1118 src/xmoto/GameText.h:1155
 msgid "Levels you have not completed"
 msgstr "Leveler du ikke har fullført"
 
-#: src/xmoto/GameText.h:552
+#: src/xmoto/GameText.h:558
 msgid "Light"
 msgstr ""
 
-#: src/xmoto/GameText.h:1198
+#: src/xmoto/GameText.h:1222
 msgid "Light Graphics Mode enabled"
 msgstr ""
 
-#: src/xmoto/GameText.h:526
+#: src/xmoto/GameText.h:531
 msgid "List All"
 msgstr "Vis alle"
 
@@ -1589,11 +1632,11 @@ msgstr "Vis alle"
 msgid "Lithuanian"
 msgstr ""
 
-#: src/xmoto/GameText.h:528
+#: src/xmoto/GameText.h:533
 msgid "Loading levels..."
 msgstr "Laster leveler..."
 
-#: src/xmoto/GameText.h:529
+#: src/xmoto/GameText.h:534
 msgid "Loading menu graphics..."
 msgstr "Laster meny grafikk"
 
@@ -1602,19 +1645,19 @@ msgstr "Laster meny grafikk"
 msgid "Loading new and updated levels..."
 msgstr "Nye og oppdaterte leveler"
 
-#: src/xmoto/GameText.h:530
+#: src/xmoto/GameText.h:535
 msgid "Loading replays..."
 msgstr "Laster replays"
 
-#: src/xmoto/GameText.h:531
+#: src/xmoto/GameText.h:536
 msgid "Loading sounds..."
 msgstr "Laster lyder"
 
-#: src/xmoto/GameText.h:532
+#: src/xmoto/GameText.h:537
 msgid "Loading textures..."
 msgstr "Laster teksturer"
 
-#: src/xmoto/GameText.h:527
+#: src/xmoto/GameText.h:532
 msgid "Loading..."
 msgstr "Laster..."
 
@@ -1626,16 +1669,20 @@ msgstr "Lokal rekord"
 msgid "Localization"
 msgstr "Lokalisering"
 
-#: src/xmoto/GameText.h:533
+#: src/xmoto/GameText.h:538
 msgid "Login"
 msgstr "Logg på"
 
-#: src/xmoto/GameText.h:1124
+#: src/xmoto/GameText.h:1067
+msgid "Logs cleared"
+msgstr ""
+
+#: src/xmoto/GameText.h:1148
 #, fuzzy
 msgid "Long levels"
 msgstr "Laster leveler..."
 
-#: src/xmoto/GameText.h:534
+#: src/xmoto/GameText.h:539
 msgid "Low"
 msgstr "Lav"
 
@@ -1643,11 +1690,11 @@ msgstr "Lav"
 msgid "MacOS X Support"
 msgstr "Mac OS X støtte"
 
-#: src/xmoto/GameText.h:535
+#: src/xmoto/GameText.h:540
 msgid "Main"
 msgstr "Hoved"
 
-#: src/xmoto/GameText.h:1021
+#: src/xmoto/GameText.h:1032
 msgid "Main options"
 msgstr ""
 
@@ -1655,37 +1702,41 @@ msgstr ""
 msgid "Main testers"
 msgstr "Hoved testere"
 
-#: src/xmoto/GameText.h:852
+#: src/xmoto/GameText.h:862
 msgid "Make console messages not disappear"
 msgstr ""
 
-#: src/xmoto/GameText.h:921
+#: src/xmoto/GameText.h:932
 msgid ""
 "Make motion blur effect for the ghost (if supported by your graphics card)"
 msgstr "Lag bevegelses blur effekt for ghosten (om støttet av ditt grafikkort)"
 
-#: src/xmoto/GameText.h:1038
+#: src/xmoto/GameText.h:1049
 msgid "Master"
 msgstr ""
 
-#: src/xmoto/GameText.h:604
+#: src/xmoto/GameText.h:541
+msgid "Max Framerate"
+msgstr ""
+
+#: src/xmoto/GameText.h:610
 msgid "Medals"
 msgstr "Medaljer"
 
-#: src/xmoto/GameText.h:546
+#: src/xmoto/GameText.h:552
 msgid "Medium"
 msgstr "Medium"
 
-#: src/xmoto/GameText.h:1123
+#: src/xmoto/GameText.h:1147
 #, fuzzy
 msgid "Medium levels"
 msgstr "Mine leveler"
 
-#: src/xmoto/GameText.h:547
+#: src/xmoto/GameText.h:553
 msgid "Menu Graphics"
 msgstr "Meny grafikk"
 
-#: src/xmoto/GameText.h:549
+#: src/xmoto/GameText.h:555
 msgid "Message not sent, unknown players :"
 msgstr ""
 
@@ -1693,23 +1744,23 @@ msgstr ""
 msgid "Mikhail Brinchuk"
 msgstr "Mikhail Brinchuk"
 
-#: src/xmoto/GameText.h:558
+#: src/xmoto/GameText.h:564
 msgid "Mono"
 msgstr "Mono"
 
-#: src/xmoto/GameText.h:871
+#: src/xmoto/GameText.h:882
 msgid "Mono (single channel) audio"
 msgstr "Mono (enkell kanals) lyd"
 
-#: src/xmoto/GameText.h:1110
+#: src/xmoto/GameText.h:1134
 msgid "Most played levels"
 msgstr "Mest spilte leveler"
 
-#: src/xmoto/GameText.h:561
+#: src/xmoto/GameText.h:567
 msgid "Motion blur ghost"
 msgstr "Bevegelses blur ghost"
 
-#: src/xmoto/GameText.h:536
+#: src/xmoto/GameText.h:542
 msgid "Mouse"
 msgstr ""
 
@@ -1729,7 +1780,7 @@ msgstr "Flytt kamera til høyre"
 msgid "Move Camera up"
 msgstr "Flytt kamera oppover"
 
-#: src/xmoto/GameText.h:562
+#: src/xmoto/GameText.h:568
 msgid "Multi"
 msgstr "Multi"
 
@@ -1737,84 +1788,84 @@ msgstr "Multi"
 msgid "Music"
 msgstr ""
 
-#: src/xmoto/GameText.h:1120
+#: src/xmoto/GameText.h:1144
 msgid "My levels"
 msgstr "Mine leveler"
 
-#: src/xmoto/GameText.h:982
+#: src/xmoto/GameText.h:993
 msgid "Name of level pack"
 msgstr "Navn på level pakke"
 
-#: src/xmoto/GameText.h:976
+#: src/xmoto/GameText.h:987
 msgid "Name of replay"
 msgstr "Replay navn"
 
-#: src/xmoto/GameText.h:1012
+#: src/xmoto/GameText.h:1023
 #, fuzzy
 msgid "Name of the language"
 msgstr "Replay navn"
 
-#: src/xmoto/GameText.h:779
+#: src/xmoto/GameText.h:787
 msgid "Network"
 msgstr ""
 
-#: src/xmoto/GameText.h:780
+#: src/xmoto/GameText.h:788
 msgid "Network admin console"
 msgstr ""
 
-#: src/xmoto/GameText.h:787
+#: src/xmoto/GameText.h:795
 msgid "Network error: you're disconnected"
 msgstr ""
 
-#: src/xmoto/GameText.h:1089
+#: src/xmoto/GameText.h:1113
 msgid "Network playing mode : just see other players as ghosts"
 msgstr ""
 
-#: src/xmoto/GameText.h:1109
+#: src/xmoto/GameText.h:1133
 msgid "Never played levels"
 msgstr "Leveler du aldri har spilt"
 
-#: src/xmoto/GameText.h:567
+#: src/xmoto/GameText.h:573
 msgid "New"
 msgstr "Ny"
 
-#: src/xmoto/GameText.h:576
+#: src/xmoto/GameText.h:582
 msgid "New Levels"
 msgstr "Nye leveler"
 
-#: src/xmoto/GameText.h:578
+#: src/xmoto/GameText.h:584
 msgid "New Profile..."
 msgstr "Ny profil..."
 
-#: src/xmoto/GameText.h:1098
+#: src/xmoto/GameText.h:1122
 msgid "New and updated levels"
 msgstr "Nye og oppdaterte leveler"
 
-#: src/xmoto/GameText.h:1136
+#: src/xmoto/GameText.h:1160
 msgid "New and updated levels since your last check"
 msgstr "Nye og oppdaterte leveler siden forrige sjekk"
 
-#: src/xmoto/GameText.h:570
+#: src/xmoto/GameText.h:576
 msgid "New highscore!"
 msgstr "Ny rekord!"
 
-#: src/xmoto/GameText.h:916
+#: src/xmoto/GameText.h:927
 msgid "New levels and levels updated from the Internet"
 msgstr "Nye leveler og oppdaterte leveler fra internett"
 
-#: src/xmoto/GameText.h:577
+#: src/xmoto/GameText.h:583
 msgid "New levels available!"
 msgstr "Nye leveler tilgjengelige!"
 
-#: src/xmoto/GameText.h:571
+#: src/xmoto/GameText.h:577
 msgid "New personal highscore!"
 msgstr "Ny personlig rekord!"
 
-#: src/xmoto/GameText.h:1049
+#: src/xmoto/GameText.h:1060
 msgid "Next level"
 msgstr ""
 
-#: src/xmoto/GameText.h:1043
+#: src/xmoto/GameText.h:1054
 msgid "Nice"
 msgstr ""
 
@@ -1826,23 +1877,23 @@ msgstr "Pent hopp der! :)"
 msgid "Nice! Now try the next one, it's a bit more difficult..."
 msgstr "Pent! Nå prøv den neste, den er litt vanskeligere..."
 
-#: src/xmoto/GameText.h:1070
+#: src/xmoto/GameText.h:1094
 msgid "Nice, could be better"
 msgstr ""
 
-#: src/xmoto/GameText.h:1140
+#: src/xmoto/GameText.h:1164
 msgid "Nicest X-Moto levels according to the web votes"
 msgstr "Fineste X-Moto leveler i følge web voteringen"
 
-#: src/xmoto/GameText.h:1101
+#: src/xmoto/GameText.h:1125
 msgid "Nicest levels"
 msgstr "Fineste leveler"
 
-#: src/xmoto/GameText.h:579
+#: src/xmoto/GameText.h:585
 msgid "No"
 msgstr "Nei"
 
-#: src/xmoto/GameText.h:1035
+#: src/xmoto/GameText.h:1046
 msgid "No idea"
 msgstr ""
 
@@ -1850,15 +1901,15 @@ msgstr ""
 msgid "No joystick found"
 msgstr ""
 
-#: src/xmoto/GameText.h:582
+#: src/xmoto/GameText.h:588
 msgid "No level following this one, sorry."
 msgstr "Ingen level følger etter denne, beklager."
 
-#: src/xmoto/GameText.h:1119
+#: src/xmoto/GameText.h:1143
 msgid "No medal"
 msgstr "Ingen medalje"
 
-#: src/xmoto/GameText.h:581
+#: src/xmoto/GameText.h:587
 msgid ""
 "No new or updated levels available.\n"
 "\n"
@@ -1868,23 +1919,23 @@ msgstr ""
 "\n"
 "Prøv igjen senere."
 
-#: src/xmoto/GameText.h:583
+#: src/xmoto/GameText.h:589
 msgid "No statistics for this profile."
 msgstr "Ingen statistikker for denne profilen."
 
-#: src/xmoto/GameText.h:1063
+#: src/xmoto/GameText.h:1087
 msgid "No technical difficulty"
 msgstr ""
 
-#: src/xmoto/GameText.h:1214
+#: src/xmoto/GameText.h:1238
 msgid "No training positions stored"
 msgstr ""
 
-#: src/xmoto/GameText.h:1190
+#: src/xmoto/GameText.h:1214
 msgid "Normal mode enabled"
 msgstr ""
 
-#: src/xmoto/GameText.h:867
+#: src/xmoto/GameText.h:878
 msgid "Normal sound quality"
 msgstr "Normal lyd kvalitet"
 
@@ -1892,23 +1943,23 @@ msgstr "Normal lyd kvalitet"
 msgid "Norwegian"
 msgstr "Norsk"
 
-#: src/xmoto/GameText.h:584
+#: src/xmoto/GameText.h:590
 msgid "Not finished"
 msgstr "Ikke ferdig"
 
-#: src/xmoto/GameText.h:1042
+#: src/xmoto/GameText.h:1053
 msgid "Not nice"
 msgstr ""
 
-#: src/xmoto/GameText.h:1041
+#: src/xmoto/GameText.h:1052
 msgid "Not nice at all"
 msgstr ""
 
-#: src/xmoto/GameText.h:1069
+#: src/xmoto/GameText.h:1093
 msgid "Not original"
 msgstr ""
 
-#: src/xmoto/GameText.h:857
+#: src/xmoto/GameText.h:868
 msgid "Not so fancy menu graphics"
 msgstr "Ikke så fancy meny grafikk"
 
@@ -1938,15 +1989,15 @@ msgid ""
 "they're not delicate enough to help you keep balance."
 msgstr ""
 
-#: src/xmoto/GameText.h:566
+#: src/xmoto/GameText.h:572
 msgid "Number of players"
 msgstr "Antall spillere"
 
-#: src/xmoto/GameText.h:597
+#: src/xmoto/GameText.h:603
 msgid "OK"
 msgstr "OK"
 
-#: src/xmoto/GameText.h:724
+#: src/xmoto/GameText.h:730
 msgid "Oh no !"
 msgstr "Å nei!"
 
@@ -1954,15 +2005,15 @@ msgstr "Å nei!"
 msgid "Okay. The red dot on your minimap is a strawberry."
 msgstr "Ok. Den røde prikken på minikartet ditt, er ett jordbær."
 
-#: src/xmoto/GameText.h:1114
+#: src/xmoto/GameText.h:1138
 msgid "Oldest highscores"
 msgstr "Eldste rekorder"
 
-#: src/xmoto/GameText.h:889
+#: src/xmoto/GameText.h:900
 msgid "Only show personal best times for this level"
 msgstr "Vis kun personlige rekorder for denne levelen"
 
-#: src/xmoto/GameText.h:892
+#: src/xmoto/GameText.h:903
 msgid "Only show personal replays for this level"
 msgstr "Vis kun personlige replayer for denne levelen"
 
@@ -1970,7 +2021,7 @@ msgstr "Vis kun personlige replayer for denne levelen"
 msgid "Oops!"
 msgstr "Oops!"
 
-#: src/xmoto/GameText.h:598
+#: src/xmoto/GameText.h:604
 msgid "Open"
 msgstr "Åpne"
 
@@ -1986,35 +2037,35 @@ msgstr ""
 msgid "Open private chat dialog box"
 msgstr ""
 
-#: src/xmoto/GameText.h:599
+#: src/xmoto/GameText.h:605
 msgid "Operation completed"
 msgstr ""
 
-#: src/xmoto/GameText.h:600
+#: src/xmoto/GameText.h:606
 msgid "Options"
 msgstr "Alternativer"
 
-#: src/xmoto/GameText.h:613
+#: src/xmoto/GameText.h:619
 msgid "Password"
 msgstr "Passord"
 
-#: src/xmoto/GameText.h:1020
+#: src/xmoto/GameText.h:1031
 msgid "Password associated to your profile for web access"
 msgstr ""
 
-#: src/xmoto/GameText.h:374 src/xmoto/GameText.h:439 src/xmoto/GameText.h:612
+#: src/xmoto/GameText.h:374 src/xmoto/GameText.h:439 src/xmoto/GameText.h:618
 msgid "Pause"
 msgstr "Pause"
 
-#: src/xmoto/GameText.h:1048
+#: src/xmoto/GameText.h:1059
 msgid "Pause to watch the level"
 msgstr ""
 
-#: src/xmoto/GameText.h:619
+#: src/xmoto/GameText.h:625
 msgid "Pause when playing X-Moto"
 msgstr ""
 
-#: src/xmoto/GameText.h:652
+#: src/xmoto/GameText.h:658
 msgid "Pause while replaying"
 msgstr ""
 
@@ -2022,19 +2073,19 @@ msgstr ""
 msgid "People who have provided bug reports"
 msgstr "Folk som har sendt in feilmeldinger (bug reports)"
 
-#: src/xmoto/GameText.h:881
+#: src/xmoto/GameText.h:892
 msgid "Permanently delete selected player profile, including best times"
 msgstr "Slett den valgte spiller profilen permanent, inkludert rekorder"
 
-#: src/xmoto/GameText.h:832
+#: src/xmoto/GameText.h:842
 msgid "Permanently delete the selected replay"
 msgstr "Slett den valgte replayen permanent"
 
-#: src/xmoto/GameText.h:614 src/xmoto/GameText.h:615
+#: src/xmoto/GameText.h:620 src/xmoto/GameText.h:621
 msgid "Personal"
 msgstr "Personlig"
 
-#: src/xmoto/GameText.h:1106
+#: src/xmoto/GameText.h:1130
 msgid "Physics levels"
 msgstr ""
 
@@ -2042,24 +2093,24 @@ msgstr ""
 msgid "Pick up the strawberry by touching it"
 msgstr "Plukk opp jordbæret ved å røre det"
 
-#: src/xmoto/GameText.h:545 src/xmoto/GameText.h:1115
+#: src/xmoto/GameText.h:551 src/xmoto/GameText.h:1139
 #, fuzzy
 msgid "Platinum"
 msgstr "Platinium"
 
-#: src/xmoto/GameText.h:620
+#: src/xmoto/GameText.h:626
 msgid "Play Next Level"
 msgstr "Spill neste level"
 
-#: src/xmoto/GameText.h:655
+#: src/xmoto/GameText.h:661
 msgid "Play a bit faster while replaying"
 msgstr ""
 
-#: src/xmoto/GameText.h:657
+#: src/xmoto/GameText.h:663
 msgid "Play a bit slower while replaying"
 msgstr ""
 
-#: src/xmoto/GameText.h:654
+#: src/xmoto/GameText.h:660
 msgid "Play faster while replaying"
 msgstr ""
 
@@ -2067,11 +2118,11 @@ msgstr ""
 msgid "Play music on all levels"
 msgstr ""
 
-#: src/xmoto/GameText.h:811
+#: src/xmoto/GameText.h:821
 msgid "Play next level"
 msgstr "Spill neste level"
 
-#: src/xmoto/GameText.h:817
+#: src/xmoto/GameText.h:827
 msgid "Play next level instead"
 msgstr "Spill neste level i stede"
 
@@ -2079,23 +2130,23 @@ msgstr "Spill neste level i stede"
 msgid "Play now !"
 msgstr ""
 
-#: src/xmoto/GameText.h:656
+#: src/xmoto/GameText.h:662
 msgid "Play slower while replaying"
 msgstr ""
 
-#: src/xmoto/GameText.h:828
+#: src/xmoto/GameText.h:838
 msgid "Play the selected level"
 msgstr "Spill den valgte levelen"
 
-#: src/xmoto/GameText.h:809
+#: src/xmoto/GameText.h:819
 msgid "Play this level again"
 msgstr "Spill denne levelen igjen"
 
-#: src/xmoto/GameText.h:827
+#: src/xmoto/GameText.h:837
 msgid "Play tutorial of how to play the game"
 msgstr "Spill en gjennomgang på hvordan du spiller spillet"
 
-#: src/xmoto/GameText.h:678
+#: src/xmoto/GameText.h:684
 msgid "Play!"
 msgstr "Spill!"
 
@@ -2104,15 +2155,15 @@ msgstr "Spill!"
 msgid "Player"
 msgstr "Spiller"
 
-#: src/xmoto/GameText.h:617
+#: src/xmoto/GameText.h:623
 msgid "Player Profile"
 msgstr "Spiller profil"
 
-#: src/xmoto/GameText.h:618
+#: src/xmoto/GameText.h:624
 msgid "Player Profiles"
 msgstr "Spiller profiler"
 
-#: src/xmoto/GameText.h:978
+#: src/xmoto/GameText.h:989
 msgid "Player who recorded the replay"
 msgstr "Spiller som spilte inn replayen"
 
@@ -2130,15 +2181,15 @@ msgstr ""
 msgid "Polish"
 msgstr "Polsk"
 
-#: src/xmoto/GameText.h:866
+#: src/xmoto/GameText.h:877
 msgid "Poor sound quality"
 msgstr "Dårlig lyd kvalitet"
 
-#: src/xmoto/GameText.h:621 src/xmoto/GameText.h:771
+#: src/xmoto/GameText.h:627 src/xmoto/GameText.h:779
 msgid "Port"
 msgstr "Port"
 
-#: src/xmoto/GameText.h:1079
+#: src/xmoto/GameText.h:1103
 msgid "Port on which the server must listen to"
 msgstr ""
 
@@ -2146,11 +2197,11 @@ msgstr ""
 msgid "Portuguese"
 msgstr ""
 
-#: src/xmoto/GameText.h:1032
+#: src/xmoto/GameText.h:1043
 msgid "Preselect the retry button when dying or finishing a level"
 msgstr ""
 
-#: src/xmoto/GameText.h:624
+#: src/xmoto/GameText.h:630
 #, c-format
 msgid "Press %s to chat"
 msgstr ""
@@ -2167,17 +2218,17 @@ msgstr "Trykk ENTER for å prøve igjen"
 msgid "Press ESC to display the menu"
 msgstr "Trykk ESC for å vise menyen"
 
-#: src/xmoto/GameText.h:623
+#: src/xmoto/GameText.h:629
 #, c-format
 msgid "Press key you want to '%s' or ESC to cancel..."
 msgstr "Trykk tast du ønsker å '%s' eller ESC for å avbryte..."
 
-#: src/xmoto/GameText.h:993
+#: src/xmoto/GameText.h:1004
 #, fuzzy
 msgid "Press to play X-Moto immediately"
 msgstr "Trykk for å spille umiddelbart til X-Moto"
 
-#: src/xmoto/GameText.h:1050
+#: src/xmoto/GameText.h:1061
 msgid "Previous level"
 msgstr ""
 
@@ -2186,23 +2237,23 @@ msgstr ""
 msgid "Previous/Next level"
 msgstr "Vanskeligste leveler"
 
-#: src/xmoto/GameText.h:625
+#: src/xmoto/GameText.h:631
 msgid "Proxy Server"
 msgstr "Proxy server"
 
-#: src/xmoto/GameText.h:986
+#: src/xmoto/GameText.h:997
 msgid "Puzzle the levels pack list"
 msgstr "Pusle level pakke listen"
 
-#: src/xmoto/GameText.h:627
+#: src/xmoto/GameText.h:633
 msgid "Quality"
 msgstr ""
 
-#: src/xmoto/GameText.h:631
+#: src/xmoto/GameText.h:637
 msgid "Quick start"
 msgstr "Hurtigstart"
 
-#: src/xmoto/GameText.h:632
+#: src/xmoto/GameText.h:638
 msgid "Quit Game"
 msgstr "Avslutt spill"
 
@@ -2210,38 +2261,38 @@ msgstr "Avslutt spill"
 msgid "Quit level"
 msgstr "Avslutt level"
 
-#: src/xmoto/GameText.h:813
+#: src/xmoto/GameText.h:823
 msgid "Quit the game"
 msgstr "Avslut spillet"
 
-#: src/xmoto/GameText.h:634
+#: src/xmoto/GameText.h:640
 msgid "Randomize"
 msgstr "Tilfeldig rekkefølge"
 
 #: src/xmoto/GameText.h:400
 msgid ""
 "Read the README file or check out the website at\n"
-"http://xmoto.tuxfamily.org\n"
+"https://xmoto.tuxfamily.org\n"
 "for more information."
 msgstr ""
 
-#: src/xmoto/GameText.h:1062
+#: src/xmoto/GameText.h:1086
 msgid "Really easy"
 msgstr ""
 
-#: src/xmoto/GameText.h:1044
+#: src/xmoto/GameText.h:1055
 msgid "Really nice"
 msgstr ""
 
-#: src/xmoto/GameText.h:742
+#: src/xmoto/GameText.h:748
 msgid "Reference room"
 msgstr ""
 
-#: src/xmoto/GameText.h:767
+#: src/xmoto/GameText.h:775
 msgid "Reinitialize zoom"
 msgstr "Reinitialiser zoom"
 
-#: src/xmoto/GameText.h:635
+#: src/xmoto/GameText.h:641
 msgid "Reload files to the database"
 msgstr ""
 
@@ -2249,15 +2300,15 @@ msgstr ""
 msgid "Reload levels, themes and replays from directories"
 msgstr ""
 
-#: src/xmoto/GameText.h:636
+#: src/xmoto/GameText.h:642
 msgid "Reloading levels..."
 msgstr "Laster leveler på nytt..."
 
-#: src/xmoto/GameText.h:637
+#: src/xmoto/GameText.h:643
 msgid "Reloading replays..."
 msgstr "Laster replays på nytt..."
 
-#: src/xmoto/GameText.h:638
+#: src/xmoto/GameText.h:644
 #, fuzzy
 msgid "Reloading themes..."
 msgstr "Laster leveler på nytt..."
@@ -2269,40 +2320,40 @@ msgid ""
 "by pressing :"
 msgstr "Husk at du kan snu sykkelen rundt"
 
-#: src/xmoto/GameText.h:1017
+#: src/xmoto/GameText.h:1028
 msgid "Remove levels not suitable for children"
 msgstr ""
 
-#: src/xmoto/GameText.h:639
+#: src/xmoto/GameText.h:645
 msgid "Replay"
 msgstr "Replay"
 
-#: src/xmoto/GameText.h:1203
+#: src/xmoto/GameText.h:1227
 msgid "Replay interpolation disabled"
 msgstr "Replay interpolation deaktivert"
 
-#: src/xmoto/GameText.h:1202
+#: src/xmoto/GameText.h:1226
 msgid "Replay interpolation enabled"
 msgstr "Replay interpolation aktivert"
 
-#: src/xmoto/GameText.h:648
+#: src/xmoto/GameText.h:654
 #, fuzzy, c-format
 msgid "Replay of %s"
 msgstr "Replays"
 
-#: src/xmoto/GameText.h:649
+#: src/xmoto/GameText.h:655
 msgid "Replays"
 msgstr "Replays"
 
-#: src/xmoto/GameText.h:1219
+#: src/xmoto/GameText.h:1243
 msgid "Restart Level to activate!"
 msgstr ""
 
-#: src/xmoto/GameText.h:660
+#: src/xmoto/GameText.h:666
 msgid "Restart This Level"
 msgstr "Start levelen på nytt"
 
-#: src/xmoto/GameText.h:662
+#: src/xmoto/GameText.h:668
 msgid "Restart level"
 msgstr ""
 
@@ -2310,27 +2361,27 @@ msgstr ""
 msgid "Restart the level"
 msgstr "Start elvelen på nytt"
 
-#: src/xmoto/GameText.h:661
+#: src/xmoto/GameText.h:667
 msgid "Restart to the last checkpoint"
 msgstr ""
 
-#: src/xmoto/GameText.h:663
+#: src/xmoto/GameText.h:669
 msgid "Resume Playing"
 msgstr "Fortsett spillet"
 
-#: src/xmoto/GameText.h:842
+#: src/xmoto/GameText.h:852
 msgid "Revert options to defaults"
 msgstr "Gjenopprett standardinstillinger"
 
-#: src/xmoto/GameText.h:650
+#: src/xmoto/GameText.h:656
 msgid "Rewind while replaying"
 msgstr ""
 
-#: src/xmoto/GameText.h:605 src/xmoto/GameText.h:664
+#: src/xmoto/GameText.h:611 src/xmoto/GameText.h:670
 msgid "Room"
 msgstr "Rom"
 
-#: src/xmoto/GameText.h:743
+#: src/xmoto/GameText.h:749
 #, fuzzy, c-format
 msgid "Room %i"
 msgstr "Rom"
@@ -2343,23 +2394,23 @@ msgstr "Roterer den med klokken"
 msgid "Rotates it counter-clockwise"
 msgstr "Roterer den mot klokken"
 
-#: src/xmoto/GameText.h:665
+#: src/xmoto/GameText.h:671
 msgid "Run Windowed"
 msgstr "Kjør i vindu"
 
-#: src/xmoto/GameText.h:972
+#: src/xmoto/GameText.h:983
 msgid "Run a dynamic zoom while playing"
 msgstr ""
 
-#: src/xmoto/GameText.h:896
+#: src/xmoto/GameText.h:907
 msgid "Run selected replay"
 msgstr "Kjør valgt replay"
 
-#: src/xmoto/GameText.h:856
+#: src/xmoto/GameText.h:866
 msgid "Run the game in a window"
 msgstr "Kjør spillet i et vindu"
 
-#: src/xmoto/GameText.h:831
+#: src/xmoto/GameText.h:841
 msgid "Run the selected replay"
 msgstr "Kjør den valgte replayen"
 
@@ -2367,46 +2418,46 @@ msgstr "Kjør den valgte replayen"
 msgid "Russian"
 msgstr "Russisk"
 
-#: src/xmoto/GameText.h:680
+#: src/xmoto/GameText.h:686
 msgid "STATS"
 msgstr "STATS"
 
-#: src/xmoto/GameText.h:667
+#: src/xmoto/GameText.h:673
 #, fuzzy
 msgid "Safemode Disabled"
 msgstr "Theme mode deaktivert"
 
-#: src/xmoto/GameText.h:666
+#: src/xmoto/GameText.h:672
 #, fuzzy
 msgid "Safemode Enabled"
 msgstr "Theme mode akitvert"
 
-#: src/xmoto/GameText.h:668
+#: src/xmoto/GameText.h:674
 msgid "Save"
 msgstr "Lagre"
 
-#: src/xmoto/GameText.h:670
+#: src/xmoto/GameText.h:676
 msgid "Save Replay"
 msgstr "Lagre replay"
 
-#: src/xmoto/GameText.h:810
+#: src/xmoto/GameText.h:820
 msgid "Save a replay for later viewing"
 msgstr "Lagre en replay for senere interesse"
 
-#: src/xmoto/GameText.h:841
+#: src/xmoto/GameText.h:851
 msgid "Save options"
 msgstr "Lagre instillinger"
 
-#: src/xmoto/GameText.h:669
+#: src/xmoto/GameText.h:675
 #, fuzzy, c-format
 msgid "Saved as %s"
 msgstr "Lagret som"
 
-#: src/xmoto/GameText.h:671
+#: src/xmoto/GameText.h:677
 msgid "Screen Resolution"
 msgstr "Skjerm oppløsning"
 
-#: src/xmoto/GameText.h:672
+#: src/xmoto/GameText.h:678
 msgid "Screenshot"
 msgstr ""
 
@@ -2414,103 +2465,107 @@ msgstr ""
 msgid "Script action"
 msgstr ""
 
-#: src/xmoto/GameText.h:1105
+#: src/xmoto/GameText.h:1129
 msgid "Scripted levels"
 msgstr "Skriptete leveler"
 
-#: src/xmoto/GameText.h:883
+#: src/xmoto/GameText.h:894
 msgid "Select a level in the level pack to play"
 msgstr "Velg en level i level pakked å spill"
 
-#: src/xmoto/GameText.h:877
+#: src/xmoto/GameText.h:888
 msgid "Select a player profile to use"
 msgstr "Velg spiller profil å bruke"
 
-#: src/xmoto/GameText.h:875
+#: src/xmoto/GameText.h:886
 msgid "Select action to re-configure to another key"
 msgstr "Velg handling til å rekonfigurere til en annen tast"
 
-#: src/xmoto/GameText.h:855
+#: src/xmoto/GameText.h:865
 msgid "Select graphics resolution"
 msgstr "Velg grafikk oppløsning"
 
-#: src/xmoto/GameText.h:907
+#: src/xmoto/GameText.h:918
 #, fuzzy
 msgid "Select this if you connect to the Internet through a SOCKS4 proxy"
 msgstr "Velg denne om du kobler til internett igjennom en SOCKS4 proxy"
 
-#: src/xmoto/GameText.h:909
+#: src/xmoto/GameText.h:920
 #, fuzzy
 msgid "Select this if you connect to the Internet through a SOCKS5 proxy"
 msgstr "Velg denne om du kobler til internett igjennom en SOCKS5 proxy"
 
-#: src/xmoto/GameText.h:905
+#: src/xmoto/GameText.h:916
 #, fuzzy
 msgid "Select this if you connect to the Internet through an HTTP proxy"
 msgstr "Velg denne om du kobler til internett igjennom en HTTP proxy"
 
-#: src/xmoto/GameText.h:903
+#: src/xmoto/GameText.h:914
 msgid "Select this if you got a direct connection to the Internet"
 msgstr "Velg dette om du har en direkte tilkobling til internett"
 
-#: src/xmoto/GameText.h:563
+#: src/xmoto/GameText.h:569
 msgid "Semi-cooperative mode"
 msgstr ""
 
-#: src/xmoto/GameText.h:1045
+#: src/xmoto/GameText.h:1056
 msgid "Send this report"
 msgstr ""
 
-#: src/xmoto/GameText.h:1072
+#: src/xmoto/GameText.h:1096
 msgid "Send this report on the webserver"
 msgstr ""
 
-#: src/xmoto/GameText.h:520
+#: src/xmoto/GameText.h:525
 msgid "Sending the report..."
 msgstr ""
 
-#: src/xmoto/GameText.h:521
+#: src/xmoto/GameText.h:526
 msgid "Sending the vote..."
 msgstr ""
 
-#: src/xmoto/GameText.h:770
+#: src/xmoto/GameText.h:778
 msgid "Server"
 msgstr ""
 
-#: src/xmoto/GameText.h:1076
+#: src/xmoto/GameText.h:1100
 msgid "Server configuration to play via the network"
 msgstr ""
 
-#: src/xmoto/GameText.h:775
+#: src/xmoto/GameText.h:783
 msgid "Server is currently started"
 msgstr ""
 
-#: src/xmoto/GameText.h:776
+#: src/xmoto/GameText.h:784
 msgid "Server is currently stopped"
 msgstr ""
 
-#: src/xmoto/GameText.h:1080
+#: src/xmoto/GameText.h:1104
 msgid "Server on which you want to connect"
 msgstr ""
 
-#: src/xmoto/GameText.h:1065
+#: src/xmoto/GameText.h:867
+msgid "Set the maximum framerate the game can run at"
+msgstr ""
+
+#: src/xmoto/GameText.h:1089
 msgid "Several difficulties"
 msgstr ""
 
-#: src/xmoto/GameText.h:1071
+#: src/xmoto/GameText.h:1095
 msgid "Several textures, sprites, ..."
 msgstr ""
 
-#: src/xmoto/GameText.h:1122
+#: src/xmoto/GameText.h:1146
 #, fuzzy
 msgid "Shortest levels"
 msgstr "Vanskeligste leveler"
 
-#: src/xmoto/GameText.h:673
+#: src/xmoto/GameText.h:679
 msgid "Show"
 msgstr "Vis"
 
-#: src/xmoto/GameText.h:677
+#: src/xmoto/GameText.h:683
 msgid "Show Mini Map"
 msgstr "Vis minikart"
 
@@ -2518,19 +2573,19 @@ msgstr "Vis minikart"
 msgid "Show World Record in-game"
 msgstr "Vis verdensrekord i spillet"
 
-#: src/xmoto/GameText.h:843
+#: src/xmoto/GameText.h:853
 msgid "Show a map of your surroundings when playing"
 msgstr "Vis et kart over omgivelsene i spillet"
 
-#: src/xmoto/GameText.h:890
+#: src/xmoto/GameText.h:901
 msgid "Show all best times for this level"
 msgstr "Vis alle rekorder for denne levelen"
 
-#: src/xmoto/GameText.h:893
+#: src/xmoto/GameText.h:904
 msgid "Show all replays for this level"
 msgstr "Vis alle replayene for denne levelen"
 
-#: src/xmoto/GameText.h:674
+#: src/xmoto/GameText.h:680
 msgid "Show console"
 msgstr ""
 
@@ -2538,11 +2593,11 @@ msgstr ""
 msgid "Show game information in the console"
 msgstr ""
 
-#: src/xmoto/GameText.h:898
+#: src/xmoto/GameText.h:909
 msgid "Show helpful help strings such as this one"
 msgstr "Vis hjelpfulle hjelpe fraser slik som denne"
 
-#: src/xmoto/GameText.h:895
+#: src/xmoto/GameText.h:906
 msgid "Show information about new players and played levels in the console"
 msgstr ""
 
@@ -2554,23 +2609,23 @@ msgstr ""
 msgid "Show next medal in-game"
 msgstr ""
 
-#: src/xmoto/GameText.h:833
+#: src/xmoto/GameText.h:843
 msgid "Show replays of all players in list"
 msgstr "Vis replays over alle spillere i listen"
 
-#: src/xmoto/GameText.h:847
+#: src/xmoto/GameText.h:857
 msgid "Show the World Record for a given level when playing"
 msgstr "Vis verdensrekorden or en gitt level i spillet"
 
-#: src/xmoto/GameText.h:918
+#: src/xmoto/GameText.h:929
 msgid "Show the ghost if possible in the game"
 msgstr "Vis ghost i spillet om mulig"
 
-#: src/xmoto/GameText.h:967
+#: src/xmoto/GameText.h:978
 msgid "Show the speedometer when playing"
 msgstr "Vis speedometeret i spillet"
 
-#: src/xmoto/GameText.h:849
+#: src/xmoto/GameText.h:859
 msgid "Show the time you need before achieving the next medal"
 msgstr ""
 
@@ -2578,19 +2633,19 @@ msgstr ""
 msgid "Show this help"
 msgstr ""
 
-#: src/xmoto/GameText.h:943
+#: src/xmoto/GameText.h:954
 msgid "Show various statistics about X-Moto"
 msgstr "Vis forskjellige statistikker om X-Moto"
 
-#: src/xmoto/GameText.h:544 src/xmoto/GameText.h:1117
+#: src/xmoto/GameText.h:550 src/xmoto/GameText.h:1141
 msgid "Silver"
 msgstr "Sølv"
 
-#: src/xmoto/GameText.h:781
+#: src/xmoto/GameText.h:789
 msgid "Simple ghost mode"
 msgstr ""
 
-#: src/xmoto/GameText.h:1046
+#: src/xmoto/GameText.h:1057
 msgid "Skip this report"
 msgstr ""
 
@@ -2598,16 +2653,16 @@ msgstr ""
 msgid "Slovak"
 msgstr "Slovakisk"
 
-#: src/xmoto/GameText.h:602
+#: src/xmoto/GameText.h:608
 msgid "Some options will not take effect before next restart!"
 msgstr ""
 "Noen alternativer vill ikke ha effekt før du har startet spillet på nytt!"
 
-#: src/xmoto/GameText.h:1133
+#: src/xmoto/GameText.h:1157
 msgid "Somebody in the room made a better highscore than yours"
 msgstr "Noen i rommet fikk en bedre rekord en din"
 
-#: src/xmoto/GameText.h:629
+#: src/xmoto/GameText.h:635
 msgid ""
 "Sorry, but there aren't enough levels matching your choice.\n"
 "Choosing random levels instead"
@@ -2621,74 +2676,74 @@ msgstr ""
 msgid "Spanish"
 msgstr "Spansk"
 
-#: src/xmoto/GameText.h:606
+#: src/xmoto/GameText.h:612
 msgid "Special"
 msgstr "Spesial"
 
-#: src/xmoto/GameText.h:675
+#: src/xmoto/GameText.h:681
 msgid "Speedometer"
 msgstr "Speedometer"
 
-#: src/xmoto/GameText.h:607
+#: src/xmoto/GameText.h:613
 msgid "Standard"
 msgstr "Standard"
 
-#: src/xmoto/GameText.h:773
+#: src/xmoto/GameText.h:781
 msgid "Start the server"
 msgstr ""
 
-#: src/xmoto/GameText.h:1077
+#: src/xmoto/GameText.h:1101
 msgid "Start the server at X-Moto startup"
 msgstr ""
 
-#: src/xmoto/GameText.h:1084
+#: src/xmoto/GameText.h:1108
 msgid "Start to play with other connected players"
 msgstr ""
 
-#: src/xmoto/GameText.h:1078
+#: src/xmoto/GameText.h:1102
 msgid "Start/stop the server"
 msgstr ""
 
-#: src/xmoto/GameText.h:609 src/xmoto/GameText.h:679
+#: src/xmoto/GameText.h:615 src/xmoto/GameText.h:685
 msgid "Statistics"
 msgstr "Statistikker"
 
-#: src/xmoto/GameText.h:749
+#: src/xmoto/GameText.h:757
 #, fuzzy, c-format
 msgid "Stats since: %s"
 msgstr "Statistikker"
 
-#: src/xmoto/GameText.h:682
+#: src/xmoto/GameText.h:688
 msgid "Stereo"
 msgstr "Stereo"
 
-#: src/xmoto/GameText.h:872
+#: src/xmoto/GameText.h:883
 msgid "Stereo (two channel) audio"
 msgstr "Stereo (dobbel kanals) lyd"
 
-#: src/xmoto/GameText.h:1126
+#: src/xmoto/GameText.h:1150
 msgid "Stolen highscores"
 msgstr ""
 
-#: src/xmoto/GameText.h:565
+#: src/xmoto/GameText.h:571
 msgid "Stop the game once a player ends the level"
 msgstr ""
 
-#: src/xmoto/GameText.h:999
+#: src/xmoto/GameText.h:1010
 msgid ""
 "Stop the game once a player ends the level or continue while a player is "
 "running"
 msgstr ""
 
-#: src/xmoto/GameText.h:774
+#: src/xmoto/GameText.h:782
 msgid "Stop the server"
 msgstr ""
 
-#: src/xmoto/GameText.h:653
+#: src/xmoto/GameText.h:659
 msgid "Stop while replaying"
 msgstr ""
 
-#: src/xmoto/GameText.h:1216
+#: src/xmoto/GameText.h:1240
 #, c-format
 msgid "Stored as training position %i"
 msgstr ""
@@ -2697,11 +2752,11 @@ msgstr ""
 msgid "Swedish"
 msgstr "Svensk"
 
-#: src/xmoto/GameText.h:690
+#: src/xmoto/GameText.h:696
 msgid "Switch FPS"
 msgstr ""
 
-#: src/xmoto/GameText.h:694
+#: src/xmoto/GameText.h:700
 msgid "Switch WWW access"
 msgstr ""
 
@@ -2709,47 +2764,47 @@ msgstr ""
 msgid "Switch biker"
 msgstr ""
 
-#: src/xmoto/GameText.h:1053
+#: src/xmoto/GameText.h:1064
 msgid "Switch ghosttrail rendering"
 msgstr ""
 
-#: src/xmoto/GameText.h:696
+#: src/xmoto/GameText.h:702
 msgid "Switch graphics mode"
 msgstr ""
 
-#: src/xmoto/GameText.h:695
+#: src/xmoto/GameText.h:701
 msgid "Switch graphics quality mode"
 msgstr ""
 
-#: src/xmoto/GameText.h:693
+#: src/xmoto/GameText.h:699
 msgid "Switch highscore information"
 msgstr ""
 
-#: src/xmoto/GameText.h:692
+#: src/xmoto/GameText.h:698
 msgid "Switch net game mode"
 msgstr ""
 
-#: src/xmoto/GameText.h:1051
+#: src/xmoto/GameText.h:1062
 msgid "Switch player"
 msgstr ""
 
-#: src/xmoto/GameText.h:697
+#: src/xmoto/GameText.h:703
 msgid "Switch safe mode"
 msgstr ""
 
-#: src/xmoto/GameText.h:1052
+#: src/xmoto/GameText.h:1063
 msgid "Switch trackingshot mode"
 msgstr ""
 
-#: src/xmoto/GameText.h:685
+#: src/xmoto/GameText.h:691
 msgid "Synchronisation done successfully"
 msgstr ""
 
-#: src/xmoto/GameText.h:683
+#: src/xmoto/GameText.h:689
 msgid "Synchronisation down"
 msgstr ""
 
-#: src/xmoto/GameText.h:684
+#: src/xmoto/GameText.h:690
 msgid "Synchronisation up"
 msgstr ""
 
@@ -2757,11 +2812,11 @@ msgstr ""
 msgid "Synchronise"
 msgstr ""
 
-#: src/xmoto/GameText.h:1027
+#: src/xmoto/GameText.h:1038
 msgid "Synchronise your database on the web"
 msgstr ""
 
-#: src/xmoto/GameText.h:1029
+#: src/xmoto/GameText.h:1040
 msgid "Synchronise your database when your quit X-Moto"
 msgstr ""
 
@@ -2800,11 +2855,11 @@ msgid ""
 "your head is lowered quite a lot..."
 msgstr "Den grunnlegende teorien er at når du kjører på bakhjulet,"
 
-#: src/xmoto/GameText.h:329 src/xmoto/GameText.h:1002
+#: src/xmoto/GameText.h:329 src/xmoto/GameText.h:1013
 msgid "The best of my replays (on this computer)"
 msgstr "Den beste av mine replays (på denne maskinen)"
 
-#: src/xmoto/GameText.h:331 src/xmoto/GameText.h:1004
+#: src/xmoto/GameText.h:331 src/xmoto/GameText.h:1015
 msgid "The best of the replays (on this computer)"
 msgstr "Den beste av replayene (på denne maskinen)"
 
@@ -2823,12 +2878,12 @@ msgstr ""
 msgid "The first jump you're going to perform is very easy."
 msgstr "Det første hoppet du kommer til å prestere er veldig lett."
 
-#: src/xmoto/GameText.h:327 src/xmoto/GameText.h:1008
+#: src/xmoto/GameText.h:327 src/xmoto/GameText.h:1019
 #, fuzzy
 msgid "The highscore of the other rooms"
 msgstr "Rommets rekord"
 
-#: src/xmoto/GameText.h:325 src/xmoto/GameText.h:1006
+#: src/xmoto/GameText.h:325 src/xmoto/GameText.h:1017
 #, fuzzy
 msgid "The highscore of the reference room"
 msgstr "Rommets rekord"
@@ -2840,19 +2895,19 @@ msgid ""
 "indicates how many strawberries still left."
 msgstr "indikerer hvor mange jorbær som er igjen"
 
-#: src/xmoto/GameText.h:517
+#: src/xmoto/GameText.h:521
 msgid "The level failed while loading with the following error :"
 msgstr ""
 
-#: src/xmoto/GameText.h:1182
+#: src/xmoto/GameText.h:1206
 msgid "The long levels (1 minute to 2 minutes)"
 msgstr ""
 
-#: src/xmoto/GameText.h:1184
+#: src/xmoto/GameText.h:1208
 msgid "The longest levels (more than 2 minutes)"
 msgstr ""
 
-#: src/xmoto/GameText.h:1180
+#: src/xmoto/GameText.h:1204
 msgid "The medium levels (25 seconds to 60)"
 msgstr ""
 
@@ -2870,19 +2925,19 @@ msgid ""
 "to collect all of them, and then find the flower."
 msgstr "å samle alle av dem, og deretter finne blomsten."
 
-#: src/xmoto/GameText.h:647
+#: src/xmoto/GameText.h:653
 msgid "The replay can't be played!"
 msgstr "Replayen kan ikke spilles av!"
 
-#: src/xmoto/GameText.h:1170
+#: src/xmoto/GameText.h:1194
 msgid "The room highscore is really better than your own highscore"
 msgstr "Rom rekorden er virkelig bedre en din rekord"
 
-#: src/xmoto/GameText.h:1010
+#: src/xmoto/GameText.h:1021
 msgid "The scene is shared by all the players"
 msgstr ""
 
-#: src/xmoto/GameText.h:1178
+#: src/xmoto/GameText.h:1202
 msgid "The shortest levels (less than 25 seconds)"
 msgstr ""
 
@@ -2893,19 +2948,19 @@ msgid ""
 "for the current level..."
 msgstr "Den lille til høyre er din egen rekord"
 
-#: src/xmoto/GameText.h:702
+#: src/xmoto/GameText.h:708
 msgid "The theme is now up to date"
 msgstr "Themet er nå oppdatert"
 
-#: src/xmoto/GameText.h:537 src/xmoto/GameText.h:698
+#: src/xmoto/GameText.h:543 src/xmoto/GameText.h:704
 msgid "Theme"
 msgstr "Theme"
 
-#: src/xmoto/GameText.h:1194
+#: src/xmoto/GameText.h:1218
 msgid "Theme mode disabled"
 msgstr "Theme mode deaktivert"
 
-#: src/xmoto/GameText.h:1193
+#: src/xmoto/GameText.h:1217
 msgid "Theme mode enabled"
 msgstr "Theme mode akitvert"
 
@@ -2925,7 +2980,7 @@ msgid ""
 "how you play the game."
 msgstr "Denne levelen er en kort gjennomgang av"
 
-#: src/xmoto/GameText.h:1218
+#: src/xmoto/GameText.h:1242
 msgid ""
 "This level is not recordable (feature still not implemented).\n"
 "Sorry."
@@ -2946,20 +3001,20 @@ msgid ""
 "Beware that this can be pretty difficult :)"
 msgstr ""
 
-#: src/xmoto/GameText.h:703
+#: src/xmoto/GameText.h:709
 msgid "Time"
 msgstr "Tid"
 
-#: src/xmoto/GameText.h:754
+#: src/xmoto/GameText.h:762
 #, c-format
 msgid "Time played: %s"
 msgstr ""
 
-#: src/xmoto/GameText.h:701
+#: src/xmoto/GameText.h:707
 msgid "To be updated"
 msgstr "Gjenstår å oppdatere"
 
-#: src/xmoto/GameText.h:700
+#: src/xmoto/GameText.h:706
 msgid "To download"
 msgstr "Gjenstår å laste ned"
 
@@ -2995,7 +3050,7 @@ msgstr ""
 msgid "Toggle theme and ugly over mode"
 msgstr ""
 
-#: src/xmoto/GameText.h:555
+#: src/xmoto/GameText.h:561
 msgid "Total time you scored / total highscore time for levels you finished"
 msgstr ""
 
@@ -3003,20 +3058,20 @@ msgstr ""
 msgid "Touch it to finish the level. Good luck with the rest :)"
 msgstr "Rør det for å fullføre banen. Lykke til med resten :)"
 
-#: src/xmoto/GameText.h:1208
+#: src/xmoto/GameText.h:1232
 msgid "Trail Cam activated"
 msgstr ""
 
-#: src/xmoto/GameText.h:1209
+#: src/xmoto/GameText.h:1233
 msgid "Trail Cam deactivated"
 msgstr ""
 
-#: src/xmoto/GameText.h:1215
+#: src/xmoto/GameText.h:1239
 #, c-format
 msgid "Training position %i/%i restored"
 msgstr ""
 
-#: src/xmoto/GameText.h:704
+#: src/xmoto/GameText.h:710
 msgid "Try This Level Again"
 msgstr "Prøv denne levelen igjen"
 
@@ -3025,11 +3080,11 @@ msgstr "Prøv denne levelen igjen"
 msgid "Try getting under the next obstacle when you feel you're ready."
 msgstr "Prøv å komme under den neste hindringen når du føler deg klar."
 
-#: src/xmoto/GameText.h:818
+#: src/xmoto/GameText.h:828
 msgid "Try this level again"
 msgstr "Prøv denne levelen på nytt"
 
-#: src/xmoto/GameText.h:816
+#: src/xmoto/GameText.h:826
 msgid "Try this level again from the beginning"
 msgstr "Prø denne levelen igjen fra starten"
 
@@ -3037,11 +3092,11 @@ msgstr "Prø denne levelen igjen fra starten"
 msgid "Turkish"
 msgstr ""
 
-#: src/xmoto/GameText.h:873
+#: src/xmoto/GameText.h:884
 msgid "Turn on engine noise"
 msgstr "Slå på motorlyd"
 
-#: src/xmoto/GameText.h:865
+#: src/xmoto/GameText.h:876
 msgid "Turn on sound effects"
 msgstr "Slå på lydeffekter"
 
@@ -3049,7 +3104,7 @@ msgstr "Slå på lydeffekter"
 msgid "Turns around and drives in the other direction"
 msgstr "Snur rundt og kjører andre veien"
 
-#: src/xmoto/GameText.h:705
+#: src/xmoto/GameText.h:711
 msgid "Tutorial"
 msgstr "Opplæring"
 
@@ -3057,67 +3112,67 @@ msgstr "Opplæring"
 msgid "Type"
 msgstr "Type"
 
-#: src/xmoto/GameText.h:1192
+#: src/xmoto/GameText.h:1216
 msgid "Ugly mode disabled"
 msgstr "Ugly mode deaktivert"
 
-#: src/xmoto/GameText.h:1191
+#: src/xmoto/GameText.h:1215
 msgid "Ugly mode enabled"
 msgstr "Ugly mode aktivert"
 
-#: src/xmoto/GameText.h:1196
+#: src/xmoto/GameText.h:1220
 msgid "UglyOver mode disabled"
 msgstr "UglyOver mode deaktivert"
 
-#: src/xmoto/GameText.h:1195
+#: src/xmoto/GameText.h:1219
 msgid "UglyOver mode enabled"
 msgstr "UglyOver mode aktivert"
 
-#: src/xmoto/GameText.h:1225
+#: src/xmoto/GameText.h:1249
 msgid "Unable to build the report"
 msgstr ""
 
-#: src/xmoto/GameText.h:786
+#: src/xmoto/GameText.h:794
 msgid "Unable to connect on the server"
 msgstr ""
 
-#: src/xmoto/GameText.h:706
+#: src/xmoto/GameText.h:712
 msgid "Undefined"
 msgstr ""
 
-#: src/xmoto/GameText.h:707
+#: src/xmoto/GameText.h:713
 msgid "Unknown"
 msgstr "Uvisst"
 
-#: src/xmoto/GameText.h:708
+#: src/xmoto/GameText.h:714
 msgid "Unknown players :"
 msgstr ""
 
-#: src/xmoto/GameText.h:709
+#: src/xmoto/GameText.h:715
 msgid "Unpacked levels"
 msgstr "Upakkede leveler"
 
-#: src/xmoto/GameText.h:713
+#: src/xmoto/GameText.h:719
 msgid "Update"
 msgstr "Oppdater"
 
-#: src/xmoto/GameText.h:945
+#: src/xmoto/GameText.h:956
 msgid "Update statistics (also happens each time X-Moto is started)"
 msgstr "Oppdater statistikk (skjer også hver gang du starter X-Moto)"
 
-#: src/xmoto/GameText.h:716
+#: src/xmoto/GameText.h:722
 msgid "Update the rooms list"
 msgstr "Oppdater romlisten"
 
-#: src/xmoto/GameText.h:717
+#: src/xmoto/GameText.h:723
 msgid "Update the theme list"
 msgstr "Oppdater theme listen"
 
-#: src/xmoto/GameText.h:714
+#: src/xmoto/GameText.h:720
 msgid "Updated"
 msgstr "Oppdatert"
 
-#: src/xmoto/GameText.h:718
+#: src/xmoto/GameText.h:724
 msgid "Updating level lists..."
 msgstr "Oppdater level listen"
 
@@ -3133,43 +3188,43 @@ msgstr "Oppgraderer database profil"
 msgid "Upgrading database stats for the profile"
 msgstr "Oppgraderer database statistikker for proilen"
 
-#: src/xmoto/GameText.h:719
+#: src/xmoto/GameText.h:725
 #, fuzzy
 msgid "Upload"
 msgstr "Oppdatert"
 
-#: src/xmoto/GameText.h:720
+#: src/xmoto/GameText.h:726
 msgid "Upload all highscores"
 msgstr "Last opp alle rekorder"
 
-#: src/xmoto/GameText.h:966
+#: src/xmoto/GameText.h:977
 msgid "Upload of highscore requires a password (Except for WR)"
 msgstr ""
 "Opplasting av rekorder krever ett passord (med unntak av verdensrekorder)"
 
-#: src/xmoto/GameText.h:964
+#: src/xmoto/GameText.h:975
 msgid "Upload of highscore requires to log in (Except for WR)"
 msgstr ""
 "Opplasting av rekorder krever innlogging (med unntak av verdensrekorder)"
 
-#: src/xmoto/GameText.h:953
+#: src/xmoto/GameText.h:964
 msgid "Upload the replay on the website of highscores"
 msgstr "Last opp replayen på websiden for rekorder"
 
-#: src/xmoto/GameText.h:955
+#: src/xmoto/GameText.h:966
 msgid "Upload your best replays to your room (useful when it is just created)"
 msgstr ""
 "Last opp dine beste repriser til rommet ditt (nyttig når rommet er nytt)"
 
-#: src/xmoto/GameText.h:725
+#: src/xmoto/GameText.h:731
 msgid "Uploading the highscore..."
 msgstr "Laster opp rekorden..."
 
-#: src/xmoto/GameText.h:728
+#: src/xmoto/GameText.h:734
 msgid "Use Environment Vars"
 msgstr "Bruk omgielses variabler"
 
-#: src/xmoto/GameText.h:729
+#: src/xmoto/GameText.h:735
 msgid "Use Profile"
 msgstr "Bruk profil"
 
@@ -3183,23 +3238,23 @@ msgstr ""
 msgid "Use Trail Cam"
 msgstr ""
 
-#: src/xmoto/GameText.h:974
+#: src/xmoto/GameText.h:985
 msgid "Use a camera that directs to the shortest path through the level"
 msgstr ""
 
-#: src/xmoto/GameText.h:726
+#: src/xmoto/GameText.h:732
 msgid "Use crappy information"
 msgstr ""
 
-#: src/xmoto/GameText.h:851
+#: src/xmoto/GameText.h:861
 msgid "Use crappy information from the website to update the crappy pack"
 msgstr ""
 
-#: src/xmoto/GameText.h:727
+#: src/xmoto/GameText.h:733
 msgid "Use permanent console"
 msgstr ""
 
-#: src/xmoto/GameText.h:878
+#: src/xmoto/GameText.h:889
 msgid "Use the selected player profile"
 msgstr "Bruk den valgte spiller profilen"
 
@@ -3213,32 +3268,32 @@ msgstr ""
 msgid "Use theme cursor"
 msgstr ""
 
-#: src/xmoto/GameText.h:910
+#: src/xmoto/GameText.h:921
 msgid "Use these settings"
 msgstr "Bruk disse instillingene"
 
-#: src/xmoto/GameText.h:731
+#: src/xmoto/GameText.h:737
 msgid "Using HTTP Proxy"
 msgstr "Ved hjelp av HTTP proxy"
 
-#: src/xmoto/GameText.h:732
+#: src/xmoto/GameText.h:738
 msgid "Using SOCKS4 Proxy"
 msgstr "Ved hjelp av SOCKS4 proxy"
 
-#: src/xmoto/GameText.h:733
+#: src/xmoto/GameText.h:739
 msgid "Using SOCKS5 Proxy"
 msgstr "Ved hjelp av SOCKS5 proxy"
 
-#: src/xmoto/GameText.h:1125
+#: src/xmoto/GameText.h:1149
 #, fuzzy
 msgid "Very long levels"
 msgstr "Laster leveler på nytt..."
 
-#: src/xmoto/GameText.h:734
+#: src/xmoto/GameText.h:740
 msgid "Video"
 msgstr "Video"
 
-#: src/xmoto/GameText.h:735
+#: src/xmoto/GameText.h:741
 msgid "View"
 msgstr "Vis"
 
@@ -3246,51 +3301,51 @@ msgstr "Vis"
 msgid "View Level Initially"
 msgstr "Vis hele levelen når du starter"
 
-#: src/xmoto/GameText.h:886
+#: src/xmoto/GameText.h:897
 msgid "View best times for the level"
 msgstr "Vis rekorder for levelen"
 
-#: src/xmoto/GameText.h:876
+#: src/xmoto/GameText.h:887
 msgid "View contents of level pack"
 msgstr "Vis innholdet av level pakken"
 
-#: src/xmoto/GameText.h:830
+#: src/xmoto/GameText.h:840
 msgid "View general information about the level, best times, and replays"
 msgstr "Vis generell informasjon om levelen, rekorder og replays"
 
-#: src/xmoto/GameText.h:823
+#: src/xmoto/GameText.h:833
 msgid "View list of recorded replays"
 msgstr "Vis liste over innspilte replays"
 
-#: src/xmoto/GameText.h:887
+#: src/xmoto/GameText.h:898
 msgid "View locally stored replays of the level"
 msgstr "Vis lokale replayer av levelen"
 
-#: src/xmoto/GameText.h:975
+#: src/xmoto/GameText.h:986
 msgid "View the X-Moto credits"
 msgstr "Vis X-Moto credits"
 
-#: src/xmoto/GameText.h:737
+#: src/xmoto/GameText.h:743
 msgid "View the highscore"
 msgstr "Vis rekorden"
 
-#: src/xmoto/GameText.h:736 src/xmoto/GameText.h:836
+#: src/xmoto/GameText.h:742 src/xmoto/GameText.h:846
 msgid "View the replay"
 msgstr ""
 
-#: src/xmoto/GameText.h:936
+#: src/xmoto/GameText.h:947
 msgid "View the replay of the room's highscore"
 msgstr "Vis replayen av rommets rekord"
 
-#: src/xmoto/GameText.h:1127
+#: src/xmoto/GameText.h:1151
 msgid "Vote unlocked levels"
 msgstr ""
 
-#: src/xmoto/GameText.h:741
+#: src/xmoto/GameText.h:747
 msgid "WWW"
 msgstr "WWW"
 
-#: src/xmoto/GameText.h:739
+#: src/xmoto/GameText.h:745
 msgid "Warning"
 msgstr "Advarsel"
 
@@ -3299,12 +3354,12 @@ msgstr "Advarsel"
 msgid "Web account password for profile '%s':"
 msgstr ""
 
-#: src/xmoto/GameText.h:1201
+#: src/xmoto/GameText.h:1225
 #, fuzzy
 msgid "Web connection disabled"
 msgstr "Internetttilkobling deaktivert"
 
-#: src/xmoto/GameText.h:1200
+#: src/xmoto/GameText.h:1224
 #, fuzzy
 msgid "Web connection enabled"
 msgstr "Internetttilkobling aktivert"
@@ -3314,7 +3369,7 @@ msgstr "Internetttilkobling aktivert"
 msgid "Web ghost of %s"
 msgstr ""
 
-#: src/xmoto/GameText.h:608
+#: src/xmoto/GameText.h:614
 msgid "Web votes"
 msgstr "Web stemmer"
 
@@ -3329,58 +3384,58 @@ msgid ""
 "It's the purple dot on your minimap."
 msgstr "Den er deen lilla prikken på minikartet ditt."
 
-#: src/xmoto/GameText.h:924
+#: src/xmoto/GameText.h:935
 msgid "When starting a level with a ghost, display who the ghost is of"
 msgstr "Når du starter en level med en ghost, vis hvem ghosten er av"
 
-#: src/xmoto/GameText.h:934
+#: src/xmoto/GameText.h:945
 msgid "Whether to show the theme cursor or the system cursor"
 msgstr ""
 
-#: src/xmoto/GameText.h:912
+#: src/xmoto/GameText.h:923
 msgid "Write the IP address or host name of proxy server to use"
 msgstr "Skriv IP adressen eller host navnet av prxy serveren du skal bruke"
 
-#: src/xmoto/GameText.h:914
+#: src/xmoto/GameText.h:925
 msgid "Write the port number used by the proxy server"
 msgstr "Skriv port nummeret brukt av proxy serveren"
 
-#: src/xmoto/GameText.h:569
+#: src/xmoto/GameText.h:575
 #, c-format
 msgid "X-Moto %s or newer required to load level"
 msgstr "Du trenger X-Moto %s eller nyere for å laste levelen"
 
-#: src/xmoto/GameText.h:1156
+#: src/xmoto/GameText.h:1180
 #, fuzzy
 msgid "X-Moto levels having a recent highscore in your room"
 msgstr "X-Moto leveler som ahr en nylig rekord i rommet ditt"
 
-#: src/xmoto/GameText.h:1159
+#: src/xmoto/GameText.h:1183
 #, fuzzy
 msgid "X-Moto levels having an old highscore in your room"
 msgstr "X-Moto leveler som har en gammel rekord i rommet ditt"
 
-#: src/xmoto/GameText.h:1148
+#: src/xmoto/GameText.h:1172
 msgid "X-Moto levels using strongly physics"
 msgstr ""
 
-#: src/xmoto/GameText.h:1147
+#: src/xmoto/GameText.h:1171
 msgid "X-Moto levels which are dynamic"
 msgstr "Dynamiske X-Moto leveler"
 
-#: src/xmoto/GameText.h:1154
+#: src/xmoto/GameText.h:1178
 msgid "X-Moto levels you have played only a few times"
 msgstr "X-Moto leveler du bare har spilt noen få ganger"
 
-#: src/xmoto/GameText.h:1152
+#: src/xmoto/GameText.h:1176
 msgid "X-Moto levels you have played the most"
 msgstr "X-Moto leveler du har spilt mest"
 
-#: src/xmoto/GameText.h:1150
+#: src/xmoto/GameText.h:1174
 msgid "X-Moto levels you never played"
 msgstr "X-Moto leveler du aldri har spilt"
 
-#: src/xmoto/GameText.h:751
+#: src/xmoto/GameText.h:759
 #, c-format
 msgid "X-Moto started %d time"
 msgid_plural "X-Moto started %d times"
@@ -3395,15 +3450,15 @@ msgid ""
 "places."
 msgstr ""
 
-#: src/xmoto/GameText.h:763
+#: src/xmoto/GameText.h:771
 msgid "Yes"
 msgstr "Ja"
 
-#: src/xmoto/GameText.h:764
+#: src/xmoto/GameText.h:772
 msgid "Yes to all"
 msgstr "Ja til alle"
 
-#: src/xmoto/GameText.h:681
+#: src/xmoto/GameText.h:687
 msgid "You are currently disconnected"
 msgstr ""
 
@@ -3411,16 +3466,16 @@ msgstr ""
 msgid "You control your bike using the keyboard"
 msgstr "Du Styrer sykkelen din med tastaturet"
 
-#: src/xmoto/GameText.h:1061
+#: src/xmoto/GameText.h:1085
 msgid "You don't want to vote"
 msgstr ""
 
-#: src/xmoto/GameText.h:550
+#: src/xmoto/GameText.h:556
 #, c-format
 msgid "You got a %s medal"
 msgstr ""
 
-#: src/xmoto/GameText.h:1160
+#: src/xmoto/GameText.h:1184
 msgid "You have the room highscore"
 msgstr "Du har rom rekorden"
 
@@ -3432,15 +3487,15 @@ msgstr ""
 msgid "You must restart so that this option takes effect"
 msgstr ""
 
-#: src/xmoto/GameText.h:782
+#: src/xmoto/GameText.h:790
 msgid "You're currently connected"
 msgstr ""
 
-#: src/xmoto/GameText.h:783
+#: src/xmoto/GameText.h:791
 msgid "You're currently disconnected"
 msgstr ""
 
-#: src/xmoto/GameText.h:1096
+#: src/xmoto/GameText.h:1120
 msgid "You're not the highscore holder"
 msgstr "Du er har ikke rekorden"
 
@@ -3448,60 +3503,60 @@ msgstr "Du er har ikke rekorden"
 msgid "Your best"
 msgstr "Din rekord"
 
-#: src/xmoto/GameText.h:765
+#: src/xmoto/GameText.h:773
 msgid "Your best time"
 msgstr ""
 
-#: src/xmoto/GameText.h:1138
+#: src/xmoto/GameText.h:1162
 #, fuzzy
 msgid "Your blacklisted levels"
 msgstr "Dine favoritt leveler"
 
-#: src/xmoto/GameText.h:1137
+#: src/xmoto/GameText.h:1161
 msgid "Your favorite levels"
 msgstr "Dine favoritt leveler"
 
-#: src/xmoto/GameText.h:990
+#: src/xmoto/GameText.h:1001
 msgid "Your password associated with your login"
 msgstr "Ditt passord tilknyttet med dit brukernavn"
 
-#: src/xmoto/GameText.h:1167
+#: src/xmoto/GameText.h:1191
 #, fuzzy
 msgid ""
 "Your personal highscore finish time is almost the room highscore (80%-90%)"
 msgstr "Din rekord rid er nesten den samme som rom rekorden (80%-90%)"
 
-#: src/xmoto/GameText.h:1164
+#: src/xmoto/GameText.h:1188
 #, fuzzy
 msgid ""
 "Your personal highscore finish time is almost the room highscore (90%-95%)"
 msgstr "Din rekord rid er nesten den samme som rom rekorden (95%-95%)"
 
-#: src/xmoto/GameText.h:1162
+#: src/xmoto/GameText.h:1186
 #, fuzzy
 msgid "Your personal highscore finish time is almost the room highscore (95%)"
 msgstr "Din rekord rid er nesten den samme som rom rekorden (95%)"
 
-#: src/xmoto/GameText.h:989
+#: src/xmoto/GameText.h:1000
 msgid "Your proxy login"
 msgstr ""
 
-#: src/xmoto/GameText.h:766
+#: src/xmoto/GameText.h:774
 msgid "Zoom in"
 msgstr "Zoom inn"
 
-#: src/xmoto/GameText.h:768
+#: src/xmoto/GameText.h:776
 msgid "Zoom out"
 msgstr "Zoom ut"
 
-#: src/xmoto/GameText.h:645
+#: src/xmoto/GameText.h:651
 msgid ""
 "[esc] , [space]\n"
 "[left/right keys]\n"
 "[up/down keys]\n"
 msgstr ""
 
-#: src/xmoto/GameText.h:642
+#: src/xmoto/GameText.h:648
 msgid ""
 "[esc] , [space]\n"
 "[right key]\n"
@@ -3595,7 +3650,7 @@ msgstr ""
 msgid "none"
 msgstr ""
 
-#: src/xmoto/GameText.h:747
+#: src/xmoto/GameText.h:755
 #, c-format
 msgid "only %i"
 msgid_plural "only %i"
@@ -3757,6 +3812,31 @@ msgstr ""
 
 #~ msgid "Here's the plan:"
 #~ msgstr "Her er planen:"
+
+#, fuzzy
+#~ msgid ""
+#~ "Important note!\n"
+#~ "\n"
+#~ "This is an in development version of X-Moto!\n"
+#~ "All kinds of feedback are highly appreciated, so the game\n"
+#~ "can get better.\n"
+#~ "Mail bugs, ideas, comments, feature requests, hatemail, etc\n"
+#~ "to xmoto@tuxfamily.org\n"
+#~ "\n"
+#~ "Also visit http://xmoto.tuxfamily.org to make sure you've\n"
+#~ "got the latest version."
+#~ msgstr ""
+#~ "Viktig beskjed!\n"
+#~ "\n"
+#~ "Dette er en utviklings version av X-Moto!\n"
+#~ "Vi blir veldig glade for alle former for tilbakemelding, slik at\n"
+#~ "spillet kan bli bedre.\n"
+#~ "Send in feil (bugs), idéer, kommentarer, framtidige ønsker\n"
+#~ ", drapstrusler og lignende\n"
+#~ "til nicolas krøllalfa adenis-lamarre punktum fr\n"
+#~ "\n"
+#~ "Besøk også http://xmoto.tuxfamily.org for å forsikre deg\n"
+#~ "om at du har siste version av spillet."
 
 #~ msgid "Initializing input system..."
 #~ msgstr "Initialiserer input system..."

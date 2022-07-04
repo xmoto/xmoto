@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: sk\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-11-14 23:53+0200\n"
+"POT-Creation-Date: 2022-07-05 01:12+0300\n"
 "PO-Revision-Date: 2011-01-19 20:44+0100\n"
 "Last-Translator: Jozef Říha <jose1711@gmail.com>\n"
 "Language-Team:  <sk@li.org>\n"
@@ -19,7 +19,7 @@ msgstr ""
 "X-Generator: KBabel 1.11.4\n"
 "Plural-Forms: nplurals=3; plural=(n==1) ? 0 : (n>=2 && n<=4) ? 1 : 2;\n"
 
-#: src/xmoto/GameText.h:640
+#: src/xmoto/GameText.h:646
 msgid ""
 "  Stop:\n"
 "    >>\n"
@@ -31,7 +31,7 @@ msgstr ""
 "   < >\n"
 " Rýchlosť:"
 
-#: src/xmoto/GameText.h:643
+#: src/xmoto/GameText.h:649
 msgid ""
 "  Stop:\n"
 "<< >>\n"
@@ -43,11 +43,11 @@ msgstr ""
 "   < >\n"
 " Rýchlosť:"
 
-#: src/xmoto/GameText.h:596
+#: src/xmoto/GameText.h:602
 msgid "# Levels"
 msgstr "# Levelov"
 
-#: src/xmoto/GameText.h:756
+#: src/xmoto/GameText.h:764
 #, fuzzy, c-format
 msgid "%d death"
 msgid_plural "%d deaths"
@@ -55,7 +55,7 @@ msgstr[0] "%d úmrtie"
 msgstr[1] "%d úmrtie"
 msgstr[2] "%d úmrtie"
 
-#: src/xmoto/GameText.h:753
+#: src/xmoto/GameText.h:761
 #, fuzzy, c-format
 msgid "%d different level"
 msgid_plural "%d different levels"
@@ -63,7 +63,15 @@ msgstr[0] "%d rozličný level"
 msgstr[1] "%d rozličný level"
 msgstr[2] "%d rozličný level"
 
-#: src/xmoto/GameText.h:758
+#: src/xmoto/GameText.h:751
+#, c-format
+msgid "%d file"
+msgid_plural "%d files"
+msgstr[0] ""
+msgstr[1] ""
+msgstr[2] ""
+
+#: src/xmoto/GameText.h:766
 #, fuzzy, c-format
 msgid "%d finished"
 msgid_plural "%d finished"
@@ -71,17 +79,17 @@ msgstr[0] "%d dokončená hra"
 msgstr[1] "%d dokončená hra"
 msgstr[2] "%d dokončená hra"
 
-#: src/xmoto/GameText.h:745
+#: src/xmoto/GameText.h:753
 #, c-format
 msgid "%d hours"
 msgstr "%d hodín"
 
-#: src/xmoto/GameText.h:746
+#: src/xmoto/GameText.h:754
 #, c-format
 msgid "%d minutes"
 msgstr "%d minút"
 
-#: src/xmoto/GameText.h:755
+#: src/xmoto/GameText.h:763
 #, fuzzy, c-format
 msgid "%d play"
 msgid_plural "%d plays"
@@ -89,7 +97,7 @@ msgstr[0] "%i hra"
 msgstr[1] "%i hra"
 msgstr[2] "%i hra"
 
-#: src/xmoto/GameText.h:760
+#: src/xmoto/GameText.h:768
 #, fuzzy, c-format
 msgid "%d restart"
 msgid_plural "%d restarts"
@@ -97,7 +105,7 @@ msgstr[0] "%d reštart"
 msgstr[1] "%d reštart"
 msgstr[2] "%d reštart"
 
-#: src/xmoto/GameText.h:762
+#: src/xmoto/GameText.h:770
 #, c-format
 msgid "%d seconds"
 msgstr "%d sekúnd"
@@ -110,7 +118,7 @@ msgstr[0] "%i nájdený joystick"
 msgstr[1] "%i nájdený joystick"
 msgstr[2] "%i nájdený joystick"
 
-#: src/xmoto/GameText.h:573
+#: src/xmoto/GameText.h:579
 #, fuzzy, c-format
 msgid "%i new or updated level available. Download now ?"
 msgid_plural "%i new or updated levels available. Download now ?"
@@ -118,7 +126,7 @@ msgstr[0] "%d nový alebo aktualizovaný level je k dispozícii. Stiahnuť teraz
 msgstr[1] "%d nový alebo aktualizovaný level je k dispozícii. Stiahnuť teraz?"
 msgstr[2] "%d nový alebo aktualizovaný level je k dispozícii. Stiahnuť teraz?"
 
-#: src/xmoto/GameText.h:616
+#: src/xmoto/GameText.h:622
 #, fuzzy, c-format
 msgid "%i player"
 msgid_plural "%i players"
@@ -126,17 +134,17 @@ msgstr[0] "%i hráč"
 msgstr[1] "%i hráč"
 msgstr[2] "%i hráč"
 
-#: src/xmoto/GameText.h:792
+#: src/xmoto/GameText.h:800
 #, c-format
 msgid "%s is playing level %s"
 msgstr "%s hrá level %s"
 
-#: src/xmoto/GameText.h:790
+#: src/xmoto/GameText.h:798
 #, c-format
 msgid "%s joined the game"
 msgstr "%s sa pripojil(a) k hre"
 
-#: src/xmoto/GameText.h:791
+#: src/xmoto/GameText.h:799
 #, c-format
 msgid "%s left the game"
 msgstr "%s opustil(a) hru"
@@ -171,7 +179,7 @@ msgstr "11 kHz"
 msgid "16-bit"
 msgstr "16-bit"
 
-#: src/xmoto/GameText.h:870
+#: src/xmoto/GameText.h:881
 msgid "16-bit sound samples, good quality"
 msgstr "16-bitové zvukové sample, dobrá kvalita"
 
@@ -187,7 +195,7 @@ msgstr "44 kHz"
 msgid "8-bit"
 msgstr "8-bit"
 
-#: src/xmoto/GameText.h:869
+#: src/xmoto/GameText.h:880
 msgid "8-bit sound samples, poor quality"
 msgstr "8-bitové zvukové sample, slabá kvalita"
 
@@ -211,7 +219,7 @@ msgstr ": Otočiť sa proti smeru hodinových ručičiek"
 msgid ": Rotate clockwise"
 msgstr ": Otočiť sa v smere hodinových ručičiek"
 
-#: src/xmoto/GameText.h:858
+#: src/xmoto/GameText.h:869
 msgid "A bit more fancy menu graphics"
 msgstr "Trošku nazdobenejšia grafika menu"
 
@@ -247,7 +255,7 @@ msgstr "Pridáva plyn"
 msgid "Action"
 msgstr "Akcia"
 
-#: src/xmoto/GameText.h:983
+#: src/xmoto/GameText.h:994
 msgid "Add the level to the favorite levels list"
 msgstr "Pridať level do zoznamu obľúbených levelov"
 
@@ -259,11 +267,11 @@ msgstr "Pridať na čiernu listinu"
 msgid "Add to favorite"
 msgstr "Pridať k obľúbeným"
 
-#: src/xmoto/GameText.h:691
+#: src/xmoto/GameText.h:697
 msgid "Add/remove to blacklisted levels"
 msgstr "Pridať/odstrániť do/z čiernej listiny"
 
-#: src/xmoto/GameText.h:689
+#: src/xmoto/GameText.h:695
 msgid "Add/remove to favorite levels"
 msgstr "Pridať/odstrániť do/zo zoznamu obľúbených levelov"
 
@@ -283,23 +291,23 @@ msgstr "Dodatočné programovanie"
 msgid "All (on this computer)"
 msgstr "Všetky (na tomto počítači)"
 
-#: src/xmoto/GameText.h:1134
+#: src/xmoto/GameText.h:1158
 msgid "All X-Moto levels"
 msgstr "Všetky X-Moto levely"
 
-#: src/xmoto/GameText.h:46 src/xmoto/GameText.h:1097
+#: src/xmoto/GameText.h:46 src/xmoto/GameText.h:1121
 msgid "All levels"
 msgstr "Všetky levely"
 
-#: src/xmoto/GameText.h:854
+#: src/xmoto/GameText.h:864
 msgid "Allow X-Moto to ask you your mind about levels"
 msgstr "Povoliť X-Moto, aby sa pýtal na váš názor na levely"
 
-#: src/xmoto/GameText.h:730
+#: src/xmoto/GameText.h:736
 msgid "Allow web forms"
 msgstr "Povoliť webové formuláre"
 
-#: src/xmoto/GameText.h:722
+#: src/xmoto/GameText.h:728
 msgid ""
 "An unexpected error has occurred. There may be some problems with the web "
 "site."
@@ -309,7 +317,11 @@ msgstr "Objavila sa neočakávaná chyba. Website má zrejme nejaké problémy."
 msgid "Anyone who has helped in any way"
 msgstr "Komukoľvek, kto poskytol akúkoľvek pomoc"
 
-#: src/xmoto/GameText.h:1058
+#: src/xmoto/GameText.h:1069
+msgid "Are you sure you want to clear old logs?"
+msgstr ""
+
+#: src/xmoto/GameText.h:1076
 msgid "Are you sure you want to clear the level cache?"
 msgstr ""
 
@@ -321,11 +333,11 @@ msgstr[0] "Skutočne si prajete vymazať %i záznam?"
 msgstr[1] "Skutočne si prajete vymazať %i záznam?"
 msgstr[2] "Skutočne si prajete vymazať %i záznam?"
 
-#: src/xmoto/GameText.h:659
+#: src/xmoto/GameText.h:665
 msgid "Are you sure you want to reset config to defaults ?"
 msgstr "Určite chcete nastaviť konfiguráciu na východziu?"
 
-#: src/xmoto/GameText.h:1064
+#: src/xmoto/GameText.h:1088
 msgid "At least one difficulty"
 msgstr "Aspoň jedna prekážka"
 
@@ -333,11 +345,11 @@ msgstr "Aspoň jedna prekážka"
 msgid "Audio"
 msgstr "Audio"
 
-#: src/xmoto/GameText.h:1207
+#: src/xmoto/GameText.h:1231
 msgid "Audio disabled"
 msgstr "Audio vypnuté"
 
-#: src/xmoto/GameText.h:1206
+#: src/xmoto/GameText.h:1230
 msgid "Audio enabled"
 msgstr "Audio zapnuté"
 
@@ -357,35 +369,35 @@ msgstr "Automatika"
 msgid "Automatic saving of replays"
 msgstr "Automatické ukladanie záznamu"
 
-#: src/xmoto/GameText.h:1091
+#: src/xmoto/GameText.h:1115
 msgid "Automatically connect to the server at startup"
 msgstr "Automaticky sa prihlásiť na server po spustení"
 
-#: src/xmoto/GameText.h:845
+#: src/xmoto/GameText.h:855
 msgid "Automatically download best times off the net when the game starts"
 msgstr "Automaticky sťahovať najlepšie časy z internetu, keď hra začne"
 
-#: src/xmoto/GameText.h:971
+#: src/xmoto/GameText.h:982
 msgid "Automatically scroll over the level before starting playing it"
 msgstr "Automatický prelet levelom pred jeho hraním"
 
-#: src/xmoto/GameText.h:699
+#: src/xmoto/GameText.h:705
 msgid "Available"
 msgstr "Dostupné"
 
-#: src/xmoto/GameText.h:814
+#: src/xmoto/GameText.h:824
 msgid "Back to the game"
 msgstr "Späť do hry"
 
-#: src/xmoto/GameText.h:812
+#: src/xmoto/GameText.h:822
 msgid "Back to the main menu"
 msgstr "Späť do hlavného menu"
 
-#: src/xmoto/GameText.h:1067
+#: src/xmoto/GameText.h:1091
 msgid "Basic blocks, no decoration"
 msgstr "Jednoduché bloky, bez dekorácie"
 
-#: src/xmoto/GameText.h:1068
+#: src/xmoto/GameText.h:1092
 msgid "Basic decoration, not smooth blocks"
 msgstr "Základná dekorácia, nevyrovnané bloky"
 
@@ -393,7 +405,7 @@ msgstr "Základná dekorácia, nevyrovnané bloky"
 msgid "Beating mode"
 msgstr "Režim zdolávania"
 
-#: src/xmoto/GameText.h:1036
+#: src/xmoto/GameText.h:1047
 msgid "Beginner"
 msgstr "Začiatočník"
 
@@ -405,11 +417,11 @@ msgstr "Najlepšie časy"
 msgid "Best player"
 msgstr "Najlepší hráč"
 
-#: src/xmoto/GameText.h:868
+#: src/xmoto/GameText.h:879
 msgid "Best sound quality"
 msgstr "Najlepšia kvalita zvuku"
 
-#: src/xmoto/GameText.h:1100
+#: src/xmoto/GameText.h:1124
 msgid "Blacklisted levels"
 msgstr "Levely na čiernej listine"
 
@@ -425,35 +437,43 @@ msgstr "Brzdí"
 msgid "Brazilian Portuguese"
 msgstr "Brazílska portugalčina"
 
-#: src/xmoto/GameText.h:542 src/xmoto/GameText.h:1118
+#: src/xmoto/GameText.h:548 src/xmoto/GameText.h:1142
 msgid "Bronze"
 msgstr "Bronzová"
 
-#: src/xmoto/GameText.h:822
+#: src/xmoto/GameText.h:832
 msgid "Browse levels available to you"
 msgstr "Prehliadať levely, ktoré sú vám prístupné"
 
-#: src/xmoto/GameText.h:820
+#: src/xmoto/GameText.h:518
+msgid "Built-in"
+msgstr ""
+
+#: src/xmoto/GameText.h:830
 msgid "Built-in and stand-alone external levels"
 msgstr "Zabudované a samostatné externé levely"
 
-#: src/xmoto/GameText.h:603
+#: src/xmoto/GameText.h:609
 msgid "By author"
 msgstr "Od autora"
 
-#: src/xmoto/GameText.h:610 src/xmoto/GameText.h:1107
+#: src/xmoto/GameText.h:616 src/xmoto/GameText.h:1131
 msgid "By best driver"
 msgstr "Podľa najlepšieho jazdca"
 
-#: src/xmoto/GameText.h:611
+#: src/xmoto/GameText.h:617
 msgid "By length"
 msgstr "Podľa dĺžky"
+
+#: src/xmoto/GameText.h:1079
+msgid "Cache file deleted"
+msgstr ""
 
 #: src/xmoto/GameText.h:62
 msgid "Camera Active Zoom"
 msgstr "Aktívne priblíženie kamery"
 
-#: src/xmoto/GameText.h:1222
+#: src/xmoto/GameText.h:1246
 #, fuzzy, c-format
 msgid "Can't find a highscore in the next %i level"
 msgid_plural "Can't find a highscore in the next %i levels"
@@ -461,7 +481,7 @@ msgstr[0] "Nemôžem nájsť rekord pre nasledujúci level"
 msgstr[1] "Nemôžem nájsť rekord pre nasledujúci level"
 msgstr[2] "Nemôžem nájsť rekord pre nasledujúci level"
 
-#: src/xmoto/GameText.h:711
+#: src/xmoto/GameText.h:717
 msgid ""
 "Can't update this theme !\n"
 "The theme is not available on the web\n"
@@ -487,11 +507,11 @@ msgstr "Zmeniť kláves..."
 msgid "Change direction"
 msgstr "Zmeniť smer"
 
-#: src/xmoto/GameText.h:826
+#: src/xmoto/GameText.h:836
 msgid "Change player profile"
 msgstr "Zmeniť profil hráča"
 
-#: src/xmoto/GameText.h:1011
+#: src/xmoto/GameText.h:1022
 msgid "Change the X-Moto language"
 msgstr "Zmeniť jazyk X-Moto"
 
@@ -499,23 +519,23 @@ msgstr "Zmeniť jazyk X-Moto"
 msgid "Change..."
 msgstr "Zmeniť..."
 
-#: src/xmoto/GameText.h:789
+#: src/xmoto/GameText.h:797
 msgid "Chat message"
 msgstr "Správa"
 
-#: src/xmoto/GameText.h:715
+#: src/xmoto/GameText.h:721
 msgid "Check WWW"
 msgstr "Skontrolovať WWW"
 
-#: src/xmoto/GameText.h:941
+#: src/xmoto/GameText.h:952
 msgid "Check for new highscores at startup"
 msgstr "Zisťovať nové rekordy pri štarte"
 
-#: src/xmoto/GameText.h:939
+#: src/xmoto/GameText.h:950
 msgid "Check for new levels at startup"
 msgstr "Zisťovať nové levely pri štarte"
 
-#: src/xmoto/GameText.h:950
+#: src/xmoto/GameText.h:961
 msgid "Check for new themes on the web"
 msgstr "Zistovať nové témy na webe"
 
@@ -551,15 +571,15 @@ msgstr "Kontrolujem nové témy..."
 msgid "Choose Level"
 msgstr "Vybrať level"
 
-#: src/xmoto/GameText.h:949
+#: src/xmoto/GameText.h:960
 msgid "Choose the X-Moto graphics theme"
 msgstr "Vybrať X-Moto grafickú tému"
 
-#: src/xmoto/GameText.h:988
+#: src/xmoto/GameText.h:999
 msgid "Choose the number of players"
 msgstr "Vyberte počet hráčov"
 
-#: src/xmoto/GameText.h:959
+#: src/xmoto/GameText.h:970
 msgid ""
 "Choose where to upload/download replays, highscore lists (for more "
 "information, check the website)"
@@ -567,11 +587,11 @@ msgstr ""
 "Vyberte kam uploadowať/odkiaľ sťahovať záznamy, zoznamy rekordov (pre viac "
 "informácií, prejdite na website)"
 
-#: src/xmoto/GameText.h:919
+#: src/xmoto/GameText.h:930
 msgid "Choose which ghost to display"
 msgstr "Vyberte, ktorý duch sa má zobrazovať"
 
-#: src/xmoto/GameText.h:961
+#: src/xmoto/GameText.h:972
 msgid "Choose your room"
 msgstr "Vyberte si miestnosť"
 
@@ -579,11 +599,15 @@ msgstr "Vyberte si miestnosť"
 msgid "Clean"
 msgstr "Vyčistiť"
 
-#: src/xmoto/GameText.h:1055 src/xmoto/GameText.h:1059
+#: src/xmoto/GameText.h:1073 src/xmoto/GameText.h:1081
 msgid "Clear level cache"
 msgstr ""
 
-#: src/xmoto/GameText.h:979
+#: src/xmoto/GameText.h:1066
+msgid "Clear old logs"
+msgstr ""
+
+#: src/xmoto/GameText.h:990
 msgid "Click to select screen resolution"
 msgstr "Kliknutím vyberte rozlíšenie obrazovky"
 
@@ -591,15 +615,15 @@ msgstr "Kliknutím vyberte rozlíšenie obrazovky"
 msgid "Close"
 msgstr "Zavrieť"
 
-#: src/xmoto/GameText.h:884
+#: src/xmoto/GameText.h:895
 msgid "Close level pack"
 msgstr "Zavrieť balík levelov"
 
-#: src/xmoto/GameText.h:1013
+#: src/xmoto/GameText.h:1024
 msgid "Code of the language"
 msgstr "Kód jazyka"
 
-#: src/xmoto/GameText.h:981
+#: src/xmoto/GameText.h:992
 msgid "Completed levels / total number of levels in pack"
 msgstr "Dokončené levely / celkový počet levelov v balíku"
 
@@ -607,55 +631,55 @@ msgstr "Dokončené levely / celkový počet levelov v balíku"
 msgid "Configure Joystick..."
 msgstr "Nastaviť joystick..."
 
-#: src/xmoto/GameText.h:626
+#: src/xmoto/GameText.h:632
 msgid "Configure Proxy..."
 msgstr "Nastaviť proxy..."
 
-#: src/xmoto/GameText.h:824
+#: src/xmoto/GameText.h:834
 msgid "Configure X-Moto preferences"
 msgstr "Nastaviť voľby X-Moto"
 
-#: src/xmoto/GameText.h:837
+#: src/xmoto/GameText.h:847
 msgid "Configure audio options"
 msgstr "Nastaviť voľby audia"
 
-#: src/xmoto/GameText.h:838
+#: src/xmoto/GameText.h:848
 msgid "Configure control options"
 msgstr "Nastaviť voľby ovládania"
 
-#: src/xmoto/GameText.h:839
+#: src/xmoto/GameText.h:849
 msgid "Configure controls of Player"
 msgstr "Nastaviť ovládanie hráča"
 
-#: src/xmoto/GameText.h:840
+#: src/xmoto/GameText.h:850
 msgid "Configure general controls"
 msgstr "Nastaviť všeobecné ovládanie"
 
-#: src/xmoto/GameText.h:1024
+#: src/xmoto/GameText.h:1035
 msgid "Configure ghosts displayed while playing the game"
 msgstr "Nastaviť duchov zobrazených počas hrania hry"
 
-#: src/xmoto/GameText.h:835
+#: src/xmoto/GameText.h:845
 msgid "Configure graphical options"
 msgstr "Nastaviť voľby grafiky"
 
-#: src/xmoto/GameText.h:808
+#: src/xmoto/GameText.h:818
 msgid "Configure how you are connected to the Internet"
 msgstr "Nastaviť spôsob pripojenie k internetu"
 
-#: src/xmoto/GameText.h:1026
+#: src/xmoto/GameText.h:1037
 msgid "Configure options linked to your X-Moto database"
 msgstr "Nastaviť voľby spojené s vašou databázou X-Moto"
 
-#: src/xmoto/GameText.h:1022
+#: src/xmoto/GameText.h:1033
 msgid "Configure the X-Moto theme"
 msgstr "Nastaviť tému X-Moto"
 
-#: src/xmoto/GameText.h:956
+#: src/xmoto/GameText.h:967
 msgid "Configure the main www options"
 msgstr "Nastaviť hlavné www voľby"
 
-#: src/xmoto/GameText.h:957
+#: src/xmoto/GameText.h:968
 msgid "Configure the www options"
 msgstr "Nastaviť voľby www"
 
@@ -663,27 +687,31 @@ msgstr "Nastaviť voľby www"
 msgid "Congrats, you're now a master jumper!"
 msgstr "Gratulujem, teraz je z vás expert na skoky!"
 
-#: src/xmoto/GameText.h:784
+#: src/xmoto/GameText.h:792
 msgid "Connect"
 msgstr "Pripojiť"
 
-#: src/xmoto/GameText.h:1082
+#: src/xmoto/GameText.h:803
+msgid "Connect to/disconnect from the server"
+msgstr ""
+
+#: src/xmoto/GameText.h:1106
 msgid "Connect/disconnect the client to the server"
 msgstr "Pripojiť/odpojiť klienta od serveru"
 
-#: src/xmoto/GameText.h:788
+#: src/xmoto/GameText.h:796
 msgid "Connected players:"
 msgstr "Pripojení hráči: "
 
-#: src/xmoto/GameText.h:793
+#: src/xmoto/GameText.h:801
 msgid "Connexion at startup"
 msgstr "Pripojenie pri spustení"
 
-#: src/xmoto/GameText.h:551
+#: src/xmoto/GameText.h:557
 msgid "Contrast"
 msgstr "Kontrastná"
 
-#: src/xmoto/GameText.h:1197
+#: src/xmoto/GameText.h:1221
 msgid "Contrast Graphics Mode enabled"
 msgstr "Zapnutý kontrastný režim grafiky"
 
@@ -691,19 +719,23 @@ msgstr "Zapnutý kontrastný režim grafiky"
 msgid "Controls"
 msgstr "Ovládanie"
 
-#: src/xmoto/GameText.h:1146
+#: src/xmoto/GameText.h:517
+msgid "Copy path"
+msgstr ""
+
+#: src/xmoto/GameText.h:1170
 msgid "Crappiest X-Moto levels according to the web votes"
 msgstr "Najslabšie X-Moto levely podľa hlasovania na webe"
 
-#: src/xmoto/GameText.h:1104
+#: src/xmoto/GameText.h:1128
 msgid "Crappiest levels"
 msgstr "Najhoršie levely"
 
-#: src/xmoto/GameText.h:1121
+#: src/xmoto/GameText.h:1145
 msgid "Crappy levels"
 msgstr "Slabé levely"
 
-#: src/xmoto/GameText.h:879
+#: src/xmoto/GameText.h:890
 msgid "Create new player profile"
 msgstr "Vytvoriť nový profil hráča"
 
@@ -711,7 +743,7 @@ msgstr "Vytvoriť nový profil hráča"
 msgid "Credits"
 msgstr "Zásluhy"
 
-#: src/xmoto/GameText.h:778
+#: src/xmoto/GameText.h:786
 msgid "Custom port"
 msgstr "Vlastný port"
 
@@ -739,7 +771,7 @@ msgstr "Animácia úmrtia"
 msgid "Decrease console history size"
 msgstr "Zmenšiť veľkosť konzolovej histórie"
 
-#: src/xmoto/GameText.h:777
+#: src/xmoto/GameText.h:785
 msgid "Default port"
 msgstr "Východzí port"
 
@@ -751,6 +783,18 @@ msgstr "Východzie"
 msgid "Delete"
 msgstr "Vymazať"
 
+#: src/xmoto/GameText.h:1071
+msgid "Delete all previous log files from disk"
+msgstr ""
+
+#: src/xmoto/GameText.h:1078
+msgid "Delete cache file"
+msgstr ""
+
+#: src/xmoto/GameText.h:1083
+msgid "Delete cached level file from disk to force a clean state (safe)"
+msgstr ""
+
 #: src/xmoto/GameText.h:261
 msgid "Delete from blacklist"
 msgstr "Vymazať z čiernej listiny"
@@ -759,11 +803,11 @@ msgstr "Vymazať z čiernej listiny"
 msgid "Delete from favorite"
 msgstr "Vymazať z obľúbených"
 
-#: src/xmoto/GameText.h:1015
+#: src/xmoto/GameText.h:1026
 msgid "Delete replays that X-Moto estimates to be not interesting to keep"
 msgstr "Vymazať záznamy, o ktorých si X-Moto myslí, že nie sú zaujímavé"
 
-#: src/xmoto/GameText.h:985
+#: src/xmoto/GameText.h:996
 msgid "Delete the level from the favorite levels list"
 msgstr "Vymazať level zo zoznamu obľúbených levelov"
 
@@ -791,19 +835,19 @@ msgstr "Priame spojenie"
 msgid "Disable Animations"
 msgstr "Vypnúť animácie"
 
-#: src/xmoto/GameText.h:932
+#: src/xmoto/GameText.h:943
 msgid "Disable block animations (if X-Moto runs slowly)"
 msgstr "Vypnúť animácie blokov (ak je X-Moto príliš pomalé)"
 
-#: src/xmoto/GameText.h:861
+#: src/xmoto/GameText.h:872
 msgid "Disable most graphics not important to the gameplay"
 msgstr "Vypnúť väčšinu grafiky, ktorá nie je dôležitá pre hru"
 
-#: src/xmoto/GameText.h:863
+#: src/xmoto/GameText.h:874
 msgid "Disable some of the most resource-intensive graphics, like particles"
 msgstr "Vypnúť niektoré z najnáročnejších grafík, ako napríklad úlomkov"
 
-#: src/xmoto/GameText.h:785
+#: src/xmoto/GameText.h:793
 msgid "Disconnect"
 msgstr "Odpojiť"
 
@@ -815,7 +859,7 @@ msgstr "Zobrazovať informácie o duchovi"
 msgid "Display Ghost time difference"
 msgstr "Zobrazovať časový rozdiel oproti duchovi"
 
-#: src/xmoto/GameText.h:926
+#: src/xmoto/GameText.h:937
 msgid "Display an arrow to display where are located the bikes on the map"
 msgstr "Zobrazovať šípku, ktorá ukazuje, kde sú motocykle na mape"
 
@@ -823,7 +867,7 @@ msgstr "Zobrazovať šípku, ktorá ukazuje, kde sú motocykle na mape"
 msgid "Display bike arrow indication"
 msgstr "Zobraziť šípky, ktoré ukazujú na motocykle"
 
-#: src/xmoto/GameText.h:928
+#: src/xmoto/GameText.h:939
 msgid "Display the time difference between the ghost and you"
 msgstr "Zobrazovať časový rozdiel medzi duchom a vami"
 
@@ -835,7 +879,7 @@ msgstr "Skutočne si prajete vymazať hráča?"
 msgid "Do you really want to delete replay?"
 msgstr "Skutočne si prajete vymazať záznam?"
 
-#: src/xmoto/GameText.h:633
+#: src/xmoto/GameText.h:639
 msgid "Do you really want to quit?"
 msgstr "Určite chcete hru ukončiť?"
 
@@ -849,20 +893,20 @@ msgstr ""
 "na internet a hľadať nové levely\n"
 "a najlepšie časy iných hráčov?"
 
-#: src/xmoto/GameText.h:519
+#: src/xmoto/GameText.h:524
 msgid "Do you want to send a report to website administrators ?"
 msgstr ""
 
-#: src/xmoto/GameText.h:738
+#: src/xmoto/GameText.h:744
 #, c-format
 msgid "Do you want to update level \"%s\"?"
 msgstr "Prajete si aktualizovať level \"%s\"?"
 
-#: src/xmoto/GameText.h:1073
+#: src/xmoto/GameText.h:1097
 msgid "Don't send this report on the webserver"
 msgstr "Neposielať toto hlásenie na webový server"
 
-#: src/xmoto/GameText.h:1009
+#: src/xmoto/GameText.h:1020
 msgid "Don't show the ghosts while playing"
 msgstr "Nezobrazovať duchov počas hry"
 
@@ -874,11 +918,11 @@ msgstr ""
 "Tu dole je minimapka, ktorá ukazuje level\n"
 "okolo vás, takže viete, ako level pokračuje."
 
-#: src/xmoto/GameText.h:951
+#: src/xmoto/GameText.h:962
 msgid "Download or update the selected theme"
 msgstr "Stiahnuť alebo aktualizovať vybranú tému"
 
-#: src/xmoto/GameText.h:806
+#: src/xmoto/GameText.h:816
 msgid "Download the latest X-Moto world records and check for new levels"
 msgstr ""
 "Stiahnuť najčerstvejšie svetové rekordy X-Moto a skontrolovať nové levely"
@@ -945,11 +989,11 @@ msgstr ""
 msgid "Dutch"
 msgstr "Holandština"
 
-#: src/xmoto/GameText.h:1144
+#: src/xmoto/GameText.h:1168
 msgid "Easiest X-Moto levels according to the web votes"
 msgstr "Najjednoduchšie X-Moto levely podľa hlasovania na webe"
 
-#: src/xmoto/GameText.h:1103
+#: src/xmoto/GameText.h:1127
 msgid "Easiest levels"
 msgstr "Najľahšie levely"
 
@@ -973,11 +1017,11 @@ msgstr "Povoliť ducha"
 msgid "Enable WWW Access"
 msgstr "Povoliť WWW prístup"
 
-#: src/xmoto/GameText.h:864
+#: src/xmoto/GameText.h:875
 msgid "Enable all graphical effects"
 msgstr "Povoliť všetky grafické efekty"
 
-#: src/xmoto/GameText.h:969
+#: src/xmoto/GameText.h:980
 msgid "Enable animation of bike falling apart when dead"
 msgstr "Zapnúť animáciu rozpadajúceho sa motocykla pri úmrtí"
 
@@ -989,7 +1033,7 @@ msgstr "Povoliť hudbu v hre"
 msgid "Enable joysticks"
 msgstr "Povoliť joysticky"
 
-#: src/xmoto/GameText.h:1030
+#: src/xmoto/GameText.h:1041
 msgid "Enable joysticks events"
 msgstr "Povoliť udalosti joysticku"
 
@@ -997,7 +1041,7 @@ msgstr "Povoliť udalosti joysticku"
 msgid "Enable menu music"
 msgstr "Povoliť hudbu v menu"
 
-#: src/xmoto/GameText.h:1018
+#: src/xmoto/GameText.h:1029
 msgid "Enable this room"
 msgstr "Povoliť túto miestnosť"
 
@@ -1009,7 +1053,7 @@ msgstr "Zapnúť/vypnúť zobrazenie FPS"
 msgid "Enable/disable audio"
 msgstr "Vypnúť/zapnúť audio"
 
-#: src/xmoto/GameText.h:474 src/xmoto/GameText.h:688
+#: src/xmoto/GameText.h:474 src/xmoto/GameText.h:694
 msgid "Enable/disable ugly mode"
 msgstr "Zapnúť/vypnúť škaredý režim"
 
@@ -1017,16 +1061,16 @@ msgstr "Zapnúť/vypnúť škaredý režim"
 msgid "Enable/disable web"
 msgstr "Zapnúť/vypnúť web"
 
-#: src/xmoto/GameText.h:1086
+#: src/xmoto/GameText.h:1110
 msgid ""
 "Enables background music for levels that do not have their own music track"
 msgstr "Povolí hudbu na pozadí pre levely, ktoré nemajú vlastnú hudobnú stopu"
 
-#: src/xmoto/GameText.h:946
+#: src/xmoto/GameText.h:957
 msgid "Enables background music in the main menu"
 msgstr "Zapína hudbu na pozadí v hlavnom menu"
 
-#: src/xmoto/GameText.h:947
+#: src/xmoto/GameText.h:958
 msgid "Enables background music while playing"
 msgstr "Povolí hudbu na pozadí počas hry"
 
@@ -1042,15 +1086,15 @@ msgstr "Zadajte názov záznamu"
 msgid "Enter player name"
 msgstr "Zadajte meno hráča"
 
-#: src/xmoto/GameText.h:987
+#: src/xmoto/GameText.h:998
 msgid "Enter text to filter the level list"
 msgstr "Zadajte text pre filtrovanie zoznamu levelov"
 
-#: src/xmoto/GameText.h:991
+#: src/xmoto/GameText.h:1002
 msgid "Enter text to filter the replay list"
 msgstr "Zadajte text pre filtrovanie zoznamu záznamov"
 
-#: src/xmoto/GameText.h:992
+#: src/xmoto/GameText.h:1003
 msgid "Enter text to filter the rooms list"
 msgstr "Zadajte text pre filter zoznamu miestností"
 
@@ -1058,17 +1102,21 @@ msgstr "Zadajte text pre filter zoznamu miestností"
 msgid "Everyone who have made levels"
 msgstr "Každému, kto vyrobil levely"
 
-#: src/xmoto/GameText.h:1037
+#: src/xmoto/GameText.h:1048
 msgid "Expert"
 msgstr "Expert"
 
-#: src/xmoto/GameText.h:1174
+#: src/xmoto/GameText.h:1198
 msgid "External levels (the one you put into the 'My levels' directory)"
 msgstr "Externé levely (tie, ktoré ste umiestnili do adresára 'My levels')"
 
 #: src/xmoto/GameText.h:300
 msgid "Failed to check for levels."
 msgstr "Zlyhala kontrola levelov."
+
+#: src/xmoto/GameText.h:522
+msgid "Failed to copy to clipboard"
+msgstr ""
 
 #: src/xmoto/GameText.h:301
 msgid "Failed to download high-scores."
@@ -1110,11 +1158,11 @@ msgstr ""
 msgid "Failed to update the theme list"
 msgstr "Zlyhala aktualizácia zoznamu tém"
 
-#: src/xmoto/GameText.h:859
+#: src/xmoto/GameText.h:870
 msgid "Fanciest menu graphics"
 msgstr "Najnazdobenejšia grafika menu"
 
-#: src/xmoto/GameText.h:1099
+#: src/xmoto/GameText.h:1123
 msgid "Favorite levels"
 msgstr "Obľúbené levely"
 
@@ -1158,23 +1206,23 @@ msgstr "Nahnúť sa vľavo"
 msgid "Flip right"
 msgstr "Nahnúť sa vpravo"
 
-#: src/xmoto/GameText.h:560
+#: src/xmoto/GameText.h:566
 msgid "Following are your most played levels"
 msgstr "Toto sú vaše najčastejšie hrané levely"
 
-#: src/xmoto/GameText.h:1228
+#: src/xmoto/GameText.h:1252
 msgid "FontGroup:GENERAL"
 msgstr "FontGroup:GENERAL"
 
-#: src/xmoto/GameText.h:651
+#: src/xmoto/GameText.h:657
 msgid "Forward while replaying"
 msgstr "Posunúť dopredu počas prehrávania"
 
-#: src/xmoto/GameText.h:1205
+#: src/xmoto/GameText.h:1229
 msgid "Fps disabled"
 msgstr "Fps vypnuté"
 
-#: src/xmoto/GameText.h:1204
+#: src/xmoto/GameText.h:1228
 msgid "Fps enabled"
 msgstr "Fps zapnuté"
 
@@ -1182,11 +1230,11 @@ msgstr "Fps zapnuté"
 msgid "French"
 msgstr "Francúzština"
 
-#: src/xmoto/GameText.h:553
+#: src/xmoto/GameText.h:559
 msgid "Full"
 msgstr "Plná"
 
-#: src/xmoto/GameText.h:1199
+#: src/xmoto/GameText.h:1223
 msgid "Full Graphics Mode enabled"
 msgstr "Zapnutý režim plnej grafiky"
 
@@ -1206,11 +1254,11 @@ msgstr "Všeobecné"
 msgid "General Info"
 msgstr "Všeobecné info"
 
-#: src/xmoto/GameText.h:834
+#: src/xmoto/GameText.h:844
 msgid "General X-Moto preferences"
 msgstr "Všeobecné voľby X-Moto"
 
-#: src/xmoto/GameText.h:885
+#: src/xmoto/GameText.h:896
 msgid "General information about the level"
 msgstr "Všeobecné informácie o leveli"
 
@@ -1222,7 +1270,7 @@ msgstr "Nemčina"
 msgid "Get More Levels!"
 msgstr "Získať nové levely!"
 
-#: src/xmoto/GameText.h:962
+#: src/xmoto/GameText.h:973
 msgid "Get the rooms list from the web"
 msgstr "Získať zoznam miestností z webu"
 
@@ -1234,15 +1282,15 @@ msgstr "Získať túto tému"
 msgid "Ghost"
 msgstr "Duch"
 
-#: src/xmoto/GameText.h:1211
+#: src/xmoto/GameText.h:1235
 msgid "Ghost Trail Rendering activated"
 msgstr "Renderovanie stopy ducha aktivované"
 
-#: src/xmoto/GameText.h:1212
+#: src/xmoto/GameText.h:1236
 msgid "Ghost Trail Rendering deactivated"
 msgstr "Renderovanie stopy ducha deaktivované"
 
-#: src/xmoto/GameText.h:1210
+#: src/xmoto/GameText.h:1234
 msgid "Ghost Trail is not available"
 msgstr "Stopa ducha nie je dostupná"
 
@@ -1251,19 +1299,19 @@ msgstr "Stopa ducha nie je dostupná"
 msgid "Ghost of %s"
 msgstr "Duch %s"
 
-#: src/xmoto/GameText.h:1034
+#: src/xmoto/GameText.h:1045
 msgid "Give your mind about this level"
 msgstr "Vyjadriť názor na tento level"
 
-#: src/xmoto/GameText.h:1040
+#: src/xmoto/GameText.h:1051
 msgid "Go !"
 msgstr "Štart!"
 
-#: src/xmoto/GameText.h:1039
+#: src/xmoto/GameText.h:1050
 msgid "God"
 msgstr "Poloboh"
 
-#: src/xmoto/GameText.h:543 src/xmoto/GameText.h:1116
+#: src/xmoto/GameText.h:549 src/xmoto/GameText.h:1140
 msgid "Gold"
 msgstr "Zlatá"
 
@@ -1275,11 +1323,11 @@ msgstr "Dobrá práca! Ďalší je ešte o niečo ťažší..."
 msgid "Graphics"
 msgstr "Grafika"
 
-#: src/xmoto/GameText.h:1142
+#: src/xmoto/GameText.h:1166
 msgid "Hardest X-Moto levels according to the web votes"
 msgstr "Najťažšie X-Moto levely podľa hlasovania na webe"
 
-#: src/xmoto/GameText.h:1102
+#: src/xmoto/GameText.h:1126
 msgid "Hardest levels"
 msgstr "Najťažšie levely"
 
@@ -1311,7 +1359,7 @@ msgstr "Vysoká"
 msgid "Highscore of the room"
 msgstr "Rekord miestnosti"
 
-#: src/xmoto/GameText.h:1172
+#: src/xmoto/GameText.h:1196
 #, c-format
 msgid "Highscores by %s"
 msgstr "Rekordy od %s"
@@ -1324,7 +1372,7 @@ msgstr "Maďarčina"
 msgid "I'm a child"
 msgstr "Som dieťa"
 
-#: src/xmoto/GameText.h:930
+#: src/xmoto/GameText.h:941
 msgid "If you make a highscore it will automatically be saved as a replay"
 msgstr "Ak urobíte rekord, automaticky bude uložený ako záznam"
 
@@ -1340,7 +1388,7 @@ msgstr ""
 "zdvojené/nesynchronizované. Ak ste tak už učinili, mali by ste odstrániť "
 "kópie, ktoré ste vytvorili."
 
-#: src/xmoto/GameText.h:586
+#: src/xmoto/GameText.h:592
 msgid ""
 "Important note!\n"
 "\n"
@@ -1350,21 +1398,11 @@ msgid ""
 "Mail bugs, ideas, comments, feature requests, hatemail, etc\n"
 "to xmoto@tuxfamily.org\n"
 "\n"
-"Also visit http://xmoto.tuxfamily.org to make sure you've\n"
+"Also visit https://xmoto.tuxfamily.org to make sure you've\n"
 "got the latest version."
 msgstr ""
-"Dôležitá poznámka!\n"
-"\n"
-"Toto je vývojová verzia X-Moto!\n"
-"Všetky druhy spätnej väzby sú vítané, takto sa\n"
-"môže hra stále zlepšovať.\n"
-"Hlásenia chýb, nápady, komentáre, prosby, nenávistné maily atď\n"
-"posielajte na xmoto@tuxfamily.org\n"
-"\n"
-"Rovnako navštívte http://xmoto.tuxfamily.org, aby ste sa uistili,\n"
-"že používate najnovšiu verziu."
 
-#: src/xmoto/GameText.h:1066
+#: src/xmoto/GameText.h:1090
 msgid "Impossible"
 msgstr "Nemožné"
 
@@ -1376,15 +1414,15 @@ msgstr "V ľavom hornom rohu vidíte časovače"
 msgid "Increase console history size"
 msgstr "Zväčšiť veľkosť konzolovej histórie"
 
-#: src/xmoto/GameText.h:997
+#: src/xmoto/GameText.h:1008
 msgid "Increase or decrease the difficulty of the levels selected"
 msgstr "Zvýšiť alebo znížiť náročnosť vybraných levelov"
 
-#: src/xmoto/GameText.h:995
+#: src/xmoto/GameText.h:1006
 msgid "Increase or decrease the quality of the levels selected"
 msgstr "Zvýšiť alebo znížiť kvalitu vybraných levelov"
 
-#: src/xmoto/GameText.h:676
+#: src/xmoto/GameText.h:682
 msgid "Info..."
 msgstr "Info..."
 
@@ -1402,7 +1440,7 @@ msgstr ""
 "a brzdením. Skúste jazdiť dopredu a dozadu na vašom zadnom\n"
 "kolese a udržať motocykel stabilným, ako to len ide..."
 
-#: src/xmoto/GameText.h:825
+#: src/xmoto/GameText.h:835
 msgid "Instructions of how to play X-Moto"
 msgstr "Inštruktáž ako hrať X-Moto"
 
@@ -1422,7 +1460,7 @@ msgstr "Joystick"
 msgid "Key"
 msgstr "Kláves"
 
-#: src/xmoto/GameText.h:687
+#: src/xmoto/GameText.h:693
 #, c-format
 msgid "Key '%s' of Player '%i' has been switched to '%s'"
 msgstr "Kláves '%s' hráča '%i' bol zmenený na '%s'"
@@ -1443,23 +1481,23 @@ msgstr "Kód jazyka"
 msgid "Language name"
 msgstr "Názov jazyka"
 
-#: src/xmoto/GameText.h:1157
+#: src/xmoto/GameText.h:1181
 msgid "Last created X-Moto levels"
 msgstr "Naposledy vytvorené X-Moto levely"
 
-#: src/xmoto/GameText.h:1112
+#: src/xmoto/GameText.h:1136
 msgid "Last highscores"
 msgstr "Posledné rekordy"
 
-#: src/xmoto/GameText.h:1113
+#: src/xmoto/GameText.h:1137
 msgid "Last levels"
 msgstr "Posledné levely"
 
-#: src/xmoto/GameText.h:1149
+#: src/xmoto/GameText.h:1173
 msgid "Last levels you have played"
 msgstr "Posledné levely, ktoré ste hrali"
 
-#: src/xmoto/GameText.h:1108
+#: src/xmoto/GameText.h:1132
 msgid "Last played levels"
 msgstr "Naposledy hrané levely"
 
@@ -1467,7 +1505,7 @@ msgstr "Naposledy hrané levely"
 msgid "Latvian"
 msgstr "Lotyšština"
 
-#: src/xmoto/GameText.h:772
+#: src/xmoto/GameText.h:780
 msgid "Launch at startup"
 msgstr "Spustiť pri štarte"
 
@@ -1475,11 +1513,11 @@ msgstr "Spustiť pri štarte"
 msgid "Lead Programming"
 msgstr "Hlavné programovanie"
 
-#: src/xmoto/GameText.h:1111
+#: src/xmoto/GameText.h:1135
 msgid "Less played levels (but played)"
 msgstr "Menej hrané levely"
 
-#: src/xmoto/GameText.h:900
+#: src/xmoto/GameText.h:911
 msgid ""
 "Let X-Moto look for more levels on the net, and install them automatically"
 msgstr ""
@@ -1489,15 +1527,23 @@ msgstr ""
 msgid "Level"
 msgstr "Level"
 
-#: src/xmoto/GameText.h:515
+#: src/xmoto/GameText.h:519
 #, c-format
 msgid "Level '%s' cannot be loaded"
 msgstr "Level '%s' sa nepodarilo načítať"
 
-#: src/xmoto/GameText.h:524
+#: src/xmoto/GameText.h:529
 #, c-format
 msgid "Level '%s' required by replay!"
 msgstr "Pre prehranie záznamu potrebujete level '%s'"
+
+#: src/xmoto/GameText.h:515
+msgid "Level File"
+msgstr ""
+
+#: src/xmoto/GameText.h:516
+msgid "Level ID"
+msgstr ""
 
 #: src/xmoto/GameText.h:513
 msgid "Level Info"
@@ -1507,32 +1553,32 @@ msgstr "Info o leveli"
 msgid "Level Name"
 msgstr "Názov levelu"
 
-#: src/xmoto/GameText.h:522
+#: src/xmoto/GameText.h:527
 msgid "Level Pack"
 msgstr "Balík levelov"
 
-#: src/xmoto/GameText.h:523
+#: src/xmoto/GameText.h:528
 msgid "Level Packs"
 msgstr "Balíky levelov"
 
-#: src/xmoto/GameText.h:1056
+#: src/xmoto/GameText.h:1074
 msgid "Level cache cleared"
 msgstr ""
 
-#: src/xmoto/GameText.h:1171
+#: src/xmoto/GameText.h:1195
 #, c-format
 msgid "Level pack \"%s\""
 msgstr "Balík levelov \"%s\""
 
-#: src/xmoto/GameText.h:977
+#: src/xmoto/GameText.h:988
 msgid "Level played in replay"
 msgstr "Záznam levelu"
 
-#: src/xmoto/GameText.h:557
+#: src/xmoto/GameText.h:563
 msgid "Level references unknown textures, it could be unplayable!"
 msgstr "Level odkazuje na neznáme textúry, nemusí byť hrateľný!"
 
-#: src/xmoto/GameText.h:525
+#: src/xmoto/GameText.h:530
 msgid "Levels"
 msgstr "Levely"
 
@@ -1540,44 +1586,44 @@ msgstr "Levely"
 msgid "Levels are being added into the database. Please wait."
 msgstr "Levely sú pridávané do databáze. Prosím čakajte."
 
-#: src/xmoto/GameText.h:1186
+#: src/xmoto/GameText.h:1210
 msgid "Levels for which you owned the highscore"
 msgstr "Levely, pre ktoré ste minulosti držali rekord"
 
-#: src/xmoto/GameText.h:821
+#: src/xmoto/GameText.h:831
 msgid "Levels grouped together in level packs"
 msgstr "Levely zoskupené do levelových balíkov"
 
-#: src/xmoto/GameText.h:1188
+#: src/xmoto/GameText.h:1212
 msgid "Levels having votes unlocked"
 msgstr "Levely, ktoré majú odomknuté hlasy"
 
-#: src/xmoto/GameText.h:1176
+#: src/xmoto/GameText.h:1200
 msgid "Levels marked 'crappy' are hidden in all other packs"
 msgstr ""
 "Levely označené ako 'slabé' sú skryté vo všetkých ďalších balíkoch levelov"
 
-#: src/xmoto/GameText.h:1093
+#: src/xmoto/GameText.h:1117
 msgid "Levels with no highscore"
 msgstr "Levely bez rekordu"
 
-#: src/xmoto/GameText.h:1130
+#: src/xmoto/GameText.h:1154
 msgid "Levels with no highscore in your room"
 msgstr "Levely bez rekordu vo vašej miestnosti"
 
-#: src/xmoto/GameText.h:1094 src/xmoto/GameText.h:1131
+#: src/xmoto/GameText.h:1118 src/xmoto/GameText.h:1155
 msgid "Levels you have not completed"
 msgstr "Levely, ktoré ste nedokončili"
 
-#: src/xmoto/GameText.h:552
+#: src/xmoto/GameText.h:558
 msgid "Light"
 msgstr "Svetlá"
 
-#: src/xmoto/GameText.h:1198
+#: src/xmoto/GameText.h:1222
 msgid "Light Graphics Mode enabled"
 msgstr "Zapnutý režim svetlej grafiky"
 
-#: src/xmoto/GameText.h:526
+#: src/xmoto/GameText.h:531
 msgid "List All"
 msgstr "Zobraziť všetky"
 
@@ -1585,11 +1631,11 @@ msgstr "Zobraziť všetky"
 msgid "Lithuanian"
 msgstr "Litovčina"
 
-#: src/xmoto/GameText.h:528
+#: src/xmoto/GameText.h:533
 msgid "Loading levels..."
 msgstr "Nahrávam levely..."
 
-#: src/xmoto/GameText.h:529
+#: src/xmoto/GameText.h:534
 msgid "Loading menu graphics..."
 msgstr "Nahrávam grafiku menu..."
 
@@ -1597,19 +1643,19 @@ msgstr "Nahrávam grafiku menu..."
 msgid "Loading new and updated levels..."
 msgstr "Načítavam nové a aktualizované levely..."
 
-#: src/xmoto/GameText.h:530
+#: src/xmoto/GameText.h:535
 msgid "Loading replays..."
 msgstr "Nahrávam záznamy..."
 
-#: src/xmoto/GameText.h:531
+#: src/xmoto/GameText.h:536
 msgid "Loading sounds..."
 msgstr "Nahrávam zvuky..."
 
-#: src/xmoto/GameText.h:532
+#: src/xmoto/GameText.h:537
 msgid "Loading textures..."
 msgstr "Nahrávam textúry..."
 
-#: src/xmoto/GameText.h:527
+#: src/xmoto/GameText.h:532
 msgid "Loading..."
 msgstr "Nahrávam..."
 
@@ -1621,15 +1667,19 @@ msgstr "Najlepšie miestne"
 msgid "Localization"
 msgstr "Lokalizácia"
 
-#: src/xmoto/GameText.h:533
+#: src/xmoto/GameText.h:538
 msgid "Login"
 msgstr "Login"
 
-#: src/xmoto/GameText.h:1124
+#: src/xmoto/GameText.h:1067
+msgid "Logs cleared"
+msgstr ""
+
+#: src/xmoto/GameText.h:1148
 msgid "Long levels"
 msgstr "Dlhé levely"
 
-#: src/xmoto/GameText.h:534
+#: src/xmoto/GameText.h:539
 msgid "Low"
 msgstr "Nízka"
 
@@ -1637,11 +1687,11 @@ msgstr "Nízka"
 msgid "MacOS X Support"
 msgstr "Podpora pre MacOS X"
 
-#: src/xmoto/GameText.h:535
+#: src/xmoto/GameText.h:540
 msgid "Main"
 msgstr "Hlavné"
 
-#: src/xmoto/GameText.h:1021
+#: src/xmoto/GameText.h:1032
 msgid "Main options"
 msgstr "Hlavné voľby"
 
@@ -1649,38 +1699,42 @@ msgstr "Hlavné voľby"
 msgid "Main testers"
 msgstr "Hlavní testovači"
 
-#: src/xmoto/GameText.h:852
+#: src/xmoto/GameText.h:862
 msgid "Make console messages not disappear"
 msgstr "Nezobrazovať konzolové hlásenia"
 
-#: src/xmoto/GameText.h:921
+#: src/xmoto/GameText.h:932
 msgid ""
 "Make motion blur effect for the ghost (if supported by your graphics card)"
 msgstr ""
 "Vytvoriť pre ducha efekt rozmazania pohybom (ak je to podporované vašou "
 "grafickou kartou)"
 
-#: src/xmoto/GameText.h:1038
+#: src/xmoto/GameText.h:1049
 msgid "Master"
 msgstr "Šampión"
 
-#: src/xmoto/GameText.h:604
+#: src/xmoto/GameText.h:541
+msgid "Max Framerate"
+msgstr ""
+
+#: src/xmoto/GameText.h:610
 msgid "Medals"
 msgstr "Medaile"
 
-#: src/xmoto/GameText.h:546
+#: src/xmoto/GameText.h:552
 msgid "Medium"
 msgstr "Stredná"
 
-#: src/xmoto/GameText.h:1123
+#: src/xmoto/GameText.h:1147
 msgid "Medium levels"
 msgstr "Priemerné levely"
 
-#: src/xmoto/GameText.h:547
+#: src/xmoto/GameText.h:553
 msgid "Menu Graphics"
 msgstr "Grafika v menu"
 
-#: src/xmoto/GameText.h:549
+#: src/xmoto/GameText.h:555
 msgid "Message not sent, unknown players :"
 msgstr "Správa nebola odoslaná, neznámi hráči: "
 
@@ -1688,23 +1742,23 @@ msgstr "Správa nebola odoslaná, neznámi hráči: "
 msgid "Mikhail Brinchuk"
 msgstr "Mikhail Brinchuk"
 
-#: src/xmoto/GameText.h:558
+#: src/xmoto/GameText.h:564
 msgid "Mono"
 msgstr "Mono"
 
-#: src/xmoto/GameText.h:871
+#: src/xmoto/GameText.h:882
 msgid "Mono (single channel) audio"
 msgstr "Mono (jeden kanál) audio"
 
-#: src/xmoto/GameText.h:1110
+#: src/xmoto/GameText.h:1134
 msgid "Most played levels"
 msgstr "Najčastejšie hrané levely"
 
-#: src/xmoto/GameText.h:561
+#: src/xmoto/GameText.h:567
 msgid "Motion blur ghost"
 msgstr "Ducha rozmazať pohybom"
 
-#: src/xmoto/GameText.h:536
+#: src/xmoto/GameText.h:542
 msgid "Mouse"
 msgstr "Myš"
 
@@ -1724,7 +1778,7 @@ msgstr "Pohni kamerou doprava"
 msgid "Move Camera up"
 msgstr "Pohni kamerou nahor"
 
-#: src/xmoto/GameText.h:562
+#: src/xmoto/GameText.h:568
 msgid "Multi"
 msgstr "Multi"
 
@@ -1732,83 +1786,83 @@ msgstr "Multi"
 msgid "Music"
 msgstr "Hudba"
 
-#: src/xmoto/GameText.h:1120
+#: src/xmoto/GameText.h:1144
 msgid "My levels"
 msgstr "Moje levely"
 
-#: src/xmoto/GameText.h:982
+#: src/xmoto/GameText.h:993
 msgid "Name of level pack"
 msgstr "Názov balíka levelov"
 
-#: src/xmoto/GameText.h:976
+#: src/xmoto/GameText.h:987
 msgid "Name of replay"
 msgstr "Názov záznamu"
 
-#: src/xmoto/GameText.h:1012
+#: src/xmoto/GameText.h:1023
 msgid "Name of the language"
 msgstr "Názov jazyka"
 
-#: src/xmoto/GameText.h:779
+#: src/xmoto/GameText.h:787
 msgid "Network"
 msgstr "Sieť"
 
-#: src/xmoto/GameText.h:780
+#: src/xmoto/GameText.h:788
 msgid "Network admin console"
 msgstr ""
 
-#: src/xmoto/GameText.h:787
+#: src/xmoto/GameText.h:795
 msgid "Network error: you're disconnected"
 msgstr "Chyba siete: boli ste odpojený"
 
-#: src/xmoto/GameText.h:1089
+#: src/xmoto/GameText.h:1113
 msgid "Network playing mode : just see other players as ghosts"
 msgstr "Režim sieťovej hry: uvidíte ostatných hráčov ako duchov"
 
-#: src/xmoto/GameText.h:1109
+#: src/xmoto/GameText.h:1133
 msgid "Never played levels"
 msgstr "Nikdy nehrané levely"
 
-#: src/xmoto/GameText.h:567
+#: src/xmoto/GameText.h:573
 msgid "New"
 msgstr "Nový"
 
-#: src/xmoto/GameText.h:576
+#: src/xmoto/GameText.h:582
 msgid "New Levels"
 msgstr "Nové levely"
 
-#: src/xmoto/GameText.h:578
+#: src/xmoto/GameText.h:584
 msgid "New Profile..."
 msgstr "Nový profil..."
 
-#: src/xmoto/GameText.h:1098
+#: src/xmoto/GameText.h:1122
 msgid "New and updated levels"
 msgstr "Nové a aktualizované levely"
 
-#: src/xmoto/GameText.h:1136
+#: src/xmoto/GameText.h:1160
 msgid "New and updated levels since your last check"
 msgstr "Nové a aktualizované levely od poslednej kontroly"
 
-#: src/xmoto/GameText.h:570
+#: src/xmoto/GameText.h:576
 msgid "New highscore!"
 msgstr "Nový rekord!"
 
-#: src/xmoto/GameText.h:916
+#: src/xmoto/GameText.h:927
 msgid "New levels and levels updated from the Internet"
 msgstr "Nové levely a levely aktualizované z internetu"
 
-#: src/xmoto/GameText.h:577
+#: src/xmoto/GameText.h:583
 msgid "New levels available!"
 msgstr "Nové levely dostupné!"
 
-#: src/xmoto/GameText.h:571
+#: src/xmoto/GameText.h:577
 msgid "New personal highscore!"
 msgstr "Nový osobný rekord!"
 
-#: src/xmoto/GameText.h:1049
+#: src/xmoto/GameText.h:1060
 msgid "Next level"
 msgstr "Ďalší level"
 
-#: src/xmoto/GameText.h:1043
+#: src/xmoto/GameText.h:1054
 msgid "Nice"
 msgstr "Pekný"
 
@@ -1820,23 +1874,23 @@ msgstr "Hej, pekný skok! :)"
 msgid "Nice! Now try the next one, it's a bit more difficult..."
 msgstr "Pekne! Teraz skúste ďalší, je trošku náročnejší..."
 
-#: src/xmoto/GameText.h:1070
+#: src/xmoto/GameText.h:1094
 msgid "Nice, could be better"
 msgstr "Pekné, mohlo by byť lepšie"
 
-#: src/xmoto/GameText.h:1140
+#: src/xmoto/GameText.h:1164
 msgid "Nicest X-Moto levels according to the web votes"
 msgstr "Najkrajšie levely X-Moto podľa hlasovania na webe"
 
-#: src/xmoto/GameText.h:1101
+#: src/xmoto/GameText.h:1125
 msgid "Nicest levels"
 msgstr "Najkrajšie levely"
 
-#: src/xmoto/GameText.h:579
+#: src/xmoto/GameText.h:585
 msgid "No"
 msgstr "Nie"
 
-#: src/xmoto/GameText.h:1035
+#: src/xmoto/GameText.h:1046
 msgid "No idea"
 msgstr "Nemám tušenia"
 
@@ -1844,15 +1898,15 @@ msgstr "Nemám tušenia"
 msgid "No joystick found"
 msgstr "Nebol nájdený joystick"
 
-#: src/xmoto/GameText.h:582
+#: src/xmoto/GameText.h:588
 msgid "No level following this one, sorry."
 msgstr "Po tomto leveli už nenasleduje ďalší, ľutujem."
 
-#: src/xmoto/GameText.h:1119
+#: src/xmoto/GameText.h:1143
 msgid "No medal"
 msgstr "Bez medaile"
 
-#: src/xmoto/GameText.h:581
+#: src/xmoto/GameText.h:587
 msgid ""
 "No new or updated levels available.\n"
 "\n"
@@ -1862,23 +1916,23 @@ msgstr ""
 "\n"
 "Skúste to neskôr."
 
-#: src/xmoto/GameText.h:583
+#: src/xmoto/GameText.h:589
 msgid "No statistics for this profile."
 msgstr "Tento profil neobsahuje štatistiku."
 
-#: src/xmoto/GameText.h:1063
+#: src/xmoto/GameText.h:1087
 msgid "No technical difficulty"
 msgstr "Žiadna technická prekážka"
 
-#: src/xmoto/GameText.h:1214
+#: src/xmoto/GameText.h:1238
 msgid "No training positions stored"
 msgstr "Neboli uložené žiadne tréningové pozície"
 
-#: src/xmoto/GameText.h:1190
+#: src/xmoto/GameText.h:1214
 msgid "Normal mode enabled"
 msgstr "Zapnutý normálny režim"
 
-#: src/xmoto/GameText.h:867
+#: src/xmoto/GameText.h:878
 msgid "Normal sound quality"
 msgstr "Bežná kvalita zvuku"
 
@@ -1886,23 +1940,23 @@ msgstr "Bežná kvalita zvuku"
 msgid "Norwegian"
 msgstr "Nórština"
 
-#: src/xmoto/GameText.h:584
+#: src/xmoto/GameText.h:590
 msgid "Not finished"
 msgstr "Nedokončené"
 
-#: src/xmoto/GameText.h:1042
+#: src/xmoto/GameText.h:1053
 msgid "Not nice"
 msgstr "Nepekný"
 
-#: src/xmoto/GameText.h:1041
+#: src/xmoto/GameText.h:1052
 msgid "Not nice at all"
 msgstr "Veľmi škaredý"
 
-#: src/xmoto/GameText.h:1069
+#: src/xmoto/GameText.h:1093
 msgid "Not original"
 msgstr "Neoriginálny"
 
-#: src/xmoto/GameText.h:857
+#: src/xmoto/GameText.h:868
 msgid "Not so fancy menu graphics"
 msgstr "Nie prilíš nazdobená grafika menu"
 
@@ -1936,15 +1990,15 @@ msgstr ""
 "Tentokrát ruky preč od ľavej a pravej kurzorovej šípky,\n"
 "nie sú dostatočne jemné, aby vám pomohli udržať rovnováhu."
 
-#: src/xmoto/GameText.h:566
+#: src/xmoto/GameText.h:572
 msgid "Number of players"
 msgstr "Počet hráčov"
 
-#: src/xmoto/GameText.h:597
+#: src/xmoto/GameText.h:603
 msgid "OK"
 msgstr "OK"
 
-#: src/xmoto/GameText.h:724
+#: src/xmoto/GameText.h:730
 msgid "Oh no !"
 msgstr "Ale nie!"
 
@@ -1952,15 +2006,15 @@ msgstr "Ale nie!"
 msgid "Okay. The red dot on your minimap is a strawberry."
 msgstr "Dobre. Červená bodka na minimape je jahoda."
 
-#: src/xmoto/GameText.h:1114
+#: src/xmoto/GameText.h:1138
 msgid "Oldest highscores"
 msgstr "Najstaršie rekordy"
 
-#: src/xmoto/GameText.h:889
+#: src/xmoto/GameText.h:900
 msgid "Only show personal best times for this level"
 msgstr "Zobrazovať iba najlepšie osobné časy pre tento level"
 
-#: src/xmoto/GameText.h:892
+#: src/xmoto/GameText.h:903
 msgid "Only show personal replays for this level"
 msgstr "Zobrazovať iba osobné záznamy pre tento level"
 
@@ -1968,7 +2022,7 @@ msgstr "Zobrazovať iba osobné záznamy pre tento level"
 msgid "Oops!"
 msgstr "Hops!"
 
-#: src/xmoto/GameText.h:598
+#: src/xmoto/GameText.h:604
 msgid "Open"
 msgstr "Otvoriť"
 
@@ -1984,35 +2038,35 @@ msgstr "Otvoriť menu s voľbami"
 msgid "Open private chat dialog box"
 msgstr ""
 
-#: src/xmoto/GameText.h:599
+#: src/xmoto/GameText.h:605
 msgid "Operation completed"
 msgstr "Operácia skončila"
 
-#: src/xmoto/GameText.h:600
+#: src/xmoto/GameText.h:606
 msgid "Options"
 msgstr "Voľby"
 
-#: src/xmoto/GameText.h:613
+#: src/xmoto/GameText.h:619
 msgid "Password"
 msgstr "Heslo"
 
-#: src/xmoto/GameText.h:1020
+#: src/xmoto/GameText.h:1031
 msgid "Password associated to your profile for web access"
 msgstr "Heslo priradené k vášmu profilu pre webový prístup"
 
-#: src/xmoto/GameText.h:374 src/xmoto/GameText.h:439 src/xmoto/GameText.h:612
+#: src/xmoto/GameText.h:374 src/xmoto/GameText.h:439 src/xmoto/GameText.h:618
 msgid "Pause"
 msgstr "Pauza"
 
-#: src/xmoto/GameText.h:1048
+#: src/xmoto/GameText.h:1059
 msgid "Pause to watch the level"
 msgstr "Pauza pre prezretie levelu"
 
-#: src/xmoto/GameText.h:619
+#: src/xmoto/GameText.h:625
 msgid "Pause when playing X-Moto"
 msgstr "Pauza počas hrania X-Moto"
 
-#: src/xmoto/GameText.h:652
+#: src/xmoto/GameText.h:658
 msgid "Pause while replaying"
 msgstr "Pauza počas prehrávania"
 
@@ -2020,19 +2074,19 @@ msgstr "Pauza počas prehrávania"
 msgid "People who have provided bug reports"
 msgstr "Ľuďom, ktorí poskytli chybové hlásenia"
 
-#: src/xmoto/GameText.h:881
+#: src/xmoto/GameText.h:892
 msgid "Permanently delete selected player profile, including best times"
 msgstr "Permanentne vymazať vybraný profil hráča, vrátane najlepších časov"
 
-#: src/xmoto/GameText.h:832
+#: src/xmoto/GameText.h:842
 msgid "Permanently delete the selected replay"
 msgstr "Permanentne vymazať vybraný záznam"
 
-#: src/xmoto/GameText.h:614 src/xmoto/GameText.h:615
+#: src/xmoto/GameText.h:620 src/xmoto/GameText.h:621
 msgid "Personal"
 msgstr "Osobné"
 
-#: src/xmoto/GameText.h:1106
+#: src/xmoto/GameText.h:1130
 msgid "Physics levels"
 msgstr "Levely s fyzikou"
 
@@ -2040,23 +2094,23 @@ msgstr "Levely s fyzikou"
 msgid "Pick up the strawberry by touching it"
 msgstr "Zoberte jahodu tak, že sa jej dotknete"
 
-#: src/xmoto/GameText.h:545 src/xmoto/GameText.h:1115
+#: src/xmoto/GameText.h:551 src/xmoto/GameText.h:1139
 msgid "Platinum"
 msgstr "Platinová"
 
-#: src/xmoto/GameText.h:620
+#: src/xmoto/GameText.h:626
 msgid "Play Next Level"
 msgstr "Hrať ďalší level"
 
-#: src/xmoto/GameText.h:655
+#: src/xmoto/GameText.h:661
 msgid "Play a bit faster while replaying"
 msgstr "Pri prehrávaní použiť o niečo vyššiu rýchlosť"
 
-#: src/xmoto/GameText.h:657
+#: src/xmoto/GameText.h:663
 msgid "Play a bit slower while replaying"
 msgstr "Pri prehrávaní použiť o niečo nižšiu rýchlosť"
 
-#: src/xmoto/GameText.h:654
+#: src/xmoto/GameText.h:660
 msgid "Play faster while replaying"
 msgstr "Vyššia rýchlosť pri prehrávaní"
 
@@ -2064,11 +2118,11 @@ msgstr "Vyššia rýchlosť pri prehrávaní"
 msgid "Play music on all levels"
 msgstr "Prehrávať hudbu vo všetkých leveloch"
 
-#: src/xmoto/GameText.h:811
+#: src/xmoto/GameText.h:821
 msgid "Play next level"
 msgstr "Hrať ďalší level"
 
-#: src/xmoto/GameText.h:817
+#: src/xmoto/GameText.h:827
 msgid "Play next level instead"
 msgstr "Hrať radšej ďalší level"
 
@@ -2076,23 +2130,23 @@ msgstr "Hrať radšej ďalší level"
 msgid "Play now !"
 msgstr "Spustiť hru!"
 
-#: src/xmoto/GameText.h:656
+#: src/xmoto/GameText.h:662
 msgid "Play slower while replaying"
 msgstr "Nižšia rýchlosť pri prehrávaní"
 
-#: src/xmoto/GameText.h:828
+#: src/xmoto/GameText.h:838
 msgid "Play the selected level"
 msgstr "Spustiť vybraný level"
 
-#: src/xmoto/GameText.h:809
+#: src/xmoto/GameText.h:819
 msgid "Play this level again"
 msgstr "Hrať tento level odznovu"
 
-#: src/xmoto/GameText.h:827
+#: src/xmoto/GameText.h:837
 msgid "Play tutorial of how to play the game"
 msgstr "Hrať návod na to, ako hrať túto hru"
 
-#: src/xmoto/GameText.h:678
+#: src/xmoto/GameText.h:684
 msgid "Play!"
 msgstr "Hrať!"
 
@@ -2100,15 +2154,15 @@ msgstr "Hrať!"
 msgid "Player"
 msgstr "Hráč"
 
-#: src/xmoto/GameText.h:617
+#: src/xmoto/GameText.h:623
 msgid "Player Profile"
 msgstr "Profil hráča"
 
-#: src/xmoto/GameText.h:618
+#: src/xmoto/GameText.h:624
 msgid "Player Profiles"
 msgstr "Vlastnosti hráča"
 
-#: src/xmoto/GameText.h:978
+#: src/xmoto/GameText.h:989
 msgid "Player who recorded the replay"
 msgstr "Hráč, ktorý urobil záznam"
 
@@ -2128,15 +2182,15 @@ msgstr ""
 msgid "Polish"
 msgstr "Poľština"
 
-#: src/xmoto/GameText.h:866
+#: src/xmoto/GameText.h:877
 msgid "Poor sound quality"
 msgstr "Slabá kvalita zvuku"
 
-#: src/xmoto/GameText.h:621 src/xmoto/GameText.h:771
+#: src/xmoto/GameText.h:627 src/xmoto/GameText.h:779
 msgid "Port"
 msgstr "Port"
 
-#: src/xmoto/GameText.h:1079
+#: src/xmoto/GameText.h:1103
 msgid "Port on which the server must listen to"
 msgstr "Port, na ktorom má server načúvať"
 
@@ -2144,13 +2198,13 @@ msgstr "Port, na ktorom má server načúvať"
 msgid "Portuguese"
 msgstr "Portugalčina"
 
-#: src/xmoto/GameText.h:1032
+#: src/xmoto/GameText.h:1043
 msgid "Preselect the retry button when dying or finishing a level"
 msgstr ""
 "Prednastaviť kurzor na tlačidlo nového pokusu pri úmrtí alebo dokončení "
 "levelu"
 
-#: src/xmoto/GameText.h:624
+#: src/xmoto/GameText.h:630
 #, c-format
 msgid "Press %s to chat"
 msgstr "Stlačte %s pre chat"
@@ -2167,16 +2221,16 @@ msgstr "Stlačte ENTER pre opätovný pokus"
 msgid "Press ESC to display the menu"
 msgstr "Stlačte ESC pre zobrazenie menu"
 
-#: src/xmoto/GameText.h:623
+#: src/xmoto/GameText.h:629
 #, c-format
 msgid "Press key you want to '%s' or ESC to cancel..."
 msgstr "Stlačte ľubuvoľný kláves pre '%s' alebo ESC pre zrušenie..."
 
-#: src/xmoto/GameText.h:993
+#: src/xmoto/GameText.h:1004
 msgid "Press to play X-Moto immediately"
 msgstr "Stlačte pre okamžité hranie X-Moto"
 
-#: src/xmoto/GameText.h:1050
+#: src/xmoto/GameText.h:1061
 msgid "Previous level"
 msgstr "Predchádzajúci level"
 
@@ -2184,23 +2238,23 @@ msgstr "Predchádzajúci level"
 msgid "Previous/Next level"
 msgstr "Predchádzajúci/ďalší level"
 
-#: src/xmoto/GameText.h:625
+#: src/xmoto/GameText.h:631
 msgid "Proxy Server"
 msgstr "Proxy server"
 
-#: src/xmoto/GameText.h:986
+#: src/xmoto/GameText.h:997
 msgid "Puzzle the levels pack list"
 msgstr "Zamiešať zoznam balíkov s levelmi"
 
-#: src/xmoto/GameText.h:627
+#: src/xmoto/GameText.h:633
 msgid "Quality"
 msgstr "Kvalita"
 
-#: src/xmoto/GameText.h:631
+#: src/xmoto/GameText.h:637
 msgid "Quick start"
 msgstr "Rýchly štart"
 
-#: src/xmoto/GameText.h:632
+#: src/xmoto/GameText.h:638
 msgid "Quit Game"
 msgstr "Ukončiť hru"
 
@@ -2208,40 +2262,38 @@ msgstr "Ukončiť hru"
 msgid "Quit level"
 msgstr "Opustiť level"
 
-#: src/xmoto/GameText.h:813
+#: src/xmoto/GameText.h:823
 msgid "Quit the game"
 msgstr "Ukončiť hru"
 
-#: src/xmoto/GameText.h:634
+#: src/xmoto/GameText.h:640
 msgid "Randomize"
 msgstr "Náhodné"
 
 #: src/xmoto/GameText.h:400
 msgid ""
 "Read the README file or check out the website at\n"
-"http://xmoto.tuxfamily.org\n"
+"https://xmoto.tuxfamily.org\n"
 "for more information."
 msgstr ""
-"Pre viac informácii si prečítajte súbor README\n"
-"alebo sa pozrite na web http://xmoto.tuxfamily.org."
 
-#: src/xmoto/GameText.h:1062
+#: src/xmoto/GameText.h:1086
 msgid "Really easy"
 msgstr "Naozaj ľahký"
 
-#: src/xmoto/GameText.h:1044
+#: src/xmoto/GameText.h:1055
 msgid "Really nice"
 msgstr "Naozaj pekný"
 
-#: src/xmoto/GameText.h:742
+#: src/xmoto/GameText.h:748
 msgid "Reference room"
 msgstr "Referenčná miestnosť"
 
-#: src/xmoto/GameText.h:767
+#: src/xmoto/GameText.h:775
 msgid "Reinitialize zoom"
 msgstr "Znovuinicializovať lupu"
 
-#: src/xmoto/GameText.h:635
+#: src/xmoto/GameText.h:641
 msgid "Reload files to the database"
 msgstr "Opätovne načítať súbory do databáze"
 
@@ -2249,15 +2301,15 @@ msgstr "Opätovne načítať súbory do databáze"
 msgid "Reload levels, themes and replays from directories"
 msgstr "Znovu načítať levely, témy a záznamy z adresárov"
 
-#: src/xmoto/GameText.h:636
+#: src/xmoto/GameText.h:642
 msgid "Reloading levels..."
 msgstr "Znovunahrávam levely..."
 
-#: src/xmoto/GameText.h:637
+#: src/xmoto/GameText.h:643
 msgid "Reloading replays..."
 msgstr "Znovunahrávam záznamy..."
 
-#: src/xmoto/GameText.h:638
+#: src/xmoto/GameText.h:644
 msgid "Reloading themes..."
 msgstr "Znovunahrávam témy..."
 
@@ -2269,40 +2321,40 @@ msgstr ""
 "Majte na pamäti, že vašu motorku môžete otáčať\n"
 "stlačením: "
 
-#: src/xmoto/GameText.h:1017
+#: src/xmoto/GameText.h:1028
 msgid "Remove levels not suitable for children"
 msgstr "Odstrániť levely, ktoré nie sú vhodné pre deti"
 
-#: src/xmoto/GameText.h:639
+#: src/xmoto/GameText.h:645
 msgid "Replay"
 msgstr "Záznam"
 
-#: src/xmoto/GameText.h:1203
+#: src/xmoto/GameText.h:1227
 msgid "Replay interpolation disabled"
 msgstr "Interpolácia záznamu vypnutá"
 
-#: src/xmoto/GameText.h:1202
+#: src/xmoto/GameText.h:1226
 msgid "Replay interpolation enabled"
 msgstr "Interpolácia záznamu zapnutá"
 
-#: src/xmoto/GameText.h:648
+#: src/xmoto/GameText.h:654
 #, c-format
 msgid "Replay of %s"
 msgstr "Záznam %s"
 
-#: src/xmoto/GameText.h:649
+#: src/xmoto/GameText.h:655
 msgid "Replays"
 msgstr "Záznamy"
 
-#: src/xmoto/GameText.h:1219
+#: src/xmoto/GameText.h:1243
 msgid "Restart Level to activate!"
 msgstr "Pre aktiváciu reštartujte level!"
 
-#: src/xmoto/GameText.h:660
+#: src/xmoto/GameText.h:666
 msgid "Restart This Level"
 msgstr "Reštartovať tento level"
 
-#: src/xmoto/GameText.h:662
+#: src/xmoto/GameText.h:668
 msgid "Restart level"
 msgstr "Reštartovať level"
 
@@ -2310,27 +2362,27 @@ msgstr "Reštartovať level"
 msgid "Restart the level"
 msgstr "Reštartovať level"
 
-#: src/xmoto/GameText.h:661
+#: src/xmoto/GameText.h:667
 msgid "Restart to the last checkpoint"
 msgstr "Reštartovať od posledného kontrolného stanovišťa"
 
-#: src/xmoto/GameText.h:663
+#: src/xmoto/GameText.h:669
 msgid "Resume Playing"
 msgstr "Pokračovať v hre"
 
-#: src/xmoto/GameText.h:842
+#: src/xmoto/GameText.h:852
 msgid "Revert options to defaults"
 msgstr "Vrátiť voľby na východzie"
 
-#: src/xmoto/GameText.h:650
+#: src/xmoto/GameText.h:656
 msgid "Rewind while replaying"
 msgstr "Previnúť nazad počas prehrávania"
 
-#: src/xmoto/GameText.h:605 src/xmoto/GameText.h:664
+#: src/xmoto/GameText.h:611 src/xmoto/GameText.h:670
 msgid "Room"
 msgstr "Miestnosť"
 
-#: src/xmoto/GameText.h:743
+#: src/xmoto/GameText.h:749
 #, c-format
 msgid "Room %i"
 msgstr "Miestnosť %i"
@@ -2343,23 +2395,23 @@ msgstr "Otáča v smere hodinových ručičiek"
 msgid "Rotates it counter-clockwise"
 msgstr "Otáča proti smeru hodinových ručičiek"
 
-#: src/xmoto/GameText.h:665
+#: src/xmoto/GameText.h:671
 msgid "Run Windowed"
 msgstr "Spustiť v okne"
 
-#: src/xmoto/GameText.h:972
+#: src/xmoto/GameText.h:983
 msgid "Run a dynamic zoom while playing"
 msgstr "Spustí dynamickú lupu počas hry"
 
-#: src/xmoto/GameText.h:896
+#: src/xmoto/GameText.h:907
 msgid "Run selected replay"
 msgstr "Spustiť vybraný záznam"
 
-#: src/xmoto/GameText.h:856
+#: src/xmoto/GameText.h:866
 msgid "Run the game in a window"
 msgstr "Spustiť hru v okne"
 
-#: src/xmoto/GameText.h:831
+#: src/xmoto/GameText.h:841
 msgid "Run the selected replay"
 msgstr "Spustiť vybraný záznam"
 
@@ -2367,46 +2419,46 @@ msgstr "Spustiť vybraný záznam"
 msgid "Russian"
 msgstr "Ruština"
 
-#: src/xmoto/GameText.h:680
+#: src/xmoto/GameText.h:686
 msgid "STATS"
 msgstr "ŠTATISTIKY"
 
-#: src/xmoto/GameText.h:667
+#: src/xmoto/GameText.h:673
 #, fuzzy
 msgid "Safemode Disabled"
 msgstr "Režim tém vypnutý"
 
-#: src/xmoto/GameText.h:666
+#: src/xmoto/GameText.h:672
 #, fuzzy
 msgid "Safemode Enabled"
 msgstr "Režim tém zapnutý"
 
-#: src/xmoto/GameText.h:668
+#: src/xmoto/GameText.h:674
 msgid "Save"
 msgstr "Uložiť"
 
-#: src/xmoto/GameText.h:670
+#: src/xmoto/GameText.h:676
 msgid "Save Replay"
 msgstr "Uložiť záznam"
 
-#: src/xmoto/GameText.h:810
+#: src/xmoto/GameText.h:820
 msgid "Save a replay for later viewing"
 msgstr "Uložiť záznam pre neskoršie prezeranie"
 
-#: src/xmoto/GameText.h:841
+#: src/xmoto/GameText.h:851
 msgid "Save options"
 msgstr "Uložiť voľby"
 
-#: src/xmoto/GameText.h:669
+#: src/xmoto/GameText.h:675
 #, c-format
 msgid "Saved as %s"
 msgstr "Uložené ako %s"
 
-#: src/xmoto/GameText.h:671
+#: src/xmoto/GameText.h:677
 msgid "Screen Resolution"
 msgstr "Rozlíšenie obrazovky"
 
-#: src/xmoto/GameText.h:672
+#: src/xmoto/GameText.h:678
 msgid "Screenshot"
 msgstr "Snímka obrazovky"
 
@@ -2414,99 +2466,103 @@ msgstr "Snímka obrazovky"
 msgid "Script action"
 msgstr "Akcia skriptu"
 
-#: src/xmoto/GameText.h:1105
+#: src/xmoto/GameText.h:1129
 msgid "Scripted levels"
 msgstr "Skriptované levely"
 
-#: src/xmoto/GameText.h:883
+#: src/xmoto/GameText.h:894
 msgid "Select a level in the level pack to play"
 msgstr "Vyberte level v balíku levelov, ktorý chcete hrať"
 
-#: src/xmoto/GameText.h:877
+#: src/xmoto/GameText.h:888
 msgid "Select a player profile to use"
 msgstr "Vyberte hráča, ktorého profil chcete použiť"
 
-#: src/xmoto/GameText.h:875
+#: src/xmoto/GameText.h:886
 msgid "Select action to re-configure to another key"
 msgstr "Vyberte akciu, pre ktorú chcete zmeniť priradenie klávesu"
 
-#: src/xmoto/GameText.h:855
+#: src/xmoto/GameText.h:865
 msgid "Select graphics resolution"
 msgstr "Vybrať grafické rozlíšenie"
 
-#: src/xmoto/GameText.h:907
+#: src/xmoto/GameText.h:918
 msgid "Select this if you connect to the Internet through a SOCKS4 proxy"
 msgstr "Vyberte túto voľbu, ak sa k internetu pripájate cez SOCKS4 proxy"
 
-#: src/xmoto/GameText.h:909
+#: src/xmoto/GameText.h:920
 msgid "Select this if you connect to the Internet through a SOCKS5 proxy"
 msgstr "Vyberte túto voľbu, ak sa k internetu pripájate cez SOCKS5 proxy"
 
-#: src/xmoto/GameText.h:905
+#: src/xmoto/GameText.h:916
 msgid "Select this if you connect to the Internet through an HTTP proxy"
 msgstr "Vyberte túto voľbu, ak sa k internetu pripájate cez HTTP proxy"
 
-#: src/xmoto/GameText.h:903
+#: src/xmoto/GameText.h:914
 msgid "Select this if you got a direct connection to the Internet"
 msgstr "Vyberte túto voľbu, ak máte priame pripojenie k internetu"
 
-#: src/xmoto/GameText.h:563
+#: src/xmoto/GameText.h:569
 msgid "Semi-cooperative mode"
 msgstr "Režim čiastočnej spolupráce"
 
-#: src/xmoto/GameText.h:1045
+#: src/xmoto/GameText.h:1056
 msgid "Send this report"
 msgstr "Odoslať toto hlásenie"
 
-#: src/xmoto/GameText.h:1072
+#: src/xmoto/GameText.h:1096
 msgid "Send this report on the webserver"
 msgstr "Poslať toto hlásenie na webový server"
 
-#: src/xmoto/GameText.h:520
+#: src/xmoto/GameText.h:525
 msgid "Sending the report..."
 msgstr ""
 
-#: src/xmoto/GameText.h:521
+#: src/xmoto/GameText.h:526
 msgid "Sending the vote..."
 msgstr ""
 
-#: src/xmoto/GameText.h:770
+#: src/xmoto/GameText.h:778
 msgid "Server"
 msgstr "Server"
 
-#: src/xmoto/GameText.h:1076
+#: src/xmoto/GameText.h:1100
 msgid "Server configuration to play via the network"
 msgstr "Nastavenie servera pre hru po sieti"
 
-#: src/xmoto/GameText.h:775
+#: src/xmoto/GameText.h:783
 msgid "Server is currently started"
 msgstr "Server je momentálne spustený"
 
-#: src/xmoto/GameText.h:776
+#: src/xmoto/GameText.h:784
 msgid "Server is currently stopped"
 msgstr "Server je momentálne zastavený"
 
-#: src/xmoto/GameText.h:1080
+#: src/xmoto/GameText.h:1104
 msgid "Server on which you want to connect"
 msgstr "Server, ku ktorému sa chcete pripojiť"
 
-#: src/xmoto/GameText.h:1065
+#: src/xmoto/GameText.h:867
+msgid "Set the maximum framerate the game can run at"
+msgstr ""
+
+#: src/xmoto/GameText.h:1089
 msgid "Several difficulties"
 msgstr "Viacero prekážok"
 
-#: src/xmoto/GameText.h:1071
+#: src/xmoto/GameText.h:1095
 msgid "Several textures, sprites, ..."
 msgstr "Zopár textúr, sprajtov, ..."
 
-#: src/xmoto/GameText.h:1122
+#: src/xmoto/GameText.h:1146
 msgid "Shortest levels"
 msgstr "Najkratšie levely"
 
-#: src/xmoto/GameText.h:673
+#: src/xmoto/GameText.h:679
 msgid "Show"
 msgstr "Zobraziť"
 
-#: src/xmoto/GameText.h:677
+#: src/xmoto/GameText.h:683
 msgid "Show Mini Map"
 msgstr "Zobraziť minimapu"
 
@@ -2514,19 +2570,19 @@ msgstr "Zobraziť minimapu"
 msgid "Show World Record in-game"
 msgstr "Zobrazovať svetový rekord počas hry"
 
-#: src/xmoto/GameText.h:843
+#: src/xmoto/GameText.h:853
 msgid "Show a map of your surroundings when playing"
 msgstr "Zobrazovať mapu vášho okolia počas hry"
 
-#: src/xmoto/GameText.h:890
+#: src/xmoto/GameText.h:901
 msgid "Show all best times for this level"
 msgstr "Zobrazovať všetky najlepšie časy pre tento level"
 
-#: src/xmoto/GameText.h:893
+#: src/xmoto/GameText.h:904
 msgid "Show all replays for this level"
 msgstr "Zobrazovať všetky záznamy pre tento level"
 
-#: src/xmoto/GameText.h:674
+#: src/xmoto/GameText.h:680
 msgid "Show console"
 msgstr "Ukázať konzolu"
 
@@ -2534,11 +2590,11 @@ msgstr "Ukázať konzolu"
 msgid "Show game information in the console"
 msgstr "Zobrazovať informácie o hre v konzole"
 
-#: src/xmoto/GameText.h:898
+#: src/xmoto/GameText.h:909
 msgid "Show helpful help strings such as this one"
 msgstr "Zobrazovať pomocné reťazce ako je napríklad tento"
 
-#: src/xmoto/GameText.h:895
+#: src/xmoto/GameText.h:906
 msgid "Show information about new players and played levels in the console"
 msgstr "Zobrazovať informácie o nových hráčoch a zahraných leveloch v konzole"
 
@@ -2550,23 +2606,23 @@ msgstr ""
 msgid "Show next medal in-game"
 msgstr "Zobrazovať ďalšiu medailu v hre"
 
-#: src/xmoto/GameText.h:833
+#: src/xmoto/GameText.h:843
 msgid "Show replays of all players in list"
 msgstr "V zozname zobrazovať záznamy všetkých hráčov"
 
-#: src/xmoto/GameText.h:847
+#: src/xmoto/GameText.h:857
 msgid "Show the World Record for a given level when playing"
 msgstr "Zobrazovať svetový rekord pre daný level počas hry"
 
-#: src/xmoto/GameText.h:918
+#: src/xmoto/GameText.h:929
 msgid "Show the ghost if possible in the game"
 msgstr "Zobrazovať pri hre ducha, kde je to možné"
 
-#: src/xmoto/GameText.h:967
+#: src/xmoto/GameText.h:978
 msgid "Show the speedometer when playing"
 msgstr "Zobrazovať tachometer počas hrania"
 
-#: src/xmoto/GameText.h:849
+#: src/xmoto/GameText.h:859
 msgid "Show the time you need before achieving the next medal"
 msgstr "Zobazovať čas, ktorý potrebujete na získanie ďalšej medaile"
 
@@ -2574,19 +2630,19 @@ msgstr "Zobazovať čas, ktorý potrebujete na získanie ďalšej medaile"
 msgid "Show this help"
 msgstr "Zobraziť túto nápovedu"
 
-#: src/xmoto/GameText.h:943
+#: src/xmoto/GameText.h:954
 msgid "Show various statistics about X-Moto"
 msgstr "Zobraziť rôzne štatistiky o X-Moto"
 
-#: src/xmoto/GameText.h:544 src/xmoto/GameText.h:1117
+#: src/xmoto/GameText.h:550 src/xmoto/GameText.h:1141
 msgid "Silver"
 msgstr "Strieborná"
 
-#: src/xmoto/GameText.h:781
+#: src/xmoto/GameText.h:789
 msgid "Simple ghost mode"
 msgstr "Jednoduchý režim s duchom"
 
-#: src/xmoto/GameText.h:1046
+#: src/xmoto/GameText.h:1057
 msgid "Skip this report"
 msgstr "Preskočiť toto hlásenie"
 
@@ -2594,15 +2650,15 @@ msgstr "Preskočiť toto hlásenie"
 msgid "Slovak"
 msgstr "Slovenčina"
 
-#: src/xmoto/GameText.h:602
+#: src/xmoto/GameText.h:608
 msgid "Some options will not take effect before next restart!"
 msgstr "Niektoré voľby budú použité až po reštarte programu!"
 
-#: src/xmoto/GameText.h:1133
+#: src/xmoto/GameText.h:1157
 msgid "Somebody in the room made a better highscore than yours"
 msgstr "Niekto v miestnosti vytvoril lepší rekord ako je ten váš"
 
-#: src/xmoto/GameText.h:629
+#: src/xmoto/GameText.h:635
 msgid ""
 "Sorry, but there aren't enough levels matching your choice.\n"
 "Choosing random levels instead"
@@ -2618,75 +2674,75 @@ msgstr "Zvukové efekty"
 msgid "Spanish"
 msgstr "Španielčina"
 
-#: src/xmoto/GameText.h:606
+#: src/xmoto/GameText.h:612
 msgid "Special"
 msgstr "Špeciálne"
 
-#: src/xmoto/GameText.h:675
+#: src/xmoto/GameText.h:681
 msgid "Speedometer"
 msgstr "Tachometer"
 
-#: src/xmoto/GameText.h:607
+#: src/xmoto/GameText.h:613
 msgid "Standard"
 msgstr "Štandardné"
 
-#: src/xmoto/GameText.h:773
+#: src/xmoto/GameText.h:781
 msgid "Start the server"
 msgstr "Spustiť server"
 
-#: src/xmoto/GameText.h:1077
+#: src/xmoto/GameText.h:1101
 msgid "Start the server at X-Moto startup"
 msgstr "Spustiť server pri štarte X-Moto"
 
-#: src/xmoto/GameText.h:1084
+#: src/xmoto/GameText.h:1108
 msgid "Start to play with other connected players"
 msgstr "Spustenie hry s ostatnými pripojenými hráčmi"
 
-#: src/xmoto/GameText.h:1078
+#: src/xmoto/GameText.h:1102
 msgid "Start/stop the server"
 msgstr "Spustiť/zastaviť server"
 
-#: src/xmoto/GameText.h:609 src/xmoto/GameText.h:679
+#: src/xmoto/GameText.h:615 src/xmoto/GameText.h:685
 msgid "Statistics"
 msgstr "Štatistiky"
 
-#: src/xmoto/GameText.h:749
+#: src/xmoto/GameText.h:757
 #, c-format
 msgid "Stats since: %s"
 msgstr "Štatistiky od: %s"
 
-#: src/xmoto/GameText.h:682
+#: src/xmoto/GameText.h:688
 msgid "Stereo"
 msgstr "Stereo"
 
-#: src/xmoto/GameText.h:872
+#: src/xmoto/GameText.h:883
 msgid "Stereo (two channel) audio"
 msgstr "Stereo (dva kanály) audio"
 
-#: src/xmoto/GameText.h:1126
+#: src/xmoto/GameText.h:1150
 msgid "Stolen highscores"
 msgstr "Ukradnuté rekordy"
 
-#: src/xmoto/GameText.h:565
+#: src/xmoto/GameText.h:571
 msgid "Stop the game once a player ends the level"
 msgstr "Ukončiť hru, keď hráč ukončí level"
 
-#: src/xmoto/GameText.h:999
+#: src/xmoto/GameText.h:1010
 msgid ""
 "Stop the game once a player ends the level or continue while a player is "
 "running"
 msgstr ""
 "Ukončiť hru, keď hráč ukončí level alebo pokračovať, pokým hráč pokračuje"
 
-#: src/xmoto/GameText.h:774
+#: src/xmoto/GameText.h:782
 msgid "Stop the server"
 msgstr "Zastaviť server"
 
-#: src/xmoto/GameText.h:653
+#: src/xmoto/GameText.h:659
 msgid "Stop while replaying"
 msgstr "Zastaviť počas prehrávania"
 
-#: src/xmoto/GameText.h:1216
+#: src/xmoto/GameText.h:1240
 #, c-format
 msgid "Stored as training position %i"
 msgstr "Uložené ako tréningová pozícia %i"
@@ -2695,11 +2751,11 @@ msgstr "Uložené ako tréningová pozícia %i"
 msgid "Swedish"
 msgstr "Švédština"
 
-#: src/xmoto/GameText.h:690
+#: src/xmoto/GameText.h:696
 msgid "Switch FPS"
 msgstr "Prepnúť FPS"
 
-#: src/xmoto/GameText.h:694
+#: src/xmoto/GameText.h:700
 msgid "Switch WWW access"
 msgstr "Prepnúť prístup na WWW"
 
@@ -2707,48 +2763,48 @@ msgstr "Prepnúť prístup na WWW"
 msgid "Switch biker"
 msgstr "Prepnúť motocyklistu"
 
-#: src/xmoto/GameText.h:1053
+#: src/xmoto/GameText.h:1064
 msgid "Switch ghosttrail rendering"
 msgstr "Prepnúť renderovanie stopy ducha"
 
-#: src/xmoto/GameText.h:696
+#: src/xmoto/GameText.h:702
 msgid "Switch graphics mode"
 msgstr "Prepnúť režimy grafiky"
 
-#: src/xmoto/GameText.h:695
+#: src/xmoto/GameText.h:701
 msgid "Switch graphics quality mode"
 msgstr "Prepnúť režim zobrazenia grafiky"
 
-#: src/xmoto/GameText.h:693
+#: src/xmoto/GameText.h:699
 msgid "Switch highscore information"
 msgstr ""
 
-#: src/xmoto/GameText.h:692
+#: src/xmoto/GameText.h:698
 msgid "Switch net game mode"
 msgstr ""
 
-#: src/xmoto/GameText.h:1051
+#: src/xmoto/GameText.h:1062
 msgid "Switch player"
 msgstr "Prepnúť hráča"
 
-#: src/xmoto/GameText.h:697
+#: src/xmoto/GameText.h:703
 #, fuzzy
 msgid "Switch safe mode"
 msgstr "Prepnúť režimy grafiky"
 
-#: src/xmoto/GameText.h:1052
+#: src/xmoto/GameText.h:1063
 msgid "Switch trackingshot mode"
 msgstr "Prepnúť režim trackingshot"
 
-#: src/xmoto/GameText.h:685
+#: src/xmoto/GameText.h:691
 msgid "Synchronisation done successfully"
 msgstr "Synchronizácia úspešne dokončená"
 
-#: src/xmoto/GameText.h:683
+#: src/xmoto/GameText.h:689
 msgid "Synchronisation down"
 msgstr "Synchronizujem zo servera"
 
-#: src/xmoto/GameText.h:684
+#: src/xmoto/GameText.h:690
 msgid "Synchronisation up"
 msgstr "Synchronizujem na server"
 
@@ -2756,11 +2812,11 @@ msgstr "Synchronizujem na server"
 msgid "Synchronise"
 msgstr "Synchronizovať"
 
-#: src/xmoto/GameText.h:1027
+#: src/xmoto/GameText.h:1038
 msgid "Synchronise your database on the web"
 msgstr "Synchronizovať vašu databázu s webom"
 
-#: src/xmoto/GameText.h:1029
+#: src/xmoto/GameText.h:1040
 msgid "Synchronise your database when your quit X-Moto"
 msgstr "Synchronizovať vašu databázu pri ukončení X-Moto"
 
@@ -2802,11 +2858,11 @@ msgstr ""
 "Základnou myšlienkou je, že keď jazdíte na zadnom kolese,\n"
 "vaša hlava je podstatne nižšie..."
 
-#: src/xmoto/GameText.h:329 src/xmoto/GameText.h:1002
+#: src/xmoto/GameText.h:329 src/xmoto/GameText.h:1013
 msgid "The best of my replays (on this computer)"
 msgstr "Moje najlepšie záznamy (na tomto počítači)"
 
-#: src/xmoto/GameText.h:331 src/xmoto/GameText.h:1004
+#: src/xmoto/GameText.h:331 src/xmoto/GameText.h:1015
 msgid "The best of the replays (on this computer)"
 msgstr "Najlepšie záznamy (na tomto počítači)"
 
@@ -2828,11 +2884,11 @@ msgstr ""
 msgid "The first jump you're going to perform is very easy."
 msgstr "Prvý krok, ktorý budete robiť je veľmi ľahký."
 
-#: src/xmoto/GameText.h:327 src/xmoto/GameText.h:1008
+#: src/xmoto/GameText.h:327 src/xmoto/GameText.h:1019
 msgid "The highscore of the other rooms"
 msgstr "Rekord iných miestností"
 
-#: src/xmoto/GameText.h:325 src/xmoto/GameText.h:1006
+#: src/xmoto/GameText.h:325 src/xmoto/GameText.h:1017
 msgid "The highscore of the reference room"
 msgstr "Rekord referenčnej miestnosti"
 
@@ -2844,19 +2900,19 @@ msgstr ""
 "Ikona vpravo od vášho času\n"
 "zobrazuje, koľko jahôd ešte zostáva."
 
-#: src/xmoto/GameText.h:517
+#: src/xmoto/GameText.h:521
 msgid "The level failed while loading with the following error :"
 msgstr ""
 
-#: src/xmoto/GameText.h:1182
+#: src/xmoto/GameText.h:1206
 msgid "The long levels (1 minute to 2 minutes)"
 msgstr "Dlhé levely (jedna až dve minúty)"
 
-#: src/xmoto/GameText.h:1184
+#: src/xmoto/GameText.h:1208
 msgid "The longest levels (more than 2 minutes)"
 msgstr "Veľmi dlhé levely (viac ako 2 minúty)"
 
-#: src/xmoto/GameText.h:1180
+#: src/xmoto/GameText.h:1204
 msgid "The medium levels (25 seconds to 60)"
 msgstr "Priemerne dlhé levely (25 až 60 sekúnd)"
 
@@ -2876,19 +2932,19 @@ msgstr ""
 "Hlavným cieľom vašej hry je pozbierať\n"
 "ich všetky a potom nájsť kvet."
 
-#: src/xmoto/GameText.h:647
+#: src/xmoto/GameText.h:653
 msgid "The replay can't be played!"
 msgstr "Záznam nemohol byť prehraný!"
 
-#: src/xmoto/GameText.h:1170
+#: src/xmoto/GameText.h:1194
 msgid "The room highscore is really better than your own highscore"
 msgstr "Rekord miestnosti je skutočne lepší ako ten váš"
 
-#: src/xmoto/GameText.h:1010
+#: src/xmoto/GameText.h:1021
 msgid "The scene is shared by all the players"
 msgstr "Scéna je zdieľaná všetkými hráčmi"
 
-#: src/xmoto/GameText.h:1178
+#: src/xmoto/GameText.h:1202
 msgid "The shortest levels (less than 25 seconds)"
 msgstr "Najkratšie levely (kratšie ako 25 sekúnd)"
 
@@ -2900,19 +2956,19 @@ msgstr ""
 "Ten malý vpravo je váš najlepší čas\n"
 "pre aktuálny level..."
 
-#: src/xmoto/GameText.h:702
+#: src/xmoto/GameText.h:708
 msgid "The theme is now up to date"
 msgstr "Téma bola práve aktualizovaná"
 
-#: src/xmoto/GameText.h:537 src/xmoto/GameText.h:698
+#: src/xmoto/GameText.h:543 src/xmoto/GameText.h:704
 msgid "Theme"
 msgstr "Téma"
 
-#: src/xmoto/GameText.h:1194
+#: src/xmoto/GameText.h:1218
 msgid "Theme mode disabled"
 msgstr "Režim tém vypnutý"
 
-#: src/xmoto/GameText.h:1193
+#: src/xmoto/GameText.h:1217
 msgid "Theme mode enabled"
 msgstr "Režim tém zapnutý"
 
@@ -2930,7 +2986,7 @@ msgid ""
 "how you play the game."
 msgstr "Tento level je krátkym návodom na to,ako hrať túto hru."
 
-#: src/xmoto/GameText.h:1218
+#: src/xmoto/GameText.h:1242
 msgid ""
 "This level is not recordable (feature still not implemented).\n"
 "Sorry."
@@ -2956,20 +3012,20 @@ msgstr ""
 "miesta, kde je nízky strop.\n"
 "Pozor, toto môže byť dosť náročné :)"
 
-#: src/xmoto/GameText.h:703
+#: src/xmoto/GameText.h:709
 msgid "Time"
 msgstr "Čas"
 
-#: src/xmoto/GameText.h:754
+#: src/xmoto/GameText.h:762
 #, c-format
 msgid "Time played: %s"
 msgstr "Odohratý čas: %s"
 
-#: src/xmoto/GameText.h:701
+#: src/xmoto/GameText.h:707
 msgid "To be updated"
 msgstr "Na aktualizáciu"
 
-#: src/xmoto/GameText.h:700
+#: src/xmoto/GameText.h:706
 msgid "To download"
 msgstr "Na stiahnutie"
 
@@ -3005,7 +3061,7 @@ msgstr "Prepnúť obľúbené"
 msgid "Toggle theme and ugly over mode"
 msgstr "Prepínanie medzi témou a škaredým režimom"
 
-#: src/xmoto/GameText.h:555
+#: src/xmoto/GameText.h:561
 msgid "Total time you scored / total highscore time for levels you finished"
 msgstr ""
 "Celkový čas, kedy ste skórovali / celkový najlepší čas pre levely, ktoré ste "
@@ -3015,20 +3071,20 @@ msgstr ""
 msgid "Touch it to finish the level. Good luck with the rest :)"
 msgstr "Dotknite sa jej pre ukončenie levelu. Veľa šťastia so zvyškom :)"
 
-#: src/xmoto/GameText.h:1208
+#: src/xmoto/GameText.h:1232
 msgid "Trail Cam activated"
 msgstr "Závesná kamera aktivovaná"
 
-#: src/xmoto/GameText.h:1209
+#: src/xmoto/GameText.h:1233
 msgid "Trail Cam deactivated"
 msgstr "Závesná kamera deaktivovaná"
 
-#: src/xmoto/GameText.h:1215
+#: src/xmoto/GameText.h:1239
 #, c-format
 msgid "Training position %i/%i restored"
 msgstr "Tréningová pozícia %i/%i obnovená"
 
-#: src/xmoto/GameText.h:704
+#: src/xmoto/GameText.h:710
 msgid "Try This Level Again"
 msgstr "Skúsiť tento level znovu"
 
@@ -3036,11 +3092,11 @@ msgstr "Skúsiť tento level znovu"
 msgid "Try getting under the next obstacle when you feel you're ready."
 msgstr "Skúste sa dostať pod ďalšiu prekážku, keď cítite, že ste pripravený."
 
-#: src/xmoto/GameText.h:818
+#: src/xmoto/GameText.h:828
 msgid "Try this level again"
 msgstr "Skúsiť tento level ešte raz"
 
-#: src/xmoto/GameText.h:816
+#: src/xmoto/GameText.h:826
 msgid "Try this level again from the beginning"
 msgstr "Skúsiť tento level znovu od začiatku"
 
@@ -3048,11 +3104,11 @@ msgstr "Skúsiť tento level znovu od začiatku"
 msgid "Turkish"
 msgstr "Turečtina"
 
-#: src/xmoto/GameText.h:873
+#: src/xmoto/GameText.h:884
 msgid "Turn on engine noise"
 msgstr "Zapnúť zvuk motora"
 
-#: src/xmoto/GameText.h:865
+#: src/xmoto/GameText.h:876
 msgid "Turn on sound effects"
 msgstr "Zapnúť zvukové efekty"
 
@@ -3060,7 +3116,7 @@ msgstr "Zapnúť zvukové efekty"
 msgid "Turns around and drives in the other direction"
 msgstr "Otáča a mení smer jazdy"
 
-#: src/xmoto/GameText.h:705
+#: src/xmoto/GameText.h:711
 msgid "Tutorial"
 msgstr "Návod"
 
@@ -3068,67 +3124,67 @@ msgstr "Návod"
 msgid "Type"
 msgstr "Typ"
 
-#: src/xmoto/GameText.h:1192
+#: src/xmoto/GameText.h:1216
 msgid "Ugly mode disabled"
 msgstr "Škaredý režim vypnutý"
 
-#: src/xmoto/GameText.h:1191
+#: src/xmoto/GameText.h:1215
 msgid "Ugly mode enabled"
 msgstr "Škaredý režim zapnutý"
 
-#: src/xmoto/GameText.h:1196
+#: src/xmoto/GameText.h:1220
 msgid "UglyOver mode disabled"
 msgstr "Režim UglyOver vypnutý"
 
-#: src/xmoto/GameText.h:1195
+#: src/xmoto/GameText.h:1219
 msgid "UglyOver mode enabled"
 msgstr "Režim UglyOver zapnutý"
 
-#: src/xmoto/GameText.h:1225
+#: src/xmoto/GameText.h:1249
 msgid "Unable to build the report"
 msgstr ""
 
-#: src/xmoto/GameText.h:786
+#: src/xmoto/GameText.h:794
 msgid "Unable to connect on the server"
 msgstr "Nepodarilo sa pripojiť k serveru"
 
-#: src/xmoto/GameText.h:706
+#: src/xmoto/GameText.h:712
 msgid "Undefined"
 msgstr "Nedefinovaný"
 
-#: src/xmoto/GameText.h:707
+#: src/xmoto/GameText.h:713
 msgid "Unknown"
 msgstr "Neznámy"
 
-#: src/xmoto/GameText.h:708
+#: src/xmoto/GameText.h:714
 msgid "Unknown players :"
 msgstr "Neznámi hráči: "
 
-#: src/xmoto/GameText.h:709
+#: src/xmoto/GameText.h:715
 msgid "Unpacked levels"
 msgstr "Nerozbalené levely"
 
-#: src/xmoto/GameText.h:713
+#: src/xmoto/GameText.h:719
 msgid "Update"
 msgstr "Aktualizovať"
 
-#: src/xmoto/GameText.h:945
+#: src/xmoto/GameText.h:956
 msgid "Update statistics (also happens each time X-Moto is started)"
 msgstr "Aktualizovať štatistiky (to sa deje tiež pri každom štarte X-Moto)"
 
-#: src/xmoto/GameText.h:716
+#: src/xmoto/GameText.h:722
 msgid "Update the rooms list"
 msgstr "Obnoviť zoznam miestností"
 
-#: src/xmoto/GameText.h:717
+#: src/xmoto/GameText.h:723
 msgid "Update the theme list"
 msgstr "Aktualizovať zoznam tém"
 
-#: src/xmoto/GameText.h:714
+#: src/xmoto/GameText.h:720
 msgid "Updated"
 msgstr "Aktualizované"
 
-#: src/xmoto/GameText.h:718
+#: src/xmoto/GameText.h:724
 msgid "Updating level lists..."
 msgstr "Aktualizovať zoznam levelov..."
 
@@ -3144,41 +3200,41 @@ msgstr "Upgradujem profil databázy"
 msgid "Upgrading database stats for the profile"
 msgstr "Upgradeujem štatistiky databázy profilu"
 
-#: src/xmoto/GameText.h:719
+#: src/xmoto/GameText.h:725
 msgid "Upload"
 msgstr "Upload"
 
-#: src/xmoto/GameText.h:720
+#: src/xmoto/GameText.h:726
 msgid "Upload all highscores"
 msgstr "Uploadovať všetky rekordy"
 
-#: src/xmoto/GameText.h:966
+#: src/xmoto/GameText.h:977
 msgid "Upload of highscore requires a password (Except for WR)"
 msgstr "Upload rekordu vyžaduje heslo (Okrem svet. rekordu)"
 
-#: src/xmoto/GameText.h:964
+#: src/xmoto/GameText.h:975
 msgid "Upload of highscore requires to log in (Except for WR)"
 msgstr "Upload rekordu vyžaduje prihlásenie (Okrem svet. rekordu)"
 
-#: src/xmoto/GameText.h:953
+#: src/xmoto/GameText.h:964
 msgid "Upload the replay on the website of highscores"
 msgstr "Uploadnuť záznam na website rekordov"
 
-#: src/xmoto/GameText.h:955
+#: src/xmoto/GameText.h:966
 msgid "Upload your best replays to your room (useful when it is just created)"
 msgstr ""
 "Uploadnuť vaše najlepšie záznamy do vašej miestnosti (užitočné, keď je práve "
 "vytvorená)"
 
-#: src/xmoto/GameText.h:725
+#: src/xmoto/GameText.h:731
 msgid "Uploading the highscore..."
 msgstr "Uploadujem rekord..."
 
-#: src/xmoto/GameText.h:728
+#: src/xmoto/GameText.h:734
 msgid "Use Environment Vars"
 msgstr "Použiť premenné prostredia"
 
-#: src/xmoto/GameText.h:729
+#: src/xmoto/GameText.h:735
 msgid "Use Profile"
 msgstr "Použiť profil"
 
@@ -3194,24 +3250,24 @@ msgstr ""
 msgid "Use Trail Cam"
 msgstr "Použiť závesnú kameru"
 
-#: src/xmoto/GameText.h:974
+#: src/xmoto/GameText.h:985
 msgid "Use a camera that directs to the shortest path through the level"
 msgstr "Použiť kameru, ktorá mieri na najkratšiu cestu levelom"
 
-#: src/xmoto/GameText.h:726
+#: src/xmoto/GameText.h:732
 msgid "Use crappy information"
 msgstr "Použiť informácie o slabých leveloch"
 
-#: src/xmoto/GameText.h:851
+#: src/xmoto/GameText.h:861
 msgid "Use crappy information from the website to update the crappy pack"
 msgstr ""
 "Použiť informácie o slabých leveloch z webu pre aktualizáciu balíka levelov"
 
-#: src/xmoto/GameText.h:727
+#: src/xmoto/GameText.h:733
 msgid "Use permanent console"
 msgstr "Použiť permanentnú konzolu"
 
-#: src/xmoto/GameText.h:878
+#: src/xmoto/GameText.h:889
 msgid "Use the selected player profile"
 msgstr "Použiť profil vybraného hráča"
 
@@ -3227,31 +3283,31 @@ msgstr ""
 msgid "Use theme cursor"
 msgstr ""
 
-#: src/xmoto/GameText.h:910
+#: src/xmoto/GameText.h:921
 msgid "Use these settings"
 msgstr "Použiť tieto nastavenia"
 
-#: src/xmoto/GameText.h:731
+#: src/xmoto/GameText.h:737
 msgid "Using HTTP Proxy"
 msgstr "Používam HTTP Proxy"
 
-#: src/xmoto/GameText.h:732
+#: src/xmoto/GameText.h:738
 msgid "Using SOCKS4 Proxy"
 msgstr "Používam SOCKS4 Proxy"
 
-#: src/xmoto/GameText.h:733
+#: src/xmoto/GameText.h:739
 msgid "Using SOCKS5 Proxy"
 msgstr "Používam SOCKS5 Proxy"
 
-#: src/xmoto/GameText.h:1125
+#: src/xmoto/GameText.h:1149
 msgid "Very long levels"
 msgstr "Veľmi dlhé levely"
 
-#: src/xmoto/GameText.h:734
+#: src/xmoto/GameText.h:740
 msgid "Video"
 msgstr "Video"
 
-#: src/xmoto/GameText.h:735
+#: src/xmoto/GameText.h:741
 msgid "View"
 msgstr "Zobraziť"
 
@@ -3259,51 +3315,51 @@ msgstr "Zobraziť"
 msgid "View Level Initially"
 msgstr "Zobraz level pred jazdou"
 
-#: src/xmoto/GameText.h:886
+#: src/xmoto/GameText.h:897
 msgid "View best times for the level"
 msgstr "Zobraziť najlepšie časy levelu"
 
-#: src/xmoto/GameText.h:876
+#: src/xmoto/GameText.h:887
 msgid "View contents of level pack"
 msgstr "Zobraziť obsah levelového balíku"
 
-#: src/xmoto/GameText.h:830
+#: src/xmoto/GameText.h:840
 msgid "View general information about the level, best times, and replays"
 msgstr "Zobraziť všeobecné informácie o leveli, najlepšíe časy a záznamy"
 
-#: src/xmoto/GameText.h:823
+#: src/xmoto/GameText.h:833
 msgid "View list of recorded replays"
 msgstr "Zobraziť zoznam nahraných záznamov"
 
-#: src/xmoto/GameText.h:887
+#: src/xmoto/GameText.h:898
 msgid "View locally stored replays of the level"
 msgstr "Zobraziť lokálne uložené záznamy levelu"
 
-#: src/xmoto/GameText.h:975
+#: src/xmoto/GameText.h:986
 msgid "View the X-Moto credits"
 msgstr "Zobraziť zásluhy na X-Moto"
 
-#: src/xmoto/GameText.h:737
+#: src/xmoto/GameText.h:743
 msgid "View the highscore"
 msgstr "Zobraziť rekord"
 
-#: src/xmoto/GameText.h:736 src/xmoto/GameText.h:836
+#: src/xmoto/GameText.h:742 src/xmoto/GameText.h:846
 msgid "View the replay"
 msgstr "Prezrieť záznam"
 
-#: src/xmoto/GameText.h:936
+#: src/xmoto/GameText.h:947
 msgid "View the replay of the room's highscore"
 msgstr "Zobraziť záznam rekordu miestnosti"
 
-#: src/xmoto/GameText.h:1127
+#: src/xmoto/GameText.h:1151
 msgid "Vote unlocked levels"
 msgstr "Hlasovať za nezamknuté levely"
 
-#: src/xmoto/GameText.h:741
+#: src/xmoto/GameText.h:747
 msgid "WWW"
 msgstr "WWW"
 
-#: src/xmoto/GameText.h:739
+#: src/xmoto/GameText.h:745
 msgid "Warning"
 msgstr "Varovanie"
 
@@ -3312,11 +3368,11 @@ msgstr "Varovanie"
 msgid "Web account password for profile '%s':"
 msgstr "Heslo pre profil na webový účet '%s':"
 
-#: src/xmoto/GameText.h:1201
+#: src/xmoto/GameText.h:1225
 msgid "Web connection disabled"
 msgstr "Webové pripojenie vypnuté"
 
-#: src/xmoto/GameText.h:1200
+#: src/xmoto/GameText.h:1224
 msgid "Web connection enabled"
 msgstr "Webové pripojenie zapnuté"
 
@@ -3325,7 +3381,7 @@ msgstr "Webové pripojenie zapnuté"
 msgid "Web ghost of %s"
 msgstr "Webový duch %s"
 
-#: src/xmoto/GameText.h:608
+#: src/xmoto/GameText.h:614
 msgid "Web votes"
 msgstr "Webové hlasy"
 
@@ -3341,56 +3397,56 @@ msgstr ""
 "Ak ste skončili, smerujte ku kvetu.\n"
 "Je to tá fialová bodka na vašej minimape."
 
-#: src/xmoto/GameText.h:924
+#: src/xmoto/GameText.h:935
 msgid "When starting a level with a ghost, display who the ghost is of"
 msgstr "Ak sa spúšťa level so zobrazeným duchom, vypísať odkiaľ duch pochádza"
 
-#: src/xmoto/GameText.h:934
+#: src/xmoto/GameText.h:945
 msgid "Whether to show the theme cursor or the system cursor"
 msgstr ""
 
-#: src/xmoto/GameText.h:912
+#: src/xmoto/GameText.h:923
 msgid "Write the IP address or host name of proxy server to use"
 msgstr "Napíšte IP adresu alebo host name proxy serveru, ktorý má byť použitý"
 
-#: src/xmoto/GameText.h:914
+#: src/xmoto/GameText.h:925
 msgid "Write the port number used by the proxy server"
 msgstr "Napíšte číslo portu, ktorý používa proxy server"
 
-#: src/xmoto/GameText.h:569
+#: src/xmoto/GameText.h:575
 #, c-format
 msgid "X-Moto %s or newer required to load level"
 msgstr "X-Moto %s alebo novší je potrebný pre načítanie levelu"
 
-#: src/xmoto/GameText.h:1156
+#: src/xmoto/GameText.h:1180
 msgid "X-Moto levels having a recent highscore in your room"
 msgstr "X-Moto levely, ktoré majú nedávno vytvorený rekord vo vašej miestnosti"
 
-#: src/xmoto/GameText.h:1159
+#: src/xmoto/GameText.h:1183
 msgid "X-Moto levels having an old highscore in your room"
 msgstr "X-Moto levely, ktoré majú dávno vytvorený rekord vo vašej miestnosti"
 
-#: src/xmoto/GameText.h:1148
+#: src/xmoto/GameText.h:1172
 msgid "X-Moto levels using strongly physics"
 msgstr "Levely X-Moto, ktoré silne využívajú fyziku"
 
-#: src/xmoto/GameText.h:1147
+#: src/xmoto/GameText.h:1171
 msgid "X-Moto levels which are dynamic"
 msgstr "X-Moto levely, ktoré sú dynamické"
 
-#: src/xmoto/GameText.h:1154
+#: src/xmoto/GameText.h:1178
 msgid "X-Moto levels you have played only a few times"
 msgstr "X-Moto levely, ktoré ste hrali len párkrát"
 
-#: src/xmoto/GameText.h:1152
+#: src/xmoto/GameText.h:1176
 msgid "X-Moto levels you have played the most"
 msgstr "X-Moto levely, ktoré ste hrali najviac"
 
-#: src/xmoto/GameText.h:1150
+#: src/xmoto/GameText.h:1174
 msgid "X-Moto levels you never played"
 msgstr "X-Moto levely, ktoré ste nikdy nehrali"
 
-#: src/xmoto/GameText.h:751
+#: src/xmoto/GameText.h:759
 #, fuzzy, c-format
 msgid "X-Moto started %d time"
 msgid_plural "X-Moto started %d times"
@@ -3409,15 +3465,15 @@ msgstr ""
 "časov a štatistík. Môžete tieto dáta poslať cez váš webový účet na server X-"
 "Moto. Je užitočné ukladať si takto dáta, ak hráte X-Moto z rozličných miest."
 
-#: src/xmoto/GameText.h:763
+#: src/xmoto/GameText.h:771
 msgid "Yes"
 msgstr "Áno"
 
-#: src/xmoto/GameText.h:764
+#: src/xmoto/GameText.h:772
 msgid "Yes to all"
 msgstr "Áno pre všetky"
 
-#: src/xmoto/GameText.h:681
+#: src/xmoto/GameText.h:687
 msgid "You are currently disconnected"
 msgstr "Momentálne nie ste pripojený"
 
@@ -3425,16 +3481,16 @@ msgstr "Momentálne nie ste pripojený"
 msgid "You control your bike using the keyboard"
 msgstr "Motocykel ovládate pomocou klávesnice"
 
-#: src/xmoto/GameText.h:1061
+#: src/xmoto/GameText.h:1085
 msgid "You don't want to vote"
 msgstr "Neprajete si hlasovať"
 
-#: src/xmoto/GameText.h:550
+#: src/xmoto/GameText.h:556
 #, c-format
 msgid "You got a %s medal"
 msgstr "Získali ste %s medajlu"
 
-#: src/xmoto/GameText.h:1160
+#: src/xmoto/GameText.h:1184
 msgid "You have the room highscore"
 msgstr "Máte rekord miestnosti"
 
@@ -3446,15 +3502,15 @@ msgstr "Pre aktiváciu tejto voľby sa musíte opäť prihlásiť k serveru"
 msgid "You must restart so that this option takes effect"
 msgstr "Pre aktiváciu tejto voľby musíte hru znovu spustiť"
 
-#: src/xmoto/GameText.h:782
+#: src/xmoto/GameText.h:790
 msgid "You're currently connected"
 msgstr "Teraz ste pripojený"
 
-#: src/xmoto/GameText.h:783
+#: src/xmoto/GameText.h:791
 msgid "You're currently disconnected"
 msgstr "Teraz ste odpojený"
 
-#: src/xmoto/GameText.h:1096
+#: src/xmoto/GameText.h:1120
 msgid "You're not the highscore holder"
 msgstr "Nedržíte rekord pre tento level"
 
@@ -3462,55 +3518,55 @@ msgstr "Nedržíte rekord pre tento level"
 msgid "Your best"
 msgstr "Vaše najlepšie"
 
-#: src/xmoto/GameText.h:765
+#: src/xmoto/GameText.h:773
 msgid "Your best time"
 msgstr "Váš najlepší čas"
 
-#: src/xmoto/GameText.h:1138
+#: src/xmoto/GameText.h:1162
 msgid "Your blacklisted levels"
 msgstr "Levely na vašej čiernej listine"
 
-#: src/xmoto/GameText.h:1137
+#: src/xmoto/GameText.h:1161
 msgid "Your favorite levels"
 msgstr "Vaše obľúbené levely"
 
-#: src/xmoto/GameText.h:990
+#: src/xmoto/GameText.h:1001
 msgid "Your password associated with your login"
 msgstr "Vaše heslo priradené k loginu"
 
-#: src/xmoto/GameText.h:1167
+#: src/xmoto/GameText.h:1191
 msgid ""
 "Your personal highscore finish time is almost the room highscore (80%-90%)"
 msgstr ""
 "Váš osobný rekordný čas dokončenia levelu je takmer taký ako rekord v "
 "miestnosti (80%-90%)"
 
-#: src/xmoto/GameText.h:1164
+#: src/xmoto/GameText.h:1188
 msgid ""
 "Your personal highscore finish time is almost the room highscore (90%-95%)"
 msgstr ""
 "Váš osobný rekordný čas dokončenia levelu je takmer taký ako rekord v "
 "miestnosti (90%-95%)"
 
-#: src/xmoto/GameText.h:1162
+#: src/xmoto/GameText.h:1186
 msgid "Your personal highscore finish time is almost the room highscore (95%)"
 msgstr ""
 "Váš osobný rekordný čas dokončenia levelu je takmer taký ako rekord v "
 "miestnosti (95%)"
 
-#: src/xmoto/GameText.h:989
+#: src/xmoto/GameText.h:1000
 msgid "Your proxy login"
 msgstr "Váš login na proxy"
 
-#: src/xmoto/GameText.h:766
+#: src/xmoto/GameText.h:774
 msgid "Zoom in"
 msgstr "Priblížiť"
 
-#: src/xmoto/GameText.h:768
+#: src/xmoto/GameText.h:776
 msgid "Zoom out"
 msgstr "Oddialiť"
 
-#: src/xmoto/GameText.h:645
+#: src/xmoto/GameText.h:651
 msgid ""
 "[esc] , [space]\n"
 "[left/right keys]\n"
@@ -3520,7 +3576,7 @@ msgstr ""
 "[šípka vľavo/vpravo]\n"
 "[šípka hor/dol]\n"
 
-#: src/xmoto/GameText.h:642
+#: src/xmoto/GameText.h:648
 msgid ""
 "[esc] , [space]\n"
 "[right key]\n"
@@ -3616,7 +3672,7 @@ msgstr "stredné tlačidlo"
 msgid "none"
 msgstr "žiadny"
 
-#: src/xmoto/GameText.h:747
+#: src/xmoto/GameText.h:755
 #, fuzzy, c-format
 msgid "only %i"
 msgid_plural "only %i"
@@ -3803,6 +3859,29 @@ msgstr "zdvihnutie kolesa"
 #~ msgid "Here's the plan:"
 #~ msgstr "Ako na to:"
 
+#~ msgid ""
+#~ "Important note!\n"
+#~ "\n"
+#~ "This is an in development version of X-Moto!\n"
+#~ "All kinds of feedback are highly appreciated, so the game\n"
+#~ "can get better.\n"
+#~ "Mail bugs, ideas, comments, feature requests, hatemail, etc\n"
+#~ "to xmoto@tuxfamily.org\n"
+#~ "\n"
+#~ "Also visit http://xmoto.tuxfamily.org to make sure you've\n"
+#~ "got the latest version."
+#~ msgstr ""
+#~ "Dôležitá poznámka!\n"
+#~ "\n"
+#~ "Toto je vývojová verzia X-Moto!\n"
+#~ "Všetky druhy spätnej väzby sú vítané, takto sa\n"
+#~ "môže hra stále zlepšovať.\n"
+#~ "Hlásenia chýb, nápady, komentáre, prosby, nenávistné maily atď\n"
+#~ "posielajte na xmoto@tuxfamily.org\n"
+#~ "\n"
+#~ "Rovnako navštívte http://xmoto.tuxfamily.org, aby ste sa uistili,\n"
+#~ "že používate najnovšiu verziu."
+
 #~ msgid "Initializing input system..."
 #~ msgstr "Inicializujem vstupný systém..."
 
@@ -3898,6 +3977,14 @@ msgstr "zdvihnutie kolesa"
 
 #~ msgid "Players"
 #~ msgstr "Hráči"
+
+#~ msgid ""
+#~ "Read the README file or check out the website at\n"
+#~ "http://xmoto.tuxfamily.org\n"
+#~ "for more information."
+#~ msgstr ""
+#~ "Pre viac informácii si prečítajte súbor README\n"
+#~ "alebo sa pozrite na web http://xmoto.tuxfamily.org."
 
 #~ msgid ""
 #~ "Read the README file or check out the website at\n"

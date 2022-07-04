@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: hu\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-11-14 23:53+0200\n"
+"POT-Creation-Date: 2022-07-05 01:12+0300\n"
 "PO-Revision-Date: 2011-01-20 20:29+0100\n"
 "Last-Translator: Zoltán Balogh <ttapecs@gmail.com>\n"
 "Language-Team: X-moto\n"
@@ -12,7 +12,7 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n>1;\n"
 
-#: src/xmoto/GameText.h:640
+#: src/xmoto/GameText.h:646
 msgid ""
 "  Stop:\n"
 "    >>\n"
@@ -24,7 +24,7 @@ msgstr ""
 "        < >\n"
 " Sebesség:"
 
-#: src/xmoto/GameText.h:643
+#: src/xmoto/GameText.h:649
 msgid ""
 "  Stop:\n"
 "<< >>\n"
@@ -36,56 +36,63 @@ msgstr ""
 "        < >\n"
 " Sebesség:"
 
-#: src/xmoto/GameText.h:596
+#: src/xmoto/GameText.h:602
 msgid "# Levels"
 msgstr "# Pályák"
 
-#: src/xmoto/GameText.h:756
+#: src/xmoto/GameText.h:764
 #, fuzzy, c-format
 msgid "%d death"
 msgid_plural "%d deaths"
 msgstr[0] "%d halál"
 msgstr[1] "%d halál"
 
-#: src/xmoto/GameText.h:753
+#: src/xmoto/GameText.h:761
 #, fuzzy, c-format
 msgid "%d different level"
 msgid_plural "%d different levels"
 msgstr[0] "%d pályán"
 msgstr[1] "%d pályán"
 
-#: src/xmoto/GameText.h:758
+#: src/xmoto/GameText.h:751
+#, c-format
+msgid "%d file"
+msgid_plural "%d files"
+msgstr[0] ""
+msgstr[1] ""
+
+#: src/xmoto/GameText.h:766
 #, fuzzy, c-format
 msgid "%d finished"
 msgid_plural "%d finished"
 msgstr[0] "%d befejezés"
 msgstr[1] "%d befejezés"
 
-#: src/xmoto/GameText.h:745
+#: src/xmoto/GameText.h:753
 #, c-format
 msgid "%d hours"
 msgstr "%d óra"
 
-#: src/xmoto/GameText.h:746
+#: src/xmoto/GameText.h:754
 #, c-format
 msgid "%d minutes"
 msgstr "%d perc"
 
-#: src/xmoto/GameText.h:755
+#: src/xmoto/GameText.h:763
 #, fuzzy, c-format
 msgid "%d play"
 msgid_plural "%d plays"
 msgstr[0] "%d játék"
 msgstr[1] "%d játék"
 
-#: src/xmoto/GameText.h:760
+#: src/xmoto/GameText.h:768
 #, fuzzy, c-format
 msgid "%d restart"
 msgid_plural "%d restarts"
 msgstr[0] "%d újrakezdés"
 msgstr[1] "%d újrakezdés"
 
-#: src/xmoto/GameText.h:762
+#: src/xmoto/GameText.h:770
 #, c-format
 msgid "%d seconds"
 msgstr "%d másodperc"
@@ -97,31 +104,31 @@ msgid_plural "%i joysticks found"
 msgstr[0] "%i joystick található"
 msgstr[1] "%i joystick található"
 
-#: src/xmoto/GameText.h:573
+#: src/xmoto/GameText.h:579
 #, fuzzy, c-format
 msgid "%i new or updated level available. Download now ?"
 msgid_plural "%i new or updated levels available. Download now ?"
 msgstr[0] "%i új vagy frissített pálya érhető el. Letöltöd most?"
 msgstr[1] "%i új vagy frissített pálya érhető el. Letöltöd most?"
 
-#: src/xmoto/GameText.h:616
+#: src/xmoto/GameText.h:622
 #, fuzzy, c-format
 msgid "%i player"
 msgid_plural "%i players"
 msgstr[0] "%i játékos"
 msgstr[1] "%i játékos"
 
-#: src/xmoto/GameText.h:792
+#: src/xmoto/GameText.h:800
 #, c-format
 msgid "%s is playing level %s"
 msgstr "%s a(z) %s pályát játssza"
 
-#: src/xmoto/GameText.h:790
+#: src/xmoto/GameText.h:798
 #, c-format
 msgid "%s joined the game"
 msgstr "%s csatlakozott a játékhoz"
 
-#: src/xmoto/GameText.h:791
+#: src/xmoto/GameText.h:799
 #, c-format
 msgid "%s left the game"
 msgstr "%s elhagyta a játékot"
@@ -154,7 +161,7 @@ msgstr "11 kHz"
 msgid "16-bit"
 msgstr "16-bit"
 
-#: src/xmoto/GameText.h:870
+#: src/xmoto/GameText.h:881
 msgid "16-bit sound samples, good quality"
 msgstr "16 bites mintavételezés, jó minőség"
 
@@ -170,7 +177,7 @@ msgstr "44 kHz"
 msgid "8-bit"
 msgstr "8-bit"
 
-#: src/xmoto/GameText.h:869
+#: src/xmoto/GameText.h:880
 msgid "8-bit sound samples, poor quality"
 msgstr "8 bites mintavételezés, gyenge minőség"
 
@@ -194,7 +201,7 @@ msgstr ": Óra járásával ellentétesen forgat"
 msgid ": Rotate clockwise"
 msgstr ": Óra járásával megegyezően forgat"
 
-#: src/xmoto/GameText.h:858
+#: src/xmoto/GameText.h:869
 msgid "A bit more fancy menu graphics"
 msgstr "Kicsit díszesebb menü grafika"
 
@@ -230,7 +237,7 @@ msgstr "Gázt ad"
 msgid "Action"
 msgstr "Akció"
 
-#: src/xmoto/GameText.h:983
+#: src/xmoto/GameText.h:994
 msgid "Add the level to the favorite levels list"
 msgstr "Pálya hozzáadása a kedvenc pályákhoz"
 
@@ -242,11 +249,11 @@ msgstr "Hozzáadás a feketelistához"
 msgid "Add to favorite"
 msgstr "Kedvencekhez"
 
-#: src/xmoto/GameText.h:691
+#: src/xmoto/GameText.h:697
 msgid "Add/remove to blacklisted levels"
 msgstr "Hozzáadás/eltávolítás a feketelistához"
 
-#: src/xmoto/GameText.h:689
+#: src/xmoto/GameText.h:695
 msgid "Add/remove to favorite levels"
 msgstr "Hozzáadás/Eltávolítás a kedvenc pályákhoz"
 
@@ -266,23 +273,23 @@ msgstr "További Fejlesztők"
 msgid "All (on this computer)"
 msgstr "Mind (ezen a számítógépen)"
 
-#: src/xmoto/GameText.h:1134
+#: src/xmoto/GameText.h:1158
 msgid "All X-Moto levels"
 msgstr "Összes X-Moto pálya"
 
-#: src/xmoto/GameText.h:46 src/xmoto/GameText.h:1097
+#: src/xmoto/GameText.h:46 src/xmoto/GameText.h:1121
 msgid "All levels"
 msgstr "Minden pálya"
 
-#: src/xmoto/GameText.h:854
+#: src/xmoto/GameText.h:864
 msgid "Allow X-Moto to ask you your mind about levels"
 msgstr "A véleményed megkérdezésének engedélyezése a pályákkal kapcsolatban"
 
-#: src/xmoto/GameText.h:730
+#: src/xmoto/GameText.h:736
 msgid "Allow web forms"
 msgstr "Webes kérdőívek engedélyezése"
 
-#: src/xmoto/GameText.h:722
+#: src/xmoto/GameText.h:728
 msgid ""
 "An unexpected error has occurred. There may be some problems with the web "
 "site."
@@ -292,7 +299,11 @@ msgstr "Egy váratlan hiba lépett fel. Talán valami baj van a honlappal."
 msgid "Anyone who has helped in any way"
 msgstr "Mindenki aki segített valahogy"
 
-#: src/xmoto/GameText.h:1058
+#: src/xmoto/GameText.h:1069
+msgid "Are you sure you want to clear old logs?"
+msgstr ""
+
+#: src/xmoto/GameText.h:1076
 msgid "Are you sure you want to clear the level cache?"
 msgstr ""
 
@@ -303,11 +314,11 @@ msgid_plural "Are you sure you want to delete %i replay"
 msgstr[0] "Biztosan törölni akarod ezt az %i visszajátszást?"
 msgstr[1] "Biztosan törölni akarod ezt az %i visszajátszást?"
 
-#: src/xmoto/GameText.h:659
+#: src/xmoto/GameText.h:665
 msgid "Are you sure you want to reset config to defaults ?"
 msgstr "Biztosan vissza akarod állítani alapértelmezettre a beállításokat? "
 
-#: src/xmoto/GameText.h:1064
+#: src/xmoto/GameText.h:1088
 msgid "At least one difficulty"
 msgstr "Legalább egy nehézség"
 
@@ -315,11 +326,11 @@ msgstr "Legalább egy nehézség"
 msgid "Audio"
 msgstr "Hang"
 
-#: src/xmoto/GameText.h:1207
+#: src/xmoto/GameText.h:1231
 msgid "Audio disabled"
 msgstr "Hang letiltva"
 
-#: src/xmoto/GameText.h:1206
+#: src/xmoto/GameText.h:1230
 msgid "Audio enabled"
 msgstr "Hang engedélyezve"
 
@@ -339,35 +350,35 @@ msgstr "Automatikus"
 msgid "Automatic saving of replays"
 msgstr "Visszajátszások Automatikus Mentése"
 
-#: src/xmoto/GameText.h:1091
+#: src/xmoto/GameText.h:1115
 msgid "Automatically connect to the server at startup"
 msgstr "Automatikus csatlakozás a szerverhez játékinduláskor"
 
-#: src/xmoto/GameText.h:845
+#: src/xmoto/GameText.h:855
 msgid "Automatically download best times off the net when the game starts"
 msgstr "Legjobb idők automatikus letöltése játékinduláskor"
 
-#: src/xmoto/GameText.h:971
+#: src/xmoto/GameText.h:982
 msgid "Automatically scroll over the level before starting playing it"
 msgstr "Pálya automatikus átfutása játék előtt"
 
-#: src/xmoto/GameText.h:699
+#: src/xmoto/GameText.h:705
 msgid "Available"
 msgstr "Elérhető"
 
-#: src/xmoto/GameText.h:814
+#: src/xmoto/GameText.h:824
 msgid "Back to the game"
 msgstr "Vissza a játékba"
 
-#: src/xmoto/GameText.h:812
+#: src/xmoto/GameText.h:822
 msgid "Back to the main menu"
 msgstr "Vissza a főmenübe"
 
-#: src/xmoto/GameText.h:1067
+#: src/xmoto/GameText.h:1091
 msgid "Basic blocks, no decoration"
 msgstr "Egyszerű tömbök, nincs díszítés"
 
-#: src/xmoto/GameText.h:1068
+#: src/xmoto/GameText.h:1092
 msgid "Basic decoration, not smooth blocks"
 msgstr "Alap dekoráció, nincsenek simított tömbök"
 
@@ -375,7 +386,7 @@ msgstr "Alap dekoráció, nincsenek simított tömbök"
 msgid "Beating mode"
 msgstr "Idődöntő Mód"
 
-#: src/xmoto/GameText.h:1036
+#: src/xmoto/GameText.h:1047
 msgid "Beginner"
 msgstr "Kezdő"
 
@@ -387,11 +398,11 @@ msgstr "Legjobb idők"
 msgid "Best player"
 msgstr "Legjobb játékos"
 
-#: src/xmoto/GameText.h:868
+#: src/xmoto/GameText.h:879
 msgid "Best sound quality"
 msgstr "Legjobb hangminőség"
 
-#: src/xmoto/GameText.h:1100
+#: src/xmoto/GameText.h:1124
 msgid "Blacklisted levels"
 msgstr "Feketelistás pályák"
 
@@ -407,42 +418,50 @@ msgstr "Fékez"
 msgid "Brazilian Portuguese"
 msgstr "Brazil portugál"
 
-#: src/xmoto/GameText.h:542 src/xmoto/GameText.h:1118
+#: src/xmoto/GameText.h:548 src/xmoto/GameText.h:1142
 msgid "Bronze"
 msgstr "Bronz"
 
-#: src/xmoto/GameText.h:822
+#: src/xmoto/GameText.h:832
 msgid "Browse levels available to you"
 msgstr "Elérhető pályák böngészése"
 
-#: src/xmoto/GameText.h:820
+#: src/xmoto/GameText.h:518
+msgid "Built-in"
+msgstr ""
+
+#: src/xmoto/GameText.h:830
 msgid "Built-in and stand-alone external levels"
 msgstr "Beépített és különálló külső pályák"
 
-#: src/xmoto/GameText.h:603
+#: src/xmoto/GameText.h:609
 msgid "By author"
 msgstr "Készítő alapján"
 
-#: src/xmoto/GameText.h:610 src/xmoto/GameText.h:1107
+#: src/xmoto/GameText.h:616 src/xmoto/GameText.h:1131
 msgid "By best driver"
 msgstr "Legjobb játékosok alapján"
 
-#: src/xmoto/GameText.h:611
+#: src/xmoto/GameText.h:617
 msgid "By length"
 msgstr "Hossz alapján"
+
+#: src/xmoto/GameText.h:1079
+msgid "Cache file deleted"
+msgstr ""
 
 #: src/xmoto/GameText.h:62
 msgid "Camera Active Zoom"
 msgstr "Kamerafüggő Közelítés"
 
-#: src/xmoto/GameText.h:1222
+#: src/xmoto/GameText.h:1246
 #, fuzzy, c-format
 msgid "Can't find a highscore in the next %i level"
 msgid_plural "Can't find a highscore in the next %i levels"
 msgstr[0] "Nincs legjobb eredmény ehhez az %i pályához"
 msgstr[1] "Nincs legjobb eredmény ehhez az %i pályához"
 
-#: src/xmoto/GameText.h:711
+#: src/xmoto/GameText.h:717
 msgid ""
 "Can't update this theme !\n"
 "The theme is not available on the web\n"
@@ -468,11 +487,11 @@ msgstr "Billentyű Váltása..."
 msgid "Change direction"
 msgstr "Irányváltás"
 
-#: src/xmoto/GameText.h:826
+#: src/xmoto/GameText.h:836
 msgid "Change player profile"
 msgstr "Játékos profil váltása"
 
-#: src/xmoto/GameText.h:1011
+#: src/xmoto/GameText.h:1022
 msgid "Change the X-Moto language"
 msgstr "X-Moto nyelvének megváltoztatása"
 
@@ -480,23 +499,23 @@ msgstr "X-Moto nyelvének megváltoztatása"
 msgid "Change..."
 msgstr "Vált..."
 
-#: src/xmoto/GameText.h:789
+#: src/xmoto/GameText.h:797
 msgid "Chat message"
 msgstr "Chat üzenet"
 
-#: src/xmoto/GameText.h:715
+#: src/xmoto/GameText.h:721
 msgid "Check WWW"
 msgstr "WWW frissítés"
 
-#: src/xmoto/GameText.h:941
+#: src/xmoto/GameText.h:952
 msgid "Check for new highscores at startup"
 msgstr "Új legjobb eredmények keresése induláskor"
 
-#: src/xmoto/GameText.h:939
+#: src/xmoto/GameText.h:950
 msgid "Check for new levels at startup"
 msgstr "Új pályák keresése induláskor"
 
-#: src/xmoto/GameText.h:950
+#: src/xmoto/GameText.h:961
 msgid "Check for new themes on the web"
 msgstr "Új témák keresése az Interneten"
 
@@ -532,15 +551,15 @@ msgstr "Új témák keresése..."
 msgid "Choose Level"
 msgstr "Válassz Pályát"
 
-#: src/xmoto/GameText.h:949
+#: src/xmoto/GameText.h:960
 msgid "Choose the X-Moto graphics theme"
 msgstr "Válaszd ki az X-Moto grafikai témáját"
 
-#: src/xmoto/GameText.h:988
+#: src/xmoto/GameText.h:999
 msgid "Choose the number of players"
 msgstr "Válaszd ki a játékosok számát"
 
-#: src/xmoto/GameText.h:959
+#: src/xmoto/GameText.h:970
 msgid ""
 "Choose where to upload/download replays, highscore lists (for more "
 "information, check the website)"
@@ -548,11 +567,11 @@ msgstr ""
 "Válaszd ki a viszajátszások feltöltésének/letöltésének és a legjobb "
 "eredményeknek a helyét (további információért nézd meg a honlapot)"
 
-#: src/xmoto/GameText.h:919
+#: src/xmoto/GameText.h:930
 msgid "Choose which ghost to display"
 msgstr "Szellem kiválasztása"
 
-#: src/xmoto/GameText.h:961
+#: src/xmoto/GameText.h:972
 msgid "Choose your room"
 msgstr "Válaszd ki a szobád"
 
@@ -560,11 +579,15 @@ msgstr "Válaszd ki a szobád"
 msgid "Clean"
 msgstr "Takarítás"
 
-#: src/xmoto/GameText.h:1055 src/xmoto/GameText.h:1059
+#: src/xmoto/GameText.h:1073 src/xmoto/GameText.h:1081
 msgid "Clear level cache"
 msgstr ""
 
-#: src/xmoto/GameText.h:979
+#: src/xmoto/GameText.h:1066
+msgid "Clear old logs"
+msgstr ""
+
+#: src/xmoto/GameText.h:990
 msgid "Click to select screen resolution"
 msgstr "Kattints, hogy kiválaszd a képernyőfelbontást"
 
@@ -572,15 +595,15 @@ msgstr "Kattints, hogy kiválaszd a képernyőfelbontást"
 msgid "Close"
 msgstr "Bezárás"
 
-#: src/xmoto/GameText.h:884
+#: src/xmoto/GameText.h:895
 msgid "Close level pack"
 msgstr "Pályacsomag bezárása"
 
-#: src/xmoto/GameText.h:1013
+#: src/xmoto/GameText.h:1024
 msgid "Code of the language"
 msgstr "Nyelv kódja"
 
-#: src/xmoto/GameText.h:981
+#: src/xmoto/GameText.h:992
 msgid "Completed levels / total number of levels in pack"
 msgstr "Befejezett pályák / összes pálya a pályacsomagban"
 
@@ -588,55 +611,55 @@ msgstr "Befejezett pályák / összes pálya a pályacsomagban"
 msgid "Configure Joystick..."
 msgstr "Joystick beállítása..."
 
-#: src/xmoto/GameText.h:626
+#: src/xmoto/GameText.h:632
 msgid "Configure Proxy..."
 msgstr "Proxy Beállítása..."
 
-#: src/xmoto/GameText.h:824
+#: src/xmoto/GameText.h:834
 msgid "Configure X-Moto preferences"
 msgstr "X-Moto beállítások"
 
-#: src/xmoto/GameText.h:837
+#: src/xmoto/GameText.h:847
 msgid "Configure audio options"
 msgstr "Hang beállítások"
 
-#: src/xmoto/GameText.h:838
+#: src/xmoto/GameText.h:848
 msgid "Configure control options"
 msgstr "Irányítási beállítások"
 
-#: src/xmoto/GameText.h:839
+#: src/xmoto/GameText.h:849
 msgid "Configure controls of Player"
 msgstr "Irányítási beállítások, játékos"
 
-#: src/xmoto/GameText.h:840
+#: src/xmoto/GameText.h:850
 msgid "Configure general controls"
 msgstr "Általános irányítási beállítások"
 
-#: src/xmoto/GameText.h:1024
+#: src/xmoto/GameText.h:1035
 msgid "Configure ghosts displayed while playing the game"
 msgstr "Játékban megjelenített szellemek beállításai"
 
-#: src/xmoto/GameText.h:835
+#: src/xmoto/GameText.h:845
 msgid "Configure graphical options"
 msgstr "Grafikai beállítások"
 
-#: src/xmoto/GameText.h:808
+#: src/xmoto/GameText.h:818
 msgid "Configure how you are connected to the Internet"
 msgstr "Internetkapcsolat beállítása"
 
-#: src/xmoto/GameText.h:1026
+#: src/xmoto/GameText.h:1037
 msgid "Configure options linked to your X-Moto database"
 msgstr "X-Moto adatbázisával kapcsolatos beállítások"
 
-#: src/xmoto/GameText.h:1022
+#: src/xmoto/GameText.h:1033
 msgid "Configure the X-Moto theme"
 msgstr "X-Moto témájának beállítása"
 
-#: src/xmoto/GameText.h:956
+#: src/xmoto/GameText.h:967
 msgid "Configure the main www options"
 msgstr "Fő Internet beállítások"
 
-#: src/xmoto/GameText.h:957
+#: src/xmoto/GameText.h:968
 msgid "Configure the www options"
 msgstr "Internet beállítások"
 
@@ -644,27 +667,31 @@ msgstr "Internet beállítások"
 msgid "Congrats, you're now a master jumper!"
 msgstr "Gratulálok, most már mester ugró vagy!"
 
-#: src/xmoto/GameText.h:784
+#: src/xmoto/GameText.h:792
 msgid "Connect"
 msgstr "Csatlakozás"
 
-#: src/xmoto/GameText.h:1082
+#: src/xmoto/GameText.h:803
+msgid "Connect to/disconnect from the server"
+msgstr ""
+
+#: src/xmoto/GameText.h:1106
 msgid "Connect/disconnect the client to the server"
 msgstr "Csatlakozás/lecsatlakozás a szerverről"
 
-#: src/xmoto/GameText.h:788
+#: src/xmoto/GameText.h:796
 msgid "Connected players:"
 msgstr "Csatlakozott játékosok"
 
-#: src/xmoto/GameText.h:793
+#: src/xmoto/GameText.h:801
 msgid "Connexion at startup"
 msgstr "Automatikus csatlakozás"
 
-#: src/xmoto/GameText.h:551
+#: src/xmoto/GameText.h:557
 msgid "Contrast"
 msgstr "Kontraszt"
 
-#: src/xmoto/GameText.h:1197
+#: src/xmoto/GameText.h:1221
 msgid "Contrast Graphics Mode enabled"
 msgstr "Kontraszt grafikus mód engedélyezve"
 
@@ -672,19 +699,23 @@ msgstr "Kontraszt grafikus mód engedélyezve"
 msgid "Controls"
 msgstr "Irányítás"
 
-#: src/xmoto/GameText.h:1146
+#: src/xmoto/GameText.h:517
+msgid "Copy path"
+msgstr ""
+
+#: src/xmoto/GameText.h:1170
 msgid "Crappiest X-Moto levels according to the web votes"
 msgstr "A legsilányabb X-Moto pályák az internetes szavazás alapján"
 
-#: src/xmoto/GameText.h:1104
+#: src/xmoto/GameText.h:1128
 msgid "Crappiest levels"
 msgstr "Legsilányabb pályák"
 
-#: src/xmoto/GameText.h:1121
+#: src/xmoto/GameText.h:1145
 msgid "Crappy levels"
 msgstr "Silány pályák"
 
-#: src/xmoto/GameText.h:879
+#: src/xmoto/GameText.h:890
 msgid "Create new player profile"
 msgstr "Új játékos profil készítése"
 
@@ -692,7 +723,7 @@ msgstr "Új játékos profil készítése"
 msgid "Credits"
 msgstr "Készítők"
 
-#: src/xmoto/GameText.h:778
+#: src/xmoto/GameText.h:786
 msgid "Custom port"
 msgstr "Saját port"
 
@@ -720,7 +751,7 @@ msgstr "Halál Animálása"
 msgid "Decrease console history size"
 msgstr "Konzolelőzmények méretének csökkentése"
 
-#: src/xmoto/GameText.h:777
+#: src/xmoto/GameText.h:785
 msgid "Default port"
 msgstr "Alapértelmezett port"
 
@@ -732,6 +763,18 @@ msgstr "Alap"
 msgid "Delete"
 msgstr "Törlés"
 
+#: src/xmoto/GameText.h:1071
+msgid "Delete all previous log files from disk"
+msgstr ""
+
+#: src/xmoto/GameText.h:1078
+msgid "Delete cache file"
+msgstr ""
+
+#: src/xmoto/GameText.h:1083
+msgid "Delete cached level file from disk to force a clean state (safe)"
+msgstr ""
+
 #: src/xmoto/GameText.h:261
 msgid "Delete from blacklist"
 msgstr "Eltávolítás a feketelistából"
@@ -740,12 +783,12 @@ msgstr "Eltávolítás a feketelistából"
 msgid "Delete from favorite"
 msgstr "Törlés"
 
-#: src/xmoto/GameText.h:1015
+#: src/xmoto/GameText.h:1026
 msgid "Delete replays that X-Moto estimates to be not interesting to keep"
 msgstr ""
 "Azoknak a visszajátszásoknak a törlése, amik az X-Moto szerint feleslegesek"
 
-#: src/xmoto/GameText.h:985
+#: src/xmoto/GameText.h:996
 msgid "Delete the level from the favorite levels list"
 msgstr "Pálya eltávolítása a kedvenc pályák közül"
 
@@ -773,20 +816,20 @@ msgstr "Közvetlen Kapcsolat"
 msgid "Disable Animations"
 msgstr "Animációk Letiltása"
 
-#: src/xmoto/GameText.h:932
+#: src/xmoto/GameText.h:943
 msgid "Disable block animations (if X-Moto runs slowly)"
 msgstr "Tömb animációk letiltása (ha az X-Moto lassan fut)"
 
-#: src/xmoto/GameText.h:861
+#: src/xmoto/GameText.h:872
 msgid "Disable most graphics not important to the gameplay"
 msgstr "Minden grafika letiltása, ami nem szükséges a játékhoz"
 
-#: src/xmoto/GameText.h:863
+#: src/xmoto/GameText.h:874
 msgid "Disable some of the most resource-intensive graphics, like particles"
 msgstr ""
 "Néhány nagyobb erőforrásigényű grafika letiltása, mint például a porszemek"
 
-#: src/xmoto/GameText.h:785
+#: src/xmoto/GameText.h:793
 msgid "Disconnect"
 msgstr "Lecsatlakozás"
 
@@ -798,7 +841,7 @@ msgstr "Szelleminformáció megjelenítése"
 msgid "Display Ghost time difference"
 msgstr "Szellem időkülönbségének kijelzése"
 
-#: src/xmoto/GameText.h:926
+#: src/xmoto/GameText.h:937
 msgid "Display an arrow to display where are located the bikes on the map"
 msgstr "Egy nyíl mutatása a motorok elhelyezkedéséről a pályán"
 
@@ -806,7 +849,7 @@ msgstr "Egy nyíl mutatása a motorok elhelyezkedéséről a pályán"
 msgid "Display bike arrow indication"
 msgstr "Motorhelyzetnyíl mutatása"
 
-#: src/xmoto/GameText.h:928
+#: src/xmoto/GameText.h:939
 msgid "Display the time difference between the ghost and you"
 msgstr "Időkülönbség mutatása közted és a szellem közt"
 
@@ -818,7 +861,7 @@ msgstr "Tényleg törölni akarod a játékost?"
 msgid "Do you really want to delete replay?"
 msgstr "Tényleg törölni akarod a visszajátszást?"
 
-#: src/xmoto/GameText.h:633
+#: src/xmoto/GameText.h:639
 msgid "Do you really want to quit?"
 msgstr "Tényleg ki akarsz lépni?"
 
@@ -832,20 +875,20 @@ msgstr ""
 "való csatlakozást új pályák és más\n"
 "játékosok legjobb idejének keresésére?"
 
-#: src/xmoto/GameText.h:519
+#: src/xmoto/GameText.h:524
 msgid "Do you want to send a report to website administrators ?"
 msgstr ""
 
-#: src/xmoto/GameText.h:738
+#: src/xmoto/GameText.h:744
 #, c-format
 msgid "Do you want to update level \"%s\"?"
 msgstr "Akarod frissíteni a(z) \"%s\" pályát?"
 
-#: src/xmoto/GameText.h:1073
+#: src/xmoto/GameText.h:1097
 msgid "Don't send this report on the webserver"
 msgstr "Ne küldd el ezt a jelentést a webszerverre"
 
-#: src/xmoto/GameText.h:1009
+#: src/xmoto/GameText.h:1020
 msgid "Don't show the ghosts while playing"
 msgstr "Ne mutassa a szellemet játék közben"
 
@@ -857,11 +900,11 @@ msgstr ""
 "Itt lent van a minitérkép, ami megmutatja a pályát\n"
 "körülötted, ezért tudod merre mész."
 
-#: src/xmoto/GameText.h:951
+#: src/xmoto/GameText.h:962
 msgid "Download or update the selected theme"
 msgstr "A kiválasztott téma letöltése vagy frissítése"
 
-#: src/xmoto/GameText.h:806
+#: src/xmoto/GameText.h:816
 msgid "Download the latest X-Moto world records and check for new levels"
 msgstr "A legfrissebb X-Moto világrekordok letöltése és új pályák keresése"
 
@@ -927,11 +970,11 @@ msgstr ""
 msgid "Dutch"
 msgstr "Holland"
 
-#: src/xmoto/GameText.h:1144
+#: src/xmoto/GameText.h:1168
 msgid "Easiest X-Moto levels according to the web votes"
 msgstr "A legkönnyebb X-Moto pályák az internetes szavazás alapján"
 
-#: src/xmoto/GameText.h:1103
+#: src/xmoto/GameText.h:1127
 msgid "Easiest levels"
 msgstr "Legkönnyebb pályák"
 
@@ -955,11 +998,11 @@ msgstr "Szellem engedélyezése"
 msgid "Enable WWW Access"
 msgstr "Internet hozzáférés engedélyezése"
 
-#: src/xmoto/GameText.h:864
+#: src/xmoto/GameText.h:875
 msgid "Enable all graphical effects"
 msgstr "Minden grafikus hatás engedélyezése"
 
-#: src/xmoto/GameText.h:969
+#: src/xmoto/GameText.h:980
 msgid "Enable animation of bike falling apart when dead"
 msgstr "Motorszétesés animálásának engedélyezése halálkor"
 
@@ -971,7 +1014,7 @@ msgstr "Játék Zene Engedélyezése"
 msgid "Enable joysticks"
 msgstr "Joystickok engedélyezése"
 
-#: src/xmoto/GameText.h:1030
+#: src/xmoto/GameText.h:1041
 msgid "Enable joysticks events"
 msgstr "Joystickok engedélyezése"
 
@@ -979,7 +1022,7 @@ msgstr "Joystickok engedélyezése"
 msgid "Enable menu music"
 msgstr "Menü Zene Engedélyezése"
 
-#: src/xmoto/GameText.h:1018
+#: src/xmoto/GameText.h:1029
 msgid "Enable this room"
 msgstr "Ennek a szobának az engedélyezése"
 
@@ -991,7 +1034,7 @@ msgstr "FPS kijelzés engedélyezése/letiltása"
 msgid "Enable/disable audio"
 msgstr "Hang engedélyezése/letiltása"
 
-#: src/xmoto/GameText.h:474 src/xmoto/GameText.h:688
+#: src/xmoto/GameText.h:474 src/xmoto/GameText.h:694
 msgid "Enable/disable ugly mode"
 msgstr "Ronda mód engedélyezése/letiltása"
 
@@ -999,17 +1042,17 @@ msgstr "Ronda mód engedélyezése/letiltása"
 msgid "Enable/disable web"
 msgstr "Internethozzáférés engedélyezése/letiltása"
 
-#: src/xmoto/GameText.h:1086
+#: src/xmoto/GameText.h:1110
 msgid ""
 "Enables background music for levels that do not have their own music track"
 msgstr ""
 "Háttérzene engedélyezése azokra a pályákra amelyeknek nincs saját zeneszámuk"
 
-#: src/xmoto/GameText.h:946
+#: src/xmoto/GameText.h:957
 msgid "Enables background music in the main menu"
 msgstr "Háttérzene engedélyezése a főmenüben"
 
-#: src/xmoto/GameText.h:947
+#: src/xmoto/GameText.h:958
 msgid "Enables background music while playing"
 msgstr "Háttérzene engedélyezése játék közben"
 
@@ -1025,15 +1068,15 @@ msgstr "Írd be a visszajátszás nevét"
 msgid "Enter player name"
 msgstr "Írd be a játékos nevét"
 
-#: src/xmoto/GameText.h:987
+#: src/xmoto/GameText.h:998
 msgid "Enter text to filter the level list"
 msgstr "Írj be szöveget hogy szűrd a pályalistát"
 
-#: src/xmoto/GameText.h:991
+#: src/xmoto/GameText.h:1002
 msgid "Enter text to filter the replay list"
 msgstr "Írj be szöveget hogy szűrd a visszajátszáslistát"
 
-#: src/xmoto/GameText.h:992
+#: src/xmoto/GameText.h:1003
 msgid "Enter text to filter the rooms list"
 msgstr "Írj be szöveget hogy szűrd a szobalistát"
 
@@ -1041,17 +1084,21 @@ msgstr "Írj be szöveget hogy szűrd a szobalistát"
 msgid "Everyone who have made levels"
 msgstr "Mindenki aki csinált pályát"
 
-#: src/xmoto/GameText.h:1037
+#: src/xmoto/GameText.h:1048
 msgid "Expert"
 msgstr "Haladó"
 
-#: src/xmoto/GameText.h:1174
+#: src/xmoto/GameText.h:1198
 msgid "External levels (the one you put into the 'My levels' directory)"
 msgstr "Külső pályák (azok amiket a 'My levels' mappába raktál)"
 
 #: src/xmoto/GameText.h:300
 msgid "Failed to check for levels."
 msgstr "Nem sikerült új pályát keresni."
+
+#: src/xmoto/GameText.h:522
+msgid "Failed to copy to clipboard"
+msgstr ""
 
 #: src/xmoto/GameText.h:301
 msgid "Failed to download high-scores."
@@ -1093,11 +1140,11 @@ msgstr ""
 msgid "Failed to update the theme list"
 msgstr "Nem sikerült frissíteni a témelistát"
 
-#: src/xmoto/GameText.h:859
+#: src/xmoto/GameText.h:870
 msgid "Fanciest menu graphics"
 msgstr "Legdíszesebb menü grafika"
 
-#: src/xmoto/GameText.h:1099
+#: src/xmoto/GameText.h:1123
 msgid "Favorite levels"
 msgstr "Kedvenc pályák"
 
@@ -1141,23 +1188,23 @@ msgstr "Balra forgatás"
 msgid "Flip right"
 msgstr "Jobbra forgatás"
 
-#: src/xmoto/GameText.h:560
+#: src/xmoto/GameText.h:566
 msgid "Following are your most played levels"
 msgstr "Ezek a legtöbbet játszott pályáid"
 
-#: src/xmoto/GameText.h:1228
+#: src/xmoto/GameText.h:1252
 msgid "FontGroup:GENERAL"
 msgstr "FontGroup:GENERAL"
 
-#: src/xmoto/GameText.h:651
+#: src/xmoto/GameText.h:657
 msgid "Forward while replaying"
 msgstr "Ugrás előre a visszajátszásban"
 
-#: src/xmoto/GameText.h:1205
+#: src/xmoto/GameText.h:1229
 msgid "Fps disabled"
 msgstr "Fps letiltva"
 
-#: src/xmoto/GameText.h:1204
+#: src/xmoto/GameText.h:1228
 msgid "Fps enabled"
 msgstr "Fps engedélyezve"
 
@@ -1165,11 +1212,11 @@ msgstr "Fps engedélyezve"
 msgid "French"
 msgstr "Francia"
 
-#: src/xmoto/GameText.h:553
+#: src/xmoto/GameText.h:559
 msgid "Full"
 msgstr "Teljes"
 
-#: src/xmoto/GameText.h:1199
+#: src/xmoto/GameText.h:1223
 msgid "Full Graphics Mode enabled"
 msgstr "Teljes grafikus mód engedélyezve"
 
@@ -1189,11 +1236,11 @@ msgstr "Általános"
 msgid "General Info"
 msgstr "Általános info"
 
-#: src/xmoto/GameText.h:834
+#: src/xmoto/GameText.h:844
 msgid "General X-Moto preferences"
 msgstr "Általános X-Moto beállítások"
 
-#: src/xmoto/GameText.h:885
+#: src/xmoto/GameText.h:896
 msgid "General information about the level"
 msgstr "Általános információ a pályáról"
 
@@ -1205,7 +1252,7 @@ msgstr "Német"
 msgid "Get More Levels!"
 msgstr "Több pálya!"
 
-#: src/xmoto/GameText.h:962
+#: src/xmoto/GameText.h:973
 msgid "Get the rooms list from the web"
 msgstr "Szobalista letöltése az Internetről"
 
@@ -1217,15 +1264,15 @@ msgstr "Kell ez a téma"
 msgid "Ghost"
 msgstr "Szellem"
 
-#: src/xmoto/GameText.h:1211
+#: src/xmoto/GameText.h:1235
 msgid "Ghost Trail Rendering activated"
 msgstr "Szellem nyomvonal mutatása bekapcsolva"
 
-#: src/xmoto/GameText.h:1212
+#: src/xmoto/GameText.h:1236
 msgid "Ghost Trail Rendering deactivated"
 msgstr "Szellem nyomvonal mutatása kikapcsolva"
 
-#: src/xmoto/GameText.h:1210
+#: src/xmoto/GameText.h:1234
 msgid "Ghost Trail is not available"
 msgstr "Szellem nyomvonal nem elérhető"
 
@@ -1234,19 +1281,19 @@ msgstr "Szellem nyomvonal nem elérhető"
 msgid "Ghost of %s"
 msgstr "%s szelleme"
 
-#: src/xmoto/GameText.h:1034
+#: src/xmoto/GameText.h:1045
 msgid "Give your mind about this level"
 msgstr "Mondd el a véleményed a pályáról"
 
-#: src/xmoto/GameText.h:1040
+#: src/xmoto/GameText.h:1051
 msgid "Go !"
 msgstr "Nyomás !"
 
-#: src/xmoto/GameText.h:1039
+#: src/xmoto/GameText.h:1050
 msgid "God"
 msgstr "Isten"
 
-#: src/xmoto/GameText.h:543 src/xmoto/GameText.h:1116
+#: src/xmoto/GameText.h:549 src/xmoto/GameText.h:1140
 msgid "Gold"
 msgstr "Arany"
 
@@ -1258,11 +1305,11 @@ msgstr "Szép munka! A következő még nehezebb..."
 msgid "Graphics"
 msgstr "Grafika"
 
-#: src/xmoto/GameText.h:1142
+#: src/xmoto/GameText.h:1166
 msgid "Hardest X-Moto levels according to the web votes"
 msgstr "A legnehezebb X-Moto pályák az internetes szavazás alapján"
 
-#: src/xmoto/GameText.h:1102
+#: src/xmoto/GameText.h:1126
 msgid "Hardest levels"
 msgstr "Legnehezebb pályák"
 
@@ -1293,7 +1340,7 @@ msgstr "Magas"
 msgid "Highscore of the room"
 msgstr "A szoba legjobb eredménye"
 
-#: src/xmoto/GameText.h:1172
+#: src/xmoto/GameText.h:1196
 #, c-format
 msgid "Highscores by %s"
 msgstr "%s legjobb eredményei"
@@ -1306,7 +1353,7 @@ msgstr "Magyar"
 msgid "I'm a child"
 msgstr "Gyerek vagyok"
 
-#: src/xmoto/GameText.h:930
+#: src/xmoto/GameText.h:941
 msgid "If you make a highscore it will automatically be saved as a replay"
 msgstr ""
 "A visszajátszás automatikusan el lesz mentve ha legjobb eredményt csinálsz "
@@ -1323,7 +1370,7 @@ msgstr ""
 "nem lesznek szinkronizálva. Ha ezt tetted, akkor el kellene távolítanod a "
 "másolataidat."
 
-#: src/xmoto/GameText.h:586
+#: src/xmoto/GameText.h:592
 msgid ""
 "Important note!\n"
 "\n"
@@ -1333,21 +1380,11 @@ msgid ""
 "Mail bugs, ideas, comments, feature requests, hatemail, etc\n"
 "to xmoto@tuxfamily.org\n"
 "\n"
-"Also visit http://xmoto.tuxfamily.org to make sure you've\n"
+"Also visit https://xmoto.tuxfamily.org to make sure you've\n"
 "got the latest version."
 msgstr ""
-"Fontos!\n"
-"\n"
-"Ez egy fejlesztői változata az X-Motonak!\n"
-"Minden visszajelzést szívesen fogadunk, hogy\n"
-"jobb legyen a játék.\n"
-"Hibákat, ötleteket, hozzászólásokat, új igényeket, gyűlölködő\n"
-"leveleket, stb a xmoto@tuxfamily.org címre küldhetsz\n"
-"\n"
-"Látogasd meg a http://xmoto.tuxfamily.org-ot, hogy\n"
-"biztos a legújabb verzió legyen meg."
 
-#: src/xmoto/GameText.h:1066
+#: src/xmoto/GameText.h:1090
 msgid "Impossible"
 msgstr "Lehetetlen"
 
@@ -1359,15 +1396,15 @@ msgstr "A balfelső sarokban vannak az órák"
 msgid "Increase console history size"
 msgstr "Konzolelőzmények méretének növelése"
 
-#: src/xmoto/GameText.h:997
+#: src/xmoto/GameText.h:1008
 msgid "Increase or decrease the difficulty of the levels selected"
 msgstr "A pályák nehézségének növelése vagy csökkentése"
 
-#: src/xmoto/GameText.h:995
+#: src/xmoto/GameText.h:1006
 msgid "Increase or decrease the quality of the levels selected"
 msgstr "A pályák minőségének növelése vagy csökkentése"
 
-#: src/xmoto/GameText.h:676
+#: src/xmoto/GameText.h:682
 msgid "Info..."
 msgstr "Info..."
 
@@ -1385,7 +1422,7 @@ msgstr ""
 "Próbálj egy kicsit előre-hátra vezetni a hátsó kerekeden,\n"
 "olyan szilárdan tartva a motort, amennyire csak lehet..."
 
-#: src/xmoto/GameText.h:825
+#: src/xmoto/GameText.h:835
 msgid "Instructions of how to play X-Moto"
 msgstr "Útmutató az X-Motohoz"
 
@@ -1405,7 +1442,7 @@ msgstr "Joystick"
 msgid "Key"
 msgstr "Billentyű"
 
-#: src/xmoto/GameText.h:687
+#: src/xmoto/GameText.h:693
 #, c-format
 msgid "Key '%s' of Player '%i' has been switched to '%s'"
 msgstr "'%s' billentyű játékos '%i'-nél '%s' billentyűre cserélve"
@@ -1426,23 +1463,23 @@ msgstr "Nyelv kódja"
 msgid "Language name"
 msgstr "Nyelv neve"
 
-#: src/xmoto/GameText.h:1157
+#: src/xmoto/GameText.h:1181
 msgid "Last created X-Moto levels"
 msgstr "Utoljára készített X-Moto pályák"
 
-#: src/xmoto/GameText.h:1112
+#: src/xmoto/GameText.h:1136
 msgid "Last highscores"
 msgstr "Legújabb legjobb eredmények"
 
-#: src/xmoto/GameText.h:1113
+#: src/xmoto/GameText.h:1137
 msgid "Last levels"
 msgstr "Legújabb pályák"
 
-#: src/xmoto/GameText.h:1149
+#: src/xmoto/GameText.h:1173
 msgid "Last levels you have played"
 msgstr "Azok a pályák amiket utoljára játszottál"
 
-#: src/xmoto/GameText.h:1108
+#: src/xmoto/GameText.h:1132
 msgid "Last played levels"
 msgstr "Utoljára játszott pályák"
 
@@ -1450,7 +1487,7 @@ msgstr "Utoljára játszott pályák"
 msgid "Latvian"
 msgstr "Lett"
 
-#: src/xmoto/GameText.h:772
+#: src/xmoto/GameText.h:780
 msgid "Launch at startup"
 msgstr "Indítás programinduláskor"
 
@@ -1458,11 +1495,11 @@ msgstr "Indítás programinduláskor"
 msgid "Lead Programming"
 msgstr "Vezető Fejlesztők"
 
-#: src/xmoto/GameText.h:1111
+#: src/xmoto/GameText.h:1135
 msgid "Less played levels (but played)"
 msgstr "Legkevesebbet játszott pályák (de játszott)"
 
-#: src/xmoto/GameText.h:900
+#: src/xmoto/GameText.h:911
 msgid ""
 "Let X-Moto look for more levels on the net, and install them automatically"
 msgstr "Új pályák keresése az Interneten és automatikus telepítésük"
@@ -1471,15 +1508,23 @@ msgstr "Új pályák keresése az Interneten és automatikus telepítésük"
 msgid "Level"
 msgstr "Pálya"
 
-#: src/xmoto/GameText.h:515
+#: src/xmoto/GameText.h:519
 #, c-format
 msgid "Level '%s' cannot be loaded"
 msgstr "A(z)  '%s' pályát nem lehet betölteni"
 
-#: src/xmoto/GameText.h:524
+#: src/xmoto/GameText.h:529
 #, c-format
 msgid "Level '%s' required by replay!"
 msgstr "A(z) '%s' pálya szükséghez a visszajátszáshoz!"
+
+#: src/xmoto/GameText.h:515
+msgid "Level File"
+msgstr ""
+
+#: src/xmoto/GameText.h:516
+msgid "Level ID"
+msgstr ""
 
 #: src/xmoto/GameText.h:513
 msgid "Level Info"
@@ -1489,32 +1534,32 @@ msgstr "Páyla info"
 msgid "Level Name"
 msgstr "Pályanév"
 
-#: src/xmoto/GameText.h:522
+#: src/xmoto/GameText.h:527
 msgid "Level Pack"
 msgstr "Pályacsomag"
 
-#: src/xmoto/GameText.h:523
+#: src/xmoto/GameText.h:528
 msgid "Level Packs"
 msgstr "Pályacsomagok"
 
-#: src/xmoto/GameText.h:1056
+#: src/xmoto/GameText.h:1074
 msgid "Level cache cleared"
 msgstr ""
 
-#: src/xmoto/GameText.h:1171
+#: src/xmoto/GameText.h:1195
 #, c-format
 msgid "Level pack \"%s\""
 msgstr "\"%s\" pályacsomag"
 
-#: src/xmoto/GameText.h:977
+#: src/xmoto/GameText.h:988
 msgid "Level played in replay"
 msgstr "Visszajátszás pályája"
 
-#: src/xmoto/GameText.h:557
+#: src/xmoto/GameText.h:563
 msgid "Level references unknown textures, it could be unplayable!"
 msgstr "A pálya ismeretlen textúrát tartalmaz, lehet, hogy játszhatatlan!"
 
-#: src/xmoto/GameText.h:525
+#: src/xmoto/GameText.h:530
 msgid "Levels"
 msgstr "Pályák"
 
@@ -1522,43 +1567,43 @@ msgstr "Pályák"
 msgid "Levels are being added into the database. Please wait."
 msgstr "Pályák hozzáadása az adatbázishoz. Kérlek várj."
 
-#: src/xmoto/GameText.h:1186
+#: src/xmoto/GameText.h:1210
 msgid "Levels for which you owned the highscore"
 msgstr "Pályák, amiken a tied volt a legjobb eredmény"
 
-#: src/xmoto/GameText.h:821
+#: src/xmoto/GameText.h:831
 msgid "Levels grouped together in level packs"
 msgstr "Pályák csomagokban"
 
-#: src/xmoto/GameText.h:1188
+#: src/xmoto/GameText.h:1212
 msgid "Levels having votes unlocked"
 msgstr "Szavazható pályák"
 
-#: src/xmoto/GameText.h:1176
+#: src/xmoto/GameText.h:1200
 msgid "Levels marked 'crappy' are hidden in all other packs"
 msgstr "A 'silány' jelzésű pályák nem jelennek meg a többi csomagban"
 
-#: src/xmoto/GameText.h:1093
+#: src/xmoto/GameText.h:1117
 msgid "Levels with no highscore"
 msgstr "Pályák legjobb eredmény nélkül"
 
-#: src/xmoto/GameText.h:1130
+#: src/xmoto/GameText.h:1154
 msgid "Levels with no highscore in your room"
 msgstr "Pályák legjobb eredmény nélkül a szobádban"
 
-#: src/xmoto/GameText.h:1094 src/xmoto/GameText.h:1131
+#: src/xmoto/GameText.h:1118 src/xmoto/GameText.h:1155
 msgid "Levels you have not completed"
 msgstr "Pályák amiket még nem fejeztél be"
 
-#: src/xmoto/GameText.h:552
+#: src/xmoto/GameText.h:558
 msgid "Light"
 msgstr "Egyszerű"
 
-#: src/xmoto/GameText.h:1198
+#: src/xmoto/GameText.h:1222
 msgid "Light Graphics Mode enabled"
 msgstr "Egyszerű grafikus mód engedélyezve"
 
-#: src/xmoto/GameText.h:526
+#: src/xmoto/GameText.h:531
 msgid "List All"
 msgstr "Összes"
 
@@ -1566,11 +1611,11 @@ msgstr "Összes"
 msgid "Lithuanian"
 msgstr "Litván"
 
-#: src/xmoto/GameText.h:528
+#: src/xmoto/GameText.h:533
 msgid "Loading levels..."
 msgstr "Pályák betöltése..."
 
-#: src/xmoto/GameText.h:529
+#: src/xmoto/GameText.h:534
 msgid "Loading menu graphics..."
 msgstr "Menü grafika betöltése..."
 
@@ -1578,19 +1623,19 @@ msgstr "Menü grafika betöltése..."
 msgid "Loading new and updated levels..."
 msgstr "Új és frissített pályák betöltése..."
 
-#: src/xmoto/GameText.h:530
+#: src/xmoto/GameText.h:535
 msgid "Loading replays..."
 msgstr "Visszajátszások betöltése..."
 
-#: src/xmoto/GameText.h:531
+#: src/xmoto/GameText.h:536
 msgid "Loading sounds..."
 msgstr "Hangok betöltése..."
 
-#: src/xmoto/GameText.h:532
+#: src/xmoto/GameText.h:537
 msgid "Loading textures..."
 msgstr "Textúrák betöltése..."
 
-#: src/xmoto/GameText.h:527
+#: src/xmoto/GameText.h:532
 msgid "Loading..."
 msgstr "Betöltés..."
 
@@ -1602,15 +1647,19 @@ msgstr "Helyi legjobb"
 msgid "Localization"
 msgstr "Fordítás"
 
-#: src/xmoto/GameText.h:533
+#: src/xmoto/GameText.h:538
 msgid "Login"
 msgstr "Bejelentkezés"
 
-#: src/xmoto/GameText.h:1124
+#: src/xmoto/GameText.h:1067
+msgid "Logs cleared"
+msgstr ""
+
+#: src/xmoto/GameText.h:1148
 msgid "Long levels"
 msgstr "Hosszú pályák"
 
-#: src/xmoto/GameText.h:534
+#: src/xmoto/GameText.h:539
 msgid "Low"
 msgstr "Alacsony"
 
@@ -1618,11 +1667,11 @@ msgstr "Alacsony"
 msgid "MacOS X Support"
 msgstr "MacOS X Támogatás"
 
-#: src/xmoto/GameText.h:535
+#: src/xmoto/GameText.h:540
 msgid "Main"
 msgstr "Fő"
 
-#: src/xmoto/GameText.h:1021
+#: src/xmoto/GameText.h:1032
 msgid "Main options"
 msgstr "Fő beállítások"
 
@@ -1630,36 +1679,40 @@ msgstr "Fő beállítások"
 msgid "Main testers"
 msgstr "Fő tesztelők"
 
-#: src/xmoto/GameText.h:852
+#: src/xmoto/GameText.h:862
 msgid "Make console messages not disappear"
 msgstr "Konzol folyamatos megjelenítése"
 
-#: src/xmoto/GameText.h:921
+#: src/xmoto/GameText.h:932
 msgid ""
 "Make motion blur effect for the ghost (if supported by your graphics card)"
 msgstr "Motion blur hatás rakása a szellemre (ha támogatja a videókártya)"
 
-#: src/xmoto/GameText.h:1038
+#: src/xmoto/GameText.h:1049
 msgid "Master"
 msgstr "Mester"
 
-#: src/xmoto/GameText.h:604
+#: src/xmoto/GameText.h:541
+msgid "Max Framerate"
+msgstr ""
+
+#: src/xmoto/GameText.h:610
 msgid "Medals"
 msgstr "Érmék"
 
-#: src/xmoto/GameText.h:546
+#: src/xmoto/GameText.h:552
 msgid "Medium"
 msgstr "Közepes"
 
-#: src/xmoto/GameText.h:1123
+#: src/xmoto/GameText.h:1147
 msgid "Medium levels"
 msgstr "Közepes pályák"
 
-#: src/xmoto/GameText.h:547
+#: src/xmoto/GameText.h:553
 msgid "Menu Graphics"
 msgstr "Menü Grafika"
 
-#: src/xmoto/GameText.h:549
+#: src/xmoto/GameText.h:555
 msgid "Message not sent, unknown players :"
 msgstr "Üzenet nincs elküldve, ismeretlen játékosok:"
 
@@ -1667,23 +1720,23 @@ msgstr "Üzenet nincs elküldve, ismeretlen játékosok:"
 msgid "Mikhail Brinchuk"
 msgstr "Mikhail Brinchuk"
 
-#: src/xmoto/GameText.h:558
+#: src/xmoto/GameText.h:564
 msgid "Mono"
 msgstr "Mono"
 
-#: src/xmoto/GameText.h:871
+#: src/xmoto/GameText.h:882
 msgid "Mono (single channel) audio"
 msgstr "Mono (egy csatornás) hang"
 
-#: src/xmoto/GameText.h:1110
+#: src/xmoto/GameText.h:1134
 msgid "Most played levels"
 msgstr "Legtöbbet játszott pályák"
 
-#: src/xmoto/GameText.h:561
+#: src/xmoto/GameText.h:567
 msgid "Motion blur ghost"
 msgstr "Motion blur szellem"
 
-#: src/xmoto/GameText.h:536
+#: src/xmoto/GameText.h:542
 msgid "Mouse"
 msgstr "Egér"
 
@@ -1703,7 +1756,7 @@ msgstr "Kamera Mozgatása jobra"
 msgid "Move Camera up"
 msgstr "Kamera Mozgatása fel"
 
-#: src/xmoto/GameText.h:562
+#: src/xmoto/GameText.h:568
 msgid "Multi"
 msgstr "Többjátékos"
 
@@ -1711,83 +1764,83 @@ msgstr "Többjátékos"
 msgid "Music"
 msgstr "Zene"
 
-#: src/xmoto/GameText.h:1120
+#: src/xmoto/GameText.h:1144
 msgid "My levels"
 msgstr "A pályáid"
 
-#: src/xmoto/GameText.h:982
+#: src/xmoto/GameText.h:993
 msgid "Name of level pack"
 msgstr "Pályacsomag neve"
 
-#: src/xmoto/GameText.h:976
+#: src/xmoto/GameText.h:987
 msgid "Name of replay"
 msgstr "Visszajátszás neve"
 
-#: src/xmoto/GameText.h:1012
+#: src/xmoto/GameText.h:1023
 msgid "Name of the language"
 msgstr "Nyelv neve"
 
-#: src/xmoto/GameText.h:779
+#: src/xmoto/GameText.h:787
 msgid "Network"
 msgstr "Hálózat"
 
-#: src/xmoto/GameText.h:780
+#: src/xmoto/GameText.h:788
 msgid "Network admin console"
 msgstr ""
 
-#: src/xmoto/GameText.h:787
+#: src/xmoto/GameText.h:795
 msgid "Network error: you're disconnected"
 msgstr "Hálózati hiba: nem vagy csatlakozva"
 
-#: src/xmoto/GameText.h:1089
+#: src/xmoto/GameText.h:1113
 msgid "Network playing mode : just see other players as ghosts"
 msgstr "Hálózati játék mód: a többiek, csak mint szellemek látása"
 
-#: src/xmoto/GameText.h:1109
+#: src/xmoto/GameText.h:1133
 msgid "Never played levels"
 msgstr "Sohasem játszott pályák"
 
-#: src/xmoto/GameText.h:567
+#: src/xmoto/GameText.h:573
 msgid "New"
 msgstr "Új"
 
-#: src/xmoto/GameText.h:576
+#: src/xmoto/GameText.h:582
 msgid "New Levels"
 msgstr "Új pályák"
 
-#: src/xmoto/GameText.h:578
+#: src/xmoto/GameText.h:584
 msgid "New Profile..."
 msgstr "Új profil..."
 
-#: src/xmoto/GameText.h:1098
+#: src/xmoto/GameText.h:1122
 msgid "New and updated levels"
 msgstr "Új vagy frissített pályák"
 
-#: src/xmoto/GameText.h:1136
+#: src/xmoto/GameText.h:1160
 msgid "New and updated levels since your last check"
 msgstr "Új vagy frissített pályák a legutóbbi ellenőrzés óta"
 
-#: src/xmoto/GameText.h:570
+#: src/xmoto/GameText.h:576
 msgid "New highscore!"
 msgstr "Új legjobb idő!"
 
-#: src/xmoto/GameText.h:916
+#: src/xmoto/GameText.h:927
 msgid "New levels and levels updated from the Internet"
 msgstr "Új és frissített pályák"
 
-#: src/xmoto/GameText.h:577
+#: src/xmoto/GameText.h:583
 msgid "New levels available!"
 msgstr "Új pályák érhetőek el!"
 
-#: src/xmoto/GameText.h:571
+#: src/xmoto/GameText.h:577
 msgid "New personal highscore!"
 msgstr "Új saját legjobb idő!"
 
-#: src/xmoto/GameText.h:1049
+#: src/xmoto/GameText.h:1060
 msgid "Next level"
 msgstr "Következő pálya"
 
-#: src/xmoto/GameText.h:1043
+#: src/xmoto/GameText.h:1054
 msgid "Nice"
 msgstr "Szép"
 
@@ -1799,23 +1852,23 @@ msgstr "Szép ugrás!:)"
 msgid "Nice! Now try the next one, it's a bit more difficult..."
 msgstr "Szép! Most próbáld a következőt, ez egy kicsit nehezebb..."
 
-#: src/xmoto/GameText.h:1070
+#: src/xmoto/GameText.h:1094
 msgid "Nice, could be better"
 msgstr "Szép, de lehetne szebb"
 
-#: src/xmoto/GameText.h:1140
+#: src/xmoto/GameText.h:1164
 msgid "Nicest X-Moto levels according to the web votes"
 msgstr "A legszebb X-Moto pályák az internetes szavazás alapján"
 
-#: src/xmoto/GameText.h:1101
+#: src/xmoto/GameText.h:1125
 msgid "Nicest levels"
 msgstr "Legszebb pályák"
 
-#: src/xmoto/GameText.h:579
+#: src/xmoto/GameText.h:585
 msgid "No"
 msgstr "Nem"
 
-#: src/xmoto/GameText.h:1035
+#: src/xmoto/GameText.h:1046
 msgid "No idea"
 msgstr "Nem tudom"
 
@@ -1823,15 +1876,15 @@ msgstr "Nem tudom"
 msgid "No joystick found"
 msgstr "Nem található joystick"
 
-#: src/xmoto/GameText.h:582
+#: src/xmoto/GameText.h:588
 msgid "No level following this one, sorry."
 msgstr "Nem következik ezután másik pálya, bocsi."
 
-#: src/xmoto/GameText.h:1119
+#: src/xmoto/GameText.h:1143
 msgid "No medal"
 msgstr "Érem nélküli"
 
-#: src/xmoto/GameText.h:581
+#: src/xmoto/GameText.h:587
 msgid ""
 "No new or updated levels available.\n"
 "\n"
@@ -1841,23 +1894,23 @@ msgstr ""
 "\n"
 "Próbáld újra máskor!"
 
-#: src/xmoto/GameText.h:583
+#: src/xmoto/GameText.h:589
 msgid "No statistics for this profile."
 msgstr "Nincs statisztika ehhez a profilhoz"
 
-#: src/xmoto/GameText.h:1063
+#: src/xmoto/GameText.h:1087
 msgid "No technical difficulty"
 msgstr "Nincs technikai nehézség"
 
-#: src/xmoto/GameText.h:1214
+#: src/xmoto/GameText.h:1238
 msgid "No training positions stored"
 msgstr "Nincs edző pozíció felvéve"
 
-#: src/xmoto/GameText.h:1190
+#: src/xmoto/GameText.h:1214
 msgid "Normal mode enabled"
 msgstr "Normál mód engedélyezve"
 
-#: src/xmoto/GameText.h:867
+#: src/xmoto/GameText.h:878
 msgid "Normal sound quality"
 msgstr "Átlagos hangminőség"
 
@@ -1865,23 +1918,23 @@ msgstr "Átlagos hangminőség"
 msgid "Norwegian"
 msgstr "Norvég"
 
-#: src/xmoto/GameText.h:584
+#: src/xmoto/GameText.h:590
 msgid "Not finished"
 msgstr "Befejezetlen"
 
-#: src/xmoto/GameText.h:1042
+#: src/xmoto/GameText.h:1053
 msgid "Not nice"
 msgstr "Nem szép"
 
-#: src/xmoto/GameText.h:1041
+#: src/xmoto/GameText.h:1052
 msgid "Not nice at all"
 msgstr "Nem túl szép"
 
-#: src/xmoto/GameText.h:1069
+#: src/xmoto/GameText.h:1093
 msgid "Not original"
 msgstr "Nem eredeti"
 
-#: src/xmoto/GameText.h:857
+#: src/xmoto/GameText.h:868
 msgid "Not so fancy menu graphics"
 msgstr "Nem túl díszes menü grafika"
 
@@ -1915,15 +1968,15 @@ msgstr ""
 "Most ne nyúlj a bal és jobb gombokhoz, ezek nem elég finomak,\n"
 "hogy segítsenek az egyensúlytartásban."
 
-#: src/xmoto/GameText.h:566
+#: src/xmoto/GameText.h:572
 msgid "Number of players"
 msgstr "Játékosok száma"
 
-#: src/xmoto/GameText.h:597
+#: src/xmoto/GameText.h:603
 msgid "OK"
 msgstr "OK"
 
-#: src/xmoto/GameText.h:724
+#: src/xmoto/GameText.h:730
 msgid "Oh no !"
 msgstr "Jaj ne !"
 
@@ -1931,15 +1984,15 @@ msgstr "Jaj ne !"
 msgid "Okay. The red dot on your minimap is a strawberry."
 msgstr "Rendben. a piros pötty a minitérképeden egy eper."
 
-#: src/xmoto/GameText.h:1114
+#: src/xmoto/GameText.h:1138
 msgid "Oldest highscores"
 msgstr "Legrégibb legjobb eredmények"
 
-#: src/xmoto/GameText.h:889
+#: src/xmoto/GameText.h:900
 msgid "Only show personal best times for this level"
 msgstr "Csak a saját legjobb idők mutatása ehhez a pályához"
 
-#: src/xmoto/GameText.h:892
+#: src/xmoto/GameText.h:903
 msgid "Only show personal replays for this level"
 msgstr "Csak a saját visszajátszások mutatása ehhez a pályához"
 
@@ -1947,7 +2000,7 @@ msgstr "Csak a saját visszajátszások mutatása ehhez a pályához"
 msgid "Oops!"
 msgstr "Hoppá!"
 
-#: src/xmoto/GameText.h:598
+#: src/xmoto/GameText.h:604
 msgid "Open"
 msgstr "Megnyitás"
 
@@ -1963,35 +2016,35 @@ msgstr "Beállítások menü megnyitása"
 msgid "Open private chat dialog box"
 msgstr ""
 
-#: src/xmoto/GameText.h:599
+#: src/xmoto/GameText.h:605
 msgid "Operation completed"
 msgstr "Művelet befejezve"
 
-#: src/xmoto/GameText.h:600
+#: src/xmoto/GameText.h:606
 msgid "Options"
 msgstr "Beállítások"
 
-#: src/xmoto/GameText.h:613
+#: src/xmoto/GameText.h:619
 msgid "Password"
 msgstr "Jelszó"
 
-#: src/xmoto/GameText.h:1020
+#: src/xmoto/GameText.h:1031
 msgid "Password associated to your profile for web access"
 msgstr "Internetes felhasználói fiókodhoz tartozó jelszó"
 
-#: src/xmoto/GameText.h:374 src/xmoto/GameText.h:439 src/xmoto/GameText.h:612
+#: src/xmoto/GameText.h:374 src/xmoto/GameText.h:439 src/xmoto/GameText.h:618
 msgid "Pause"
 msgstr "Szünet"
 
-#: src/xmoto/GameText.h:1048
+#: src/xmoto/GameText.h:1059
 msgid "Pause to watch the level"
 msgstr "Szünet pálya bejárásához"
 
-#: src/xmoto/GameText.h:619
+#: src/xmoto/GameText.h:625
 msgid "Pause when playing X-Moto"
 msgstr "Szüneteltet játék közben"
 
-#: src/xmoto/GameText.h:652
+#: src/xmoto/GameText.h:658
 msgid "Pause while replaying"
 msgstr "Visszajátszás megállítása"
 
@@ -1999,19 +2052,19 @@ msgstr "Visszajátszás megállítása"
 msgid "People who have provided bug reports"
 msgstr "Mindenki aki küldött hibajelentést"
 
-#: src/xmoto/GameText.h:881
+#: src/xmoto/GameText.h:892
 msgid "Permanently delete selected player profile, including best times"
 msgstr "Kiválasztott játékos végleges törlése, legjobb időivel együtt"
 
-#: src/xmoto/GameText.h:832
+#: src/xmoto/GameText.h:842
 msgid "Permanently delete the selected replay"
 msgstr "Kiválasztott visszajátszás végleges törlése"
 
-#: src/xmoto/GameText.h:614 src/xmoto/GameText.h:615
+#: src/xmoto/GameText.h:620 src/xmoto/GameText.h:621
 msgid "Personal"
 msgstr "Saját"
 
-#: src/xmoto/GameText.h:1106
+#: src/xmoto/GameText.h:1130
 msgid "Physics levels"
 msgstr "Fizikás pályák"
 
@@ -2019,23 +2072,23 @@ msgstr "Fizikás pályák"
 msgid "Pick up the strawberry by touching it"
 msgstr "Vedd fel az epret azzal, hogy megérinted"
 
-#: src/xmoto/GameText.h:545 src/xmoto/GameText.h:1115
+#: src/xmoto/GameText.h:551 src/xmoto/GameText.h:1139
 msgid "Platinum"
 msgstr "Platina"
 
-#: src/xmoto/GameText.h:620
+#: src/xmoto/GameText.h:626
 msgid "Play Next Level"
 msgstr "Következő pálya"
 
-#: src/xmoto/GameText.h:655
+#: src/xmoto/GameText.h:661
 msgid "Play a bit faster while replaying"
 msgstr "Visszajátszás kicsit gyorsabb lejátszása"
 
-#: src/xmoto/GameText.h:657
+#: src/xmoto/GameText.h:663
 msgid "Play a bit slower while replaying"
 msgstr "Visszajátszás kicsit lassabb lejátszása"
 
-#: src/xmoto/GameText.h:654
+#: src/xmoto/GameText.h:660
 msgid "Play faster while replaying"
 msgstr "Visszajátszás gyorsabb lejátszása"
 
@@ -2043,11 +2096,11 @@ msgstr "Visszajátszás gyorsabb lejátszása"
 msgid "Play music on all levels"
 msgstr "Zene Minden Pályán"
 
-#: src/xmoto/GameText.h:811
+#: src/xmoto/GameText.h:821
 msgid "Play next level"
 msgstr "Következő pálya"
 
-#: src/xmoto/GameText.h:817
+#: src/xmoto/GameText.h:827
 msgid "Play next level instead"
 msgstr "Következő pálya"
 
@@ -2055,23 +2108,23 @@ msgstr "Következő pálya"
 msgid "Play now !"
 msgstr "Játék!"
 
-#: src/xmoto/GameText.h:656
+#: src/xmoto/GameText.h:662
 msgid "Play slower while replaying"
 msgstr "Visszajátszás lassabb lejátszása"
 
-#: src/xmoto/GameText.h:828
+#: src/xmoto/GameText.h:838
 msgid "Play the selected level"
 msgstr "Kiválasztott pálya játszása"
 
-#: src/xmoto/GameText.h:809
+#: src/xmoto/GameText.h:819
 msgid "Play this level again"
 msgstr "Pálya újrajátszása"
 
-#: src/xmoto/GameText.h:827
+#: src/xmoto/GameText.h:837
 msgid "Play tutorial of how to play the game"
 msgstr "Bevezető játszása"
 
-#: src/xmoto/GameText.h:678
+#: src/xmoto/GameText.h:684
 msgid "Play!"
 msgstr "Játék!"
 
@@ -2079,15 +2132,15 @@ msgstr "Játék!"
 msgid "Player"
 msgstr "Játékos"
 
-#: src/xmoto/GameText.h:617
+#: src/xmoto/GameText.h:623
 msgid "Player Profile"
 msgstr "Játékos profil"
 
-#: src/xmoto/GameText.h:618
+#: src/xmoto/GameText.h:624
 msgid "Player Profiles"
 msgstr "Játékos profilok"
 
-#: src/xmoto/GameText.h:978
+#: src/xmoto/GameText.h:989
 msgid "Player who recorded the replay"
 msgstr "Visszajátszás játékosa"
 
@@ -2107,15 +2160,15 @@ msgstr ""
 msgid "Polish"
 msgstr "Lengyel"
 
-#: src/xmoto/GameText.h:866
+#: src/xmoto/GameText.h:877
 msgid "Poor sound quality"
 msgstr "Gyenge hangminőség"
 
-#: src/xmoto/GameText.h:621 src/xmoto/GameText.h:771
+#: src/xmoto/GameText.h:627 src/xmoto/GameText.h:779
 msgid "Port"
 msgstr "Port"
 
-#: src/xmoto/GameText.h:1079
+#: src/xmoto/GameText.h:1103
 msgid "Port on which the server must listen to"
 msgstr "Port amin figyel a szerver"
 
@@ -2123,12 +2176,12 @@ msgstr "Port amin figyel a szerver"
 msgid "Portuguese"
 msgstr "Portugál"
 
-#: src/xmoto/GameText.h:1032
+#: src/xmoto/GameText.h:1043
 msgid "Preselect the retry button when dying or finishing a level"
 msgstr ""
 "Újrakezdő gomb előzetes kiválasztása meghaláskor vagy a pálya befejezésekor"
 
-#: src/xmoto/GameText.h:624
+#: src/xmoto/GameText.h:630
 #, c-format
 msgid "Press %s to chat"
 msgstr "Nyomj %s-t a chathez"
@@ -2145,16 +2198,16 @@ msgstr "Nyomj ENTER-t az újrakezdéshez"
 msgid "Press ESC to display the menu"
 msgstr "Nyomj ESC-et a a menühöz"
 
-#: src/xmoto/GameText.h:623
+#: src/xmoto/GameText.h:629
 #, c-format
 msgid "Press key you want to '%s' or ESC to cancel..."
 msgstr "Nyomj le egy billentyűt: '%s' vagy az ESC-et visszavonáshoz"
 
-#: src/xmoto/GameText.h:993
+#: src/xmoto/GameText.h:1004
 msgid "Press to play X-Moto immediately"
 msgstr "Kattints azonnali játékkezdéshez"
 
-#: src/xmoto/GameText.h:1050
+#: src/xmoto/GameText.h:1061
 msgid "Previous level"
 msgstr "Előző pálya"
 
@@ -2162,23 +2215,23 @@ msgstr "Előző pálya"
 msgid "Previous/Next level"
 msgstr "Előző/Következő pálya"
 
-#: src/xmoto/GameText.h:625
+#: src/xmoto/GameText.h:631
 msgid "Proxy Server"
 msgstr "Proxy Szerver"
 
-#: src/xmoto/GameText.h:986
+#: src/xmoto/GameText.h:997
 msgid "Puzzle the levels pack list"
 msgstr "A pályák összekeverése"
 
-#: src/xmoto/GameText.h:627
+#: src/xmoto/GameText.h:633
 msgid "Quality"
 msgstr "Minőség"
 
-#: src/xmoto/GameText.h:631
+#: src/xmoto/GameText.h:637
 msgid "Quick start"
 msgstr "Gyors Kezdés"
 
-#: src/xmoto/GameText.h:632
+#: src/xmoto/GameText.h:638
 msgid "Quit Game"
 msgstr "Kilépés"
 
@@ -2186,41 +2239,38 @@ msgstr "Kilépés"
 msgid "Quit level"
 msgstr "Kilépés a pályáról"
 
-#: src/xmoto/GameText.h:813
+#: src/xmoto/GameText.h:823
 msgid "Quit the game"
 msgstr "Kilépés a játékból"
 
-#: src/xmoto/GameText.h:634
+#: src/xmoto/GameText.h:640
 msgid "Randomize"
 msgstr "Keverés"
 
 #: src/xmoto/GameText.h:400
 msgid ""
 "Read the README file or check out the website at\n"
-"http://xmoto.tuxfamily.org\n"
+"https://xmoto.tuxfamily.org\n"
 "for more information."
 msgstr ""
-"Olvasd el a README fájlt vagy lapozgasd a\n"
-"http://xmoto.tuxfamily.org-ot\n"
-"további információkért."
 
-#: src/xmoto/GameText.h:1062
+#: src/xmoto/GameText.h:1086
 msgid "Really easy"
 msgstr "Nagyon könnyű"
 
-#: src/xmoto/GameText.h:1044
+#: src/xmoto/GameText.h:1055
 msgid "Really nice"
 msgstr "Nagyon szép"
 
-#: src/xmoto/GameText.h:742
+#: src/xmoto/GameText.h:748
 msgid "Reference room"
 msgstr "Alapértelmezett szoba"
 
-#: src/xmoto/GameText.h:767
+#: src/xmoto/GameText.h:775
 msgid "Reinitialize zoom"
 msgstr "Közelítés alaphelyzetbe állítása"
 
-#: src/xmoto/GameText.h:635
+#: src/xmoto/GameText.h:641
 msgid "Reload files to the database"
 msgstr "Fájlok újrabetölrése az adatbázisba"
 
@@ -2228,15 +2278,15 @@ msgstr "Fájlok újrabetölrése az adatbázisba"
 msgid "Reload levels, themes and replays from directories"
 msgstr "Pályák, témák és visszajátszások újratöltése a könyvtárakból"
 
-#: src/xmoto/GameText.h:636
+#: src/xmoto/GameText.h:642
 msgid "Reloading levels..."
 msgstr "Pályák újratöltése..."
 
-#: src/xmoto/GameText.h:637
+#: src/xmoto/GameText.h:643
 msgid "Reloading replays..."
 msgstr "Visszajátszások újratöltése..."
 
-#: src/xmoto/GameText.h:638
+#: src/xmoto/GameText.h:644
 msgid "Reloading themes..."
 msgstr "Témák újratöltése..."
 
@@ -2248,40 +2298,40 @@ msgstr ""
 "Ne feledd, meg tudsz fordulni a motor körül\n"
 "Nyomd le : "
 
-#: src/xmoto/GameText.h:1017
+#: src/xmoto/GameText.h:1028
 msgid "Remove levels not suitable for children"
 msgstr "Pályák eltávolítása nem lehetséges gyerekek számára"
 
-#: src/xmoto/GameText.h:639
+#: src/xmoto/GameText.h:645
 msgid "Replay"
 msgstr "Visszajátszás"
 
-#: src/xmoto/GameText.h:1203
+#: src/xmoto/GameText.h:1227
 msgid "Replay interpolation disabled"
 msgstr "Visszajátszás interpoláció letiltva"
 
-#: src/xmoto/GameText.h:1202
+#: src/xmoto/GameText.h:1226
 msgid "Replay interpolation enabled"
 msgstr "Visszajátszás interpoláció engedélyezve"
 
-#: src/xmoto/GameText.h:648
+#: src/xmoto/GameText.h:654
 #, c-format
 msgid "Replay of %s"
 msgstr "%s visszajátszásai"
 
-#: src/xmoto/GameText.h:649
+#: src/xmoto/GameText.h:655
 msgid "Replays"
 msgstr "Visszajátszások"
 
-#: src/xmoto/GameText.h:1219
+#: src/xmoto/GameText.h:1243
 msgid "Restart Level to activate!"
 msgstr "Kezd újra a pályát az aktiváláshoz!"
 
-#: src/xmoto/GameText.h:660
+#: src/xmoto/GameText.h:666
 msgid "Restart This Level"
 msgstr "Pálya Újrakezdése"
 
-#: src/xmoto/GameText.h:662
+#: src/xmoto/GameText.h:668
 msgid "Restart level"
 msgstr "Pálya újrakezdése"
 
@@ -2289,27 +2339,27 @@ msgstr "Pálya újrakezdése"
 msgid "Restart the level"
 msgstr "Pálya újrakezdése"
 
-#: src/xmoto/GameText.h:661
+#: src/xmoto/GameText.h:667
 msgid "Restart to the last checkpoint"
 msgstr "Visszatérés az utolsó ellenörzőponthoz"
 
-#: src/xmoto/GameText.h:663
+#: src/xmoto/GameText.h:669
 msgid "Resume Playing"
 msgstr "Vissza a játékba"
 
-#: src/xmoto/GameText.h:842
+#: src/xmoto/GameText.h:852
 msgid "Revert options to defaults"
 msgstr "Beállítások visszaállítása alapértelmezettre"
 
-#: src/xmoto/GameText.h:650
+#: src/xmoto/GameText.h:656
 msgid "Rewind while replaying"
 msgstr "Ugrás hátra a visszajátszásban"
 
-#: src/xmoto/GameText.h:605 src/xmoto/GameText.h:664
+#: src/xmoto/GameText.h:611 src/xmoto/GameText.h:670
 msgid "Room"
 msgstr "Szoba"
 
-#: src/xmoto/GameText.h:743
+#: src/xmoto/GameText.h:749
 #, c-format
 msgid "Room %i"
 msgstr "%i. szoba"
@@ -2322,23 +2372,23 @@ msgstr "Óra járásával megegyezően forgat"
 msgid "Rotates it counter-clockwise"
 msgstr "Óra járásával ellentétesen forgat"
 
-#: src/xmoto/GameText.h:665
+#: src/xmoto/GameText.h:671
 msgid "Run Windowed"
 msgstr "Futás Ablakban"
 
-#: src/xmoto/GameText.h:972
+#: src/xmoto/GameText.h:983
 msgid "Run a dynamic zoom while playing"
 msgstr "Dinamikus közelítés játék közben"
 
-#: src/xmoto/GameText.h:896
+#: src/xmoto/GameText.h:907
 msgid "Run selected replay"
 msgstr "Kiválasztott visszajátszás lejátszása"
 
-#: src/xmoto/GameText.h:856
+#: src/xmoto/GameText.h:866
 msgid "Run the game in a window"
 msgstr "Játék futtatása ablakban"
 
-#: src/xmoto/GameText.h:831
+#: src/xmoto/GameText.h:841
 msgid "Run the selected replay"
 msgstr "A kiválasztott visszajátszás lejátszása"
 
@@ -2346,46 +2396,46 @@ msgstr "A kiválasztott visszajátszás lejátszása"
 msgid "Russian"
 msgstr "Orosz"
 
-#: src/xmoto/GameText.h:680
+#: src/xmoto/GameText.h:686
 msgid "STATS"
 msgstr "STATISZTIKA"
 
-#: src/xmoto/GameText.h:667
+#: src/xmoto/GameText.h:673
 #, fuzzy
 msgid "Safemode Disabled"
 msgstr "Témafigyelő mód letiltva"
 
-#: src/xmoto/GameText.h:666
+#: src/xmoto/GameText.h:672
 #, fuzzy
 msgid "Safemode Enabled"
 msgstr "Témafigyelő mód engedélyezve"
 
-#: src/xmoto/GameText.h:668
+#: src/xmoto/GameText.h:674
 msgid "Save"
 msgstr "Mentés"
 
-#: src/xmoto/GameText.h:670
+#: src/xmoto/GameText.h:676
 msgid "Save Replay"
 msgstr "Visszajátszás mentése"
 
-#: src/xmoto/GameText.h:810
+#: src/xmoto/GameText.h:820
 msgid "Save a replay for later viewing"
 msgstr "Visszajátszás elmentése későbbi megtekintésre"
 
-#: src/xmoto/GameText.h:841
+#: src/xmoto/GameText.h:851
 msgid "Save options"
 msgstr "Beállítások mentése"
 
-#: src/xmoto/GameText.h:669
+#: src/xmoto/GameText.h:675
 #, c-format
 msgid "Saved as %s"
 msgstr "Mentve mint %s"
 
-#: src/xmoto/GameText.h:671
+#: src/xmoto/GameText.h:677
 msgid "Screen Resolution"
 msgstr "Képernyőfelbontás"
 
-#: src/xmoto/GameText.h:672
+#: src/xmoto/GameText.h:678
 msgid "Screenshot"
 msgstr "Képernyőkép mentése"
 
@@ -2393,99 +2443,103 @@ msgstr "Képernyőkép mentése"
 msgid "Script action"
 msgstr "Szkript akció"
 
-#: src/xmoto/GameText.h:1105
+#: src/xmoto/GameText.h:1129
 msgid "Scripted levels"
 msgstr "Szkriptelt pályák"
 
-#: src/xmoto/GameText.h:883
+#: src/xmoto/GameText.h:894
 msgid "Select a level in the level pack to play"
 msgstr "Válassz ki egy pályát a pályacsomagból, hogy játszhass"
 
-#: src/xmoto/GameText.h:877
+#: src/xmoto/GameText.h:888
 msgid "Select a player profile to use"
 msgstr "Válassz egy játékos profilt"
 
-#: src/xmoto/GameText.h:875
+#: src/xmoto/GameText.h:886
 msgid "Select action to re-configure to another key"
 msgstr "Válassz egy akciót, hogy átállítsd egy másik billentyűre"
 
-#: src/xmoto/GameText.h:855
+#: src/xmoto/GameText.h:865
 msgid "Select graphics resolution"
 msgstr "Grafikai felbontás kiválasztása"
 
-#: src/xmoto/GameText.h:907
+#: src/xmoto/GameText.h:918
 msgid "Select this if you connect to the Internet through a SOCKS4 proxy"
 msgstr "Válaszd ezt ha egy SOCKS4 proxyn keresztül kapcsolódsz az Internetre"
 
-#: src/xmoto/GameText.h:909
+#: src/xmoto/GameText.h:920
 msgid "Select this if you connect to the Internet through a SOCKS5 proxy"
 msgstr "Válaszd ezt ha egy SOCKS5 proxyn keresztül kapcsolódsz az Internetre"
 
-#: src/xmoto/GameText.h:905
+#: src/xmoto/GameText.h:916
 msgid "Select this if you connect to the Internet through an HTTP proxy"
 msgstr "Válaszd ezt ha egy HTTP proxyn keresztül kapcsolódsz az Internetre"
 
-#: src/xmoto/GameText.h:903
+#: src/xmoto/GameText.h:914
 msgid "Select this if you got a direct connection to the Internet"
 msgstr "Válaszd ezt ha közvetlenül csatlakozol az Internetre"
 
-#: src/xmoto/GameText.h:563
+#: src/xmoto/GameText.h:569
 msgid "Semi-cooperative mode"
 msgstr "Félközös mód"
 
-#: src/xmoto/GameText.h:1045
+#: src/xmoto/GameText.h:1056
 msgid "Send this report"
 msgstr "Jelentés küldése"
 
-#: src/xmoto/GameText.h:1072
+#: src/xmoto/GameText.h:1096
 msgid "Send this report on the webserver"
 msgstr "Küldd el ezt a jelentést a webszerverre"
 
-#: src/xmoto/GameText.h:520
+#: src/xmoto/GameText.h:525
 msgid "Sending the report..."
 msgstr ""
 
-#: src/xmoto/GameText.h:521
+#: src/xmoto/GameText.h:526
 msgid "Sending the vote..."
 msgstr ""
 
-#: src/xmoto/GameText.h:770
+#: src/xmoto/GameText.h:778
 msgid "Server"
 msgstr "Szerver"
 
-#: src/xmoto/GameText.h:1076
+#: src/xmoto/GameText.h:1100
 msgid "Server configuration to play via the network"
 msgstr "Szerver beállítások a hálózati játékhoz"
 
-#: src/xmoto/GameText.h:775
+#: src/xmoto/GameText.h:783
 msgid "Server is currently started"
 msgstr "Szerver fut"
 
-#: src/xmoto/GameText.h:776
+#: src/xmoto/GameText.h:784
 msgid "Server is currently stopped"
 msgstr "Szerver nem fut"
 
-#: src/xmoto/GameText.h:1080
+#: src/xmoto/GameText.h:1104
 msgid "Server on which you want to connect"
 msgstr "Szerver amire csatlakozni akarsz"
 
-#: src/xmoto/GameText.h:1065
+#: src/xmoto/GameText.h:867
+msgid "Set the maximum framerate the game can run at"
+msgstr ""
+
+#: src/xmoto/GameText.h:1089
 msgid "Several difficulties"
 msgstr "Sok nehézség"
 
-#: src/xmoto/GameText.h:1071
+#: src/xmoto/GameText.h:1095
 msgid "Several textures, sprites, ..."
 msgstr "Számos textúra, plakát, ..."
 
-#: src/xmoto/GameText.h:1122
+#: src/xmoto/GameText.h:1146
 msgid "Shortest levels"
 msgstr "Legrövidebb pályák"
 
-#: src/xmoto/GameText.h:673
+#: src/xmoto/GameText.h:679
 msgid "Show"
 msgstr "Mutat"
 
-#: src/xmoto/GameText.h:677
+#: src/xmoto/GameText.h:683
 msgid "Show Mini Map"
 msgstr "Minitérkép Mutatása"
 
@@ -2493,19 +2547,19 @@ msgstr "Minitérkép Mutatása"
 msgid "Show World Record in-game"
 msgstr "Világrekord mutatása játékban"
 
-#: src/xmoto/GameText.h:843
+#: src/xmoto/GameText.h:853
 msgid "Show a map of your surroundings when playing"
 msgstr "Egy térkép mutatása a környezetedről játék közben"
 
-#: src/xmoto/GameText.h:890
+#: src/xmoto/GameText.h:901
 msgid "Show all best times for this level"
 msgstr "Összes legjobb idő mutatása ehhez a pályához"
 
-#: src/xmoto/GameText.h:893
+#: src/xmoto/GameText.h:904
 msgid "Show all replays for this level"
 msgstr "Összes visszajátszás mutatása ehhez a pályához"
 
-#: src/xmoto/GameText.h:674
+#: src/xmoto/GameText.h:680
 msgid "Show console"
 msgstr "Konzol mutatása"
 
@@ -2513,11 +2567,11 @@ msgstr "Konzol mutatása"
 msgid "Show game information in the console"
 msgstr "Játékinformációk mutatása a konzolban"
 
-#: src/xmoto/GameText.h:898
+#: src/xmoto/GameText.h:909
 msgid "Show helpful help strings such as this one"
 msgstr "Hasznos feliratok mutatása, mint ez is"
 
-#: src/xmoto/GameText.h:895
+#: src/xmoto/GameText.h:906
 msgid "Show information about new players and played levels in the console"
 msgstr ""
 "Információ mutatása az új játékosokról és az éppen játszott pályákról a "
@@ -2531,23 +2585,23 @@ msgstr ""
 msgid "Show next medal in-game"
 msgstr "Következő érem mutatása a játékban"
 
-#: src/xmoto/GameText.h:833
+#: src/xmoto/GameText.h:843
 msgid "Show replays of all players in list"
 msgstr "Minden játékos visszajátszásainak mutatása"
 
-#: src/xmoto/GameText.h:847
+#: src/xmoto/GameText.h:857
 msgid "Show the World Record for a given level when playing"
 msgstr "Világrekord mutatása játék közben"
 
-#: src/xmoto/GameText.h:918
+#: src/xmoto/GameText.h:929
 msgid "Show the ghost if possible in the game"
 msgstr "Szellem mutatása a játékban ha lehetséges"
 
-#: src/xmoto/GameText.h:967
+#: src/xmoto/GameText.h:978
 msgid "Show the speedometer when playing"
 msgstr "Sebességmérő mutatása játékban"
 
-#: src/xmoto/GameText.h:849
+#: src/xmoto/GameText.h:859
 msgid "Show the time you need before achieving the next medal"
 msgstr "Következő érem eléréséhez szüksége idő mutatása"
 
@@ -2555,19 +2609,19 @@ msgstr "Következő érem eléréséhez szüksége idő mutatása"
 msgid "Show this help"
 msgstr "Súgó mutatása"
 
-#: src/xmoto/GameText.h:943
+#: src/xmoto/GameText.h:954
 msgid "Show various statistics about X-Moto"
 msgstr "X-Motoval kapcsolatos statisztikák"
 
-#: src/xmoto/GameText.h:544 src/xmoto/GameText.h:1117
+#: src/xmoto/GameText.h:550 src/xmoto/GameText.h:1141
 msgid "Silver"
 msgstr "Ezüst"
 
-#: src/xmoto/GameText.h:781
+#: src/xmoto/GameText.h:789
 msgid "Simple ghost mode"
 msgstr "Egyszerű szellem mód"
 
-#: src/xmoto/GameText.h:1046
+#: src/xmoto/GameText.h:1057
 msgid "Skip this report"
 msgstr "Jelentés kihagyása"
 
@@ -2575,15 +2629,15 @@ msgstr "Jelentés kihagyása"
 msgid "Slovak"
 msgstr "Szlovák"
 
-#: src/xmoto/GameText.h:602
+#: src/xmoto/GameText.h:608
 msgid "Some options will not take effect before next restart!"
 msgstr "Néhány beállítás nem lép életbe a következő indításig!"
 
-#: src/xmoto/GameText.h:1133
+#: src/xmoto/GameText.h:1157
 msgid "Somebody in the room made a better highscore than yours"
 msgstr "Valaki a szobában csinált egy jobb eredményt mint a tied"
 
-#: src/xmoto/GameText.h:629
+#: src/xmoto/GameText.h:635
 msgid ""
 "Sorry, but there aren't enough levels matching your choice.\n"
 "Choosing random levels instead"
@@ -2599,60 +2653,60 @@ msgstr "Hanghatások"
 msgid "Spanish"
 msgstr "Spanyol"
 
-#: src/xmoto/GameText.h:606
+#: src/xmoto/GameText.h:612
 msgid "Special"
 msgstr "Különleges"
 
-#: src/xmoto/GameText.h:675
+#: src/xmoto/GameText.h:681
 msgid "Speedometer"
 msgstr "Sebességmérő"
 
-#: src/xmoto/GameText.h:607
+#: src/xmoto/GameText.h:613
 msgid "Standard"
 msgstr "Alapcsomagok"
 
-#: src/xmoto/GameText.h:773
+#: src/xmoto/GameText.h:781
 msgid "Start the server"
 msgstr "Szerver indítása"
 
-#: src/xmoto/GameText.h:1077
+#: src/xmoto/GameText.h:1101
 msgid "Start the server at X-Moto startup"
 msgstr "Szerver indítása X-Moto indulásakor"
 
-#: src/xmoto/GameText.h:1084
+#: src/xmoto/GameText.h:1108
 msgid "Start to play with other connected players"
 msgstr "Játék más csatlakozott játékosokkal"
 
-#: src/xmoto/GameText.h:1078
+#: src/xmoto/GameText.h:1102
 msgid "Start/stop the server"
 msgstr "Szerver indítása/leállítása"
 
-#: src/xmoto/GameText.h:609 src/xmoto/GameText.h:679
+#: src/xmoto/GameText.h:615 src/xmoto/GameText.h:685
 msgid "Statistics"
 msgstr "Statisztika"
 
-#: src/xmoto/GameText.h:749
+#: src/xmoto/GameText.h:757
 #, c-format
 msgid "Stats since: %s"
 msgstr "Statisztika %s óta"
 
-#: src/xmoto/GameText.h:682
+#: src/xmoto/GameText.h:688
 msgid "Stereo"
 msgstr "Sztereó"
 
-#: src/xmoto/GameText.h:872
+#: src/xmoto/GameText.h:883
 msgid "Stereo (two channel) audio"
 msgstr "Sztereó (két csatornás) hang"
 
-#: src/xmoto/GameText.h:1126
+#: src/xmoto/GameText.h:1150
 msgid "Stolen highscores"
 msgstr "Ellopott legjobb eredmények"
 
-#: src/xmoto/GameText.h:565
+#: src/xmoto/GameText.h:571
 msgid "Stop the game once a player ends the level"
 msgstr "Vége a pályának ha az egyik játékos végigér"
 
-#: src/xmoto/GameText.h:999
+#: src/xmoto/GameText.h:1010
 msgid ""
 "Stop the game once a player ends the level or continue while a player is "
 "running"
@@ -2660,15 +2714,15 @@ msgstr ""
 "Pálya befejezése ha az egyik játékos végigér vagy pálya folytatása addig, "
 "amíg mindenki be nem fejez"
 
-#: src/xmoto/GameText.h:774
+#: src/xmoto/GameText.h:782
 msgid "Stop the server"
 msgstr "Szerver leállítása"
 
-#: src/xmoto/GameText.h:653
+#: src/xmoto/GameText.h:659
 msgid "Stop while replaying"
 msgstr "Visszajátszás leállítása"
 
-#: src/xmoto/GameText.h:1216
+#: src/xmoto/GameText.h:1240
 #, c-format
 msgid "Stored as training position %i"
 msgstr "%i. edzőpozícióként mentve"
@@ -2677,11 +2731,11 @@ msgstr "%i. edzőpozícióként mentve"
 msgid "Swedish"
 msgstr "Svéd"
 
-#: src/xmoto/GameText.h:690
+#: src/xmoto/GameText.h:696
 msgid "Switch FPS"
 msgstr "FPS mutatása/elrejtése"
 
-#: src/xmoto/GameText.h:694
+#: src/xmoto/GameText.h:700
 msgid "Switch WWW access"
 msgstr "Internet hozzáférés engedélyezése/tiltása"
 
@@ -2689,48 +2743,48 @@ msgstr "Internet hozzáférés engedélyezése/tiltása"
 msgid "Switch biker"
 msgstr "Játékosváltás"
 
-#: src/xmoto/GameText.h:1053
+#: src/xmoto/GameText.h:1064
 msgid "Switch ghosttrail rendering"
 msgstr "Szellem nyom mutatásának be-/kikapcsolása"
 
-#: src/xmoto/GameText.h:696
+#: src/xmoto/GameText.h:702
 msgid "Switch graphics mode"
 msgstr "Grafikus mód váltása"
 
-#: src/xmoto/GameText.h:695
+#: src/xmoto/GameText.h:701
 msgid "Switch graphics quality mode"
 msgstr "Grafika minőségének változtatása"
 
-#: src/xmoto/GameText.h:693
+#: src/xmoto/GameText.h:699
 msgid "Switch highscore information"
 msgstr ""
 
-#: src/xmoto/GameText.h:692
+#: src/xmoto/GameText.h:698
 msgid "Switch net game mode"
 msgstr ""
 
-#: src/xmoto/GameText.h:1051
+#: src/xmoto/GameText.h:1062
 msgid "Switch player"
 msgstr "Játékosváltás"
 
-#: src/xmoto/GameText.h:697
+#: src/xmoto/GameText.h:703
 #, fuzzy
 msgid "Switch safe mode"
 msgstr "Grafikus mód váltása"
 
-#: src/xmoto/GameText.h:1052
+#: src/xmoto/GameText.h:1063
 msgid "Switch trackingshot mode"
 msgstr "Követőfelvétel mód be-/kikapcsolása"
 
-#: src/xmoto/GameText.h:685
+#: src/xmoto/GameText.h:691
 msgid "Synchronisation done successfully"
 msgstr "Sikeres szinkronizálás"
 
-#: src/xmoto/GameText.h:683
+#: src/xmoto/GameText.h:689
 msgid "Synchronisation down"
 msgstr "Leszinkronizálás"
 
-#: src/xmoto/GameText.h:684
+#: src/xmoto/GameText.h:690
 msgid "Synchronisation up"
 msgstr "Felszinkronizálás"
 
@@ -2738,11 +2792,11 @@ msgstr "Felszinkronizálás"
 msgid "Synchronise"
 msgstr "Szinkronizálás"
 
-#: src/xmoto/GameText.h:1027
+#: src/xmoto/GameText.h:1038
 msgid "Synchronise your database on the web"
 msgstr "Internetes adatbázissal való szinkronizálás"
 
-#: src/xmoto/GameText.h:1029
+#: src/xmoto/GameText.h:1040
 msgid "Synchronise your database when your quit X-Moto"
 msgstr "Adatbázis szinkronizálása X-Moto bezárásakor"
 
@@ -2784,11 +2838,11 @@ msgstr ""
 "Az alapötelet az, hogy amikor hátsó keréken vagy\n"
 "a fejed kicsit lejjebb van..."
 
-#: src/xmoto/GameText.h:329 src/xmoto/GameText.h:1002
+#: src/xmoto/GameText.h:329 src/xmoto/GameText.h:1013
 msgid "The best of my replays (on this computer)"
 msgstr "A legjobb visszajátszásod (ezen a számítógépen)"
 
-#: src/xmoto/GameText.h:331 src/xmoto/GameText.h:1004
+#: src/xmoto/GameText.h:331 src/xmoto/GameText.h:1015
 msgid "The best of the replays (on this computer)"
 msgstr "A legjobb visszajátszás (ezen a számítógépen)"
 
@@ -2810,11 +2864,11 @@ msgstr ""
 msgid "The first jump you're going to perform is very easy."
 msgstr "Az első ugrásod nagyon könnyű."
 
-#: src/xmoto/GameText.h:327 src/xmoto/GameText.h:1008
+#: src/xmoto/GameText.h:327 src/xmoto/GameText.h:1019
 msgid "The highscore of the other rooms"
 msgstr "Más szobák legjobb eredménye"
 
-#: src/xmoto/GameText.h:325 src/xmoto/GameText.h:1006
+#: src/xmoto/GameText.h:325 src/xmoto/GameText.h:1017
 msgid "The highscore of the reference room"
 msgstr "Az alapértelmezett szoba legjobb eredménye"
 
@@ -2826,19 +2880,19 @@ msgstr ""
 "Az ikon jobbra az idődtől azt mutatja,\n"
 "hogy mennyi eper van még."
 
-#: src/xmoto/GameText.h:517
+#: src/xmoto/GameText.h:521
 msgid "The level failed while loading with the following error :"
 msgstr ""
 
-#: src/xmoto/GameText.h:1182
+#: src/xmoto/GameText.h:1206
 msgid "The long levels (1 minute to 2 minutes)"
 msgstr "A hosszú pályák (1 és 2 perc között)"
 
-#: src/xmoto/GameText.h:1184
+#: src/xmoto/GameText.h:1208
 msgid "The longest levels (more than 2 minutes)"
 msgstr "A leghosszabb pályák (több mint 2 perc)"
 
-#: src/xmoto/GameText.h:1180
+#: src/xmoto/GameText.h:1204
 msgid "The medium levels (25 seconds to 60)"
 msgstr "A közepes pályák (25 és 60 másodperc között)"
 
@@ -2858,19 +2912,19 @@ msgstr ""
 "Az elsődleges célja a játéknak, hogy összegyűjtsd\n"
 "az összeset, és utána megtaláld a virágot."
 
-#: src/xmoto/GameText.h:647
+#: src/xmoto/GameText.h:653
 msgid "The replay can't be played!"
 msgstr "A visszajátszást nem lehet lejátszani!"
 
-#: src/xmoto/GameText.h:1170
+#: src/xmoto/GameText.h:1194
 msgid "The room highscore is really better than your own highscore"
 msgstr "A szoba legjobb ideje sokkal jobb mint a saját legjobb időd "
 
-#: src/xmoto/GameText.h:1010
+#: src/xmoto/GameText.h:1021
 msgid "The scene is shared by all the players"
 msgstr "A képernyő meg van osztva a játékosok közt"
 
-#: src/xmoto/GameText.h:1178
+#: src/xmoto/GameText.h:1202
 msgid "The shortest levels (less than 25 seconds)"
 msgstr "A legrövidebb pályák (kevesebb mint 25 másodperc)"
 
@@ -2880,19 +2934,19 @@ msgid ""
 "for the current level..."
 msgstr "A jobboldali kicsi a legjobb időd a jelenlegi pályán..."
 
-#: src/xmoto/GameText.h:702
+#: src/xmoto/GameText.h:708
 msgid "The theme is now up to date"
 msgstr "A téme most már elérhető"
 
-#: src/xmoto/GameText.h:537 src/xmoto/GameText.h:698
+#: src/xmoto/GameText.h:543 src/xmoto/GameText.h:704
 msgid "Theme"
 msgstr "Téma"
 
-#: src/xmoto/GameText.h:1194
+#: src/xmoto/GameText.h:1218
 msgid "Theme mode disabled"
 msgstr "Témafigyelő mód letiltva"
 
-#: src/xmoto/GameText.h:1193
+#: src/xmoto/GameText.h:1217
 msgid "Theme mode enabled"
 msgstr "Témafigyelő mód engedélyezve"
 
@@ -2912,7 +2966,7 @@ msgstr ""
 "Ez a pálya egy rövid bevezető,\n"
 "hogy hogyan játssz."
 
-#: src/xmoto/GameText.h:1218
+#: src/xmoto/GameText.h:1242
 msgid ""
 "This level is not recordable (feature still not implemented).\n"
 "Sorry."
@@ -2939,20 +2993,20 @@ msgstr ""
 "való vezetést olyan helyeken ahol alacsony a mennyezet.\n"
 "Vigyázz, ez egy kicsit lehet, hogy nehéz :)"
 
-#: src/xmoto/GameText.h:703
+#: src/xmoto/GameText.h:709
 msgid "Time"
 msgstr "Idő"
 
-#: src/xmoto/GameText.h:754
+#: src/xmoto/GameText.h:762
 #, c-format
 msgid "Time played: %s"
 msgstr "Játékidő: %s"
 
-#: src/xmoto/GameText.h:701
+#: src/xmoto/GameText.h:707
 msgid "To be updated"
 msgstr "Frissítendő"
 
-#: src/xmoto/GameText.h:700
+#: src/xmoto/GameText.h:706
 msgid "To download"
 msgstr "Letölthető"
 
@@ -2988,7 +3042,7 @@ msgstr "Hozzáadás/eltávolítás a kedvencekhez"
 msgid "Toggle theme and ugly over mode"
 msgstr "Téma és felülronda mód közti váltás"
 
-#: src/xmoto/GameText.h:555
+#: src/xmoto/GameText.h:561
 msgid "Total time you scored / total highscore time for levels you finished"
 msgstr "Összes időd / összes legjobb idő azokon a pályákon, amiket befejeztél"
 
@@ -2997,20 +3051,20 @@ msgid "Touch it to finish the level. Good luck with the rest :)"
 msgstr ""
 "Érintsd meg ahhoz, hogy befejezd a pályát. Sok sikert a továbbiakban :)"
 
-#: src/xmoto/GameText.h:1208
+#: src/xmoto/GameText.h:1232
 msgid "Trail Cam activated"
 msgstr "Nyomkamera bekapcsolva"
 
-#: src/xmoto/GameText.h:1209
+#: src/xmoto/GameText.h:1233
 msgid "Trail Cam deactivated"
 msgstr "Nyomkamera kikapcsolva"
 
-#: src/xmoto/GameText.h:1215
+#: src/xmoto/GameText.h:1239
 #, c-format
 msgid "Training position %i/%i restored"
 msgstr "%i/%i edzőpozíció felvéve"
 
-#: src/xmoto/GameText.h:704
+#: src/xmoto/GameText.h:710
 msgid "Try This Level Again"
 msgstr "Pálya Újrakezdése"
 
@@ -3018,11 +3072,11 @@ msgstr "Pálya Újrakezdése"
 msgid "Try getting under the next obstacle when you feel you're ready."
 msgstr "Próbálj meg átjutni a következő akadály alatt, ha készen állsz"
 
-#: src/xmoto/GameText.h:818
+#: src/xmoto/GameText.h:828
 msgid "Try this level again"
 msgstr "Pálya újrakezdése"
 
-#: src/xmoto/GameText.h:816
+#: src/xmoto/GameText.h:826
 msgid "Try this level again from the beginning"
 msgstr "Pálya újrakezdése az elejéről"
 
@@ -3030,11 +3084,11 @@ msgstr "Pálya újrakezdése az elejéről"
 msgid "Turkish"
 msgstr "Török"
 
-#: src/xmoto/GameText.h:873
+#: src/xmoto/GameText.h:884
 msgid "Turn on engine noise"
 msgstr "Motorhang bekapcsolása"
 
-#: src/xmoto/GameText.h:865
+#: src/xmoto/GameText.h:876
 msgid "Turn on sound effects"
 msgstr "Hanghatások engedélyezése"
 
@@ -3042,7 +3096,7 @@ msgstr "Hanghatások engedélyezése"
 msgid "Turns around and drives in the other direction"
 msgstr "Megfordulás és vezetés a másik irányba"
 
-#: src/xmoto/GameText.h:705
+#: src/xmoto/GameText.h:711
 msgid "Tutorial"
 msgstr "Bevezetés"
 
@@ -3050,67 +3104,67 @@ msgstr "Bevezetés"
 msgid "Type"
 msgstr "Típus"
 
-#: src/xmoto/GameText.h:1192
+#: src/xmoto/GameText.h:1216
 msgid "Ugly mode disabled"
 msgstr "Ronda mód letiltva"
 
-#: src/xmoto/GameText.h:1191
+#: src/xmoto/GameText.h:1215
 msgid "Ugly mode enabled"
 msgstr "Ronda mód engedélyezve"
 
-#: src/xmoto/GameText.h:1196
+#: src/xmoto/GameText.h:1220
 msgid "UglyOver mode disabled"
 msgstr "Felülronda mód letiltva"
 
-#: src/xmoto/GameText.h:1195
+#: src/xmoto/GameText.h:1219
 msgid "UglyOver mode enabled"
 msgstr "Felülronda mód engedélyezve"
 
-#: src/xmoto/GameText.h:1225
+#: src/xmoto/GameText.h:1249
 msgid "Unable to build the report"
 msgstr ""
 
-#: src/xmoto/GameText.h:786
+#: src/xmoto/GameText.h:794
 msgid "Unable to connect on the server"
 msgstr "Nem sikerült csatlakozni a szerverhez"
 
-#: src/xmoto/GameText.h:706
+#: src/xmoto/GameText.h:712
 msgid "Undefined"
 msgstr "Meghatározatlan"
 
-#: src/xmoto/GameText.h:707
+#: src/xmoto/GameText.h:713
 msgid "Unknown"
 msgstr "Ismeretlen"
 
-#: src/xmoto/GameText.h:708
+#: src/xmoto/GameText.h:714
 msgid "Unknown players :"
 msgstr "Ismeretlen játékosok:"
 
-#: src/xmoto/GameText.h:709
+#: src/xmoto/GameText.h:715
 msgid "Unpacked levels"
 msgstr "Csomag nélküli pályák"
 
-#: src/xmoto/GameText.h:713
+#: src/xmoto/GameText.h:719
 msgid "Update"
 msgstr "Frissítés"
 
-#: src/xmoto/GameText.h:945
+#: src/xmoto/GameText.h:956
 msgid "Update statistics (also happens each time X-Moto is started)"
 msgstr "Statisztikák frissítése (minden X-Moto induláskor megtörténik)"
 
-#: src/xmoto/GameText.h:716
+#: src/xmoto/GameText.h:722
 msgid "Update the rooms list"
 msgstr "Szobalista frissítése"
 
-#: src/xmoto/GameText.h:717
+#: src/xmoto/GameText.h:723
 msgid "Update the theme list"
 msgstr "Témalista frissítése"
 
-#: src/xmoto/GameText.h:714
+#: src/xmoto/GameText.h:720
 msgid "Updated"
 msgstr "Frissített"
 
-#: src/xmoto/GameText.h:718
+#: src/xmoto/GameText.h:724
 msgid "Updating level lists..."
 msgstr "Pálya listák frissítése..."
 
@@ -3126,41 +3180,41 @@ msgstr "Profil adatinak frissítése"
 msgid "Upgrading database stats for the profile"
 msgstr "Profil statisztikáinak frissítése"
 
-#: src/xmoto/GameText.h:719
+#: src/xmoto/GameText.h:725
 msgid "Upload"
 msgstr "Feltöltés"
 
-#: src/xmoto/GameText.h:720
+#: src/xmoto/GameText.h:726
 msgid "Upload all highscores"
 msgstr "Legjobb idők feltöltése"
 
-#: src/xmoto/GameText.h:966
+#: src/xmoto/GameText.h:977
 msgid "Upload of highscore requires a password (Except for WR)"
 msgstr "A legjobb eredmény feltöltéséhez kell egy jelszó (Kivéve WR)"
 
-#: src/xmoto/GameText.h:964
+#: src/xmoto/GameText.h:975
 msgid "Upload of highscore requires to log in (Except for WR)"
 msgstr "A legjobb eredmény feltöltéséhez be kell jelentkezned (Kivéve WR)"
 
-#: src/xmoto/GameText.h:953
+#: src/xmoto/GameText.h:964
 msgid "Upload the replay on the website of highscores"
 msgstr "Visszajátszás feltöltése a legjobb eredmények oldalra"
 
-#: src/xmoto/GameText.h:955
+#: src/xmoto/GameText.h:966
 msgid "Upload your best replays to your room (useful when it is just created)"
 msgstr ""
 "A legjobb visszajátszásaid feltöltése a szobádba (hasznos ha nemrég lett "
 "készítve)"
 
-#: src/xmoto/GameText.h:725
+#: src/xmoto/GameText.h:731
 msgid "Uploading the highscore..."
 msgstr "Legjobb eredmény feltöltése..."
 
-#: src/xmoto/GameText.h:728
+#: src/xmoto/GameText.h:734
 msgid "Use Environment Vars"
 msgstr "Környezeti Változók Használata"
 
-#: src/xmoto/GameText.h:729
+#: src/xmoto/GameText.h:735
 msgid "Use Profile"
 msgstr "Profil használata"
 
@@ -3176,23 +3230,23 @@ msgstr ""
 msgid "Use Trail Cam"
 msgstr "Nyomkamera Használata"
 
-#: src/xmoto/GameText.h:974
+#: src/xmoto/GameText.h:985
 msgid "Use a camera that directs to the shortest path through the level"
 msgstr "A pályán keresztülvezető legrövidebb utat mutató kamera használata"
 
-#: src/xmoto/GameText.h:726
+#: src/xmoto/GameText.h:732
 msgid "Use crappy information"
 msgstr "Silány pályák lekérdezése"
 
-#: src/xmoto/GameText.h:851
+#: src/xmoto/GameText.h:861
 msgid "Use crappy information from the website to update the crappy pack"
 msgstr "A silány pályacsomag frissítése az Internetes információk alapján"
 
-#: src/xmoto/GameText.h:727
+#: src/xmoto/GameText.h:733
 msgid "Use permanent console"
 msgstr "Állandó konzol használata"
 
-#: src/xmoto/GameText.h:878
+#: src/xmoto/GameText.h:889
 msgid "Use the selected player profile"
 msgstr "Kiválasztott játékos profil használata"
 
@@ -3208,31 +3262,31 @@ msgstr ""
 msgid "Use theme cursor"
 msgstr ""
 
-#: src/xmoto/GameText.h:910
+#: src/xmoto/GameText.h:921
 msgid "Use these settings"
 msgstr "Ezen beállítások használata"
 
-#: src/xmoto/GameText.h:731
+#: src/xmoto/GameText.h:737
 msgid "Using HTTP Proxy"
 msgstr "HTTP Proxy"
 
-#: src/xmoto/GameText.h:732
+#: src/xmoto/GameText.h:738
 msgid "Using SOCKS4 Proxy"
 msgstr "SOCKS4 Proxy"
 
-#: src/xmoto/GameText.h:733
+#: src/xmoto/GameText.h:739
 msgid "Using SOCKS5 Proxy"
 msgstr "SOCKS5 Proxy"
 
-#: src/xmoto/GameText.h:1125
+#: src/xmoto/GameText.h:1149
 msgid "Very long levels"
 msgstr "Nagyon hosszú pályák"
 
-#: src/xmoto/GameText.h:734
+#: src/xmoto/GameText.h:740
 msgid "Video"
 msgstr "Videó"
 
-#: src/xmoto/GameText.h:735
+#: src/xmoto/GameText.h:741
 msgid "View"
 msgstr "Nézet"
 
@@ -3240,51 +3294,51 @@ msgstr "Nézet"
 msgid "View Level Initially"
 msgstr "Pálya Előnézete"
 
-#: src/xmoto/GameText.h:886
+#: src/xmoto/GameText.h:897
 msgid "View best times for the level"
 msgstr "Legjobb idők megtekintése ehhez a pályához"
 
-#: src/xmoto/GameText.h:876
+#: src/xmoto/GameText.h:887
 msgid "View contents of level pack"
 msgstr "Pályacsomag tartalmának megtekintése"
 
-#: src/xmoto/GameText.h:830
+#: src/xmoto/GameText.h:840
 msgid "View general information about the level, best times, and replays"
 msgstr "Általános információ, legjobb idők, visszajátszások megtekintése"
 
-#: src/xmoto/GameText.h:823
+#: src/xmoto/GameText.h:833
 msgid "View list of recorded replays"
 msgstr "Elmentett visszajátszások megtekintése"
 
-#: src/xmoto/GameText.h:887
+#: src/xmoto/GameText.h:898
 msgid "View locally stored replays of the level"
 msgstr "Helyben tárolt visszajátszások megtekintése ehhez a pályához"
 
-#: src/xmoto/GameText.h:975
+#: src/xmoto/GameText.h:986
 msgid "View the X-Moto credits"
 msgstr "Az X-Moto készítőinek megtekintése"
 
-#: src/xmoto/GameText.h:737
+#: src/xmoto/GameText.h:743
 msgid "View the highscore"
 msgstr "Legjobb eredmény"
 
-#: src/xmoto/GameText.h:736 src/xmoto/GameText.h:836
+#: src/xmoto/GameText.h:742 src/xmoto/GameText.h:846
 msgid "View the replay"
 msgstr "Mutasd a visszajátszást"
 
-#: src/xmoto/GameText.h:936
+#: src/xmoto/GameText.h:947
 msgid "View the replay of the room's highscore"
 msgstr "A szoba legjobb visszajátszásának megtekintése"
 
-#: src/xmoto/GameText.h:1127
+#: src/xmoto/GameText.h:1151
 msgid "Vote unlocked levels"
 msgstr "Szavazás a szavazható pályákra"
 
-#: src/xmoto/GameText.h:741
+#: src/xmoto/GameText.h:747
 msgid "WWW"
 msgstr "WWW"
 
-#: src/xmoto/GameText.h:739
+#: src/xmoto/GameText.h:745
 msgid "Warning"
 msgstr "Figyelmeztetés"
 
@@ -3293,11 +3347,11 @@ msgstr "Figyelmeztetés"
 msgid "Web account password for profile '%s':"
 msgstr "Internetes jelszó '%s' profiljához:"
 
-#: src/xmoto/GameText.h:1201
+#: src/xmoto/GameText.h:1225
 msgid "Web connection disabled"
 msgstr "Internethozzáférés letiltva"
 
-#: src/xmoto/GameText.h:1200
+#: src/xmoto/GameText.h:1224
 msgid "Web connection enabled"
 msgstr "Internethozzáférés engedélyezve"
 
@@ -3306,7 +3360,7 @@ msgstr "Internethozzáférés engedélyezve"
 msgid "Web ghost of %s"
 msgstr "%s webszelleme"
 
-#: src/xmoto/GameText.h:608
+#: src/xmoto/GameText.h:614
 msgid "Web votes"
 msgstr "Internetes szavazások"
 
@@ -3322,56 +3376,56 @@ msgstr ""
 "Ezután indulj el a virág felé.\n"
 "A lila pötty a minitérképen."
 
-#: src/xmoto/GameText.h:924
+#: src/xmoto/GameText.h:935
 msgid "When starting a level with a ghost, display who the ghost is of"
 msgstr "Szellem tulajdonosának kiírása pálya kezdésekor"
 
-#: src/xmoto/GameText.h:934
+#: src/xmoto/GameText.h:945
 msgid "Whether to show the theme cursor or the system cursor"
 msgstr ""
 
-#: src/xmoto/GameText.h:912
+#: src/xmoto/GameText.h:923
 msgid "Write the IP address or host name of proxy server to use"
 msgstr "Írd le a proxy szerver IP címét vagy kiszolgáló nevét"
 
-#: src/xmoto/GameText.h:914
+#: src/xmoto/GameText.h:925
 msgid "Write the port number used by the proxy server"
 msgstr "Írd be a proxy szerveren használt port számot"
 
-#: src/xmoto/GameText.h:569
+#: src/xmoto/GameText.h:575
 #, c-format
 msgid "X-Moto %s or newer required to load level"
 msgstr "X-Moto %s vagy újabb szükséges a pálya betöltéséhez"
 
-#: src/xmoto/GameText.h:1156
+#: src/xmoto/GameText.h:1180
 msgid "X-Moto levels having a recent highscore in your room"
 msgstr "X-Moto pályák friss legjobb eredménnyel"
 
-#: src/xmoto/GameText.h:1159
+#: src/xmoto/GameText.h:1183
 msgid "X-Moto levels having an old highscore in your room"
 msgstr "X-Moto pályák régi legjobb eredménnyel a szobádban"
 
-#: src/xmoto/GameText.h:1148
+#: src/xmoto/GameText.h:1172
 msgid "X-Moto levels using strongly physics"
 msgstr "X-Moto pályák erős fizika használattal"
 
-#: src/xmoto/GameText.h:1147
+#: src/xmoto/GameText.h:1171
 msgid "X-Moto levels which are dynamic"
 msgstr "Dinamikus X-Moto pályák"
 
-#: src/xmoto/GameText.h:1154
+#: src/xmoto/GameText.h:1178
 msgid "X-Moto levels you have played only a few times"
 msgstr "X-Moto pályák amiket csak kevésszer játszol"
 
-#: src/xmoto/GameText.h:1152
+#: src/xmoto/GameText.h:1176
 msgid "X-Moto levels you have played the most"
 msgstr "X-Moto pályák amiket a legtöbbször játszol"
 
-#: src/xmoto/GameText.h:1150
+#: src/xmoto/GameText.h:1174
 msgid "X-Moto levels you never played"
 msgstr "X-Moto pályák amiket sosem játszottál"
 
-#: src/xmoto/GameText.h:751
+#: src/xmoto/GameText.h:759
 #, fuzzy, c-format
 msgid "X-Moto started %d time"
 msgid_plural "X-Moto started %d times"
@@ -3390,15 +3444,15 @@ msgstr ""
 "felhasználói fiókod segítségével. Ez akkor lehet hasznos ha el akarod "
 "menteni az adataid vagy ha több gépről játszol."
 
-#: src/xmoto/GameText.h:763
+#: src/xmoto/GameText.h:771
 msgid "Yes"
 msgstr "Igen"
 
-#: src/xmoto/GameText.h:764
+#: src/xmoto/GameText.h:772
 msgid "Yes to all"
 msgstr "Mindet"
 
-#: src/xmoto/GameText.h:681
+#: src/xmoto/GameText.h:687
 msgid "You are currently disconnected"
 msgstr "Nem vagy csatlakozva"
 
@@ -3406,16 +3460,16 @@ msgstr "Nem vagy csatlakozva"
 msgid "You control your bike using the keyboard"
 msgstr "Így irányítod a motorodat a billentyűzet segítségével"
 
-#: src/xmoto/GameText.h:1061
+#: src/xmoto/GameText.h:1085
 msgid "You don't want to vote"
 msgstr "Nem akarok szavazni"
 
-#: src/xmoto/GameText.h:550
+#: src/xmoto/GameText.h:556
 #, c-format
 msgid "You got a %s medal"
 msgstr "Szereztél egy %s érmet"
 
-#: src/xmoto/GameText.h:1160
+#: src/xmoto/GameText.h:1184
 msgid "You have the room highscore"
 msgstr "Tied a szoba legjobb ideje"
 
@@ -3427,15 +3481,15 @@ msgstr "Újra kell csatlakoznod a szerverre, hogy ez a beállítás életbe lép
 msgid "You must restart so that this option takes effect"
 msgstr "Újra kell indítanod ehhez a beállításhoz"
 
-#: src/xmoto/GameText.h:782
+#: src/xmoto/GameText.h:790
 msgid "You're currently connected"
 msgstr "Csatlakozva vagy"
 
-#: src/xmoto/GameText.h:783
+#: src/xmoto/GameText.h:791
 msgid "You're currently disconnected"
 msgstr "Nem vagy csatlakozva"
 
-#: src/xmoto/GameText.h:1096
+#: src/xmoto/GameText.h:1120
 msgid "You're not the highscore holder"
 msgstr "Nem a tied a legjobb eredmény"
 
@@ -3443,49 +3497,49 @@ msgstr "Nem a tied a legjobb eredmény"
 msgid "Your best"
 msgstr "A legjobb időd"
 
-#: src/xmoto/GameText.h:765
+#: src/xmoto/GameText.h:773
 msgid "Your best time"
 msgstr "A legjobb időd"
 
-#: src/xmoto/GameText.h:1138
+#: src/xmoto/GameText.h:1162
 msgid "Your blacklisted levels"
 msgstr "A feketelistás pályáid"
 
-#: src/xmoto/GameText.h:1137
+#: src/xmoto/GameText.h:1161
 msgid "Your favorite levels"
 msgstr "A kedvenc pályáid"
 
-#: src/xmoto/GameText.h:990
+#: src/xmoto/GameText.h:1001
 msgid "Your password associated with your login"
 msgstr "Jelszavad a proxyhoz"
 
-#: src/xmoto/GameText.h:1167
+#: src/xmoto/GameText.h:1191
 msgid ""
 "Your personal highscore finish time is almost the room highscore (80%-90%)"
 msgstr "A saját legjobb időd majdnem a szoba legjobbja (80%-90%)"
 
-#: src/xmoto/GameText.h:1164
+#: src/xmoto/GameText.h:1188
 msgid ""
 "Your personal highscore finish time is almost the room highscore (90%-95%)"
 msgstr "A saját legjobb időd majdnem a szoba legjobbja (90%-95%)"
 
-#: src/xmoto/GameText.h:1162
+#: src/xmoto/GameText.h:1186
 msgid "Your personal highscore finish time is almost the room highscore (95%)"
 msgstr "A saját legjobb időd majdnem a szoba legjobbja (95%)"
 
-#: src/xmoto/GameText.h:989
+#: src/xmoto/GameText.h:1000
 msgid "Your proxy login"
 msgstr "Bejelentkezési neved a proxyhoz"
 
-#: src/xmoto/GameText.h:766
+#: src/xmoto/GameText.h:774
 msgid "Zoom in"
 msgstr "Közelítés"
 
-#: src/xmoto/GameText.h:768
+#: src/xmoto/GameText.h:776
 msgid "Zoom out"
 msgstr "Távolítás"
 
-#: src/xmoto/GameText.h:645
+#: src/xmoto/GameText.h:651
 msgid ""
 "[esc] , [space]\n"
 "[left/right keys]\n"
@@ -3495,7 +3549,7 @@ msgstr ""
 "[bal/jobb]\n"
 "[fel/le]\n"
 
-#: src/xmoto/GameText.h:642
+#: src/xmoto/GameText.h:648
 msgid ""
 "[esc] , [space]\n"
 "[right key]\n"
@@ -3591,7 +3645,7 @@ msgstr "középső gomb"
 msgid "none"
 msgstr "semmi"
 
-#: src/xmoto/GameText.h:747
+#: src/xmoto/GameText.h:755
 #, fuzzy, c-format
 msgid "only %i"
 msgid_plural "only %i"
@@ -3648,6 +3702,38 @@ msgstr "görgő fel"
 
 #~ msgid "Enable/disable theme mode"
 #~ msgstr "Témafigyelő mód engedélyezése/letiltása"
+
+#~ msgid ""
+#~ "Important note!\n"
+#~ "\n"
+#~ "This is an in development version of X-Moto!\n"
+#~ "All kinds of feedback are highly appreciated, so the game\n"
+#~ "can get better.\n"
+#~ "Mail bugs, ideas, comments, feature requests, hatemail, etc\n"
+#~ "to xmoto@tuxfamily.org\n"
+#~ "\n"
+#~ "Also visit http://xmoto.tuxfamily.org to make sure you've\n"
+#~ "got the latest version."
+#~ msgstr ""
+#~ "Fontos!\n"
+#~ "\n"
+#~ "Ez egy fejlesztői változata az X-Motonak!\n"
+#~ "Minden visszajelzést szívesen fogadunk, hogy\n"
+#~ "jobb legyen a játék.\n"
+#~ "Hibákat, ötleteket, hozzászólásokat, új igényeket, gyűlölködő\n"
+#~ "leveleket, stb a xmoto@tuxfamily.org címre küldhetsz\n"
+#~ "\n"
+#~ "Látogasd meg a http://xmoto.tuxfamily.org-ot, hogy\n"
+#~ "biztos a legújabb verzió legyen meg."
+
+#~ msgid ""
+#~ "Read the README file or check out the website at\n"
+#~ "http://xmoto.tuxfamily.org\n"
+#~ "for more information."
+#~ msgstr ""
+#~ "Olvasd el a README fájlt vagy lapozgasd a\n"
+#~ "http://xmoto.tuxfamily.org-ot\n"
+#~ "további információkért."
 
 #~ msgid "Trail Cam not available"
 #~ msgstr "Nyomkamera nem elérhető"
