@@ -47,6 +47,7 @@ StatePreplaying::StatePreplaying(const std::string i_idlevel, bool i_sameLevel)
   m_name = "StatePreplaying";
   m_idlevel = i_idlevel;
   m_isInitialized = false;
+  m_animationReady = false;
 
   m_sameLevel = i_sameLevel;
   /* if the level is not the same, ask to play the animation */
@@ -315,6 +316,16 @@ bool StatePreplaying::update() {
 }
 
 bool StatePreplaying::render() {
+  /*
+   * If the framerate is >100, there's a one frame long gap where the camera animation
+   * is not zoomed out properly when the level is loaded or restarted.
+   * This effectively skips the frame to stop it from causing a quick flash on the screen
+   */
+  if (shouldBeAnimated() && !m_animationReady) {
+    m_animationReady = true;
+    return true;
+  }
+
   if (m_isInitialized == false) {
     GameApp::instance()->getDrawLib()->clearGraphics();
     return true;

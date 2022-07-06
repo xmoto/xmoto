@@ -50,6 +50,7 @@ public:
 protected:
   std::string m_idlevel;
   bool m_sameLevel;
+  bool m_animationReady;
 
   virtual void initUniverse() = 0;
   virtual void preloadLevels() = 0;
