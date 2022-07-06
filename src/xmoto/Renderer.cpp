@@ -718,7 +718,7 @@ void GameRenderer::renderMiniMap(Scene *i_scene,
         color = MAKE_COLOR(255, 0, 0, 255);
         break;
       case ET_KILL:
-        color = MAKE_COLOR(26, 26, 188, 255);
+        color = MAKE_COLOR(80, 255, 255, 255);
         break;
       case ET_CHECKPOINT:
         color = MAKE_COLOR(26, 188, 26, 255);
