@@ -67,6 +67,8 @@ void XMSession::setToDefault() {
   m_timedemo = DEFAULT_TIMEDEMO;
   m_fps = DEFAULT_FPS;
   m_ugly = DEFAULT_UGLY;
+  m_hideSpritesUgly = DEFAULT_HIDESPRITESUGLY;
+  m_hideSpritesMinimap = DEFAULT_HIDESPRITESMINIMAP;
   m_uglyOver = DEFAULT_UGLYOVER;
   m_testTheme = DEFAULT_TESTTHEME;
   m_noLog = DEFAULT_NOLOG;
@@ -408,6 +410,10 @@ void XMSession::loadProfile(const std::string &i_id_profile, xmDatabase *pDb) {
     pDb->config_getBool(i_id_profile, "EnableJoysticks", m_enableJoysticks);
   m_beatingMode =
     pDb->config_getBool(i_id_profile, "BeatingMode", m_beatingMode);
+  m_hideSpritesUgly =
+    pDb->config_getBool(i_id_profile, "HideSpritesUgly", m_hideSpritesUgly);
+  m_hideSpritesMinimap =
+    pDb->config_getBool(i_id_profile, "HideSpritesMinimap", m_hideSpritesMinimap);
   m_webForms = pDb->config_getBool(i_id_profile, "WebForms", m_webForms);
 
   m_serverStartAtStartup = pDb->config_getBool(
@@ -607,6 +613,8 @@ void XMSession::saveProfile(xmDatabase *pDb) {
   pDb->config_setBool(m_profile, "DbSynchronizeOnQuit", m_dbsynchronizeOnQuit);
   pDb->config_setBool(m_profile, "EnableJoysticks", m_enableJoysticks);
   pDb->config_setBool(m_profile, "BeatingMode", m_beatingMode);
+  pDb->config_setBool(m_profile, "HideSpritesUgly", m_hideSpritesUgly);
+  pDb->config_setBool(m_profile, "HideSpritesMinimap", m_hideSpritesMinimap);
   pDb->config_setBool(m_profile, "WebForms", m_webForms);
 
   pDb->config_setBool(
@@ -809,6 +817,24 @@ void XMSession::setUglyOver(bool i_value) {
 void XMSession::setTestTheme(bool i_value) {
   PROPAGATE(XMSession, setTestTheme, i_value, bool);
   m_testTheme = i_value;
+}
+
+bool XMSession::hideSpritesUgly() const {
+  return m_hideSpritesUgly;
+}
+
+void XMSession::setHideSpritesUgly(bool i_value) {
+  PROPAGATE(XMSession, setHideSpritesUgly, i_value, bool);
+  m_hideSpritesUgly = i_value;
+}
+
+bool XMSession::hideSpritesMinimap() const {
+  return m_hideSpritesMinimap;
+}
+
+void XMSession::setHideSpritesMinimap(bool i_value) {
+  PROPAGATE(XMSession, setHideSpritesMinimap, i_value, bool);
+  m_hideSpritesMinimap = i_value;
 }
 
 bool XMSession::ghostStrategy_MYBEST() const {

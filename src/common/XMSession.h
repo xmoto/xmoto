@@ -143,6 +143,10 @@ public:
   void setUgly(bool i_value);
   bool uglyOver() const;
   void setUglyOver(bool i_value);
+  bool hideSpritesUgly() const;
+  void setHideSpritesUgly(bool i_value);
+  bool hideSpritesMinimap() const;
+  void setHideSpritesMinimap(bool i_value);
   bool noLog() const;
   bool testTheme() const;
   void setTestTheme(bool i_value);
@@ -358,6 +362,8 @@ private:
   bool m_fps;
   bool m_ugly;
   bool m_uglyOver;
+  bool m_hideSpritesUgly;
+  bool m_hideSpritesMinimap;
   bool m_testTheme;
   bool m_autosaveHighscoreReplays;
   bool m_disableAnimations;

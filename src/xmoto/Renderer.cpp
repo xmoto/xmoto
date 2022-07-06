@@ -74,6 +74,10 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 // how much uglier in uglymode
 #define GT_UGLY_MODE_MULTIPLYER 2
 
+bool isEntityInsignificant(Entity *entity) {
+  return entity->Speciality() & (ET_NONE | ET_PARTICLES_SOURCE | ET_JOINT);
+}
+
 /* to sort blocks on their texture */
 struct AscendingTextureSort {
   bool operator()(Block *b1, Block *b2) {
@@ -698,20 +702,33 @@ void GameRenderer::renderMiniMap(Scene *i_scene,
   std::vector<Entity *> Entities =
     i_scene->getCollisionHandler()->getEntitiesNearPosition(mapBBox);
 
-  for (unsigned int i = 0; i < Entities.size(); i++) {
-    Vector2f entityPos(LEVEL_TO_SCREEN_X(Entities[i]->DynamicPosition().x),
-                       LEVEL_TO_SCREEN_Y(Entities[i]->DynamicPosition().y));
-    if (Entities[i]->DoesMakeWin()) {
-      pDrawlib->drawCircle(entityPos, 3, 0, MAKE_COLOR(255, 0, 255, 255), 0);
-    } else if (Entities[i]->IsToTake()) {
-      pDrawlib->drawCircle(entityPos, 3, 0, MAKE_COLOR(255, 0, 0, 255), 0);
-    } else if (Entities[i]->DoesKill()) {
-      pDrawlib->drawCircle(entityPos, 3, 0, MAKE_COLOR(26, 26, 188, 255), 0);
-    } else if (Entities[i]->IsCheckpoint()) {
-      pDrawlib->drawCircle(entityPos, 3, 0, MAKE_COLOR(26, 188, 26, 255), 0);
-    } else {
-      pDrawlib->drawCircle(entityPos, 3, 0, MAKE_COLOR(230, 226, 100, 255), 0);
+  for (auto &entity : Entities) {
+    if (XMSession::instance()->hideSpritesMinimap() && isEntityInsignificant(entity))
+      continue;
+
+    Vector2f entityPos(LEVEL_TO_SCREEN_X(entity->DynamicPosition().x),
+                       LEVEL_TO_SCREEN_Y(entity->DynamicPosition().y));
+
+    Color color;
+    switch (entity->Speciality()) {
+      case ET_MAKEWIN:
+        color = MAKE_COLOR(255, 0, 255, 255);
+        break;
+      case ET_ISTOTAKE:
+        color = MAKE_COLOR(255, 0, 0, 255);
+        break;
+      case ET_KILL:
+        color = MAKE_COLOR(26, 26, 188, 255);
+        break;
+      case ET_CHECKPOINT:
+        color = MAKE_COLOR(26, 188, 26, 255);
+        break;
+      default:
+        color = MAKE_COLOR(230, 226, 100, 255);
+        break;
     }
+
+    pDrawlib->drawCircle(entityPos, 3, 0, color, 0);
   }
 
 #ifdef ENABLE_OPENGL
@@ -1972,52 +1989,57 @@ void GameRenderer::_RenderSprite(Scene *i_scene, Entity *pEntity, float i_sizeMu
       }
     }
   }
-  /* If this is debug-mode, also draw entity's area of effect */
-  if (XMSession::instance()->debug() || XMSession::instance()->testTheme() ||
-      XMSession::instance()->ugly()) {
-    Vector2f C = pEntity->DynamicPosition();
-    Color v_color;
 
-    switch (pEntity->Speciality()) {
-      case ET_KILL:
-        v_color =
-          MAKE_COLOR(80,
-                     255,
-                     255,
-                     255); /* Fix: color changed a bit so it's easier to spot */
-        break;
-      case ET_MAKEWIN:
-        v_color =
-          MAKE_COLOR(255, 0, 255, 255); /* Fix: color not same as blocks */
-        break;
-      case ET_ISTOTAKE:
-        v_color = MAKE_COLOR(255, 0, 0, 255);
-        break;
-      case ET_ISSTART:
-        v_color = MAKE_COLOR(
-          0,
-          0,
-          0,
-          0); /* we dont wanna have start position displayed in ugly mode */
-        break;
-      case ET_CHECKPOINT:
-        v_color = MAKE_COLOR(
-          26,
-          188,
-          26,
-          255);
-        break;
-      default:
-        v_color = MAKE_COLOR(
-          255,
-          255,
-          90,
-          255); /* then only the entitys used in scripts get displayed */
-        break;
-    }
+  auto sess = XMSession::instance();
+  bool hide = sess->hideSpritesUgly() && isEntityInsignificant(pEntity);
 
-    _RenderCircle(20, v_color, C, pEntity->Size() * i_sizeMult);
+  if (sess->debug() ||
+      sess->testTheme() ||
+      (sess->ugly() && !hide)) {
+    _RenderSpriteCircle(pEntity, i_sizeMult);
   }
+}
+
+void GameRenderer::_RenderSpriteCircle(Entity *entity, float sizeMult) {
+
+  Color color;
+  switch (entity->Speciality()) {
+    case ET_KILL:
+      /* Fix: color changed a bit so it's easier to spot */
+      color = MAKE_COLOR(80, 255, 255, 255);
+      break;
+
+    case ET_MAKEWIN:
+       /* Fix: color not same as blocks */
+      color = MAKE_COLOR(255, 0, 255, 255);
+      break;
+
+    case ET_ISTOTAKE:
+      color = MAKE_COLOR(255, 0, 0, 255);
+      break;
+
+    case ET_ISSTART:
+      /* we dont wanna have start position displayed in ugly mode */
+      color = MAKE_COLOR(0, 0, 0, 0);
+      break;
+
+    case ET_CHECKPOINT:
+      color = MAKE_COLOR(26, 188, 26, 255);
+      break;
+
+    default:
+       /* then only the entities used in scripts get displayed */
+      color = MAKE_COLOR(255, 255, 90, 255);
+      break;
+  }
+
+  _RenderCircle(
+    20,
+    color,
+    entity->DynamicPosition(),
+    entity->Size() * sizeMult
+  );
+
 }
 
 /*===========================================================================

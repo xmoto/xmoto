@@ -54,6 +54,8 @@ Central place to keep many in-game text strings
 #define GAMETEXT_AUTOMATIC _("Automatic")
 #define GAMETEXT_AUTOSAVEREPLAYS _("Automatic saving of replays")
 #define GAMETEXT_SHOWANIMATIONS _("Disable Animations")
+#define GAMETEXT_HIDESPRITESUGLY _("Hide sprites in ugly mode")
+#define GAMETEXT_HIDESPRITESMINIMAP _("Hide sprites from the minimap")
 #define GAMETEXT_USETHEMECURSOR _("Use theme cursor")
 #define GAMETEXT_SHOWGAMEINFORMATIONINCONSOLE \
   _("Show game information in the console")

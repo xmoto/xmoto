@@ -214,6 +214,20 @@ void StateOptions::checkEvents() {
     XMSession::instance()->setUseThemeCursor(v_button->getChecked());
   }
 
+  v_button = reinterpret_cast<UIButton *>(
+    m_GUI->getChild("MAIN:TABS:GENERAL_TAB:TABS:MAIN_TAB:HIDESPRITESUGLY"));
+  if (v_button->isClicked()) {
+    v_button->setClicked(false);
+    XMSession::instance()->setHideSpritesUgly(v_button->getChecked());
+  }
+
+  v_button = reinterpret_cast<UIButton *>(
+    m_GUI->getChild("MAIN:TABS:GENERAL_TAB:TABS:MAIN_TAB:HIDESPRITESMINIMAP"));
+  if (v_button->isClicked()) {
+    v_button->setClicked(false);
+    XMSession::instance()->setHideSpritesMinimap(v_button->getChecked());
+  }
+
   v_list = reinterpret_cast<UIList *>(
     m_GUI->getChild("MAIN:TABS:GENERAL_TAB:TABS:THEME_TAB:LIST"));
   if (v_list->isClicked()) {
@@ -1122,6 +1136,31 @@ UIWindow *StateOptions::makeWindowOptions_general(UIWindow *i_parent) {
   v_button->setFont(drawlib->getFontSmall());
   v_button->setGroup(50023);
   v_button->setContextHelp(CONTEXTHELP_BEATINGMODE);
+
+  v_button = new UIButton(v_window,
+                          5 + (v_window->getPosition().nWidth + 40) / 2,
+                          183 - 10,
+                          GAMETEXT_HIDESPRITESUGLY,
+                          (v_window->getPosition().nWidth - 40) / 2,
+                          28);
+  v_button->setType(UI_BUTTON_TYPE_CHECK);
+  v_button->setID("HIDESPRITESUGLY");
+  v_button->setFont(drawlib->getFontSmall());
+  v_button->setGroup(50023);
+  v_button->setContextHelp(GAMETEXT_HIDESPRITESUGLY);
+
+  v_button = new UIButton(v_window,
+                          5 + (v_window->getPosition().nWidth + 40) / 2,
+                          213 - 10,
+                          GAMETEXT_HIDESPRITESMINIMAP,
+                          (v_window->getPosition().nWidth - 40) / 2,
+                          28);
+  v_button->setType(UI_BUTTON_TYPE_CHECK);
+  v_button->setID("HIDESPRITESMINIMAP");
+  v_button->setFont(drawlib->getFontSmall());
+  v_button->setGroup(50023);
+  v_button->setContextHelp(GAMETEXT_HIDESPRITESMINIMAP);
+
 
   /* theme */
   v_window = new UIWindow(v_generalTabs,
@@ -2383,6 +2422,12 @@ void StateOptions::updateOptions() {
   v_button = reinterpret_cast<UIButton *>(
     m_GUI->getChild("MAIN:TABS:GENERAL_TAB:TABS:MAIN_TAB:USETHEMECURSOR"));
   v_button->setChecked(XMSession::instance()->useThemeCursor());
+  v_button = reinterpret_cast<UIButton *>(
+    m_GUI->getChild("MAIN:TABS:GENERAL_TAB:TABS:MAIN_TAB:HIDESPRITESUGLY"));
+  v_button->setChecked(XMSession::instance()->hideSpritesUgly());
+  v_button = reinterpret_cast<UIButton *>(
+    m_GUI->getChild("MAIN:TABS:GENERAL_TAB:TABS:MAIN_TAB:HIDESPRITESMINIMAP"));
+  v_button->setChecked(XMSession::instance()->hideSpritesMinimap());
 
   // trail
   updateTrailCamOptions();
