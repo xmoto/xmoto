@@ -2,12 +2,13 @@
 # This file is distributed under the same license as the PACKAGE package.
 #
 # Mikhail Brinchuk <thecentury@gmail.com>, 2007, 2010.
+# Andrei Stepanov, 2020, 2022.
 msgid ""
 msgstr ""
 "Project-Id-Version: X-Moto\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-07-05 01:12+0300\n"
-"PO-Revision-Date: 2020-05-03 14:08+0400\n"
+"PO-Revision-Date: 2022-07-11 07:13+0400\n"
 "Last-Translator: \n"
 "Language-Team: American English <kde-i18n-doc@kde.org>\n"
 "Language: ru\n"
@@ -44,7 +45,7 @@ msgstr ""
 
 #: src/xmoto/GameText.h:602
 msgid "# Levels"
-msgstr "# Уровни"
+msgstr "Число уровней"
 
 #: src/xmoto/GameText.h:764
 #, c-format
@@ -66,9 +67,9 @@ msgstr[2] "%d различных уровней"
 #, c-format
 msgid "%d file"
 msgid_plural "%d files"
-msgstr[0] ""
-msgstr[1] ""
-msgstr[2] ""
+msgstr[0] "%d файл"
+msgstr[1] "%d файла"
+msgstr[2] "%d файлов"
 
 #: src/xmoto/GameText.h:766
 #, c-format
@@ -260,7 +261,7 @@ msgstr "Добавить уровень к списку избранных"
 
 #: src/xmoto/GameText.h:43
 msgid "Add to blacklist"
-msgstr "Добавить в игнор-лист"
+msgstr "Добавить в чёрный список"
 
 #: src/xmoto/GameText.h:42
 msgid "Add to favorite"
@@ -268,7 +269,7 @@ msgstr "Добавить в избранное"
 
 #: src/xmoto/GameText.h:697
 msgid "Add/remove to blacklisted levels"
-msgstr "Добавить/удалить из игнора"
+msgstr "Добавить/удалить из чёрного списка уровней"
 
 #: src/xmoto/GameText.h:695
 msgid "Add/remove to favorite levels"
@@ -276,7 +277,7 @@ msgstr "Добавить/удалить из избранных уровней"
 
 #: src/xmoto/GameText.h:511
 msgid "Added to blacklist"
-msgstr "Добавлен в игнор"
+msgstr "Добавлен в чёрный список"
 
 #: src/xmoto/GameText.h:509
 msgid "Added to favorites"
@@ -320,11 +321,11 @@ msgstr "Всем, кто помогал"
 
 #: src/xmoto/GameText.h:1069
 msgid "Are you sure you want to clear old logs?"
-msgstr ""
+msgstr "Вы действительно хотите очистить старые журналы?"
 
 #: src/xmoto/GameText.h:1076
 msgid "Are you sure you want to clear the level cache?"
-msgstr ""
+msgstr "Вы действительно хотите очистить кэш уровней?"
 
 #: src/xmoto/GameText.h:87
 #, c-format
@@ -424,7 +425,7 @@ msgstr "Наилучшее качество звука"
 
 #: src/xmoto/GameText.h:1124
 msgid "Blacklisted levels"
-msgstr "Игнорируемые уровни"
+msgstr "Уровни чёрного списка"
 
 #: src/xmoto/GameText.h:67
 msgid "Brake"
@@ -448,7 +449,7 @@ msgstr "Просмотреть доступные уровни"
 
 #: src/xmoto/GameText.h:518
 msgid "Built-in"
-msgstr ""
+msgstr "Встроенные"
 
 #: src/xmoto/GameText.h:830
 msgid "Built-in and stand-alone external levels"
@@ -468,7 +469,7 @@ msgstr "По продолжительности"
 
 #: src/xmoto/GameText.h:1079
 msgid "Cache file deleted"
-msgstr ""
+msgstr "Файл кэша удалён"
 
 #: src/xmoto/GameText.h:62
 msgid "Camera Active Zoom"
@@ -590,7 +591,7 @@ msgstr ""
 
 #: src/xmoto/GameText.h:930
 msgid "Choose which ghost to display"
-msgstr "Выберите, какого Призрака отображать"
+msgstr "Выберите призрака для отображения"
 
 #: src/xmoto/GameText.h:972
 msgid "Choose your room"
@@ -602,15 +603,15 @@ msgstr "Очистить"
 
 #: src/xmoto/GameText.h:1073 src/xmoto/GameText.h:1081
 msgid "Clear level cache"
-msgstr ""
+msgstr "Очистить кэш уровней"
 
 #: src/xmoto/GameText.h:1066
 msgid "Clear old logs"
-msgstr ""
+msgstr "Очистить старые журналы"
 
 #: src/xmoto/GameText.h:990
 msgid "Click to select screen resolution"
-msgstr "Нажмите для смены разрешения экрана"
+msgstr "Щёлкните для смены разрешения экрана"
 
 #: src/xmoto/GameText.h:91
 msgid "Close"
@@ -694,7 +695,7 @@ msgstr "Подключиться"
 
 #: src/xmoto/GameText.h:803
 msgid "Connect to/disconnect from the server"
-msgstr ""
+msgstr "Подключиться / отключиться от сервера"
 
 #: src/xmoto/GameText.h:1106
 msgid "Connect/disconnect the client to the server"
@@ -702,11 +703,11 @@ msgstr "Подключить/отключить клиент от сервера
 
 #: src/xmoto/GameText.h:796
 msgid "Connected players:"
-msgstr "Подключены игроки:"
+msgstr "Подключённые игроки:"
 
 #: src/xmoto/GameText.h:801
 msgid "Connexion at startup"
-msgstr "Подключится при запуске"
+msgstr "Подключаться при запуске"
 
 #: src/xmoto/GameText.h:557
 msgid "Contrast"
@@ -722,7 +723,7 @@ msgstr "Управление"
 
 #: src/xmoto/GameText.h:517
 msgid "Copy path"
-msgstr ""
+msgstr "Копировать путь"
 
 #: src/xmoto/GameText.h:1170
 msgid "Crappiest X-Moto levels according to the web votes"
@@ -770,11 +771,11 @@ msgstr "Анимация смерти"
 
 #: src/xmoto/GameText.h:93
 msgid "Decrease console history size"
-msgstr "Уменьшить максимальный объем информации из истории чата"
+msgstr "Уменьшить размер истории чата в консоли"
 
 #: src/xmoto/GameText.h:785
 msgid "Default port"
-msgstr "Порт по умолчанию"
+msgstr "Стандартный порт"
 
 #: src/xmoto/GameText.h:256
 msgid "Defaults"
@@ -786,15 +787,17 @@ msgstr "Удалить"
 
 #: src/xmoto/GameText.h:1071
 msgid "Delete all previous log files from disk"
-msgstr ""
+msgstr "Удалить все прошлые файлы журналов с диска"
 
 #: src/xmoto/GameText.h:1078
 msgid "Delete cache file"
-msgstr ""
+msgstr "Удалить файл кэша"
 
 #: src/xmoto/GameText.h:1083
 msgid "Delete cached level file from disk to force a clean state (safe)"
 msgstr ""
+"Удалить файл кэша уровней с диска для принудительного перехода в чистое "
+"состояние (безопасно)"
 
 #: src/xmoto/GameText.h:261
 msgid "Delete from blacklist"
@@ -814,7 +817,7 @@ msgstr "Удалить уровень из избранных"
 
 #: src/xmoto/GameText.h:512
 msgid "Deleted from blacklist"
-msgstr "Удалён из игнора"
+msgstr "Удалён из чёрного списка"
 
 #: src/xmoto/GameText.h:510
 msgid "Deleted from favorites"
@@ -856,11 +859,11 @@ msgstr "Отключиться"
 
 #: src/xmoto/GameText.h:265
 msgid "Display Ghost Information"
-msgstr "Показывать информацию о Призраке"
+msgstr "Показывать информацию о призраке"
 
 #: src/xmoto/GameText.h:264
 msgid "Display Ghost time difference"
-msgstr "Показывать разницу времени Призрака"
+msgstr "Показывать разницу времени призрака"
 
 #: src/xmoto/GameText.h:937
 msgid "Display an arrow to display where are located the bikes on the map"
@@ -872,7 +875,7 @@ msgstr "Показывать стрелку на мотоцикл"
 
 #: src/xmoto/GameText.h:939
 msgid "Display the time difference between the ghost and you"
-msgstr "Показывать разницу времени между Призраком и вами"
+msgstr "Показывать разницу времени между призраком и вами"
 
 #: src/xmoto/GameText.h:257
 msgid "Do you really want to delete player?"
@@ -1014,7 +1017,7 @@ msgstr "Проигрывать звук двигателя"
 
 #: src/xmoto/GameText.h:289
 msgid "Enable Ghost"
-msgstr "Показывать Призрака"
+msgstr "Показывать призрака"
 
 #: src/xmoto/GameText.h:294
 msgid "Enable WWW Access"
@@ -1121,7 +1124,7 @@ msgstr "Ошибка при поиске уровней."
 
 #: src/xmoto/GameText.h:522
 msgid "Failed to copy to clipboard"
-msgstr ""
+msgstr "Не удалось скопировать в буфер обмена"
 
 #: src/xmoto/GameText.h:301
 msgid "Failed to download high-scores."
@@ -1353,7 +1356,7 @@ msgstr ""
 
 #: src/xmoto/GameText.h:487
 msgid "Hide ghosts"
-msgstr "Не показывать призраков"
+msgstr "Скрыть призраков"
 
 #: src/xmoto/GameText.h:488
 msgid "High"
@@ -1388,8 +1391,8 @@ msgid ""
 "copies you did."
 msgstr ""
 "Если вы скопировали вручную ваши файлы пользователя X-Moto (.xmoto) на "
-"другие компьютера, не следует использовать эту функциональность,иначе ваша "
-"статистика будет дублирована или не синхронизирована. Если вы все же сделали "
+"другие компьютера, не следует использовать эту функцию, иначе ваша "
+"статистика будет дублирована или не синхронизирована. Если вы всё же сделали "
 "это, удалите копии, которые вы создали."
 
 #: src/xmoto/GameText.h:592
@@ -1405,6 +1408,16 @@ msgid ""
 "Also visit https://xmoto.tuxfamily.org to make sure you've\n"
 "got the latest version."
 msgstr ""
+"Важное замечание!\n"
+"\n"
+"Это версия X-Moto находится в активной разработке!\n"
+"Обратная связь всякого рода крайне важна, поскольку\n"
+"игра может стать лучше.\n"
+"Отправляйте ошибки, идеи, комментарии,пожелания,\n"
+"письма с угрозами и прочее на xmoto@tuxfamily.org\n"
+"\n"
+"Также посетите http://xmoto.tuxfamily.org, чтобы\n"
+"проверить наличие у вас последней версии."
 
 #: src/xmoto/GameText.h:1090
 msgid "Impossible"
@@ -1544,15 +1557,15 @@ msgstr "Для этого повтора требуется уровень '%s'!
 
 #: src/xmoto/GameText.h:515
 msgid "Level File"
-msgstr ""
+msgstr "Файл уровней"
 
 #: src/xmoto/GameText.h:516
 msgid "Level ID"
-msgstr ""
+msgstr "ИД уровня"
 
 #: src/xmoto/GameText.h:513
 msgid "Level Info"
-msgstr "Информация об уровне"
+msgstr "Сведения об уровне"
 
 #: src/xmoto/GameText.h:514
 msgid "Level Name"
@@ -1568,7 +1581,7 @@ msgstr "Наборы уровней"
 
 #: src/xmoto/GameText.h:1074
 msgid "Level cache cleared"
-msgstr ""
+msgstr "Кэш уровней очищен"
 
 #: src/xmoto/GameText.h:1195
 #, c-format
@@ -1678,7 +1691,7 @@ msgstr "Логин"
 
 #: src/xmoto/GameText.h:1067
 msgid "Logs cleared"
-msgstr ""
+msgstr "Журналы очищены"
 
 #: src/xmoto/GameText.h:1148
 msgid "Long levels"
@@ -1720,7 +1733,7 @@ msgstr "Хозяин"
 
 #: src/xmoto/GameText.h:541
 msgid "Max Framerate"
-msgstr ""
+msgstr "Максимальная частота кадров"
 
 #: src/xmoto/GameText.h:610
 msgid "Medals"
@@ -1784,7 +1797,7 @@ msgstr "Переместить камеру вверх"
 
 #: src/xmoto/GameText.h:568
 msgid "Multi"
-msgstr "Мульти"
+msgstr "Совместно"
 
 #: src/xmoto/GameText.h:149
 msgid "Music"
@@ -1820,7 +1833,7 @@ msgstr "Сетевая ошибка: вы отключены"
 
 #: src/xmoto/GameText.h:1113
 msgid "Network playing mode : just see other players as ghosts"
-msgstr "Режим сетевой игры: видеть других игроков как призраков"
+msgstr "Режим сетевой игры: другие игроки отображаются призраками"
 
 #: src/xmoto/GameText.h:1133
 msgid "Never played levels"
@@ -2281,6 +2294,9 @@ msgid ""
 "https://xmoto.tuxfamily.org\n"
 "for more information."
 msgstr ""
+"Прочтите файл README или постите наш сайт\n"
+"http://xmoto.tuxfamily.org\n"
+"для подробностей."
 
 #: src/xmoto/GameText.h:1086
 msgid "Really easy"
@@ -2292,7 +2308,7 @@ msgstr "Чрезвычайно красивый"
 
 #: src/xmoto/GameText.h:748
 msgid "Reference room"
-msgstr "Упоминаемая комната"
+msgstr "Основная комната"
 
 #: src/xmoto/GameText.h:775
 msgid "Reinitialize zoom"
@@ -2381,7 +2397,7 @@ msgstr "Вернуть настройки по умолчанию"
 
 #: src/xmoto/GameText.h:656
 msgid "Rewind while replaying"
-msgstr ""
+msgstr "Перемотка назад при воспрозведении"
 
 #: src/xmoto/GameText.h:611 src/xmoto/GameText.h:670
 msgid "Room"
@@ -2547,7 +2563,7 @@ msgstr "Сервер, к которому вы хотите подсоедини
 
 #: src/xmoto/GameText.h:867
 msgid "Set the maximum framerate the game can run at"
-msgstr ""
+msgstr "Задать максимальную частоту кадров для игры"
 
 #: src/xmoto/GameText.h:1089
 msgid "Several difficulties"
@@ -2603,7 +2619,7 @@ msgstr "Показывать информацию об игроках и про 
 
 #: src/xmoto/GameText.h:485
 msgid "Show level info"
-msgstr ""
+msgstr "Показать сведения об уровне"
 
 #: src/xmoto/GameText.h:291
 msgid "Show next medal in-game"
@@ -2619,7 +2635,7 @@ msgstr "Показывать мировой рекорд уровня во вр�
 
 #: src/xmoto/GameText.h:929
 msgid "Show the ghost if possible in the game"
-msgstr "Показывать Призрака в игре, если это возможно"
+msgstr "Показывать призрака в игре, если это возможно"
 
 #: src/xmoto/GameText.h:978
 msgid "Show the speedometer when playing"
@@ -2643,7 +2659,7 @@ msgstr "Серебро"
 
 #: src/xmoto/GameText.h:789
 msgid "Simple ghost mode"
-msgstr "Режим простого призрака"
+msgstr "Простой режим призрака"
 
 #: src/xmoto/GameText.h:1057
 msgid "Skip this report"
@@ -2728,7 +2744,7 @@ msgstr "Украденные рекорды"
 
 #: src/xmoto/GameText.h:571
 msgid "Stop the game once a player ends the level"
-msgstr "Заканчивать игру если кто-то финишировал"
+msgstr "Остановить игру, если кто-то финишировал"
 
 #: src/xmoto/GameText.h:1010
 msgid ""
@@ -2767,7 +2783,7 @@ msgstr "Сменить байкера"
 
 #: src/xmoto/GameText.h:1064
 msgid "Switch ghosttrail rendering"
-msgstr "Вкл/откл отображение след призрака"
+msgstr "Вкл/откл отображение следа призрака"
 
 #: src/xmoto/GameText.h:702
 msgid "Switch graphics mode"
@@ -3064,7 +3080,7 @@ msgstr "Вкл/откл режим темы и показ граней"
 
 #: src/xmoto/GameText.h:561
 msgid "Total time you scored / total highscore time for levels you finished"
-msgstr "Ваше суммарное время / суммарный рекорд для пройдённых уровней"
+msgstr "Ваше суммарное время / суммарный рекорд для пройденных уровней"
 
 #: src/xmoto/LevelsText.h:46
 msgid "Touch it to finish the level. Good luck with the rest :)"
@@ -3287,7 +3303,7 @@ msgstr ""
 
 #: src/xmoto/GameText.h:57
 msgid "Use theme cursor"
-msgstr ""
+msgstr "Использовать курсор темы"
 
 #: src/xmoto/GameText.h:921
 msgid "Use these settings"
@@ -3385,11 +3401,11 @@ msgstr "Связь с Интернетом включена"
 #: src/xmoto/GameText.h:335
 #, c-format
 msgid "Web ghost of %s"
-msgstr "Веб призрак %s"
+msgstr "Веб-призрак %s"
 
 #: src/xmoto/GameText.h:614
 msgid "Web votes"
-msgstr "Интернет голосования"
+msgstr "Интернет-голосования"
 
 #: src/xmoto/LevelsText.h:42
 msgid "Welcome to X-Moto!"
@@ -3405,11 +3421,11 @@ msgstr ""
 
 #: src/xmoto/GameText.h:935
 msgid "When starting a level with a ghost, display who the ghost is of"
-msgstr "Начиная уровень с Призраком, показывать, чей это Призрак"
+msgstr "При старте игры на уровне с призраком, показывать, чей он"
 
 #: src/xmoto/GameText.h:945
 msgid "Whether to show the theme cursor or the system cursor"
-msgstr ""
+msgstr "Отображать курсор из темы или системный"
 
 #: src/xmoto/GameText.h:923
 msgid "Write the IP address or host name of proxy server to use"
@@ -3531,7 +3547,7 @@ msgstr "Ваше лучшее время"
 
 #: src/xmoto/GameText.h:1162
 msgid "Your blacklisted levels"
-msgstr "Игнорируемые уровни"
+msgstr "Ваш чёрный список уровней"
 
 #: src/xmoto/GameText.h:1161
 msgid "Your favorite levels"
