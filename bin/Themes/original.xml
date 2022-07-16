@@ -630,4 +630,42 @@
 <sprite type="Effect" name="EdgeGrayBricks1" file="EdgeGrayBricks1.jpg" />
 <sprite type="Effect" name="EdgeIce1" file="EdgeIce1.png" />
 <sprite type="Effect" name="EdgeRedBricks1" file="EdgeRedBricks1.jpg" />
+<sprite type="Texture" name="Arctics_bw" file="Arctics_bw_909.jpg" sum="372c91d4d00bf55781d0b0bdc17714ed"/>
+<sprite type="EdgeEffect" name="BloodEffect_bw" file="BloodEffect_bw_878.png" scale="1" depth="1" sum="43610a1e63cce6c585aeff72cac35636"/>
+<sprite type="Texture" name="Cherrywood" file="Cherrywood_882.png" sum="d9e756f45f132005155eb8fd5e203255"/>
+<sprite type="Texture" name="Dirt_bw" file="Dirt_bw_907.jpg" sum="c2fbb097b011c28c3d55d6b36255e757"/>
+<sprite type="EdgeEffect" name="EdgeGrass_bw" file="EdgeGrass_bw_876.png" scale="1" depth="1" sum="7f03db961ce7c00c4e64baa4b4ea820b"/>
+<sprite type="Entity" name="FireEx" file="FireEx_895.jpg" sum="d3721ab84566b5a2ea13f6f7f29f53e3"/>
+<sprite type="Texture" name="hatch_01_dark" file="hatch_01_dark_874.jpg" sum="4eb4034c8fae2666968b0adb7a4c8b63"/>
+<sprite type="EdgeEffect" name="KRWRockEdge_bw" file="KRWRockEdge_bw_877.png" scale="1" depth="1" sum="76a081ed798d361efd8bfead67acab87"/>
+<sprite type="Entity" name="light" file="light_933.png" centerX="256" centerY="256" sum="cc02a3b03772774d901b9529fc3dc3d7"/>
+<sprite type="Texture" name="metall" file="metall_935.png" sum="5f08f8be32273939f14e5fdc95ea0c57"/>
+<sprite type="Texture" name="MetalTile_bw" file="MetalTile_bw_880.png" sum="31bd22e829c4a2580595b97ebc0cf839"/>
+<sprite type="EdgeEffect" name="MetalTile_Edge" file="MetalTile_Edge_875.png" scale="1" depth="1" sum="3e631244e6632ff6f1b06bd877d83b50"/>
+<sprite type="Texture" name="mountain" file="mountain_929.png" sum="62181088e4e3025c17e78f0ae7a5437e"/>
+<sprite type="Texture" name="mud3" file="mud3_905.jpg" sum="dd6cc70cddd76d3c350590c84c944743"/>
+<sprite type="EdgeEffect" name="PlasticEdge" file="PlasticEdge_837.png" scale="1" depth="1" sum="f9c644904dd874006ab77b54da13e299"/>
+<sprite type="EdgeEffect" name="rock_edge" file="rock_edge_932.png" sum="45556f1f7f823e4c52e608cc4a5bd952"/>
+<sprite type="Texture" name="rocks_bumpmapped" file="rocks_bumpmapped_931.png" sum="6ca397852bd39f1dcddb7dab7471e15b"/>
+<sprite type="Texture" name="Rust_bw" file="Rust_bw_910.jpg" sum="f3ac39b0a2a6f62dbaf88f46c37e13a2"/>
+<sprite type="Entity" name="spot_light" file="spot_light_934.png" centerX="256" centerY="40" sum="d8a8230b48096fd344d3ce352355e82a"/>
+<sprite type="Texture" name="T_Dirt" file="T_Dirt_920.jpg" sum="44b2c5a6a5ddfd7e81ea78ea7f7983a9"/>
+<sprite type="Texture" name="T_Grass1" file="T_Grass1_924.jpg" sum="84f147fe71a7686410d75f8dc44162fa"/>
+<sprite type="Texture" name="T_Grass2" file="T_Grass2_925.jpg" sum="ba96795e91557d2a56840cec23ddad2d"/>
+<sprite type="Texture" name="T_Grass3" file="T_Grass3_944.jpg" sum="38693c6ac8030c16ec3de898e8daf93d"/>
+<sprite type="Texture" name="Tiles_bw" file="Tiles_bw_908.jpg" sum="973b1267ce0f92a2484032a1c6ad6a55"/>
+<sprite type="Texture" name="T_Stone" file="T_Stone_922.jpg" sum="7c3526cb970d4be922f7a80f81eda46a"/>
+<sprite type="Entity" name="Checkpoint_0" file="Checkpoint_0_959.png" width="1.8" height="1.8" centerX="0.9" centerY="0.9" sum="b677f1261b17962cd94697609132150e" />
+<sprite type="Entity" name="Checkpoint_1" fileBase="Checkpoint_1_958_" fileExtension="png" width="1.8" height="1.8" centerX="0.9" centerY="0.9" delay="0.05">
+<frame sum="1b623e91a2d350f309c5e3270839fbde" />
+<frame sum="1c30507adfb66677d500f2de581e0369" />
+<frame sum="92334a4aedd5f2941fa9f3c0ee51f718" />
+<frame sum="c77b136bf51b00fc7a0a05b1c860925b" />
+<frame sum="9d4be2745deb585fa2ddd028ebd5f484" />
+<frame sum="747ad0d0e7581d45fb1532becf32ec41" />
+<frame sum="a3844ee3f2b1e6994c4f467e36453968" />
+<frame sum="9012b9ef52b103088af392ed09450ea8" />
+<frame sum="d004b59c52c956ea4574391dcba1fbeb" />
+<frame sum="a392ff0a0185d145329061f0fb88753c" />
+</sprite>
 </xmoto_theme>
