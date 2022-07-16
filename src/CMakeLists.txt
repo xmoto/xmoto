@@ -521,7 +521,7 @@ target_compile_definitions(xmoto PUBLIC $<$<BOOL:${STATIC_BUILD}>:LIBXML_STATIC>
 target_compile_definitions(xmoto PUBLIC SVN_REV=\"git\")
 
 # options
-target_compile_definitions(xmoto PRIVATE CONFIGURE_DEFAULT_THEME=\"Modern\")
+target_compile_definitions(xmoto PRIVATE CONFIGURE_DEFAULT_THEME=\"Classic\")
 
 if(CMAKE_SYSTEM_NAME MATCHES Windows)
   target_compile_definitions(xmoto PRIVATE
