@@ -116,6 +116,10 @@ bool Sound::isInitialized() {
 
 void Sound::update(void) {}
 
+int64_t Sound::RWops_size(SDL_RWops *context) {
+  return -1;
+}
+
 int64_t Sound::RWops_seek(SDL_RWops *context, int64_t offset, int whence) {
   FileHandle *pf = (FileHandle *)context->hidden.unknown.data1;
   switch (whence) {
@@ -165,6 +169,7 @@ SoundSample *Sound::loadSample(const std::string &File) {
   pOps->close = RWops_close;
   pOps->read = RWops_read;
   pOps->seek = RWops_seek;
+  pOps->size = RWops_size;
   pOps->write = RWops_write;
   pOps->type = 1000;
 
