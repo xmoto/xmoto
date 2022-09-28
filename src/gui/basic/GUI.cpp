@@ -408,6 +408,10 @@ void UIMsgBox::paint(void) {
 
   std::string s = utf8::utf8_substring(m_textEdit.text(), 0, m_textEdit.cursorPos());
 
+  if (m_textInputFont) {
+    setFont(m_textInputFont);
+  }
+
   if (m_textEdit.text() != "") {
     FontManager *fm = getFont();
     FontGlyph *fg = fm->getGlyph(s);
@@ -450,7 +454,6 @@ void UIMsgBox::paint(void) {
             24,
             MAKE_COLOR(255, 0, 0, 255));
 
-    setFont(m_textInputFont);
     putText(xOffset, yOffset, m_textEdit.text());
   }
 }

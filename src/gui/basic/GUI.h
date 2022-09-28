@@ -538,6 +538,7 @@ public:
   void setTextInput(const std::string &s) {
     m_displayText = s;
     m_textEdit.setText(s);
+    m_textEdit.jumpToEnd();
   }
   void setTextInputFont(FontManager *pFont) { m_textInputFont = pFont; }
   void addCompletionWord(std::string &word);
