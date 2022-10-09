@@ -66,11 +66,13 @@ std::pair<std::string, std::string> Locales::changeLocale(
           setlocale(LC_MESSAGES, NULL));
 #endif
 
+#ifdef __GLIBC__
   /* Make change known.  */
   {
     extern int _nl_msg_cat_cntr;
     ++_nl_msg_cat_cntr;
   }
+#endif
 
   std::pair<std::string, std::string> locale_str(
     locale.first == NULL ? std::string("") : std::string(locale.first),
