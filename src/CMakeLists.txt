@@ -51,13 +51,19 @@ endif()
 
 # Can't disable yet
 if(ON OR USE_SDLGFX)
-  find_package(SDL2 REQUIRED)
+  # This is a workaround required on some systems that ship a broken sdl2-config.cmake
+  find_library(SDL2_LIBRARIES NAMES SDL2 SDL2main)
+  if(NOT SDL2_LIBRARIES)
+    find_package(SDL2 REQUIRED)
+
+    if("${SDL2_LIBRARIES}" STREQUAL "")
+      set(SDL2_LIBRARIES SDL2::SDL2)
+    endif()
+  endif()
+
   find_package(SDL2_mixer REQUIRED)
   find_package(SDL2_net REQUIRED)
   find_package(SDL2_ttf REQUIRED)
-  if("${SDL2_LIBRARIES}" STREQUAL "")
-    set(SDL2_LIBRARIES SDL2::SDL2)
-  endif()
 endif()
 
 find_package(SQLITE3 REQUIRED)
