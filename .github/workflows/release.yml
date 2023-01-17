@@ -52,7 +52,7 @@ jobs:
           ./linuxdeploy-x86_64.AppImage \
             --appdir="AppDir" \
             --desktop-file="AppDir/usr/share/applications/xmoto.desktop" \
-            --icon-file="AppDir/usr/share/pixmaps/xmoto.xpm"
+            --icon-file="AppDir/usr/share/pixmaps/xmoto.png"
 
           ./appimagetool-x86_64.AppImage \
             AppDir \
