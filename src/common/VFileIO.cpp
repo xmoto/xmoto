@@ -19,16 +19,17 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 =============================================================================*/
 
 #ifdef WIN32
-#include <direct.h>
-#include <io.h>
-#include <userenv.h>
-#include <winbase.h>
-#include <windows.h>
+  #include <windows.h>
+  #include <direct.h>
+  #include <io.h>
+  #include <userenv.h>
+  #include <winbase.h>
 #else
-#include <dirent.h>
-#include <sys/types.h>
-#include <unistd.h>
+  #include <dirent.h>
+  #include <sys/types.h>
+  #include <unistd.h>
 #endif
+
 #include <stdarg.h>
 #include <sys/stat.h>
 

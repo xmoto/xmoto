@@ -24,8 +24,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 /* Load in configuration */
 #include "BuildConfig.h"
 
-/* Misc. nice-to-have includes */
-#if defined(WIN32)
+#ifdef WIN32
 #include <windows.h>
 #endif
 

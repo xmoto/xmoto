@@ -4,7 +4,7 @@ set(MACOS_PLIST_PATH "${CMAKE_BINARY_DIR}/macos/Info.plist")
 set(MACOS_PLIST_IN_PATH "${PROJECT_SOURCE_DIR}/macos/Info.plist.in")
 
 set(CPACK_BUNDLE_ICON "${PROJECT_SOURCE_DIR}/macos/xmoto.icns")
-set(CPACK_DMG_VOLUME_NAME "X-Moto ${XMOTO_VERSION}")
+set(CPACK_DMG_VOLUME_NAME "${APP_NAME} ${APP_VERSION}")
 
 include(InstallRequiredSystemLibraries)
 

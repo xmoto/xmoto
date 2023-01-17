@@ -77,7 +77,13 @@ if(APPLE)
   find_library(COREFOUNDATION_LIBRARY CoreFoundation)
 endif()
 
-# sources
+# used by xdgbasedir and xmoto
+check_prototype_definition(mkdir
+  "int mkdir(const char *_Path)"
+  "0"
+  "sys/types.h;sys/stat.h"
+  MS_MKDIR
+)
 
 add_subdirectory("${PROJECT_SOURCE_DIR}/vendor/bzip2" bzip2)
 add_subdirectory("${PROJECT_SOURCE_DIR}/vendor/libccd" libccd)
@@ -482,7 +488,6 @@ target_link_libraries(xmoto PUBLIC
   ${CMAKE_DL_LIBS}
   ${OPENGL_LIBRARIES}
   ${PNG_LIBRARY}
-  $<$<AND:$<PLATFORM_ID:Windows>,$<BOOL:${IS_MSYS2}>>:SDL2main>
   ${SDL2_LIBRARIES}
   ${SDL2_MIXER_LIBRARY}
   ${SDL2_NET_LIBRARY}
@@ -502,13 +507,11 @@ check_symbol_exists(putenv stdlib.h HAVE_PUTENV)
 check_symbol_exists(setenv stdlib.h HAVE_SETENV)
 target_compile_definitions(xmoto PUBLIC HAVE_PUTENV=$<BOOL:${HAVE_PUTENV}>)
 target_compile_definitions(xmoto PUBLIC HAVE_SETENV=$<BOOL:${HAVE_SETENV}>)
-check_prototype_definition(mkdir
-  "int mkdir(const char *_Path)"
-  "0"
-  "sys/types.h;sys/stat.h"
-  MS_MKDIR
-)
 target_compile_definitions(xmoto PUBLIC MS_MKDIR=$<BOOL:${MS_MKDIR}>)
+
+if(WIN32)
+  target_compile_definitions(xmoto PRIVATE WIN32_LEAN_AND_MEAN)
+endif()
 
 if(USE_SYSTEM_Lua)
   check_symbol_exists(luaL_openlib lauxlib.h HAVE_LUAL_OPENLIB)
@@ -606,7 +609,8 @@ if(WIN32)
     # use msys prefix path as the target
     set_win32_compat_path(DLLCOPY_TARGET $ENV{MSYSTEM_PREFIX})
   else()
-    set(DLLCOPY_TARGET "i686-w64-mingw32.shared")
+    get_filename_component(mxe_target "${MXE_TOOLCHAIN_PATH}" NAME)
+    set(DLLCOPY_TARGET "${mxe_target}")
   endif()
   message("DLLCOPY_TARGET: ${DLLCOPY_TARGET}")
 

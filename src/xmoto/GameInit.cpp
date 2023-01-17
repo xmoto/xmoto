@@ -99,12 +99,7 @@ BOOL LibraryOK(STRPTR libname, ULONG version, ULONG revision) {
 }
 #endif
 
-#if defined(WIN32)
-int SDL_main(int nNumArgs, char **ppcArgs) {
-#else
 int main(int nNumArgs, char **ppcArgs) {
-#endif
-
 #ifdef __amigaos4__
   /* checking for MiniGL 2.0 */
 

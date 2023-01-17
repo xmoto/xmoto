@@ -1,8 +1,5 @@
 #!/bin/sh
 
-is_mxe=0
-mxe_compiler_suffix="-gcc"
-
 usage() {
     cat <<EOF
 Usage:
@@ -10,27 +7,20 @@ Usage:
 EOF
 }
 
-# expects <compiler> to be set
-guess_mxe_path() {
-    compiler="$1${mxe_compiler_suffix}"
-    if MXE_PATH="$(command -v -- "$compiler")"; then
-        MXE_PATH="$(dirname "$MXE_PATH" | sed -e 's|\(.\)\{0,1\}usr/bin||g')"
-    fi
-    if [ ! -d "$MXE_PATH" ]; then
-        >&2 echo "fatal: failed to guess MXE_PATH"
-        exit 1
-    fi
-}
-
 if [ $# -eq 0 ]; then >&2 usage; exit 1; fi
+
+is_mxe=0
 
 [ -n "$MSYSTEM_PREFIX" ]
 is_mxe=$?
+
+tools_dir="$(readlink -f "$(dirname "$0")")"
 
 target=""
 output_dir=""
 executable=""
 recursive=0
+
 while getopts "t:o:e:r" opt; do
     case "${opt}" in
         t) target="${OPTARG}"
@@ -44,100 +34,109 @@ while getopts "t:o:e:r" opt; do
             ;;
         r) recursive=1 ;;
         *)
-            >&2 usage; exit 1
+            >&2 usage
+            exit 1
             ;;
     esac
 done
 shift $((OPTIND-1))
 
-# check if path is relative
+# Check if path is relative
 if case "$output_dir" in /*) false;; esac; then
     if ! _output_dir="$(readlink -nf "$output_dir")"; then
-        >&2 echo "fatal: failed to resolve relative path '$output_dir'"
+        >&2 echo "Error: Failed to resolve relative path: '$output_dir'"
         exit 1
     fi
     output_dir="$_output_dir"
 fi
-mkdir -p "$output_dir" || echo 'warning: mkdir -p failed'
 
-if [ ! -d "$output_dir" ]; then
-    >&2 echo "fatal: directory '$output_dir' does not exist!"
+if ! mkdir -p "$output_dir"; then
+    >&2 echo "Error: Failed to create output directory"
+    exit 1
 fi
-echo "output_dir: $output_dir"
 
 if [ -z "$executable" ]; then
-    echo "no executable specified - running on first .exe found"
+    echo "No executable specified - Picking first .exe found"
     executable="$(find . -name "*.exe" | head -n1)"
 fi
-echo "executable: $executable"
 
-# check if we're using MXE
+echo "Output directory: $output_dir"
+echo "Executable: $executable"
+
+# Check if we're using MXE
 # (should probably use the opposite boolean convention)
 if [ "$is_mxe" -ne 0 ]; then
-    if ! command -v -- "${target}${mxe_compiler_suffix}" >/dev/null; then
-        >&2 echo "fatal: invalid target '$target'"
+    if ! command -v -- "${target}-gcc" >/dev/null; then
+        >&2 echo "Error: Invalid target '$target'"
         exit 1
     elif ! echo "$target" | grep -q -- "shared"; then
-        echo "not a shared target, exiting"
+        echo "Not a shared target, exiting"
         exit 0
     fi
 
     if [ -z "$MXE_PATH" ]; then
-        guess_mxe_path "$target"
+        MXE_PATH="$(command -- "$tools_dir/mxe_get_path.sh" "$target")"
     fi
-    echo "MXE_PATH: $MXE_PATH"
+
+    if [ -z "$MXE_PATH" ]; then
+        >&2 echo "Failed to get MXE path"
+        >&2 echo "Tools directory: $tools_dir"
+        exit 1
+    fi
+
+    echo "MXE path: $MXE_PATH"
 else
     # assume MSYS2
     MSYS2_PATH="$target"
-    echo "MSYS2_PATH: $MSYS2_PATH"
+    echo "MSYS2 path: $MSYS2_PATH"
 fi
 
-printf "\ncopying required DLLs...\n"
+printf "\nCopying required DLLs...\n"
 
-dll_check_deps() {
-    [ -z "$1" ] && { >&2 echo "argument required"; exit 1; }
+copy_dlls() {
+    [ -z "$1" ] && { >&2 echo "Error: Argument required"; exit 1; }
     path="$1"
     force="${2:-0}"
-    # make sure the specified file exists
+
     if [ ! -f "$path" ]; then
-        echo "warning: file '$path' does not exist"
+        >&2 echo "Warning: File '$path' does not exist"
     fi
 
     [ "$force" -eq 0 ] && if ! file -b -- "$path" | grep -q "(DLL)"; then
         return
     fi
 
-    # yes, using strings(1) is a dirty hack
+    if [ "$is_mxe" -ne 0 ]; then
+        dll_directory="$MXE_PATH/usr/$target/bin"
+    else
+        dll_directory="$MSYS2_PATH/bin"
+    fi
+
     strings "$path" | grep -i '\.dll$' \
         | while IFS="" read -r dll || [ -n "$dll" ]; do
 
-        if [ "$is_mxe" -ne 0 ]; then
-            dll_path="$MXE_PATH/usr/$target/bin/$dll"
-        else
-            dll_path="$MSYS2_PATH/bin/$dll"
-        fi
-        echo "dll_path: $dll_path"
+        source_path="$dll_directory/$dll"
+        dest_path="$output_dir/$dll"
 
-        # check if the file has already been copied to $output_dir
-        if [ ! -f "$output_dir/$dll" ] && [ -f "$dll_path" ]; then
-            cp "$dll_path" "$output_dir/$dll"
-            dll_check_deps "$dll_path"
-        fi
+        [ ! -f "$source_path" ] && continue
+        [ -f "$dest_path" ] && continue
+        echo "  $dll"
+
+        cp -n -- "$source_path" "$output_dir/$dll"
+        copy_dlls "$source_path"
     done
 }
 
 if [ "$recursive" -ne 0 ]; then
-    # technically, even with this,
-    # you may still need to rely on copydlldeps.sh
-    dll_check_deps "$executable" 1
+    echo "Copying DLLs:"
+    copy_dlls "$executable" 1
+    echo "Done copying DLLs"
 else
-    # check out:
-    # https://github.com/mxe/mxe/blob/master/tools/copydlldeps.md
-
     OBJDUMP="$MXE_PATH/usr/bin/$target-objdump"
+
     if [ ! -e "$OBJDUMP" ]; then
         OBJDUMP="$(command -v "objdump")" || \
-            { >&2 echo "fatal: objdump not found"; exit 1; }
+            { >&2 echo "Error: objdump not found"; exit 1; }
     fi
 
     "$MXE_PATH/tools/copydlldeps.sh" \
@@ -147,4 +146,3 @@ else
         --copy \
         --objdump "$OBJDUMP"
 fi
-

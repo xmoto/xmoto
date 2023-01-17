@@ -19,9 +19,9 @@
 	<key>CFBundlePackageType</key>
 	<string>APPL</string>
 	<key>CFBundleShortVersionString</key>
-	<string>${XMOTO_VERSION}</string>
+	<string>${APP_VERSION}</string>
 	<key>CFBundleVersion</key>
-	<string>${XMOTO_VERSION}</string>
+	<string>${APP_VERSION}</string>
 	<key>CFBundleDocumentTypes</key>
 	<array>
 		<dict>

@@ -335,7 +335,7 @@ void DrawLibOpenGL::init(unsigned int nDispWidth,
 
 #if !defined(WIN32) && !defined(__APPLE__) && !defined(__amigaos4__)
   SDL_Surface *v_icon = SDL_LoadBMP(
-    (XMFS::getSystemDataDir() + std::string("/xmoto_icone_x.ico")).c_str());
+    (XMFS::getSystemDataDir() + std::string("/xmoto.ico")).c_str());
   if (v_icon != NULL) {
     SDL_SetSurfaceBlendMode(v_icon, SDL_BLENDMODE_BLEND);
     SDL_SetColorKey(

@@ -20,11 +20,11 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
 #include "Environment.h"
 #include "VExcept.h"
+#include <stdlib.h>
+#include <string.h>
 #ifdef WIN32
 #include <windows.h>
 #endif
-#include <stdlib.h>
-#include <string.h>
 
 std::vector<char *> Environment::m_chars;
 
@@ -61,7 +61,6 @@ void Environment::set_variable(const std::string &i_variable,
   }
   v_set = true;
 #elif HAVE_PUTENV
-#warning "Missing setenv"
   std::string v_buffer;
   char *v_str;
 
@@ -83,8 +82,7 @@ void Environment::set_variable(const std::string &i_variable,
   v_set = true;
 
 #else
-#warning "Missing putenv"
-#warning "No C environment capabilities"
+  #warning "Missing setenv and putenv"
 #endif
 
   if (v_set == false) {
