@@ -852,18 +852,6 @@ void StateOptions::checkEvents() {
   //}
 
   v_button = reinterpret_cast<UIButton *>(
-      m_GUI->getChild("MAIN:TABS:GENERAL_TAB:TABS:INFOS_TAB:CLEAROLDLOGS_BUTTON"));
-  if (v_button->isClicked()) {
-    v_button->setClicked(false);
-
-    StateMessageBox *v_msgboxState = new StateMessageBox(
-      this, GAMETEXT_CONFIRMCLEAROLDLOGS, UI_MSGBOX_YES | UI_MSGBOX_NO);
-    StateManager::instance()->pushState(v_msgboxState);
-    v_msgboxState->setMsgBxId("CLEAROLDLOGS");
-    v_msgboxState->makeActiveButton(UI_MSGBOX_NO);
-  }
-
-  v_button = reinterpret_cast<UIButton *>(
       m_GUI->getChild("MAIN:TABS:GENERAL_TAB:TABS:INFOS_TAB:CLEARLEVELCACHE_BUTTON"));
   if (v_button->isClicked()) {
     v_button->setClicked(false);
@@ -1762,17 +1750,6 @@ UIWindow *StateOptions::makeWindowOptions_infos(UIWindow *i_parent) {
   p += 20;
   str_net << XM_NET_PROTOCOL_VERSION;
   makeWindowOptions_infos_line(v_window, "xmNet version", str_net.str(), p);
-
-  v_button = new UIButton(v_window,
-      20,
-      v_window->getPosition().nHeight - 68 - 57,
-      GAMETEXT_CLEAROLDLOGS,
-      207,
-      57);
-  v_button->setID("CLEAROLDLOGS_BUTTON");
-  v_button->setFont(drawlib->getFontSmall());
-  v_button->setType(UI_BUTTON_TYPE_LARGE);
-  v_button->setContextHelp(CONTEXTHELP_CLEAROLDLOGS);
 
   v_button = new UIButton(v_window,
       20,
@@ -3222,22 +3199,6 @@ void StateOptions::sendFromMessageBox(const std::string &i_id,
       Input::instance()->setDefaultConfig();
       XMSession::instance()->setToDefault();
       updateOptions();
-    }
-  }
-
-  else if (i_id == "CLEAROLDLOGS") {
-    if (i_button == UI_MSGBOX_YES) {
-      int count = Logger::deleteOldFiles();
-
-      auto format = GAMETEXT_XFILES(count);
-      auto size = std::snprintf(nullptr, 0, format, count);
-      std::string countStr(size + 1, '\0');
-      std::sprintf(&countStr[0], format, count);
-
-      std::ostringstream msg;
-      msg << GAMETEXT_LOGSCLEARED << " (" << countStr << ")";
-
-      SysMessage::instance()->displayInformation(msg.str());
     }
   }
 

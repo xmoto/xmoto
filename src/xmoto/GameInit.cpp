@@ -252,7 +252,6 @@ void GameApp::run_load(int nNumArgs, char **ppcArgs) {
   XMSession::instance()->loadArgs(
     &v_xmArgs); /* overload default session by xmargs     */
 
-  Logger::deleteOldFiles(XMSession::instance()->logRetentionCount());
   Logger::setVerbose(
     XMSession::instance()->isVerbose()); /* apply verbose mode */
   Logger::setActiv(XMSession::instance()->noLog() ==

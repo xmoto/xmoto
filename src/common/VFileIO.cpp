@@ -1158,7 +1158,7 @@ bool XMFS::copyFile(FileDataType i_fdt,
   return true;
 }
 
-bool XMFS::renameUserFile(const std::string &From, const std::string &To) {
+bool XMFS::moveFile(const std::string &From, const std::string &To) {
   return rename(From.c_str(), To.c_str()) == 0;
 }
 
@@ -1500,14 +1500,6 @@ int XMFS::mkDir(const char *pcPath) {
 #endif
 }
 
-bool XMFS::mklink(const std::string &source, const std::string &dest) {
-#ifdef WIN32
-  return CreateHardLinkA(dest.c_str(), source.c_str(), nullptr);
-#else
-  return symlink(source.c_str(), dest.c_str()) == 0;
-#endif
-}
-
 std::string XMFS::binCheckSum() {
   return XMFS::m_binCheckSum;
 }
@@ -1682,7 +1674,7 @@ void XMFS::migrateFSToXdgBaseDirFile(const std::string &i_src,
   mkArborescence(i_dest);
 
   // move the file
-  if (renameUserFile(i_src, i_dest) == false) {
+  if (moveFile(i_src, i_dest) == false) {
     throw Exception("Unable to migrate the file " + i_src + " to " + i_dest);
   }
 }

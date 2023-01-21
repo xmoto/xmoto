@@ -157,7 +157,6 @@ void XMSession::setToDefault() {
   m_clientServerPort = DEFAULT_CLIENTSERVERPORT;
   m_clientFramerateUpload = DEFAULT_CLIENTFRAMERATEUPLOAD;
   m_musicOnAllLevels = DEFAULT_MUSICONALLLEVELS;
-  m_logRetentionCount = DEFAULT_LOGRETENTIONCOUNT;
   m_proxySettings.setDefault();
 }
 
@@ -302,7 +301,6 @@ void XMSession::loadConfig(UserConfig *config, bool loadProfile) {
   m_webThemesURLBase = config->getString("WebThemesURLBase");
   m_webLevelsUrl = config->getString("WebLevelsURL");
   m_uploadDbSyncUrl = config->getString("WebDbSyncUploadURL");
-  m_logRetentionCount = config->getInteger("LogRetentionCount");
 }
 
 void XMSession::loadProfile(const std::string &i_id_profile, xmDatabase *pDb) {
@@ -532,7 +530,6 @@ void XMSession::save(UserConfig *v_config, xmDatabase *pDb) {
   v_config->setString("WebHighscoreUploadURL", m_uploadHighscoreUrl);
   v_config->setString("WebLevelsURL", m_webLevelsUrl);
   v_config->setString("WebDbSyncUploadURL", m_uploadDbSyncUrl);
-  v_config->setInteger("LogRetentionCount", m_logRetentionCount);
 
   v_config->setFloat("ReplayFrameRate", m_replayFrameRate);
   v_config->setBool("StoreReplays", m_storeReplays);
@@ -1404,14 +1401,6 @@ void XMSession::setAdminMode(bool i_value) {
   m_adminMode = i_value;
 }
 
-int XMSession::logRetentionCount() const {
-  return m_logRetentionCount;
-}
-
-void XMSession::setLogRetentionCount(int i_value) {
-  m_logRetentionCount = i_value;
-}
-
 bool XMSession::enableJoysticks() const {
   return m_enableJoysticks;
 }
@@ -1699,5 +1688,4 @@ void XMSession::createDefaultConfig(UserConfig *v_config) {
   v_config->createVar("WebThemesURL", DEFAULT_WEBTHEMES_URL);
   v_config->createVar("WebThemesURLBase", DEFAULT_WEBTHEMES_SPRITESURLBASE);
   v_config->createVar("WebHighscoreUploadURL", DEFAULT_UPLOADREPLAY_URL);
-  v_config->createVar("LogRetentionCount", std::to_string(DEFAULT_LOGRETENTIONCOUNT));
 }

@@ -96,8 +96,7 @@ public:
     std::string &To_really_done,
     bool mkdirs = false);
 
-  // you can rename only user files
-  static bool renameUserFile(const std::string &From, const std::string &To);
+  static bool moveFile(const std::string &From, const std::string &To);
 
   static void deleteFile(FileDataType i_fdt, const std::string &File);
 
@@ -172,8 +171,6 @@ public:
   static bool isPathAbsolute(const std::string &Path);
 
   static int mkDir(const char *pcPath);
-
-  static bool mklink(const std::string &source, const std::string &dest);
 
   /* Data interfaces */
   static std::string getUserDir(FileDataType i_fdt);
