@@ -173,7 +173,7 @@ msgstr ""
 
 #: src/xmoto/GameText.h:35
 msgid "11 kHz"
-msgstr "11 КГц"
+msgstr "11 кГц"
 
 #: src/xmoto/GameText.h:36
 msgid "16-bit"
@@ -185,11 +185,11 @@ msgstr "16-битный звук, хорошее качество"
 
 #: src/xmoto/GameText.h:37
 msgid "22 kHz"
-msgstr "22 КГц"
+msgstr "22 кГц"
 
 #: src/xmoto/GameText.h:38
 msgid "44 kHz"
-msgstr "44 КГц"
+msgstr "44 кГц"
 
 #: src/xmoto/GameText.h:39
 msgid "8-bit"
@@ -301,23 +301,22 @@ msgstr "Все уровни"
 
 #: src/xmoto/GameText.h:864
 msgid "Allow X-Moto to ask you your mind about levels"
-msgstr "Разрешить Х-Moto спрашивать ваше мнения об уровнях"
+msgstr "Разрешить Х-Moto спрашивать ваше мнение об уровнях"
 
 #: src/xmoto/GameText.h:736
 msgid "Allow web forms"
-msgstr "Разрешить веб-формах"
+msgstr "Разрешить веб-формы"
 
 #: src/xmoto/GameText.h:728
 msgid ""
 "An unexpected error has occurred. There may be some problems with the web "
 "site."
 msgstr ""
-"Произошла неожиданная ошибка\n"
-"Сайт, возможно, работает неправильно."
+"Произошла неожиданная ошибка. Сайт, возможно, работает неправильно."
 
 #: src/xmoto/GameText.h:231
 msgid "Anyone who has helped in any way"
-msgstr "Всем, кто помогал"
+msgstr "Всем, кто помогал любым образом"
 
 #: src/xmoto/GameText.h:1069
 msgid "Are you sure you want to clear old logs?"
@@ -337,7 +336,7 @@ msgstr[2] "Вы действительно хотите удалить %i пов
 
 #: src/xmoto/GameText.h:665
 msgid "Are you sure you want to reset config to defaults ?"
-msgstr "Уверены ли, что хотите сбросить конфигурации по умолчанию?"
+msgstr "Уверены ли, что хотите сбросить настройки к стандартным?"
 
 #: src/xmoto/GameText.h:1088
 msgid "At least one difficulty"
@@ -361,7 +360,7 @@ msgstr "Автор"
 
 #: src/xmoto/GameText.h:60
 msgid "Auto zoom"
-msgstr "Авто приближение"
+msgstr "Автомасштабирование"
 
 #: src/xmoto/GameText.h:54
 msgid "Automatic"
@@ -461,11 +460,11 @@ msgstr "Автор:"
 
 #: src/xmoto/GameText.h:616 src/xmoto/GameText.h:1131
 msgid "By best driver"
-msgstr "Лучшие водители"
+msgstr "Лучшие гонщики"
 
 #: src/xmoto/GameText.h:617
 msgid "By length"
-msgstr "По продолжительности"
+msgstr "По длительности"
 
 #: src/xmoto/GameText.h:1079
 msgid "Cache file deleted"
@@ -473,7 +472,7 @@ msgstr "Файл кэша удалён"
 
 #: src/xmoto/GameText.h:62
 msgid "Camera Active Zoom"
-msgstr "Активный зум камеры"
+msgstr "Активное масштабирование камеры"
 
 #: src/xmoto/GameText.h:1246
 #, c-format
@@ -503,11 +502,11 @@ msgstr "Каталонский"
 
 #: src/xmoto/GameText.h:76
 msgid "Change Key..."
-msgstr "Изменить клавишу..."
+msgstr "Сменить клавишу..."
 
 #: src/xmoto/GameText.h:75
 msgid "Change direction"
-msgstr "Изменить направление"
+msgstr "Сменить направление"
 
 #: src/xmoto/GameText.h:836
 msgid "Change player profile"
@@ -515,7 +514,7 @@ msgstr "Сменить профиль игрока"
 
 #: src/xmoto/GameText.h:1022
 msgid "Change the X-Moto language"
-msgstr "Выбрать язык"
+msgstr "Сменить язык X-Moto"
 
 #: src/xmoto/GameText.h:74
 msgid "Change..."
@@ -1053,7 +1052,7 @@ msgstr "Включить эту комнату"
 
 #: src/xmoto/GameText.h:469
 msgid "Enable/disable FPS display"
-msgstr "Вкл/откл показ FPS"
+msgstr "Вкл./откл. отображение счётчика кадров FPS"
 
 #: src/xmoto/GameText.h:450
 msgid "Enable/disable audio"
@@ -1061,7 +1060,7 @@ msgstr "Включить/отключить звук"
 
 #: src/xmoto/GameText.h:474 src/xmoto/GameText.h:694
 msgid "Enable/disable ugly mode"
-msgstr "Вкл/откл уродливый режим"
+msgstr "Вкл./откл. уродливый режим"
 
 #: src/xmoto/GameText.h:383 src/xmoto/GameText.h:471
 msgid "Enable/disable web"
@@ -1256,7 +1255,7 @@ msgstr "Графика в игре"
 
 #: src/xmoto/GameText.h:96 src/xmoto/GameText.h:318
 msgid "General"
-msgstr "Основные"
+msgstr "Главное"
 
 #: src/xmoto/GameText.h:319
 msgid "General Info"
@@ -1391,7 +1390,7 @@ msgid ""
 "copies you did."
 msgstr ""
 "Если вы скопировали вручную ваши файлы пользователя X-Moto (.xmoto) на "
-"другие компьютера, не следует использовать эту функцию, иначе ваша "
+"другие компьютеры, не следует использовать эту функцию, иначе ваша "
 "статистика будет дублирована или не синхронизирована. Если вы всё же сделали "
 "это, удалите копии, которые вы создали."
 
@@ -1429,7 +1428,7 @@ msgstr "В верхнем левом углу находятся таймеры"
 
 #: src/xmoto/GameText.h:94
 msgid "Increase console history size"
-msgstr "Увеличить максимальный объем информации из истории чата"
+msgstr "Увеличить размер истории чата в консоли"
 
 #: src/xmoto/GameText.h:1008
 msgid "Increase or decrease the difficulty of the levels selected"
@@ -1671,7 +1670,7 @@ msgstr "Загрузка звуков..."
 
 #: src/xmoto/GameText.h:537
 msgid "Loading textures..."
-msgstr "Загруза текстур..."
+msgstr "Загрузка текстур..."
 
 #: src/xmoto/GameText.h:532
 msgid "Loading..."
@@ -2080,7 +2079,7 @@ msgstr "Пауза"
 
 #: src/xmoto/GameText.h:1059
 msgid "Pause to watch the level"
-msgstr "Сделать паузу чтобы просмотреть уровень"
+msgstr "Сделать паузу, чтобы осмотреть уровень"
 
 #: src/xmoto/GameText.h:625
 msgid "Pause when playing X-Moto"
@@ -2229,7 +2228,7 @@ msgstr "Нажмите %s для чата"
 
 #: src/xmoto/GameText.h:501
 msgid "Press BACKSPACE to return to Checkpoint"
-msgstr "Нажми BACKSPACE чтобы возвратиться к чекпойнту"
+msgstr "Нажмите BACKSPACE, чтобы вернуться к контрольной точке"
 
 #: src/xmoto/GameText.h:499
 msgid "Press ENTER to try again"
@@ -2385,7 +2384,7 @@ msgstr "Перезапустить"
 
 #: src/xmoto/GameText.h:667
 msgid "Restart to the last checkpoint"
-msgstr "Переиграть с последнего чекпойнта"
+msgstr "Переиграть с последней контрольной точки"
 
 #: src/xmoto/GameText.h:669
 msgid "Resume Playing"
@@ -2479,7 +2478,7 @@ msgstr "Разрешение экрана"
 
 #: src/xmoto/GameText.h:678
 msgid "Screenshot"
-msgstr "Скриншот"
+msgstr "Снимок экрана"
 
 #: src/xmoto/GameText.h:127
 msgid "Script action"
@@ -2771,11 +2770,11 @@ msgstr "Шведский"
 
 #: src/xmoto/GameText.h:696
 msgid "Switch FPS"
-msgstr "Вкл/откл отображение FPS"
+msgstr "Вкл./откл. счётчик кадров"
 
 #: src/xmoto/GameText.h:700
 msgid "Switch WWW access"
-msgstr "Вкл/откл доступ к интернету"
+msgstr "Вкл./откл. доступ к интернету"
 
 #: src/xmoto/GameText.h:462
 msgid "Switch biker"
@@ -2783,7 +2782,7 @@ msgstr "Сменить байкера"
 
 #: src/xmoto/GameText.h:1064
 msgid "Switch ghosttrail rendering"
-msgstr "Вкл/откл отображение следа призрака"
+msgstr "Вкл./откл. отображение следа призрака"
 
 #: src/xmoto/GameText.h:702
 msgid "Switch graphics mode"
@@ -2795,7 +2794,7 @@ msgstr "Сменить качество графики"
 
 #: src/xmoto/GameText.h:699
 msgid "Switch highscore information"
-msgstr "Вкл/откл информацию о лучшем времени"
+msgstr "Вкл./откл. информацию о лучшем времени"
 
 #: src/xmoto/GameText.h:698
 msgid "Switch net game mode"
@@ -2811,7 +2810,7 @@ msgstr "Переключить безопасный режим"
 
 #: src/xmoto/GameText.h:1063
 msgid "Switch trackingshot mode"
-msgstr "Вкл/откл trackingshot режим"
+msgstr "Вкл./откл. режим отображения траектории"
 
 #: src/xmoto/GameText.h:691
 msgid "Synchronisation done successfully"
@@ -3040,31 +3039,31 @@ msgstr "Время игры: %s"
 
 #: src/xmoto/GameText.h:707
 msgid "To be updated"
-msgstr "Для обновления"
+msgstr "Можно обновить"
 
 #: src/xmoto/GameText.h:706
 msgid "To download"
-msgstr "Для скачивания"
+msgstr "Можно скачать"
 
 #: src/xmoto/GameText.h:478
 msgid "Toggle Contrast, Light and Full Graphics"
-msgstr "Настроить контрастную, лёгкую и полную графику"
+msgstr "Включить контрастную, лёгкую или полную графику"
 
 #: src/xmoto/GameText.h:458
 msgid "Toggle Display Medals,Display WR"
-msgstr "Вкл/откл отображение медалей, WR"
+msgstr "Вкл./откл. отображение медалей, WR"
 
 #: src/xmoto/GameText.h:454
 msgid "Toggle Ghost Trail Rendering"
-msgstr "Вкл/откл след призрака"
+msgstr "Вкл./откл. след призрака"
 
 #: src/xmoto/GameText.h:467
 msgid "Toggle Ghost Trail Tracking Shot"
-msgstr "Вкл/откл просмотр пути призрака"
+msgstr "Вкл./откл. просмотр пути призрака"
 
 #: src/xmoto/GameText.h:456
 msgid "Toggle Trail Cam"
-msgstr "Вкл/откл следящую камеру"
+msgstr "Вкл./откл. следящую камеру"
 
 #: src/xmoto/GameText.h:448
 msgid "Toggle blacklist"
@@ -3076,7 +3075,7 @@ msgstr "Добавить/удалить из избранных"
 
 #: src/xmoto/GameText.h:481
 msgid "Toggle theme and ugly over mode"
-msgstr "Вкл/откл режим темы и показ граней"
+msgstr "Вкл./откл. режим темы и показ граней"
 
 #: src/xmoto/GameText.h:561
 msgid "Total time you scored / total highscore time for levels you finished"
@@ -3117,7 +3116,7 @@ msgstr "Попробовать пройти этот уровень снова"
 
 #: src/xmoto/GameText.h:826
 msgid "Try this level again from the beginning"
-msgstr "Играть этот уровень заново"
+msgstr "Играть этот уровень с начала"
 
 #: src/xmoto/GameText.h:193
 msgid "Turkish"
@@ -3129,7 +3128,7 @@ msgstr "Включить шум мотора"
 
 #: src/xmoto/GameText.h:876
 msgid "Turn on sound effects"
-msgstr "Включить аудио эффекты"
+msgstr "Включить звуковые эффекты"
 
 #: src/xmoto/GameText.h:372 src/xmoto/GameText.h:435
 msgid "Turns around and drives in the other direction"
@@ -3181,7 +3180,7 @@ msgstr "Неизвестные игроки:"
 
 #: src/xmoto/GameText.h:715
 msgid "Unpacked levels"
-msgstr "Незапакованные уровни"
+msgstr "Распакованные уровни"
 
 #: src/xmoto/GameText.h:719
 msgid "Update"
@@ -3287,7 +3286,7 @@ msgstr "Скачать с сервера список плохих уровне�
 
 #: src/xmoto/GameText.h:733
 msgid "Use permanent console"
-msgstr "Вкл/откл постоянное отображения консоли"
+msgstr "Вкл./откл. постоянное отображения консоли"
 
 #: src/xmoto/GameText.h:889
 msgid "Use the selected player profile"
@@ -3590,7 +3589,7 @@ msgid ""
 "[up/down keys]\n"
 msgstr ""
 "[esc] , [пробел]\n"
-"[lвлево/вправо]\n"
+"[влево/вправо]\n"
 "[вверх/вниз]\n"
 
 #: src/xmoto/GameText.h:648
@@ -3627,7 +3626,7 @@ msgstr "ru_RU"
 
 #: src/xmoto/GameText.h:212
 msgid "for Debian packaging"
-msgstr "за пакет Debian"
+msgstr "за пакет для Debian"
 
 #: src/xmoto/GameText.h:218
 msgid "for FreeBSD packaging"
@@ -3635,7 +3634,7 @@ msgstr "за пакет для FreeBSD"
 
 #: src/xmoto/GameText.h:214
 msgid "for Gentoo packaging"
-msgstr "за пакет Gentoo"
+msgstr "за пакет для Gentoo"
 
 #: src/xmoto/GameText.h:210
 msgid "for KDE/gnome integration"
@@ -3643,7 +3642,7 @@ msgstr "за интеграцию с KDE/gnome"
 
 #: src/xmoto/GameText.h:216
 msgid "for Mandriva packaging"
-msgstr "за пакет Mandriva"
+msgstr "за пакет для Mandriva"
 
 #: src/xmoto/GameText.h:220
 msgid "for across/elma"
@@ -3655,7 +3654,7 @@ msgstr "за создание tinyxml"
 
 #: src/xmoto/GameText.h:224
 msgid "for the MD5 code"
-msgstr "за MD5 код"
+msgstr "за код MD5"
 
 #: src/xmoto/GameText.h:117
 msgid "left"
