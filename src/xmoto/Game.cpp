@@ -477,18 +477,18 @@ void GameApp::switchUglyOverMode(bool mode) {
 }
 
 void GameApp::reloadTheme() {
+  const auto loadTheme = [](const std::string &name) {
+    auto filename = xmDatabase::instance("main")->themes_getFileName(name);
+    Theme::instance()->load(FDT_DATA, filename);
+  };
+
   try {
-    Theme::instance()->load(FDT_DATA,
-                            xmDatabase::instance("main")->themes_getFileName(
-                              XMSession::instance()->theme()));
+    loadTheme(XMSession::instance()->theme());
   } catch (Exception &e) {
     /* unable to load the theme, load the default one */
-    Theme::instance()->load(FDT_DATA,
-                            xmDatabase::instance("main")->themes_getFileName(
-                              DEFAULT_THEME)); // no XMDefault::DefaultTheme,
-    // the DEFAULT_THEME one is
-    // included into xmoto files
+    loadTheme(DEFAULT_THEME);
   }
+  LogInfo("Using theme: %s", Theme::instance()->Name().c_str());
 }
 
 void GameApp::initReplaysFromDir(

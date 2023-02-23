@@ -37,6 +37,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
 #include "Credits.h"
 #include "GeomsManager.h"
+#include "LuaLibBase.h"
 #include "Replay.h"
 #include "SysMessage.h"
 #include "XMDemo.h"
@@ -605,6 +606,8 @@ void GameApp::run_load(int nNumArgs, char **ppcArgs) {
              "it's compatible or not");
 #endif
   m_isODEInitialized = true;
+
+  LogInfo("Lua version: %s", LUA_RELEASE);
 
   /* load packs */
   LevelsManager::checkPrerequires();
