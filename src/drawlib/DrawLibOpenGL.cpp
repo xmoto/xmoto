@@ -326,10 +326,13 @@ void DrawLibOpenGL::init(unsigned int nDispWidth,
 
     if ((m_window = SDL_CreateWindow(title.c_str(),
             SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED,
-            800, 600, SDL_WINDOW_SHOWN | SDL_WINDOW_OPENGL)) == NULL) {
+            m_nDispWidth, m_nDispHeight, SDL_WINDOW_SHOWN | SDL_WINDOW_OPENGL)) == NULL) {
       throw Exception("SDL_CreateWindow: " + std::string(SDL_GetError()));
     }
   }
+
+  SDL_SetWindowMinimumSize(m_window, m_nDispWidth, m_nDispHeight);
+  SDL_SetWindowMaximumSize(m_window, m_nDispWidth, m_nDispHeight);
 
   SDL_SetWindowTitle(m_window, title.c_str());
 
