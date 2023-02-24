@@ -222,7 +222,12 @@ XMKey_direction XMKey::getDirection() const {
   return XMKD_NODIRECTION;
 }
 
-bool XMKey::operator==(const XMKey &i_other) const {
+bool XMKey::equalsIgnoreMods(const XMKey &i_other) const {
+  // NOTE:
+  // This function was temporarily split from `operator==(const XMKey &)` to fix a specific
+  // bug with the way modifier keys are handled for the bike controls.
+  // It should be merged back with it if/when the update code gets an overhaul.
+
   if (m_type != i_other.m_type) {
     return false;
   }
@@ -238,9 +243,7 @@ bool XMKey::operator==(const XMKey &i_other) const {
   }
 
   if (m_type == XMK_KEYBOARD) {
-    int mods = KMOD_CTRL | KMOD_SHIFT | KMOD_ALT | KMOD_GUI;
-    return m_keyboard_sym == i_other.m_keyboard_sym &&
-      ((m_keyboard_mod & mods) == (i_other.m_keyboard_mod & mods));
+    return m_keyboard_sym == i_other.m_keyboard_sym;
   }
 
   if (m_type == XMK_MOUSEBUTTON) {
@@ -257,6 +260,17 @@ bool XMKey::operator==(const XMKey &i_other) const {
   }
 
   return false;
+}
+
+bool XMKey::operator==(const XMKey &i_other) const {
+  bool equals = equalsIgnoreMods(i_other);
+
+  if (m_type == XMK_KEYBOARD) {
+    int mods = KMOD_CTRL | KMOD_SHIFT | KMOD_ALT | KMOD_GUI;
+    return equals && ((m_keyboard_mod & mods) == (i_other.m_keyboard_mod & mods));
+  }
+
+  return equals;
 }
 
 std::string XMKey::toString() const {

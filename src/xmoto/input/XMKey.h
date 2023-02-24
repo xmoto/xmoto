@@ -61,6 +61,7 @@ public:
   XMKey(Joystick *joystick, Uint8 i_joyAxis, Sint16 i_joyAxisValue); // joystick axis
 
   bool operator==(const XMKey &i_other) const;
+  bool equalsIgnoreMods(const XMKey &i_other) const;
   std::string toString() const;
   std::string toFancyString() const;
   static const char *modKeyString(SDL_Keymod modKey);
