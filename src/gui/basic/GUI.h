@@ -38,6 +38,9 @@ class RenderSurface;
 
 #define UGLY_MODE_WINDOW_BG MAKE_COLOR(35, 35, 35, 255)
 
+static const int IBeamWidth = 1;
+static const int BlockCursorWidth = 6;
+
 /*===========================================================================
   Alignments
   ===========================================================================*/

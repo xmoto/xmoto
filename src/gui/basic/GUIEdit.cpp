@@ -60,14 +60,20 @@ void UIEdit::paint(void) {
     nCursorOffset = fg->realWidth();
   }
 
-  /* cursor */
-  if (m_textEdit.cursorPos() == utf8::utf8_length(v_textToDisplay)) {
-    nCursorWidth = 6;
+  // For future use
+  bool selection = false;
+
+  if (!selection) {
+    nCursorWidth = IBeamWidth;
   } else {
-    std::string s = utf8::utf8_substring(v_textToDisplay, m_textEdit.cursorPos(), 1);
-    FontManager *fm = getFont();
-    FontGlyph *fg = fm->getGlyph(s);
-    nCursorWidth = fg->realWidth();
+    if (m_textEdit.cursorPos() >= utf8::utf8_length(v_textToDisplay)) {
+      nCursorWidth = BlockCursorWidth;
+    } else {
+      std::string s = utf8::utf8_substring(v_textToDisplay, m_textEdit.cursorPos(), 1);
+      FontManager *fm = getFont();
+      FontGlyph *fg = fm->getGlyph(s);
+      nCursorWidth = fg->realWidth();
+    }
   }
 
   /* Draw */
