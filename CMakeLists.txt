@@ -7,6 +7,8 @@ include(CheckCXXCompilerFlag)
 include(CheckPrototypeDefinition)
 include(CheckSymbolExists)
 
+include(CMake/mxe.cmake)
+
 add_subdirectory(src)
 
 # we set some cpack variables in src/CMakeLists.txt so include this after src/

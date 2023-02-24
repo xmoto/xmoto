@@ -37,6 +37,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
 #include "Credits.h"
 #include "GeomsManager.h"
+#include "LuaLibBase.h"
 #include "Replay.h"
 #include "SysMessage.h"
 #include "XMDemo.h"
@@ -99,12 +100,7 @@ BOOL LibraryOK(STRPTR libname, ULONG version, ULONG revision) {
 }
 #endif
 
-#if defined(WIN32)
-int SDL_main(int nNumArgs, char **ppcArgs) {
-#else
 int main(int nNumArgs, char **ppcArgs) {
-#endif
-
 #ifdef __amigaos4__
   /* checking for MiniGL 2.0 */
 
@@ -257,7 +253,6 @@ void GameApp::run_load(int nNumArgs, char **ppcArgs) {
   XMSession::instance()->loadArgs(
     &v_xmArgs); /* overload default session by xmargs     */
 
-  Logger::deleteOldFiles(XMSession::instance()->logRetentionCount());
   Logger::setVerbose(
     XMSession::instance()->isVerbose()); /* apply verbose mode */
   Logger::setActiv(XMSession::instance()->noLog() ==
@@ -611,6 +606,8 @@ void GameApp::run_load(int nNumArgs, char **ppcArgs) {
              "it's compatible or not");
 #endif
   m_isODEInitialized = true;
+
+  LogInfo("Lua version: %s", LUA_RELEASE);
 
   /* load packs */
   LevelsManager::checkPrerequires();

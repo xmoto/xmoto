@@ -52,7 +52,7 @@ jobs:
           ./linuxdeploy-x86_64.AppImage \
             --appdir="AppDir" \
             --desktop-file="AppDir/usr/share/applications/xmoto.desktop" \
-            --icon-file="AppDir/usr/share/pixmaps/xmoto.xpm"
+            --icon-file="AppDir/usr/share/pixmaps/xmoto.png"
 
           ./appimagetool-x86_64.AppImage \
             AppDir \
@@ -67,7 +67,7 @@ jobs:
 
 
   win32:
-    runs-on: ubuntu-18.04
+    runs-on: ubuntu-20.04
 
     steps:
       - uses: actions/checkout@v2
@@ -93,7 +93,7 @@ jobs:
           "$CMAKE_BINARY" \
             -DCMAKE_INSTALL_PREFIX=/usr \
             -DCMAKE_BUILD_TYPE=Release \
-            -DXMOTO_PACK=manual \
+            -DXMOTO_PACK=wine \
             ..
 
       - name: Build
@@ -114,34 +114,9 @@ jobs:
             done
           }
 
-          wait_for_xvfb() {
-            count=0
-            max=20
-            while [ ! -e /tmp/.X11-unix/X0 ]; do
-              sleep 0.5
-              count=$((count+1))
-              if [ "$count" -ge "$max" ]; then
-                >&2 echo "xvfb timed out"
-                exit 1
-              fi
-            done
-          }
-
           relink gcc g++
 
-          # Xvfb is needed to run xmoto.exe during the xmoto_pack target
-          Xvfb :0 -screen 0 1024x768x16 &
-          xvfb_pid=$!
-
-          wait_for_xvfb
-
           make -j"$(nproc)"
-
-          # kill xvfb
-          kill -15 "$xvfb_pid"
-          jobs -p | xargs -r kill -9
-
-          make xmoto_pack
 
       - name: Package
         run: |

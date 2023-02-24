@@ -52,7 +52,6 @@ public:
   static void LogData(void *data, unsigned int len);
 
   static void deleteLegacyLog();
-  static int deleteOldFiles(int retentionCount = 0);
 
 private:
   static bool m_isInitialized;

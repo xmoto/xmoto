@@ -21,10 +21,11 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #if !defined(WIN32)
 #error file is win32 only
 #endif
+
 #include "HashTbl.h"
 #include "HighPrecisionTimer.h"
-#include <string.h>
 #include <windows.h>
+#include <string.h>
 
 #if defined(PROFILE_MAIN_LOOP)
 

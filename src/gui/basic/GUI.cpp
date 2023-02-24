@@ -406,6 +406,9 @@ void UIMsgBox::paint(void) {
   int nCursorOffset = 0;
   int nCursorWidth = 0;
 
+  // For future use
+  bool selection = false;
+
   std::string s = utf8::utf8_substring(m_textEdit.text(), 0, m_textEdit.cursorPos());
 
   if (m_textInputFont) {
@@ -418,13 +421,17 @@ void UIMsgBox::paint(void) {
     nCursorOffset = fg->realWidth();
   }
 
-  if (m_textEdit.cursorPos() >= utf8::utf8_length(m_textEdit.text())) {
-    nCursorWidth = 6;
+  if (!selection) {
+    nCursorWidth = IBeamWidth;
   } else {
-    std::string s = utf8::utf8_substring(m_textEdit.text(), m_textEdit.cursorPos(), 1);
-    FontManager *fm = getFont();
-    FontGlyph *fg = fm->getGlyph(s);
-    nCursorWidth = fg->realWidth();
+    if (m_textEdit.cursorPos() >= utf8::utf8_length(m_textEdit.text())) {
+      nCursorWidth = BlockCursorWidth;
+    } else {
+      std::string s = utf8::utf8_substring(m_textEdit.text(), m_textEdit.cursorPos(), 1);
+      FontManager *fm = getFont();
+      FontGlyph *fg = fm->getGlyph(s);
+      nCursorWidth = fg->realWidth();
+    }
   }
 
   /* Should the OK button be disabled? (if any) */

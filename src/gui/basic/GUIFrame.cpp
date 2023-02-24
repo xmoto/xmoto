@@ -23,6 +23,8 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 #include "GUI.h"
 #include "helpers/utf8.h"
+#include "states/GameState.h"
+#include "states/StateManager.h"
 #include "xmoto/Game.h"
 
 UIFrame::UIFrame() {
@@ -215,10 +217,13 @@ void UIFrame::paint(void) {
       nTargetY = m_nMaximizedY;
     }
 
-    /* Are window at target position? */
+    float targetFps = (float)StateManager::instance()->getTopState()->getRenderFps();
+    float animationSpeed = targetFps > 0.0f ? (30.0f / targetFps) : 1.0f;
+
+    /* Is the window at target position? */
     if (getPosition().nX != nTargetX) {
       int nDiffX = nTargetX - getPosition().nX;
-      int nVelX = nDiffX / 4;
+      int nVelX = ((float)nDiffX * animationSpeed) / 4;
       if (getPosition().nX < nTargetX && nVelX == 0)
         nVelX = 1;
       if (getPosition().nX > nTargetX && nVelX == 0)
@@ -231,7 +236,7 @@ void UIFrame::paint(void) {
 
     if (getPosition().nY != nTargetY) {
       int nDiffY = nTargetY - getPosition().nY;
-      int nVelY = nDiffY / 4;
+      int nVelY = ((float)nDiffY * animationSpeed) / 4;
       if (getPosition().nY < nTargetY && nVelY == 0)
         nVelY = 1;
       if (getPosition().nY > nTargetY && nVelY == 0)

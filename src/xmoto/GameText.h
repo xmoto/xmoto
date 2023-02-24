@@ -1065,13 +1065,6 @@ Central place to keep many in-game text strings
 #define GAMETEXT_SWITCHTRACKINGSHOTMODE _("Switch trackingshot mode")
 #define GAMETEXT_SWITCHREDERGHOSTTRAIL _("Switch ghosttrail rendering")
 
-#define GAMETEXT_CLEAROLDLOGS _("Clear old logs")
-#define GAMETEXT_LOGSCLEARED _("Logs cleared")
-#define GAMETEXT_CONFIRMCLEAROLDLOGS \
-  _("Are you sure you want to clear old logs?")
-
-#define CONTEXTHELP_CLEAROLDLOGS _("Delete all previous log files from disk")
-
 #define GAMETEXT_CLEARLEVELCACHE _("Clear level cache")
 #define GAMETEXT_LEVELCACHECLEARED _("Level cache cleared")
 #define GAMETEXT_CONFIRMCLEARLEVELCACHE \

@@ -262,7 +262,7 @@ void xmDatabase::levels_cleanNoWWWLevels() {
                   protectString(v_id_level) + "\";");
 
         v_basename = XMFS::getFileBaseName(v_filepath);
-        if (XMFS::renameUserFile(
+        if (XMFS::moveFile(
               v_filepath, v_savePath + "/" + v_basename + ".lvl") == false) {
           LogWarning("Unable to move the file into the trash");
         }

@@ -326,16 +326,19 @@ void DrawLibOpenGL::init(unsigned int nDispWidth,
 
     if ((m_window = SDL_CreateWindow(title.c_str(),
             SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED,
-            800, 600, SDL_WINDOW_SHOWN | SDL_WINDOW_OPENGL)) == NULL) {
+            m_nDispWidth, m_nDispHeight, SDL_WINDOW_SHOWN | SDL_WINDOW_OPENGL)) == NULL) {
       throw Exception("SDL_CreateWindow: " + std::string(SDL_GetError()));
     }
   }
+
+  SDL_SetWindowMinimumSize(m_window, m_nDispWidth, m_nDispHeight);
+  SDL_SetWindowMaximumSize(m_window, m_nDispWidth, m_nDispHeight);
 
   SDL_SetWindowTitle(m_window, title.c_str());
 
 #if !defined(WIN32) && !defined(__APPLE__) && !defined(__amigaos4__)
   SDL_Surface *v_icon = SDL_LoadBMP(
-    (XMFS::getSystemDataDir() + std::string("/xmoto_icone_x.ico")).c_str());
+    (XMFS::getSystemDataDir() + std::string("/xmoto.bmp")).c_str());
   if (v_icon != NULL) {
     SDL_SetSurfaceBlendMode(v_icon, SDL_BLENDMODE_BLEND);
     SDL_SetColorKey(

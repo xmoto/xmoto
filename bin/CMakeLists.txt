@@ -1,13 +1,15 @@
-set(XMOTO_PACK "always" CACHE STRING "When to build xmoto.bin")
-set_property(CACHE XMOTO_PACK PROPERTY STRINGS "manual" "always")
+set(XMOTO_PACK "native" CACHE STRING "Whether to pack xmoto.bin natively or through wine")
+set_property(CACHE XMOTO_PACK PROPERTY STRINGS "native" "wine")
 
-if(WIN32 AND CMAKE_CROSSCOMPILING)
+if(WIN32 AND CMAKE_CROSSCOMPILING AND XMOTO_PACK STREQUAL "wine")
   add_custom_command(
     OUTPUT xmoto.bin
-    # setting DISPLAY=:0.0 for travis
-    COMMAND ${CMAKE_COMMAND} -E env DISPLAY=:0.0 wine
-            "${PROJECT_BINARY_DIR}/src/xmoto.exe"
-            --pack xmoto.bin "${CMAKE_CURRENT_SOURCE_DIR}"
+    COMMAND
+      "${PROJECT_SOURCE_DIR}/tools/mxe_pack.sh"
+      "${CMAKE_BINARY_DIR}/wine-prefix" # Wine prefix directory
+      "${CMAKE_CURRENT_SOURCE_DIR}" # Input directory
+      "${CMAKE_BINARY_DIR}" # Build directory
+      "${MXE_TOOLCHAIN_PATH}" # Toolchain directory
     MAIN_DEPENDENCY package.lst
     COMMENT "Packing xmoto.bin"
   )
@@ -20,11 +22,7 @@ else()
   )
 endif()
 
-if(XMOTO_PACK STREQUAL "always")
-  add_custom_target(xmoto_pack ALL DEPENDS xmoto.bin)
-else()
-  add_custom_target(xmoto_pack DEPENDS xmoto.bin)
-endif()
+add_custom_target(xmoto_pack ALL DEPENDS xmoto.bin)
 
 if(WIN32)
   install(FILES "${CMAKE_CURRENT_BINARY_DIR}/xmoto.bin" DESTINATION "./")
