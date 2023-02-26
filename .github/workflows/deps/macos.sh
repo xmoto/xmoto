@@ -3,7 +3,7 @@
 export HOMEBREW_NO_ANALYTICS=1
 
 # packages to be checked for before installing them
-for pkg in cmake ninja ccache libjpeg-turbo libpng \
+for pkg in cmake ninja libjpeg-turbo libpng \
            bzip2 curl sqlite3 zlib; do
   brew list "$pkg" &>/dev/null || brew install "$pkg"
 done
