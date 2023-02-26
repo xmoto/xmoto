@@ -32,7 +32,8 @@ if(WIN32)
 elseif(BUILD_MACOS_BUNDLE)
   install(CODE "
   set(RESOURCES_DIR_PATH
-    \"\${CMAKE_INSTALL_PREFIX}/xmoto.app/Contents/Resources\")
+    # CPACK_BUNDLE_NAME is set in cpack/macos.cmake
+    \"\${CMAKE_INSTALL_PREFIX}/${CPACK_BUNDLE_NAME}.app/Contents/Resources\")
 
   execute_process(COMMAND \"\${CMAKE_COMMAND}\"
     -E copy

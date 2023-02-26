@@ -9,7 +9,7 @@
 	<key>CFBundleName</key>
 	<string>X-Moto</string>
 	<key>CFBundleExecutable</key>
-	<string>xmoto</string>
+	<string>X-Moto</string>
 	<key>CFBundleIconFile</key>
 	<string>X-Moto.icns</string>
 	<key>CFBundleIdentifier</key>
@@ -38,7 +38,7 @@
 		</dict>
 	</array>
 	<key>NSHumanReadableCopyright</key>
-	<string>© 2005-2021</string>
+  <string>© 2005-${APP_COPYRIGHT_YEAR}</string>
 	<key>NSPrincipalClass</key>
 	<string>NSApplication</string>
 </dict>

@@ -3,7 +3,7 @@ name: Release
 on:
   push:
     tags:
-      - "*"
+      - "v*.*.*"
 
 jobs:
   linux:
@@ -157,8 +157,13 @@ jobs:
           mkdir build
           cd build
 
+          # CMAKE_FIND_FRAMEWORK=LAST needs to be set to fix
+          # a header/dylib version mismatch caused by Mono being present:
+          # https://gitlab.kitware.com/cmake/cmake/-/issues/18921#note_601123
           cmake \
             -DCMAKE_BUILD_TYPE=Release \
+            -DCMAKE_FIND_FRAMEWORK=LAST \
+            -DBUILD_MACOS_BUNDLE=ON \
             -G Ninja \
             ..
 
@@ -184,5 +189,22 @@ jobs:
         with:
           files:
             ${{ github.workspace }}/release/**/*
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+
+  release:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: softprops/action-gh-release@v1
+
+        name: Set release name
+
+        with:
+          name: X-Moto $GITHUB_REF_NAME
+          files:
+            ${{ github.workspace }}/release/**/*
+
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
