@@ -202,7 +202,8 @@ jobs:
         name: Set release name
 
         with:
-          name: X-Moto $GITHUB_REF_NAME
+          name: X-Moto ${{ GITHUB_REF_NAME }}
+
           files:
             ${{ github.workspace }}/release/**/*
 
