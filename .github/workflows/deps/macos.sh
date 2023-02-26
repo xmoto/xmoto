@@ -3,8 +3,8 @@
 export HOMEBREW_NO_ANALYTICS=1
 
 # packages to be checked for before installing them
-for pkg in cmake ninja ccache jpeg libpng \
-           bzip2 curl sqlite3 libxml2 zlib; do
+for pkg in cmake ninja ccache libjpeg-turbo libpng \
+           bzip2 curl sqlite3 zlib; do
   brew list "$pkg" &>/dev/null || brew install "$pkg"
 done
 
@@ -13,4 +13,3 @@ brew install gettext sdl2 sdl2_mixer sdl2_net sdl2_ttf
 
 brew unlink gettext
 brew link --force gettext
-

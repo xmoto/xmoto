@@ -91,8 +91,6 @@ else
     echo "MSYS2 path: $MSYS2_PATH"
 fi
 
-printf "\nCopying required DLLs...\n"
-
 copy_dlls() {
     [ -z "$1" ] && { >&2 echo "Error: Argument required"; exit 1; }
     path="$1"
@@ -127,10 +125,10 @@ copy_dlls() {
     done
 }
 
+printf "\nCopying required DLLs...\n"
+
 if [ "$recursive" -ne 0 ]; then
-    echo "Copying DLLs:"
     copy_dlls "$executable" 1
-    echo "Done copying DLLs"
 else
     OBJDUMP="$MXE_PATH/usr/bin/$target-objdump"
 
@@ -146,3 +144,5 @@ else
         --copy \
         --objdump "$OBJDUMP"
 fi
+
+echo "Done copying DLLs"

@@ -42,7 +42,7 @@ case "$mxe_target" in
     ;;
 esac
 
-export WINEPATH="$toolchain_path/bin${WINEPATH:+:${WINEPATH}}"
+export WINEPATH="$toolchain_path/bin${WINEPATH:+";${WINEPATH}"}"
 export WINEDEBUG=fixme-all,err+all
 
 echo "Wine arch: $WINEARCH"

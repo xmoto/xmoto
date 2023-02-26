@@ -23,6 +23,7 @@ else()
 endif()
 
 add_custom_target(xmoto_pack ALL DEPENDS xmoto.bin)
+add_dependencies(xmoto_pack xmoto)
 
 if(WIN32)
   install(FILES "${CMAKE_CURRENT_BINARY_DIR}/xmoto.bin" DESTINATION "./")

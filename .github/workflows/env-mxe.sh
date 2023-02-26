@@ -10,7 +10,6 @@ export MXE_CROSS_ROOT="$MXE_PATH/usr"
 export MXE_HOST_BIN="$MXE_PATH/usr/x86_64-pc-linux-gnu/bin"
 export MXE_CROSS_BIN="$MXE_CROSS_ROOT/$MXE_TARGET/bin"
 
-export WINEPATH="$MXE_PATH/usr/$MXE_TARGET/bin${WINEPATH:+:${WINEPATH}}"
 export WINEARCH=win32
 
 export CMAKE_BINARY="${MXE_TARGET}-cmake"
