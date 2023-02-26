@@ -10,7 +10,7 @@ on:
 
 jobs:
   build:
-    runs-on: ubuntu-18.04
+    runs-on: ubuntu-20.04
 
     env:
       CCACHE_MAXSIZE: 400M
@@ -18,7 +18,7 @@ jobs:
       CCACHE_COMPRESS: 1
 
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
 
       - name: Install dependencies
         run: ./.github/workflows/deps/linux.sh

@@ -7,10 +7,10 @@ on:
 
 jobs:
   linux:
-    runs-on: ubuntu-18.04
+    runs-on: ubuntu-20.04
 
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
 
       - name: Install dependencies
         run: ./.github/workflows/deps/linux.sh
@@ -56,7 +56,7 @@ jobs:
 
           ./appimagetool-x86_64.AppImage \
             AppDir \
-            "$release_dir/xmoto-${version}-linux.AppImage"
+            "$release_dir/xmoto-${version}-linux-x86_64.AppImage"
 
       - uses: softprops/action-gh-release@v1
         with:
@@ -70,7 +70,7 @@ jobs:
     runs-on: ubuntu-20.04
 
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
 
       - name: Set env variables
         run: ./.github/workflows/env-mxe.sh
@@ -82,8 +82,7 @@ jobs:
         run: |
           env
 
-          echo "PATH:"
-          echo "$PATH"
+          echo "PATH: $PATH"
           echo "/usr/lib/mxe/usr/bin:"
           ls "/usr/lib/mxe/usr/bin"
 
@@ -145,10 +144,10 @@ jobs:
 
 
   macos:
-    runs-on: macos-10.15
+    runs-on: macos-11
 
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
 
       - name: Install dependencies
         run: ./.github/workflows/deps/macos.sh
@@ -187,4 +186,3 @@ jobs:
             ${{ github.workspace }}/release/**/*
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-

@@ -24,4 +24,3 @@ sudo apt-get install -y \
     libsdl2-mixer-dev \
     libsdl2-ttf-dev \
     libsdl2-net-dev
-

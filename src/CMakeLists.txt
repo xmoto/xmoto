@@ -586,7 +586,7 @@ function(set_win32_compat_path COMPAT REAL)
   set(${COMPAT} "${_COMPAT}" PARENT_SCOPE)
 endfunction()
 
-function(win32_run_script _CMD _ARGS _IS_MSYS2)
+function(win32_install_command _CMD _ARGS _IS_MSYS2)
   if (IS_MSYS2)
     # msys2's cmake is a native win32 program, and it can't run bash scripts directly
     install(CODE "execute_process(COMMAND bash -l -c '${_CMD} ${_ARGS}' \n\
@@ -605,6 +605,16 @@ function(win32_run_script _CMD _ARGS _IS_MSYS2)
 endfunction()
 
 if(WIN32)
+  install(
+    FILES
+      "${PROJECT_SOURCE_DIR}/README.md"
+      "${PROJECT_SOURCE_DIR}/COPYING"
+      "${PROJECT_SOURCE_DIR}/ChangeLog"
+    DESTINATION "./"
+  )
+
+  install(TARGETS xmoto RUNTIME DESTINATION "./")
+
   if(IS_MSYS2)
     # use msys prefix path as the target
     set_win32_compat_path(DLLCOPY_TARGET $ENV{MSYSTEM_PREFIX})
@@ -629,15 +639,10 @@ if(WIN32)
     set(WIN32_COMPAT_INSTALL_PREFIX "${CMAKE_INSTALL_PREFIX}")
   endif()
 
-  install(
-    FILES
-      "${PROJECT_SOURCE_DIR}/README.md"
-      "${PROJECT_SOURCE_DIR}/COPYING"
-      "${PROJECT_SOURCE_DIR}/ChangeLog"
-    DESTINATION "./"
-  )
   set(WIN32_DLL_DEST_DIR "${CMAKE_CURRENT_BINARY_DIR}/dll")
   set_win32_compat_path(WIN32_COMPAT_DLL_DEST_DIR "${WIN32_DLL_DEST_DIR}")
+
+
   set(COPY_DLLS_CMD "${WIN32_COMPAT_SOURCE_DIR}/tools/win32_copy_dlls.sh")
   string(CONCAT COPY_DLLS_ARGS
     " -t \"${DLLCOPY_TARGET}\""
@@ -645,27 +650,24 @@ if(WIN32)
     " -e \"${WIN32_COMPAT_CURRENT_BINARY_DIR}/xmoto.exe\""
     " -r"
   )
-  win32_run_script("${COPY_DLLS_CMD}" "${COPY_DLLS_ARGS}" IS_MSYS2)
 
-  install(TARGETS xmoto RUNTIME DESTINATION "./")
-
-  install(
-    # NOTE: don't use WIN32_COMPAT_DLL_DEST_DIR here!
-    DIRECTORY "${WIN32_DLL_DEST_DIR}/"
-    DESTINATION "./"
-    FILES_MATCHING PATTERN "*.dll"
-  )
+  win32_install_command("${COPY_DLLS_CMD}" "${COPY_DLLS_ARGS}" IS_MSYS2)
 
   if (CMAKE_BUILD_TYPE STREQUAL "Release")
-    # strip the dlls
     set(STRIP_DLLS_CMD "${WIN32_COMPAT_SOURCE_DIR}/tools/win32_strip_dlls.sh")
     string(CONCAT
       STRIP_DLLS_ARGS
       " \"${CMAKE_STRIP}\"" # (path to) strip program
-      " \"${WIN32_COMPAT_INSTALL_PREFIX}\"" # DLL folder
+      " \"${WIN32_COMPAT_DLL_DEST_DIR}\"" # DLL folder
     )
-    win32_run_script("${STRIP_DLLS_CMD}" "${STRIP_DLLS_ARGS}" IS_MSYS2)
+    win32_install_command("${STRIP_DLLS_CMD}" "${STRIP_DLLS_ARGS}" IS_MSYS2)
   endif()
+
+  install(
+    DIRECTORY "${WIN32_DLL_DEST_DIR}/"
+    DESTINATION "./"
+    FILES_MATCHING PATTERN "*.dll"
+  )
 elseif(NOT BUILD_MACOS_BUNDLE)
   # for macOS bundles, this is set in cpack/macos.cmake
   # because otherwise fixup_bundle() would complain
