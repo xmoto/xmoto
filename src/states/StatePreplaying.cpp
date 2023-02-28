@@ -321,7 +321,7 @@ bool StatePreplaying::render() {
    * is not zoomed out properly when the level is loaded or restarted.
    * This effectively skips the frame to stop it from causing a quick flash on the screen
    */
-  if (shouldBeAnimated() && !m_animationReady) {
+  if (!m_animationReady) {
     m_animationReady = true;
     return true;
   }
