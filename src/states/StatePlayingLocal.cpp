@@ -341,7 +341,7 @@ void StatePlayingLocal::xmKey(InputEventType i_type, const XMKey &i_xmkey) {
         v_isCheckpoint = true;
       }
     }
-    if (v_isCheckpoint) {
+    if (!XMSession::instance()->isSafemodeActive() && v_isCheckpoint) {
       StateScene::playToCheckpoint();
     }
   }
