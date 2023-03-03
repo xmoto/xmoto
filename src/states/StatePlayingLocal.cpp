@@ -335,14 +335,23 @@ void StatePlayingLocal::xmKey(InputEventType i_type, const XMKey &i_xmkey) {
                         INPUT_RESTARTCHECKPOINT))) {
 
     bool v_isCheckpoint = false;
+    bool safemode = XMSession::instance()->isSafemodeActive();
 
     for (unsigned int j = 0; j < m_universe->getScenes().size(); j++) {
-      if (m_universe->getScenes()[j]->getCheckpoint() != NULL) {
-        v_isCheckpoint = true;
+      if (!m_universe->getScenes()[j]->getCheckpoint()) {
+        continue;
       }
+
+      v_isCheckpoint = true;
+      break;
     }
-    if (!XMSession::instance()->isSafemodeActive() && v_isCheckpoint) {
-      StateScene::playToCheckpoint();
+
+    if (!safemode) {
+      if (v_isCheckpoint) {
+        StateScene::playToCheckpoint();
+      } else if (XMSession::instance()->beatingMode()) {
+        restartLevel();
+      }
     }
   }
 

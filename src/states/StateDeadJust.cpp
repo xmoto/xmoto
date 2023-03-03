@@ -105,6 +105,7 @@ void StateDeadJust::xmKey(InputEventType i_type, const XMKey &i_xmkey) {
   else if (i_type == INPUT_DOWN &&
            i_xmkey == (*Input::instance()->getGlobalKey(
                         INPUT_RESTARTCHECKPOINT))) {
+
     toCheckpointBeeingDead();
   }
 
@@ -214,7 +215,7 @@ void StateDeadJust::executeOneCommand(std::string cmd, std::string args) {
 void StateDeadJust::toCheckpointBeeingDead() {
   bool v_isCheckpoint = false;
 
-  // resussite players
+  // resuscitate players
   for (unsigned int j = 0; j < m_universe->getScenes().size(); j++) {
     if (m_universe->getScenes()[j]->getCheckpoint() != NULL) {
       v_isCheckpoint = true;
@@ -231,6 +232,10 @@ void StateDeadJust::toCheckpointBeeingDead() {
     StateScene::playToCheckpoint();
     StateManager::instance()->replaceState(
       new StatePlayingLocal(m_universe, m_renderer), getStateId());
+  } else {
+    if (XMSession::instance()->beatingMode()) {
+      restartLevel();
+    }
   }
 }
 
