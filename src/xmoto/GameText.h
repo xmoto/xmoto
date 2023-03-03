@@ -86,10 +86,10 @@ Central place to keep many in-game text strings
 #define GAMETEXT_CHOOSELEVEL _("Choose Level")
 #define GAMETEXT_CLEAN _("Clean")
 #define GAMETEXT_CLEAN_CONFIRM(A)                       \
-  ngettext("Are you sure you want to delete %i replay", \
-           "Are you sure you want to delete %i replay", \
+  ngettext("Are you sure you want to delete %i replay?", \
+           "Are you sure you want to delete %i replays?", \
            A)
-#define GAMETEXT_CLEAN_NOTHING_TO_DO _("There is no replay to clean")
+#define GAMETEXT_CLEAN_NOTHING_TO_DO _("There are no replays to clean")
 #define GAMETEXT_CLOSE _("Close")
 #define GAMETEXT_CONFIGUREJOYSTICK _("Configure Joystick...")
 #define GAMETEXT_CONSOLEHISTORYMINUS _("Decrease console history size")
@@ -445,7 +445,7 @@ Central place to keep many in-game text strings
     previous_level_KEY + "/" + next_level_KEY + " - " +                        \
     std::string(_("Previous/Next level")) + "\n"                               \
                                             "  ctrl+M - " +                    \
-    std::string(_("change mirror mode")) + "\n"                                \
+    std::string(_("Change mirror mode")) + "\n"                                \
                                            "  ctrl+B - " +                     \
     std::string(_("Toggle blacklist")) + "\n"                                  \
                                          "  ctrl+S - " +                       \
@@ -493,7 +493,7 @@ Central place to keep many in-game text strings
 #define GAMETEXT_LOAD_LEVEL_HOOK \
   _("Levels are being added into the database. Please wait.")
 #define GAMETEXT_INETCONF _("Internet Configuration")
-#define GAMETEXT_INFOS _("Infos")
+#define GAMETEXT_INFO _("Info")
 #define GAMETEXT_INITZOOM _("View Level Initially")
 #define GAMETEXT_JOYSTICK _("Joystick")
 #define GAMETEXT_ENABLEJOYSTICKS _("Enable joysticks")
