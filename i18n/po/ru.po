@@ -325,9 +325,9 @@ msgstr "Вы действительно хотите очистить кэш у�
 #, c-format
 msgid "Are you sure you want to delete %i replay?"
 msgid_plural "Are you sure you want to delete %i replays?"
-msgstr[0] "Уверены, что хотите удалить %i повторов?"
-msgstr[1] ""
-msgstr[2] ""
+msgstr[0] "Уверены, что хотите удалить %i повтор?"
+msgstr[1] "Уверены, что хотите удалить %i повтора?"
+msgstr[2] "Уверены, что хотите удалить %i повторов?"
 
 #: src/xmoto/GameText.h:667
 msgid "Are you sure you want to reset config to defaults ?"
