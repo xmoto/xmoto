@@ -94,6 +94,8 @@ add_subdirectory("${PROJECT_SOURCE_DIR}/vendor/ode" ode)
 add_subdirectory("${PROJECT_SOURCE_DIR}/vendor/xdgbasedir" xdgbasedir)
 add_subdirectory("${PROJECT_SOURCE_DIR}/vendor/glad" glad)
 
+configure_file(common/XMBuildConfig.h.in common/XMBuildConfig.h)
+
 set(common_src
   common/BuildConfig.h
   common/CRCHash.cpp
@@ -132,7 +134,6 @@ set(common_src
   common/XMArgs.h
   common/XMBuild.cpp
   common/XMBuild.h
-  common/XMBuild_info.h
   common/XMSession.cpp
   common/XMSession.h
   common/XMSession_default.cpp
@@ -458,6 +459,9 @@ target_include_directories(xmoto
 
   "$<${USE_SYSTEM_Lua}:${LUA_INCLUDE_DIR}>"
   "$<$<NOT:${USE_SYSTEM_Lua}>:${PROJECT_SOURCE_DIR}/vendor/lua/lua>"
+
+  # Needed for files generated through configure_file()
+  "${PROJECT_BINARY_DIR}/src"
 )
 
 target_link_libraries(xmoto PUBLIC

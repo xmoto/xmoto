@@ -19,9 +19,9 @@
 	<key>CFBundlePackageType</key>
 	<string>APPL</string>
 	<key>CFBundleShortVersionString</key>
-	<string>${APP_VERSION}</string>
+	<string>${APP_VERSION_STRING}</string>
 	<key>CFBundleVersion</key>
-	<string>${APP_VERSION}</string>
+	<string>${APP_VERSION_STRING}</string>
 	<key>CFBundleDocumentTypes</key>
 	<array>
 		<dict>

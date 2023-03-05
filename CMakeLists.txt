@@ -3,6 +3,18 @@ project(xmoto C CXX)
 
 list(APPEND CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/CMake")
 
+set(APP_NAME "X-Moto")
+set(APP_COPYRIGHT_YEAR "2023")
+
+set(APP_VERSION_MAJOR 0)
+set(APP_VERSION_MINOR 6)
+set(APP_VERSION_PATCH 1)
+
+set(APP_VERSION_STRING "\
+${APP_VERSION_MAJOR}.\
+${APP_VERSION_MINOR}.\
+${APP_VERSION_PATCH}")
+
 include(CheckCXXCompilerFlag)
 include(CheckPrototypeDefinition)
 include(CheckSymbolExists)
