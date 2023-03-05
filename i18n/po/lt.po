@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: xmoto 0.3.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-07-05 01:12+0300\n"
+"POT-Creation-Date: 2023-03-03 11:38+0200\n"
 "PO-Revision-Date: 2009-05-15 12:45+0300\n"
 "Last-Translator: Tadas Masiulionis <tadzikaz@gmail.com>\n"
 "Language-Team: Lithuanian <tadzikaz@gmail.com>\n"
@@ -19,7 +19,7 @@ msgstr ""
 "Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n != 0 ? 1 : "
 "2);\n"
 
-#: src/xmoto/GameText.h:646
+#: src/xmoto/GameText.h:648
 msgid ""
 "  Stop:\n"
 "    >>\n"
@@ -31,7 +31,7 @@ msgstr ""
 "   < >\n"
 " Greitis:"
 
-#: src/xmoto/GameText.h:649
+#: src/xmoto/GameText.h:651
 msgid ""
 "  Stop:\n"
 "<< >>\n"
@@ -43,11 +43,11 @@ msgstr ""
 "   < >\n"
 " Greitis:"
 
-#: src/xmoto/GameText.h:602
+#: src/xmoto/GameText.h:604
 msgid "# Levels"
 msgstr "# Lygiai"
 
-#: src/xmoto/GameText.h:764
+#: src/xmoto/GameText.h:766
 #, fuzzy, c-format
 msgid "%d death"
 msgid_plural "%d deaths"
@@ -60,7 +60,7 @@ msgstr[2] "%d mirtis"
 # msgstr[0] "X-Moto paleistas %d kartą"
 # msgstr[1] "X-Moto paleistas %d kartus"
 # msgstr[2] "X-Moto paleistas %d kartų"
-#: src/xmoto/GameText.h:761
+#: src/xmoto/GameText.h:763
 #, fuzzy, c-format
 msgid "%d different level"
 msgid_plural "%d different levels"
@@ -68,7 +68,7 @@ msgstr[0] "%d skirtingas lygis"
 msgstr[1] "%d skirtingas lygis"
 msgstr[2] "%d skirtingas lygis"
 
-#: src/xmoto/GameText.h:751
+#: src/xmoto/GameText.h:753
 #, c-format
 msgid "%d file"
 msgid_plural "%d files"
@@ -76,7 +76,7 @@ msgstr[0] ""
 msgstr[1] ""
 msgstr[2] ""
 
-#: src/xmoto/GameText.h:766
+#: src/xmoto/GameText.h:768
 #, fuzzy, c-format
 msgid "%d finished"
 msgid_plural "%d finished"
@@ -84,17 +84,17 @@ msgstr[0] "%d pabaiga"
 msgstr[1] "%d pabaiga"
 msgstr[2] "%d pabaiga"
 
-#: src/xmoto/GameText.h:753
+#: src/xmoto/GameText.h:755
 #, c-format
 msgid "%d hours"
 msgstr "%d valandos"
 
-#: src/xmoto/GameText.h:754
+#: src/xmoto/GameText.h:756
 #, c-format
 msgid "%d minutes"
 msgstr "%d minutės"
 
-#: src/xmoto/GameText.h:763
+#: src/xmoto/GameText.h:765
 #, fuzzy, c-format
 msgid "%d play"
 msgid_plural "%d plays"
@@ -102,7 +102,7 @@ msgstr[0] "%i žaidimas"
 msgstr[1] "%i žaidimas"
 msgstr[2] "%i žaidimas"
 
-#: src/xmoto/GameText.h:768
+#: src/xmoto/GameText.h:770
 #, fuzzy, c-format
 msgid "%d restart"
 msgid_plural "%d restarts"
@@ -110,12 +110,12 @@ msgstr[0] "%d perkrovimas"
 msgstr[1] "%d perkrovimas"
 msgstr[2] "%d perkrovimas"
 
-#: src/xmoto/GameText.h:770
+#: src/xmoto/GameText.h:772
 #, c-format
 msgid "%d seconds"
 msgstr "%d sekundės"
 
-#: src/xmoto/GameText.h:115
+#: src/xmoto/GameText.h:117
 #, fuzzy, c-format
 msgid "%i joystick found"
 msgid_plural "%i joysticks found"
@@ -123,7 +123,7 @@ msgstr[0] "Rasta %i vairalazdė"
 msgstr[1] "Rasta %i vairalazdė"
 msgstr[2] "Rasta %i vairalazdė"
 
-#: src/xmoto/GameText.h:579
+#: src/xmoto/GameText.h:581
 #, fuzzy, c-format
 msgid "%i new or updated level available. Download now ?"
 msgid_plural "%i new or updated levels available. Download now ?"
@@ -131,7 +131,7 @@ msgstr[0] "Yra %d naujas arba atnaujintas lygis. Atsiųsti dabar?"
 msgstr[1] "Yra %d naujas arba atnaujintas lygis. Atsiųsti dabar?"
 msgstr[2] "Yra %d naujas arba atnaujintas lygis. Atsiųsti dabar?"
 
-#: src/xmoto/GameText.h:622
+#: src/xmoto/GameText.h:624
 #, fuzzy, c-format
 msgid "%i player"
 msgid_plural "%i players"
@@ -139,22 +139,22 @@ msgstr[0] "%i žaidėjas"
 msgstr[1] "%i žaidėjas"
 msgstr[2] "%i žaidėjas"
 
-#: src/xmoto/GameText.h:800
+#: src/xmoto/GameText.h:802
 #, c-format
 msgid "%s is playing level %s"
 msgstr "%s žaidžia lygį %s"
 
-#: src/xmoto/GameText.h:798
+#: src/xmoto/GameText.h:800
 #, c-format
 msgid "%s joined the game"
 msgstr "%s prisijungė prie žaidimo"
 
-#: src/xmoto/GameText.h:799
+#: src/xmoto/GameText.h:801
 #, c-format
 msgid "%s left the game"
 msgstr "%s atsijungė nuo žaidimo"
 
-#: src/xmoto/GameText.h:490
+#: src/xmoto/GameText.h:492
 #, c-format
 msgid "%s: %s beat your highscore for level '%s'"
 msgstr "%s: %s įveikė jūsų '%s' lygio rekordą"
@@ -163,7 +163,7 @@ msgstr "%s: %s įveikė jūsų '%s' lygio rekordą"
 msgid "(You seem to be using a joystick, can't help with that :P)"
 msgstr "(Atrodo, jūs naudojate vairalazdę, negalime niekuo padėti :P)"
 
-#: src/xmoto/GameText.h:68
+#: src/xmoto/GameText.h:70
 #, c-format
 msgid "(by %s)"
 msgstr "(pagal %s)"
@@ -184,7 +184,7 @@ msgstr "11 kHz"
 msgid "16-bit"
 msgstr "16 bitų"
 
-#: src/xmoto/GameText.h:881
+#: src/xmoto/GameText.h:883
 msgid "16-bit sound samples, good quality"
 msgstr "16 bitų garso pavyzdžiai, gera kokybė"
 
@@ -200,7 +200,7 @@ msgstr "44 kHz"
 msgid "8-bit"
 msgstr "8 bitų"
 
-#: src/xmoto/GameText.h:880
+#: src/xmoto/GameText.h:882
 msgid "8-bit sound samples, poor quality"
 msgstr "8 bitų garso pavyzdžiai, prasta kokybė"
 
@@ -224,11 +224,11 @@ msgstr ": Suktis prieš laikrodžio rodyklę"
 msgid ": Rotate clockwise"
 msgstr ": Suktis pagal laikrodžio rodyklę"
 
-#: src/xmoto/GameText.h:869
+#: src/xmoto/GameText.h:871
 msgid "A bit more fancy menu graphics"
 msgstr "Šiek tiek įmantri meniu grafika"
 
-#: src/xmoto/GameText.h:106
+#: src/xmoto/GameText.h:108
 msgid "Abort the process"
 msgstr ""
 
@@ -252,7 +252,7 @@ msgstr ""
 "Įsibėgėkite DABAR! Gaukite maksimalų greitį ir\n"
 "pabandykite sulaikyti priekinį ratą ant žemės..."
 
-#: src/xmoto/GameText.h:361 src/xmoto/GameText.h:424
+#: src/xmoto/GameText.h:363 src/xmoto/GameText.h:426
 msgid "Accelerates"
 msgstr "Važiuoti"
 
@@ -260,7 +260,7 @@ msgstr "Važiuoti"
 msgid "Action"
 msgstr "Veiksmas"
 
-#: src/xmoto/GameText.h:994
+#: src/xmoto/GameText.h:996
 msgid "Add the level to the favorite levels list"
 msgstr "Pridėti lygį į parankinių lygių sąrašą"
 
@@ -272,23 +272,23 @@ msgstr "Įdėti į juodąjį sąrašą"
 msgid "Add to favorite"
 msgstr "Įdėti į parankinius"
 
-#: src/xmoto/GameText.h:697
+#: src/xmoto/GameText.h:699
 msgid "Add/remove to blacklisted levels"
 msgstr "Pridėti/pašalinti lygius, įtrauktus į juodąjį sąrašą"
 
-#: src/xmoto/GameText.h:695
+#: src/xmoto/GameText.h:697
 msgid "Add/remove to favorite levels"
 msgstr "Pridėti/pašalinti parankinius lygius"
 
-#: src/xmoto/GameText.h:511
+#: src/xmoto/GameText.h:513
 msgid "Added to blacklist"
 msgstr "Įdėtas į juodąjį sąrašą"
 
-#: src/xmoto/GameText.h:509
+#: src/xmoto/GameText.h:511
 msgid "Added to favorites"
 msgstr "Įdėtas į parankinius"
 
-#: src/xmoto/GameText.h:135
+#: src/xmoto/GameText.h:137
 msgid "Additional Programming"
 msgstr "Papildomas programavimas"
 
@@ -296,53 +296,49 @@ msgstr "Papildomas programavimas"
 msgid "All (on this computer)"
 msgstr "Visi (šiame kompiuteryje)"
 
-#: src/xmoto/GameText.h:1158
+#: src/xmoto/GameText.h:1154
 msgid "All X-Moto levels"
 msgstr "Visi X-Moto lygiai"
 
-#: src/xmoto/GameText.h:46 src/xmoto/GameText.h:1121
+#: src/xmoto/GameText.h:46 src/xmoto/GameText.h:1117
 msgid "All levels"
 msgstr "Visi lygiai"
 
-#: src/xmoto/GameText.h:864
+#: src/xmoto/GameText.h:866
 msgid "Allow X-Moto to ask you your mind about levels"
 msgstr "Leisite X-Moto klausti jūsų nuomonės apie lygius"
 
-#: src/xmoto/GameText.h:736
+#: src/xmoto/GameText.h:738
 msgid "Allow web forms"
 msgstr "Įjungti tinklapio formas"
 
-#: src/xmoto/GameText.h:728
+#: src/xmoto/GameText.h:730
 msgid ""
 "An unexpected error has occurred. There may be some problems with the web "
 "site."
 msgstr "Įvyko netikėta klaida. Gali būti tam tikros problemos su tinklu."
 
-#: src/xmoto/GameText.h:231
+#: src/xmoto/GameText.h:233
 msgid "Anyone who has helped in any way"
 msgstr "Visiems, kurie padėjo bet kokiu būdu"
 
-#: src/xmoto/GameText.h:1069
-msgid "Are you sure you want to clear old logs?"
-msgstr ""
-
-#: src/xmoto/GameText.h:1076
+#: src/xmoto/GameText.h:1072
 msgid "Are you sure you want to clear the level cache?"
 msgstr ""
 
-#: src/xmoto/GameText.h:87
-#, fuzzy, c-format
-msgid "Are you sure you want to delete %i replay"
-msgid_plural "Are you sure you want to delete %i replay"
-msgstr[0] "Ar tikrai ištrinti %i pakartojimą?"
-msgstr[1] "Ar tikrai ištrinti %i pakartojimą?"
-msgstr[2] "Ar tikrai ištrinti %i pakartojimą?"
+#: src/xmoto/GameText.h:89
+#, c-format
+msgid "Are you sure you want to delete %i replay?"
+msgid_plural "Are you sure you want to delete %i replays?"
+msgstr[0] ""
+msgstr[1] ""
+msgstr[2] ""
 
-#: src/xmoto/GameText.h:665
+#: src/xmoto/GameText.h:667
 msgid "Are you sure you want to reset config to defaults ?"
 msgstr "Ar tikrai norite atstatyti nustatymus į numatytuosius?"
 
-#: src/xmoto/GameText.h:1088
+#: src/xmoto/GameText.h:1084
 msgid "At least one difficulty"
 msgstr "Bent jau vienas sunkumas"
 
@@ -350,11 +346,11 @@ msgstr "Bent jau vienas sunkumas"
 msgid "Audio"
 msgstr "Garsas"
 
-#: src/xmoto/GameText.h:1231
+#: src/xmoto/GameText.h:1227
 msgid "Audio disabled"
 msgstr "Garsas išjungtas"
 
-#: src/xmoto/GameText.h:1230
+#: src/xmoto/GameText.h:1226
 msgid "Audio enabled"
 msgstr "Garsas įjungtas"
 
@@ -362,7 +358,7 @@ msgstr "Garsas įjungtas"
 msgid "Author"
 msgstr "Autorius"
 
-#: src/xmoto/GameText.h:60
+#: src/xmoto/GameText.h:62
 msgid "Auto zoom"
 msgstr "Automatinis mastelis"
 
@@ -374,112 +370,112 @@ msgstr "Automatiškai"
 msgid "Automatic saving of replays"
 msgstr "Automatiškai išsaugoti pakartojimus"
 
-#: src/xmoto/GameText.h:1115
+#: src/xmoto/GameText.h:1111
 msgid "Automatically connect to the server at startup"
 msgstr ""
 
-#: src/xmoto/GameText.h:855
+#: src/xmoto/GameText.h:857
 msgid "Automatically download best times off the net when the game starts"
 msgstr ""
 "Automatiškai atsiųsti geriausius laikus iš tinklo, kai pradedamas žaidimas"
 
-#: src/xmoto/GameText.h:982
+#: src/xmoto/GameText.h:984
 msgid "Automatically scroll over the level before starting playing it"
 msgstr "Automatiškai persukti lygį pradžioje žaidimo"
 
-#: src/xmoto/GameText.h:705
+#: src/xmoto/GameText.h:707
 msgid "Available"
 msgstr "Galima"
 
-#: src/xmoto/GameText.h:824
+#: src/xmoto/GameText.h:826
 msgid "Back to the game"
 msgstr "Grįžti į žaidimą"
 
-#: src/xmoto/GameText.h:822
+#: src/xmoto/GameText.h:824
 msgid "Back to the main menu"
 msgstr "Grįžti į pagrindinį menių"
 
-#: src/xmoto/GameText.h:1091
+#: src/xmoto/GameText.h:1087
 msgid "Basic blocks, no decoration"
 msgstr "Pagrindiniai blokai, jokio dekoravimo"
 
-#: src/xmoto/GameText.h:1092
+#: src/xmoto/GameText.h:1088
 msgid "Basic decoration, not smooth blocks"
 msgstr "Pagrindinis dekoravimas, neglotnūs blokai"
 
-#: src/xmoto/GameText.h:64
+#: src/xmoto/GameText.h:66
 msgid "Beating mode"
 msgstr "Mušimo režimas"
 
-#: src/xmoto/GameText.h:1047
+#: src/xmoto/GameText.h:1050
 msgid "Beginner"
 msgstr "Naujokams"
 
-#: src/xmoto/GameText.h:65
+#: src/xmoto/GameText.h:67
 msgid "Best Times"
 msgstr "Geriausi laikai"
 
-#: src/xmoto/GameText.h:66
+#: src/xmoto/GameText.h:68
 msgid "Best player"
 msgstr "Geriausias žaidėjas"
 
-#: src/xmoto/GameText.h:879
+#: src/xmoto/GameText.h:881
 msgid "Best sound quality"
 msgstr "Gera garso kokybė"
 
-#: src/xmoto/GameText.h:1124
+#: src/xmoto/GameText.h:1120
 msgid "Blacklisted levels"
 msgstr "Juodojo sąrašo lygiai"
 
-#: src/xmoto/GameText.h:67
+#: src/xmoto/GameText.h:69
 msgid "Brake"
 msgstr "Stabdžiai"
 
-#: src/xmoto/GameText.h:363 src/xmoto/GameText.h:426
+#: src/xmoto/GameText.h:365 src/xmoto/GameText.h:428
 msgid "Brakes"
 msgstr "Stabdžiai"
 
-#: src/xmoto/GameText.h:185
+#: src/xmoto/GameText.h:187
 msgid "Brazilian Portuguese"
 msgstr "portugalų"
 
-#: src/xmoto/GameText.h:548 src/xmoto/GameText.h:1142
+#: src/xmoto/GameText.h:550 src/xmoto/GameText.h:1138
 msgid "Bronze"
 msgstr "Bronza"
 
-#: src/xmoto/GameText.h:832
+#: src/xmoto/GameText.h:834
 msgid "Browse levels available to you"
 msgstr "Naršyti lygius"
 
-#: src/xmoto/GameText.h:518
+#: src/xmoto/GameText.h:520
 msgid "Built-in"
 msgstr ""
 
-#: src/xmoto/GameText.h:830
+#: src/xmoto/GameText.h:832
 msgid "Built-in and stand-alone external levels"
 msgstr "Jūsų pasirinkti mėgstamiausi lygiai"
 
-#: src/xmoto/GameText.h:609
+#: src/xmoto/GameText.h:611
 msgid "By author"
 msgstr "Pagal autorių"
 
-#: src/xmoto/GameText.h:616 src/xmoto/GameText.h:1131
+#: src/xmoto/GameText.h:618 src/xmoto/GameText.h:1127
 msgid "By best driver"
 msgstr "Pagal geriausius vairuotojus"
 
-#: src/xmoto/GameText.h:617
+#: src/xmoto/GameText.h:619
 msgid "By length"
 msgstr "Pagal ilgį"
 
-#: src/xmoto/GameText.h:1079
+#: src/xmoto/GameText.h:1075
 msgid "Cache file deleted"
 msgstr ""
 
-#: src/xmoto/GameText.h:62
+#: src/xmoto/GameText.h:64
 msgid "Camera Active Zoom"
 msgstr "Kintamas vaizdo mastelis"
 
-#: src/xmoto/GameText.h:1246
+#: src/xmoto/GameText.h:1242
 #, fuzzy, c-format
 msgid "Can't find a highscore in the next %i level"
 msgid_plural "Can't find a highscore in the next %i levels"
@@ -487,7 +483,7 @@ msgstr[0] "Neįmanoma surasti rekordų sekančiame %i lygyje"
 msgstr[1] "Neįmanoma surasti rekordų sekančiame %i lygyje"
 msgstr[2] "Neįmanoma surasti rekordų sekančiame %i lygyje"
 
-#: src/xmoto/GameText.h:717
+#: src/xmoto/GameText.h:719
 msgid ""
 "Can't update this theme !\n"
 "The theme is not available on the web\n"
@@ -497,95 +493,99 @@ msgstr ""
 "Tema nėra tinkle arba jūsų temų\n"
 "sąrašas nėra naujausias."
 
-#: src/xmoto/GameText.h:73
+#: src/xmoto/GameText.h:75
 msgid "Cancel"
 msgstr "Nutraukti"
 
-#: src/xmoto/GameText.h:171
+#: src/xmoto/GameText.h:173
 msgid "Catalan"
 msgstr "katalonų"
 
-#: src/xmoto/GameText.h:76
+#: src/xmoto/GameText.h:78
 msgid "Change Key..."
 msgstr "Keisti raktą..."
 
-#: src/xmoto/GameText.h:75
+#: src/xmoto/GameText.h:77
 msgid "Change direction"
 msgstr "Keisti kryptį"
 
-#: src/xmoto/GameText.h:836
+#: src/xmoto/GameText.h:448
+msgid "Change mirror mode"
+msgstr "Keisti veidrodžio režimą"
+
+#: src/xmoto/GameText.h:838
 msgid "Change player profile"
 msgstr "Keisti žaidėjo profilį"
 
-#: src/xmoto/GameText.h:1022
+#: src/xmoto/GameText.h:1024
 msgid "Change the X-Moto language"
 msgstr "Keisti X-Moto kalbą"
 
-#: src/xmoto/GameText.h:74
+#: src/xmoto/GameText.h:76
 msgid "Change..."
 msgstr "Keisti..."
 
-#: src/xmoto/GameText.h:797
+#: src/xmoto/GameText.h:799
 msgid "Chat message"
 msgstr "Pokalbių žinutė"
 
-#: src/xmoto/GameText.h:721
+#: src/xmoto/GameText.h:723
 msgid "Check WWW"
 msgstr "Tikrinti WWW"
 
-#: src/xmoto/GameText.h:952
+#: src/xmoto/GameText.h:954
 msgid "Check for new highscores at startup"
 msgstr "Paleidžiant ieškoti naujų rekordų"
 
-#: src/xmoto/GameText.h:950
+#: src/xmoto/GameText.h:952
 msgid "Check for new levels at startup"
 msgstr "Paleidžiant ieškoti naujų lygių"
 
-#: src/xmoto/GameText.h:961
+#: src/xmoto/GameText.h:963
 msgid "Check for new themes on the web"
 msgstr "Ieškoti naujų temų tinkle"
 
-#: src/xmoto/GameText.h:286
+#: src/xmoto/GameText.h:288
 msgid "Check new highscores at startup"
 msgstr "Ieškoti naujų rezultatų paleidžiant"
 
-#: src/xmoto/GameText.h:284
+#: src/xmoto/GameText.h:286
 msgid "Check new levels at startup"
 msgstr "Ieškoti naujų lygių paleidžiant"
 
-#: src/xmoto/GameText.h:299
+#: src/xmoto/GameText.h:301
 msgid "Check your Internet connection !"
 msgstr "Patikrinkite savo interneto ryšį!"
 
-#: src/xmoto/GameText.h:277
+#: src/xmoto/GameText.h:279
 msgid "Checking for existing rooms..."
 msgstr "Ieškomi egzistuojantys kambariai..."
 
-#: src/xmoto/GameText.h:274
+#: src/xmoto/GameText.h:276
 msgid "Checking for new levels..."
 msgstr "Ieškomi nauji lygiai..."
 
-#: src/xmoto/GameText.h:82
+#: src/xmoto/GameText.h:84
 msgid "Checking for new or updated levels..."
 msgstr "Ieškomi nauji ir atnaujinti lygiai..."
 
-#: src/xmoto/GameText.h:280
+#: src/xmoto/GameText.h:282
 msgid "Checking for new themes..."
 msgstr "Ieškomos naujos temos..."
 
-#: src/xmoto/GameText.h:84
+#: src/xmoto/GameText.h:86
 msgid "Choose Level"
 msgstr "Pasirinkti lygį"
 
-#: src/xmoto/GameText.h:960
+#: src/xmoto/GameText.h:962
 msgid "Choose the X-Moto graphics theme"
 msgstr "Pasirinkti X-Moto grafikos temą"
 
-#: src/xmoto/GameText.h:999
+#: src/xmoto/GameText.h:1001
 msgid "Choose the number of players"
 msgstr "Pasirinkite žaidėjų skaičių"
 
-#: src/xmoto/GameText.h:970
+#: src/xmoto/GameText.h:972
 msgid ""
 "Choose where to upload/download replays, highscore lists (for more "
 "information, check the website)"
@@ -593,99 +593,95 @@ msgstr ""
 "Pasirinkite, kur nusiųsti/atsiųsti pakartojimų, rekordų sąrašus (daugiau "
 "informacijos ieškokite tinklapyje)"
 
-#: src/xmoto/GameText.h:930
+#: src/xmoto/GameText.h:932
 msgid "Choose which ghost to display"
 msgstr "Pasirinkite, kuri vaiduoklį rodyti"
 
-#: src/xmoto/GameText.h:972
+#: src/xmoto/GameText.h:974
 msgid "Choose your room"
 msgstr "Keisti kambarį"
 
-#: src/xmoto/GameText.h:85
+#: src/xmoto/GameText.h:87
 msgid "Clean"
 msgstr "Išvalyti"
 
-#: src/xmoto/GameText.h:1073 src/xmoto/GameText.h:1081
+#: src/xmoto/GameText.h:1069 src/xmoto/GameText.h:1077
 msgid "Clear level cache"
 msgstr ""
 
-#: src/xmoto/GameText.h:1066
-msgid "Clear old logs"
-msgstr ""
-
-#: src/xmoto/GameText.h:990
+#: src/xmoto/GameText.h:992
 msgid "Click to select screen resolution"
 msgstr "Pasirinkite norimą ekrano raišką"
 
-#: src/xmoto/GameText.h:91
+#: src/xmoto/GameText.h:93
 msgid "Close"
 msgstr "Uždaryti"
 
-#: src/xmoto/GameText.h:895
+#: src/xmoto/GameText.h:897
 msgid "Close level pack"
 msgstr "Uždaryti lygių sąrašą"
 
-#: src/xmoto/GameText.h:1024
+#: src/xmoto/GameText.h:1026
 msgid "Code of the language"
 msgstr "Kalbos kodas"
 
-#: src/xmoto/GameText.h:992
+#: src/xmoto/GameText.h:994
 msgid "Completed levels / total number of levels in pack"
 msgstr "Pabaigti lygiai/visas lygių skaičius pakete"
 
-#: src/xmoto/GameText.h:92
+#: src/xmoto/GameText.h:94
 msgid "Configure Joystick..."
 msgstr "Formuoti vairalazdę..."
 
-#: src/xmoto/GameText.h:632
+#: src/xmoto/GameText.h:634
 msgid "Configure Proxy..."
 msgstr "Formuoti tarpinį serverį..."
 
-#: src/xmoto/GameText.h:834
+#: src/xmoto/GameText.h:836
 msgid "Configure X-Moto preferences"
 msgstr "Formuoti X-Moto nustatymus"
 
-#: src/xmoto/GameText.h:847
+#: src/xmoto/GameText.h:849
 msgid "Configure audio options"
 msgstr "Formuoti garso parinktis"
 
-#: src/xmoto/GameText.h:848
+#: src/xmoto/GameText.h:850
 msgid "Configure control options"
 msgstr "Formuoti valdymo parinktis"
 
-#: src/xmoto/GameText.h:849
+#: src/xmoto/GameText.h:851
 msgid "Configure controls of Player"
 msgstr ""
 
-#: src/xmoto/GameText.h:850
+#: src/xmoto/GameText.h:852
 msgid "Configure general controls"
 msgstr ""
 
-#: src/xmoto/GameText.h:1035
+#: src/xmoto/GameText.h:1037
 msgid "Configure ghosts displayed while playing the game"
 msgstr "Formuoti vaiduoklius, rodomus žaidimo metu"
 
-#: src/xmoto/GameText.h:845
+#: src/xmoto/GameText.h:847
 msgid "Configure graphical options"
 msgstr "Formuoti grafikos parinktis"
 
-#: src/xmoto/GameText.h:818
+#: src/xmoto/GameText.h:820
 msgid "Configure how you are connected to the Internet"
 msgstr "Formuokite, kaip jūs esate prijungtas prie interneto"
 
-#: src/xmoto/GameText.h:1037
+#: src/xmoto/GameText.h:1039
 msgid "Configure options linked to your X-Moto database"
 msgstr "Formuoti parinktis, susietas su jūsų X-Moto duomenų baze"
 
-#: src/xmoto/GameText.h:1033
+#: src/xmoto/GameText.h:1035
 msgid "Configure the X-Moto theme"
 msgstr "Formuoti X-Moto tema"
 
-#: src/xmoto/GameText.h:967
+#: src/xmoto/GameText.h:969
 msgid "Configure the main www options"
 msgstr "Formuoti pagrindinius WWW nustatymus"
 
-#: src/xmoto/GameText.h:968
+#: src/xmoto/GameText.h:970
 msgid "Configure the www options"
 msgstr "Formuoti WWW nustatymus"
 
@@ -693,149 +689,145 @@ msgstr "Formuoti WWW nustatymus"
 msgid "Congrats, you're now a master jumper!"
 msgstr "Sveikinu, jūs dabar esate šuolių meistras!"
 
-#: src/xmoto/GameText.h:792
+#: src/xmoto/GameText.h:794
 msgid "Connect"
 msgstr "Prisijungti"
 
-#: src/xmoto/GameText.h:803
+#: src/xmoto/GameText.h:805
 msgid "Connect to/disconnect from the server"
 msgstr ""
 
-#: src/xmoto/GameText.h:1106
+#: src/xmoto/GameText.h:1102
 msgid "Connect/disconnect the client to the server"
 msgstr "Prijungti/atjungti klientą nuo serverio"
 
-#: src/xmoto/GameText.h:796
+#: src/xmoto/GameText.h:798
 msgid "Connected players:"
 msgstr "Prisijungę žaidėjai:"
 
-#: src/xmoto/GameText.h:801
+#: src/xmoto/GameText.h:803
 msgid "Connexion at startup"
 msgstr ""
 
-#: src/xmoto/GameText.h:557
+#: src/xmoto/GameText.h:559
 msgid "Contrast"
 msgstr ""
 
-#: src/xmoto/GameText.h:1221
+#: src/xmoto/GameText.h:1217
 msgid "Contrast Graphics Mode enabled"
 msgstr ""
 
-#: src/xmoto/GameText.h:95
+#: src/xmoto/GameText.h:97
 msgid "Controls"
 msgstr "Valdymas"
 
-#: src/xmoto/GameText.h:517
+#: src/xmoto/GameText.h:519
 msgid "Copy path"
 msgstr ""
 
-#: src/xmoto/GameText.h:1170
+#: src/xmoto/GameText.h:1166
 msgid "Crappiest X-Moto levels according to the web votes"
 msgstr "Labai netikę X-Moto lygiai pagal tinklo balsus"
 
-#: src/xmoto/GameText.h:1128
+#: src/xmoto/GameText.h:1124
 msgid "Crappiest levels"
 msgstr "Labai netikę lygiai"
 
-#: src/xmoto/GameText.h:1145
+#: src/xmoto/GameText.h:1141
 msgid "Crappy levels"
 msgstr "Netikę lygiai"
 
-#: src/xmoto/GameText.h:890
+#: src/xmoto/GameText.h:892
 msgid "Create new player profile"
 msgstr "Sukurti naują žaidėjo profilį"
 
-#: src/xmoto/GameText.h:233
+#: src/xmoto/GameText.h:235
 msgid "Credits"
 msgstr "Autoriai"
 
-#: src/xmoto/GameText.h:786
+#: src/xmoto/GameText.h:788
 msgid "Custom port"
 msgstr "Kitas prievadas"
 
-#: src/xmoto/GameText.h:180
+#: src/xmoto/GameText.h:182
 msgid "Czech"
 msgstr "čekų"
 
-#: src/xmoto/GameText.h:189
+#: src/xmoto/GameText.h:191
 msgid "Danish"
 msgstr "danų"
 
-#: src/xmoto/GameText.h:61
+#: src/xmoto/GameText.h:63
 msgid "Database"
 msgstr "Duomenų bazė"
 
-#: src/xmoto/GameText.h:237
+#: src/xmoto/GameText.h:239
 msgid "Date"
 msgstr "Data"
 
-#: src/xmoto/GameText.h:255
+#: src/xmoto/GameText.h:257
 msgid "Death Animation"
 msgstr "Mirties animacija"
 
-#: src/xmoto/GameText.h:93
+#: src/xmoto/GameText.h:95
 msgid "Decrease console history size"
 msgstr ""
 
-#: src/xmoto/GameText.h:785
+#: src/xmoto/GameText.h:787
 msgid "Default port"
 msgstr "Numatytasis prievadas"
 
-#: src/xmoto/GameText.h:256
+#: src/xmoto/GameText.h:258
 msgid "Defaults"
 msgstr "Numatytieji"
 
-#: src/xmoto/GameText.h:259 src/xmoto/GameText.h:262
+#: src/xmoto/GameText.h:261 src/xmoto/GameText.h:264
 msgid "Delete"
 msgstr "Ištrinti"
 
-#: src/xmoto/GameText.h:1071
-msgid "Delete all previous log files from disk"
-msgstr ""
-
-#: src/xmoto/GameText.h:1078
+#: src/xmoto/GameText.h:1074
 msgid "Delete cache file"
 msgstr ""
 
-#: src/xmoto/GameText.h:1083
+#: src/xmoto/GameText.h:1079
 msgid "Delete cached level file from disk to force a clean state (safe)"
 msgstr ""
 
-#: src/xmoto/GameText.h:261
+#: src/xmoto/GameText.h:263
 msgid "Delete from blacklist"
 msgstr "Ištrinti iš juodojo sąrašo"
 
-#: src/xmoto/GameText.h:260
+#: src/xmoto/GameText.h:262
 msgid "Delete from favorite"
 msgstr "Ištrinti iš parankinių"
 
-#: src/xmoto/GameText.h:1026
+#: src/xmoto/GameText.h:1028
 msgid "Delete replays that X-Moto estimates to be not interesting to keep"
 msgstr ""
 "Ištrinti pakartojimus, kuriuos X-Moto vertina, kai neįdomius ir\n"
 "nevertus išsaugoti"
 
-#: src/xmoto/GameText.h:996
+#: src/xmoto/GameText.h:998
 msgid "Delete the level from the favorite levels list"
 msgstr "Ištrinti lygį iš parankinių lygių sąrašo"
 
-#: src/xmoto/GameText.h:512
+#: src/xmoto/GameText.h:514
 msgid "Deleted from blacklist"
 msgstr "Ištrintas iš juodojo sąrašo"
 
-#: src/xmoto/GameText.h:510
+#: src/xmoto/GameText.h:512
 msgid "Deleted from favorites"
 msgstr "Ištrintas iš parankinių"
 
-#: src/xmoto/GameText.h:263
+#: src/xmoto/GameText.h:265
 msgid "Description"
 msgstr "Aprašymas"
 
-#: src/xmoto/GameText.h:238
+#: src/xmoto/GameText.h:240
 msgid "Difficulty"
 msgstr "Sunkumas"
 
-#: src/xmoto/GameText.h:267
+#: src/xmoto/GameText.h:269
 msgid "Direct Connection"
 msgstr "Tiesioginis ryšys"
 
@@ -843,52 +835,52 @@ msgstr "Tiesioginis ryšys"
 msgid "Disable Animations"
 msgstr ""
 
-#: src/xmoto/GameText.h:943
+#: src/xmoto/GameText.h:945
 msgid "Disable block animations (if X-Moto runs slowly)"
 msgstr ""
 
-#: src/xmoto/GameText.h:872
+#: src/xmoto/GameText.h:874
 msgid "Disable most graphics not important to the gameplay"
 msgstr "Išjungti didžiąją dalį grafikos, nesvarbios žaidimui"
 
-#: src/xmoto/GameText.h:874
+#: src/xmoto/GameText.h:876
 msgid "Disable some of the most resource-intensive graphics, like particles"
 msgstr ""
 "Išjungti grafikos elementus, naudojančių daugiausiai kompiuterio išteklių"
 
-#: src/xmoto/GameText.h:793
+#: src/xmoto/GameText.h:795
 msgid "Disconnect"
 msgstr "Atsijungti"
 
-#: src/xmoto/GameText.h:265
+#: src/xmoto/GameText.h:267
 msgid "Display Ghost Information"
 msgstr "Rodyti vaiduoklio informaciją"
 
-#: src/xmoto/GameText.h:264
+#: src/xmoto/GameText.h:266
 msgid "Display Ghost time difference"
 msgstr "Rodyti vaiduoklio laiko skirtumą"
 
-#: src/xmoto/GameText.h:937
+#: src/xmoto/GameText.h:939
 msgid "Display an arrow to display where are located the bikes on the map"
 msgstr "Rodyti rodyklę, kur yra motociklas žemėlapyje"
 
-#: src/xmoto/GameText.h:266
+#: src/xmoto/GameText.h:268
 msgid "Display bike arrow indication"
 msgstr "Rodyti motociklo rodyklės indikaciją"
 
-#: src/xmoto/GameText.h:939
+#: src/xmoto/GameText.h:941
 msgid "Display the time difference between the ghost and you"
 msgstr "Rodyti laiko skirtumą tarp jūsų ir vaiduoklio"
 
-#: src/xmoto/GameText.h:257
+#: src/xmoto/GameText.h:259
 msgid "Do you really want to delete player?"
 msgstr "Ar tikrai ištrinti žaidėją?"
 
-#: src/xmoto/GameText.h:258
+#: src/xmoto/GameText.h:260
 msgid "Do you really want to delete replay?"
 msgstr "Ar tikrai ištrinti pakartojimą?"
 
-#: src/xmoto/GameText.h:639
+#: src/xmoto/GameText.h:641
 msgid "Do you really want to quit?"
 msgstr "Ar tikrai norite išeiti?"
 
@@ -902,20 +894,20 @@ msgstr ""
 "kad pamatytumėte daugiau lygių ir kitų žadėjų\n"
 "geriausius laikus?"
 
-#: src/xmoto/GameText.h:524
+#: src/xmoto/GameText.h:526
 msgid "Do you want to send a report to website administrators ?"
 msgstr ""
 
-#: src/xmoto/GameText.h:744
+#: src/xmoto/GameText.h:746
 #, c-format
 msgid "Do you want to update level \"%s\"?"
 msgstr "Ar norite atnaujinti lygį \"%s\"?"
 
-#: src/xmoto/GameText.h:1097
+#: src/xmoto/GameText.h:1093
 msgid "Don't send this report on the webserver"
 msgstr "Nesiųsti šios apklausos į web serverį"
 
-#: src/xmoto/GameText.h:1020
+#: src/xmoto/GameText.h:1022
 msgid "Don't show the ghosts while playing"
 msgstr "Žaidimo metu nerodyti vaiduoklių"
 
@@ -927,17 +919,17 @@ msgstr ""
 "Apačioje yra matomas mažas žemėlapis, kuris rodo lygį aplink jus,\n"
 "todėl jūs žinote, kur esate."
 
-#: src/xmoto/GameText.h:962
+#: src/xmoto/GameText.h:964
 msgid "Download or update the selected theme"
 msgstr "Atsiųsti arba atnaujinti pasirinktas temas"
 
-#: src/xmoto/GameText.h:816
+#: src/xmoto/GameText.h:818
 msgid "Download the latest X-Moto world records and check for new levels"
 msgstr ""
 "Atsisiųskite naujausius X-Moto pasaulio rekordus ir pasitikrinkite naujus "
 "lygius"
 
-#: src/xmoto/GameText.h:272
+#: src/xmoto/GameText.h:274
 msgid ""
 "Downloading extra levels...\n"
 "Press ESC to abort."
@@ -945,31 +937,31 @@ msgstr ""
 "Atsiunčiami papildomi lygiai...\n"
 "Spauskite ESC, kad nutrauktumėte."
 
-#: src/xmoto/GameText.h:269
+#: src/xmoto/GameText.h:271
 msgid "Downloading ghosts..."
 msgstr ""
 
-#: src/xmoto/GameText.h:271
+#: src/xmoto/GameText.h:273
 msgid "Downloading high-scores..."
 msgstr "Atsiunčiami rekordai..."
 
-#: src/xmoto/GameText.h:268
+#: src/xmoto/GameText.h:270
 msgid "Downloading the ghost..."
 msgstr "Atsiunčiamas vaiduoklis..."
 
-#: src/xmoto/GameText.h:270
+#: src/xmoto/GameText.h:272
 msgid "Downloading the highscore..."
 msgstr "Atsiunčiamas rekordas..."
 
-#: src/xmoto/GameText.h:273
+#: src/xmoto/GameText.h:275
 msgid "Downloading the level..."
 msgstr ""
 
-#: src/xmoto/GameText.h:275
+#: src/xmoto/GameText.h:277
 msgid "Downloading the replay..."
 msgstr ""
 
-#: src/xmoto/GameText.h:279
+#: src/xmoto/GameText.h:281
 msgid ""
 "Downloading theme data required by new levels...\n"
 "Press ESC to abort."
@@ -978,7 +970,7 @@ msgstr ""
 "reikalingi naujiems lygiams...\n"
 "Spauskite ESC, kad atšauktumėte."
 
-#: src/xmoto/GameText.h:282
+#: src/xmoto/GameText.h:284
 msgid "Drive"
 msgstr "Važiuoti"
 
@@ -996,168 +988,168 @@ msgstr ""
 "pabandykite sureguliuoti savo padėtį su kairiniu ir dešininiu\n"
 "krypčių klavišais, tokiu būdu jūs nusileisite ant savo ratų."
 
-#: src/xmoto/GameText.h:199
+#: src/xmoto/GameText.h:201
 msgid "Dutch"
 msgstr ""
 
-#: src/xmoto/GameText.h:1168
+#: src/xmoto/GameText.h:1164
 msgid "Easiest X-Moto levels according to the web votes"
 msgstr "Lengviausi X-Moto lygiai pagal tinklo balsus"
 
-#: src/xmoto/GameText.h:1127
+#: src/xmoto/GameText.h:1123
 msgid "Easiest levels"
 msgstr "Lengviausi lygiai"
 
-#: src/xmoto/GameText.h:283
+#: src/xmoto/GameText.h:285
 msgid "Enable Audio"
 msgstr "Įjungti garsą"
 
-#: src/xmoto/GameText.h:287
+#: src/xmoto/GameText.h:289
 msgid "Enable Context Help"
 msgstr "Įjungti konteksto pagalbą"
 
-#: src/xmoto/GameText.h:288
+#: src/xmoto/GameText.h:290
 msgid "Enable Engine Sound"
 msgstr "Įjungti variklio garsą"
 
-#: src/xmoto/GameText.h:289
+#: src/xmoto/GameText.h:291
 msgid "Enable Ghost"
 msgstr "Įjungti vaiduoklį"
 
-#: src/xmoto/GameText.h:294
+#: src/xmoto/GameText.h:296
 msgid "Enable WWW Access"
 msgstr "Įjunkti WWW prieigą"
 
-#: src/xmoto/GameText.h:875
+#: src/xmoto/GameText.h:877
 msgid "Enable all graphical effects"
 msgstr "Įjungti visus grafikos efektus"
 
-#: src/xmoto/GameText.h:980
+#: src/xmoto/GameText.h:982
 msgid "Enable animation of bike falling apart when dead"
 msgstr "Animuotas dūžtantis motociklas"
 
-#: src/xmoto/GameText.h:293
+#: src/xmoto/GameText.h:295
 msgid "Enable game music"
 msgstr "Įjungti žaidimo muziką"
 
-#: src/xmoto/GameText.h:497
+#: src/xmoto/GameText.h:499
 msgid "Enable joysticks"
 msgstr "Įjungti vairalazdę"
 
-#: src/xmoto/GameText.h:1041
+#: src/xmoto/GameText.h:1043
 msgid "Enable joysticks events"
 msgstr "Įjungti vairalaizdės įvykius"
 
-#: src/xmoto/GameText.h:292
+#: src/xmoto/GameText.h:294
 msgid "Enable menu music"
 msgstr "Įjungti meniu muziką"
 
-#: src/xmoto/GameText.h:1029
+#: src/xmoto/GameText.h:1031
 msgid "Enable this room"
 msgstr "Įjungti šį kambarį"
 
-#: src/xmoto/GameText.h:469
+#: src/xmoto/GameText.h:471
 msgid "Enable/disable FPS display"
 msgstr "Įjungti/išjungti FPS rodymą"
 
-#: src/xmoto/GameText.h:450
+#: src/xmoto/GameText.h:452
 msgid "Enable/disable audio"
 msgstr "Įjungti/išjungti garsą"
 
-#: src/xmoto/GameText.h:474 src/xmoto/GameText.h:694
+#: src/xmoto/GameText.h:476 src/xmoto/GameText.h:696
 msgid "Enable/disable ugly mode"
 msgstr "Įjungti/išjungti bjaurų režimą"
 
-#: src/xmoto/GameText.h:383 src/xmoto/GameText.h:471
+#: src/xmoto/GameText.h:385 src/xmoto/GameText.h:473
 msgid "Enable/disable web"
 msgstr "Įjungti/išjungti tinklą"
 
-#: src/xmoto/GameText.h:1110
+#: src/xmoto/GameText.h:1106
 msgid ""
 "Enables background music for levels that do not have their own music track"
 msgstr "Įjungti lygiams foninę muziką, kurie neturi savo garso takelio"
 
-#: src/xmoto/GameText.h:957
+#: src/xmoto/GameText.h:959
 msgid "Enables background music in the main menu"
 msgstr "Įjungti foninę muziką pagrindiniame meniu"
 
-#: src/xmoto/GameText.h:958
+#: src/xmoto/GameText.h:960
 msgid "Enables background music while playing"
 msgstr "Įjungti foninę muziką žaidžimo metu"
 
-#: src/xmoto/GameText.h:164
+#: src/xmoto/GameText.h:166
 msgid "English"
 msgstr ""
 
-#: src/xmoto/GameText.h:296
+#: src/xmoto/GameText.h:298
 msgid "Enter name of replay"
 msgstr "Įveskite pakartojimo pavadinimą"
 
-#: src/xmoto/GameText.h:295
+#: src/xmoto/GameText.h:297
 msgid "Enter player name"
 msgstr "Įveskite žaidėjo vardą"
 
-#: src/xmoto/GameText.h:998
+#: src/xmoto/GameText.h:1000
 msgid "Enter text to filter the level list"
 msgstr "Įveskite tekstą, kad filtruotumėte lygių sąrašą"
 
-#: src/xmoto/GameText.h:1002
+#: src/xmoto/GameText.h:1004
 msgid "Enter text to filter the replay list"
 msgstr "Įveskite tekstą, kad filtruotumėte pakartojimų sąrašą"
 
-#: src/xmoto/GameText.h:1003
+#: src/xmoto/GameText.h:1005
 msgid "Enter text to filter the rooms list"
 msgstr "Įveskite tekstą kambarių sąrašo filtravimui"
 
-#: src/xmoto/GameText.h:227
+#: src/xmoto/GameText.h:229
 msgid "Everyone who have made levels"
 msgstr "Kiekvienam, kuris sukūrė lygius"
 
-#: src/xmoto/GameText.h:1048
+#: src/xmoto/GameText.h:1051
 msgid "Expert"
 msgstr "Ekspertams"
 
-#: src/xmoto/GameText.h:1198
+#: src/xmoto/GameText.h:1194
 msgid "External levels (the one you put into the 'My levels' directory)"
 msgstr "Išoriniai lygiai (tokius jūs padedate į 'Mano lygiai' aplankalą)"
 
-#: src/xmoto/GameText.h:300
+#: src/xmoto/GameText.h:302
 msgid "Failed to check for levels."
 msgstr "Nepavyko patikrinti lygių."
 
-#: src/xmoto/GameText.h:522
+#: src/xmoto/GameText.h:524
 msgid "Failed to copy to clipboard"
 msgstr ""
 
-#: src/xmoto/GameText.h:301
+#: src/xmoto/GameText.h:303
 msgid "Failed to download high-scores."
 msgstr "Nepavyko atsiųsti rezultatų."
 
-#: src/xmoto/GameText.h:302
+#: src/xmoto/GameText.h:304
 msgid "Failed to download levels."
 msgstr "Nepavyko atsiųsti lygių."
 
-#: src/xmoto/GameText.h:303
+#: src/xmoto/GameText.h:305
 msgid "Failed to download the replay."
 msgstr "Nepavyko atsiųsti pakartojimų."
 
-#: src/xmoto/GameText.h:304
+#: src/xmoto/GameText.h:306
 msgid "Failed to download the rooms list."
 msgstr "Nepavyko atsiųsti kambarių sąrašo."
 
-#: src/xmoto/GameText.h:305
+#: src/xmoto/GameText.h:307
 msgid "Failed to get the selected theme"
 msgstr "Nepavyko gauti pasirinktos temos."
 
-#: src/xmoto/GameText.h:306
+#: src/xmoto/GameText.h:308
 msgid "Failed to initialize level!"
 msgstr "Nepavyko iškviesti lygio!"
 
-#: src/xmoto/GameText.h:307
+#: src/xmoto/GameText.h:309
 msgid "Failed to load replay!"
 msgstr "Nepavyko įkelti pakartojimo!"
 
-#: src/xmoto/GameText.h:309
+#: src/xmoto/GameText.h:311
 msgid ""
 "Failed to save replay!\n"
 "Maybe you should try with another name?"
@@ -1165,41 +1157,41 @@ msgstr ""
 "Nepavyko išsaugoti pakartojimo!\n"
 "Gal pabandykite pervadinti?"
 
-#: src/xmoto/GameText.h:310
+#: src/xmoto/GameText.h:312
 msgid "Failed to update the theme list"
 msgstr "Nepavyko atnaujinti temų sąrašo."
 
-#: src/xmoto/GameText.h:870
+#: src/xmoto/GameText.h:872
 msgid "Fanciest menu graphics"
 msgstr "Labai įmantri meniu grafika"
 
-#: src/xmoto/GameText.h:1123
+#: src/xmoto/GameText.h:1119
 msgid "Favorite levels"
 msgstr "Parankiniai lygiai"
 
-#: src/xmoto/GameText.h:311
+#: src/xmoto/GameText.h:313
 msgid "File"
 msgstr "Rinkmena"
 
-#: src/xmoto/GameText.h:312
+#: src/xmoto/GameText.h:314
 msgid "Filter"
 msgstr "Filtras"
 
-#: src/xmoto/GameText.h:397
+#: src/xmoto/GameText.h:399
 msgid ""
 "Find all the strawberries and touch the flower to finish\n"
 "the level."
 msgstr "Suraskite visas žemuoges ir palieskite gėlę, kad baigtumėte lygį"
 
-#: src/xmoto/GameText.h:314
+#: src/xmoto/GameText.h:316
 msgid "Finish Time"
 msgstr "Baigimo laikas"
 
-#: src/xmoto/GameText.h:313
+#: src/xmoto/GameText.h:315
 msgid "Finished!"
 msgstr "Baigta!"
 
-#: src/xmoto/GameText.h:169
+#: src/xmoto/GameText.h:171
 msgid "Finnish"
 msgstr "suomių"
 
@@ -1207,120 +1199,120 @@ msgstr "suomių"
 msgid "First let's take a look at the user interface..."
 msgstr "Pirmiau pažiūrėkime į vartotojo sąsają..."
 
-#: src/xmoto/GameText.h:315
+#: src/xmoto/GameText.h:317
 msgid "Flip left"
 msgstr "Kairinis sprigtas"
 
-#: src/xmoto/GameText.h:316
+#: src/xmoto/GameText.h:318
 msgid "Flip right"
 msgstr "Dešininis sprigtas"
 
-#: src/xmoto/GameText.h:566
+#: src/xmoto/GameText.h:568
 msgid "Following are your most played levels"
 msgstr "Toliau yra jūsų labiausiai žaisti lygiai"
 
-#: src/xmoto/GameText.h:1252
+#: src/xmoto/GameText.h:1248
 msgid "FontGroup:GENERAL"
 msgstr "Šriftų grupė: BENDRA"
 
-#: src/xmoto/GameText.h:657
+#: src/xmoto/GameText.h:659
 msgid "Forward while replaying"
 msgstr ""
 
-#: src/xmoto/GameText.h:1229
+#: src/xmoto/GameText.h:1225
 msgid "Fps disabled"
 msgstr "Kadrų sklaistinė išjungta"
 
-#: src/xmoto/GameText.h:1228
+#: src/xmoto/GameText.h:1224
 msgid "Fps enabled"
 msgstr "Kadrų skleistinė įjungta"
 
-#: src/xmoto/GameText.h:162
+#: src/xmoto/GameText.h:164
 msgid "French"
 msgstr "prancūzų"
 
-#: src/xmoto/GameText.h:559
+#: src/xmoto/GameText.h:561
 msgid "Full"
 msgstr ""
 
-#: src/xmoto/GameText.h:1223
+#: src/xmoto/GameText.h:1219
 msgid "Full Graphics Mode enabled"
 msgstr ""
 
-#: src/xmoto/GameText.h:203
+#: src/xmoto/GameText.h:205
 msgid "Galician"
 msgstr ""
 
-#: src/xmoto/GameText.h:317
+#: src/xmoto/GameText.h:319
 msgid "Game Graphics"
 msgstr "Žaidimo grafika"
 
-#: src/xmoto/GameText.h:96 src/xmoto/GameText.h:318
+#: src/xmoto/GameText.h:98 src/xmoto/GameText.h:320
 msgid "General"
 msgstr "Bendri"
 
-#: src/xmoto/GameText.h:319
+#: src/xmoto/GameText.h:321
 msgid "General Info"
 msgstr "Bendra info"
 
-#: src/xmoto/GameText.h:844
+#: src/xmoto/GameText.h:846
 msgid "General X-Moto preferences"
 msgstr "Bendri X-Moto nustatymai"
 
-#: src/xmoto/GameText.h:896
+#: src/xmoto/GameText.h:898
 msgid "General information about the level"
 msgstr "Bendra informacija apie lygį"
 
-#: src/xmoto/GameText.h:167
+#: src/xmoto/GameText.h:169
 msgid "German"
 msgstr "vokiečių"
 
-#: src/xmoto/GameText.h:281
+#: src/xmoto/GameText.h:283
 msgid "Get More Levels!"
 msgstr "Gauk daugiau lygių!"
 
-#: src/xmoto/GameText.h:973
+#: src/xmoto/GameText.h:975
 msgid "Get the rooms list from the web"
 msgstr "Gauti kambarių sąrašą iš tinklo"
 
-#: src/xmoto/GameText.h:320
+#: src/xmoto/GameText.h:322
 msgid "Get this theme"
 msgstr "Gauti šią temą"
 
-#: src/xmoto/GameText.h:336
+#: src/xmoto/GameText.h:338
 msgid "Ghost"
 msgstr "Vaiduoklis"
 
-#: src/xmoto/GameText.h:1235
+#: src/xmoto/GameText.h:1231
 msgid "Ghost Trail Rendering activated"
 msgstr ""
 
-#: src/xmoto/GameText.h:1236
+#: src/xmoto/GameText.h:1232
 msgid "Ghost Trail Rendering deactivated"
 msgstr ""
 
-#: src/xmoto/GameText.h:1234
+#: src/xmoto/GameText.h:1230
 msgid "Ghost Trail is not available"
 msgstr ""
 
-#: src/xmoto/GameText.h:332
+#: src/xmoto/GameText.h:334
 #, c-format
 msgid "Ghost of %s"
 msgstr "%s vaiduoklis"
 
-#: src/xmoto/GameText.h:1045
+#: src/xmoto/GameText.h:1048
 msgid "Give your mind about this level"
 msgstr "Pateik savo nuomonę apie šį lygį"
 
-#: src/xmoto/GameText.h:1051
+#: src/xmoto/GameText.h:1054
 msgid "Go !"
 msgstr "Važiuok!"
 
-#: src/xmoto/GameText.h:1050
+#: src/xmoto/GameText.h:1053
 msgid "God"
 msgstr "Asams"
 
-#: src/xmoto/GameText.h:549 src/xmoto/GameText.h:1140
+#: src/xmoto/GameText.h:551 src/xmoto/GameText.h:1136
 msgid "Gold"
 msgstr "Auksas"
 
@@ -1328,19 +1320,19 @@ msgstr "Auksas"
 msgid "Good job! The next one is even more difficult..."
 msgstr "Atlikta gerai! Sekantis bus dar sudėtingesnis..."
 
-#: src/xmoto/GameText.h:145
+#: src/xmoto/GameText.h:147
 msgid "Graphics"
 msgstr "Grafika"
 
-#: src/xmoto/GameText.h:1166
+#: src/xmoto/GameText.h:1162
 msgid "Hardest X-Moto levels according to the web votes"
 msgstr "Sunkiausi X-Moto lygiai pagal tinklo balsus"
 
-#: src/xmoto/GameText.h:1126
+#: src/xmoto/GameText.h:1122
 msgid "Hardest levels"
 msgstr "Sunkiausi lygiai"
 
-#: src/xmoto/GameText.h:337
+#: src/xmoto/GameText.h:339
 msgid "Help"
 msgstr "Pagalba"
 
@@ -1355,36 +1347,44 @@ msgstr ""
 "Jūs vėl turėsite išvysti maksimalų greitį, bet kai jūs\n"
 "pasieksite šuolio kraštą, kelkite motociklo priekinį ratą į viršų."
 
-#: src/xmoto/GameText.h:487
+#: src/xmoto/GameText.h:489
 msgid "Hide ghosts"
 msgstr "Paslėpti vaiduoklį"
 
-#: src/xmoto/GameText.h:488
+#: src/xmoto/GameText.h:58
+msgid "Hide sprites from the minimap"
+msgstr ""
+
+#: src/xmoto/GameText.h:57
+msgid "Hide sprites in ugly mode"
+msgstr ""
+
+#: src/xmoto/GameText.h:490
 msgid "High"
 msgstr "Aukšta"
 
-#: src/xmoto/GameText.h:489
+#: src/xmoto/GameText.h:491
 msgid "Highscore of the room"
 msgstr "Kambario rekordas"
 
-#: src/xmoto/GameText.h:1196
+#: src/xmoto/GameText.h:1192
 #, c-format
 msgid "Highscores by %s"
 msgstr "Žaidėjo %s rekordai"
 
-#: src/xmoto/GameText.h:195
+#: src/xmoto/GameText.h:197
 msgid "Hungarian"
 msgstr ""
 
-#: src/xmoto/GameText.h:83
+#: src/xmoto/GameText.h:85
 msgid "I'm a child"
 msgstr "Aš esu vaikas"
 
-#: src/xmoto/GameText.h:941
+#: src/xmoto/GameText.h:943
 msgid "If you make a highscore it will automatically be saved as a replay"
 msgstr "Pakartojimas bus automatiškai išsaugotas, jei pasieksite rekordą"
 
-#: src/xmoto/GameText.h:245
+#: src/xmoto/GameText.h:247
 msgid ""
 "If you manually copied the X-Moto user files (.xmoto) on some other "
 "computers, you should not use this functionality otherwise your statistics "
@@ -1396,7 +1396,7 @@ msgstr ""
 "sudubliuota/nesinchronizuota. Jeigu tai padarėte, turėtumėte pašalinti "
 "padarytas kopijas."
 
-#: src/xmoto/GameText.h:592
+#: src/xmoto/GameText.h:594
 msgid ""
 "Important note!\n"
 "\n"
@@ -1410,7 +1410,7 @@ msgid ""
 "got the latest version."
 msgstr ""
 
-#: src/xmoto/GameText.h:1090
+#: src/xmoto/GameText.h:1086
 msgid "Impossible"
 msgstr "Neįmanoma"
 
@@ -1418,25 +1418,25 @@ msgstr "Neįmanoma"
 msgid "In the upper left corner, you've got your timers"
 msgstr "Viršutiniame kairiame kampe, jūs turite savo laikmačius"
 
-#: src/xmoto/GameText.h:94
+#: src/xmoto/GameText.h:96
 msgid "Increase console history size"
 msgstr ""
 
-#: src/xmoto/GameText.h:1008
+#: src/xmoto/GameText.h:1010
 msgid "Increase or decrease the difficulty of the levels selected"
 msgstr "Padidinkite ar sumažinkite pasirinktų lygių sunkumą"
 
-#: src/xmoto/GameText.h:1006
+#: src/xmoto/GameText.h:1008
 msgid "Increase or decrease the quality of the levels selected"
 msgstr "Padidinkite ar sumažinkite pasirinktų lygių kokybę"
 
-#: src/xmoto/GameText.h:682
+#: src/xmoto/GameText.h:496
+msgid "Info"
+msgstr ""
+
+#: src/xmoto/GameText.h:684
 msgid "Info..."
 msgstr "Info..."
-
-#: src/xmoto/GameText.h:494
-msgid "Infos"
-msgstr ""
 
 #: src/xmoto/LevelsText.h:76
 msgid ""
@@ -1448,429 +1448,425 @@ msgstr ""
 "Bandykite važiuoti truputį atgal ir pirmyn ant savo\n"
 "užpakalinio rato, laikydamas motociklą stabiliai, kiek įmanoma..."
 
-#: src/xmoto/GameText.h:835
+#: src/xmoto/GameText.h:837
 msgid "Instructions of how to play X-Moto"
 msgstr "Instrukcijos, kaip žaisti X-Moto"
 
-#: src/xmoto/GameText.h:493
+#: src/xmoto/GameText.h:495
 msgid "Internet Configuration"
 msgstr "Interneto formavimas"
 
-#: src/xmoto/GameText.h:176
+#: src/xmoto/GameText.h:178
 msgid "Italian"
 msgstr "italų"
 
-#: src/xmoto/GameText.h:496
+#: src/xmoto/GameText.h:498
 msgid "Joystick"
 msgstr "Vairalazdė"
 
-#: src/xmoto/GameText.h:503
+#: src/xmoto/GameText.h:505
 msgid "Key"
 msgstr "Raktas"
 
-#: src/xmoto/GameText.h:693
+#: src/xmoto/GameText.h:695
 #, c-format
 msgid "Key '%s' of Player '%i' has been switched to '%s'"
 msgstr ""
 
-#: src/xmoto/GameText.h:504
+#: src/xmoto/GameText.h:506
 msgid "Keyboard"
 msgstr "Klaviatūra"
 
-#: src/xmoto/GameText.h:505
+#: src/xmoto/GameText.h:507
 msgid "Language"
 msgstr "Kalba"
 
-#: src/xmoto/GameText.h:507
+#: src/xmoto/GameText.h:509
 msgid "Language code"
 msgstr "Kalbos kodas"
 
-#: src/xmoto/GameText.h:506
+#: src/xmoto/GameText.h:508
 msgid "Language name"
 msgstr "Kalbos pavadinimas"
 
-#: src/xmoto/GameText.h:1181
+#: src/xmoto/GameText.h:1177
 msgid "Last created X-Moto levels"
 msgstr "Paskutiniai sukurti X-Moto lygiai"
 
-#: src/xmoto/GameText.h:1136
+#: src/xmoto/GameText.h:1132
 msgid "Last highscores"
 msgstr "Paskutinis rekordai"
 
-#: src/xmoto/GameText.h:1137
+#: src/xmoto/GameText.h:1133
 msgid "Last levels"
 msgstr "Paskutinis lygis"
 
-#: src/xmoto/GameText.h:1173
+#: src/xmoto/GameText.h:1169
 msgid "Last levels you have played"
 msgstr "Paskutiniai jūsų žaisti lygiai"
 
-#: src/xmoto/GameText.h:1132
+#: src/xmoto/GameText.h:1128
 msgid "Last played levels"
 msgstr "Paskutiniai žaisti lygiai"
 
-#: src/xmoto/GameText.h:187
+#: src/xmoto/GameText.h:189
 msgid "Latvian"
 msgstr "latvių"
 
-#: src/xmoto/GameText.h:780
+#: src/xmoto/GameText.h:782
 msgid "Launch at startup"
 msgstr "Paleisti startuojant"
 
-#: src/xmoto/GameText.h:130
+#: src/xmoto/GameText.h:132
 msgid "Lead Programming"
 msgstr "Pagrindinis programavimas"
 
-#: src/xmoto/GameText.h:1135
+#: src/xmoto/GameText.h:1131
 msgid "Less played levels (but played)"
 msgstr "Mažiausiai žaisti lygiai"
 
-#: src/xmoto/GameText.h:911
+#: src/xmoto/GameText.h:913
 msgid ""
 "Let X-Moto look for more levels on the net, and install them automatically"
 msgstr ""
 "Leiskite X-Moto ieškoti daugiau lygių tinkle ir įdiegti juos automatiškai"
 
-#: src/xmoto/GameText.h:508
+#: src/xmoto/GameText.h:510
 msgid "Level"
 msgstr "Lygis"
 
-#: src/xmoto/GameText.h:519
+#: src/xmoto/GameText.h:521
 #, c-format
 msgid "Level '%s' cannot be loaded"
 msgstr "Lygis \"%s\" negali įsikelti"
 
-#: src/xmoto/GameText.h:529
+#: src/xmoto/GameText.h:531
 #, c-format
 msgid "Level '%s' required by replay!"
 msgstr "Lygis '%s' reikalauja pakartojimo!"
 
-#: src/xmoto/GameText.h:515
+#: src/xmoto/GameText.h:517
 msgid "Level File"
 msgstr ""
 
-#: src/xmoto/GameText.h:516
+#: src/xmoto/GameText.h:518
 msgid "Level ID"
 msgstr ""
 
-#: src/xmoto/GameText.h:513
+#: src/xmoto/GameText.h:515
 msgid "Level Info"
 msgstr "Lygio info"
 
-#: src/xmoto/GameText.h:514
+#: src/xmoto/GameText.h:516
 msgid "Level Name"
 msgstr "Lygio pavadinimas"
 
-#: src/xmoto/GameText.h:527
+#: src/xmoto/GameText.h:529
 msgid "Level Pack"
 msgstr "Lygių paketas"
 
-#: src/xmoto/GameText.h:528
+#: src/xmoto/GameText.h:530
 msgid "Level Packs"
 msgstr "Lygių paketai"
 
-#: src/xmoto/GameText.h:1074
+#: src/xmoto/GameText.h:1070
 msgid "Level cache cleared"
 msgstr ""
 
-#: src/xmoto/GameText.h:1195
+#: src/xmoto/GameText.h:1191
 #, c-format
 msgid "Level pack \"%s\""
 msgstr "Lygių paketas \"%s\""
 
-#: src/xmoto/GameText.h:988
+#: src/xmoto/GameText.h:990
 msgid "Level played in replay"
 msgstr "Lygis, kuris yra pakartojime"
 
-#: src/xmoto/GameText.h:563
+#: src/xmoto/GameText.h:565
 msgid "Level references unknown textures, it could be unplayable!"
 msgstr "Lygį sudaro nežinomos struktūros, todėl žaisti gali būti neįmanoma!"
 
-#: src/xmoto/GameText.h:530
+#: src/xmoto/GameText.h:532
 msgid "Levels"
 msgstr "Lygiai"
 
-#: src/xmoto/GameText.h:492
+#: src/xmoto/GameText.h:494
 msgid "Levels are being added into the database. Please wait."
 msgstr "Lygiai įkeliami į duomenų bazę. Prašome palaukti."
 
-#: src/xmoto/GameText.h:1210
+#: src/xmoto/GameText.h:1206
 msgid "Levels for which you owned the highscore"
 msgstr "Jūsų pasisavinti lygių rekordai"
 
-#: src/xmoto/GameText.h:831
+#: src/xmoto/GameText.h:833
 msgid "Levels grouped together in level packs"
 msgstr "Lygiai sugrupuoti kartu į lygių paketus"
 
-#: src/xmoto/GameText.h:1212
+#: src/xmoto/GameText.h:1208
 msgid "Levels having votes unlocked"
 msgstr ""
 
-#: src/xmoto/GameText.h:1200
+#: src/xmoto/GameText.h:1196
 msgid "Levels marked 'crappy' are hidden in all other packs"
 msgstr ""
 "Lygiai, pažymėti, kaip 'niekam tikę', yra paslėpti visuose kituose paketuose"
 
-#: src/xmoto/GameText.h:1117
+#: src/xmoto/GameText.h:1113
 msgid "Levels with no highscore"
 msgstr "Lygiai be rekordų"
 
-#: src/xmoto/GameText.h:1154
+#: src/xmoto/GameText.h:1150
 msgid "Levels with no highscore in your room"
 msgstr "Lygiai be rekordo jūsų kambaryje"
 
-#: src/xmoto/GameText.h:1118 src/xmoto/GameText.h:1155
+#: src/xmoto/GameText.h:1114 src/xmoto/GameText.h:1151
 msgid "Levels you have not completed"
 msgstr "Jūsų neužbaigti lygiai"
 
-#: src/xmoto/GameText.h:558
+#: src/xmoto/GameText.h:560
 msgid "Light"
 msgstr ""
 
-#: src/xmoto/GameText.h:1222
+#: src/xmoto/GameText.h:1218
 msgid "Light Graphics Mode enabled"
 msgstr ""
 
-#: src/xmoto/GameText.h:531
+#: src/xmoto/GameText.h:533
 msgid "List All"
 msgstr "Visas sąrašas"
 
-#: src/xmoto/GameText.h:191
+#: src/xmoto/GameText.h:193
 msgid "Lithuanian"
 msgstr "lietuvių"
 
-#: src/xmoto/GameText.h:533
+#: src/xmoto/GameText.h:535
 msgid "Loading levels..."
 msgstr "Įkeliami lygiai..."
 
-#: src/xmoto/GameText.h:534
+#: src/xmoto/GameText.h:536
 msgid "Loading menu graphics..."
 msgstr "Įkeliama meniu grafika..."
 
-#: src/xmoto/GameText.h:276
+#: src/xmoto/GameText.h:278
 msgid "Loading new and updated levels..."
 msgstr "Įkeliami nauji ir atnaujinti lygiai..."
 
-#: src/xmoto/GameText.h:535
+#: src/xmoto/GameText.h:537
 msgid "Loading replays..."
 msgstr "Įkeliami pakartojimai..."
 
-#: src/xmoto/GameText.h:536
+#: src/xmoto/GameText.h:538
 msgid "Loading sounds..."
 msgstr "Įkeliami garsai..."
 
-#: src/xmoto/GameText.h:537
+#: src/xmoto/GameText.h:539
 msgid "Loading textures..."
 msgstr "Įkeliamos struktūros..."
 
-#: src/xmoto/GameText.h:532
+#: src/xmoto/GameText.h:534
 msgid "Loading..."
 msgstr "Įkeliama..."
 
-#: src/xmoto/GameText.h:321
+#: src/xmoto/GameText.h:323
 msgid "Local best"
 msgstr "Vietinis geriausias"
 
-#: src/xmoto/GameText.h:159
+#: src/xmoto/GameText.h:161
 msgid "Localization"
 msgstr "Vertimas"
 
-#: src/xmoto/GameText.h:538
+#: src/xmoto/GameText.h:540
 msgid "Login"
 msgstr "Vartotojas"
 
-#: src/xmoto/GameText.h:1067
-msgid "Logs cleared"
-msgstr ""
-
-#: src/xmoto/GameText.h:1148
+#: src/xmoto/GameText.h:1144
 msgid "Long levels"
 msgstr "Ilgi lygiai"
 
-#: src/xmoto/GameText.h:539
+#: src/xmoto/GameText.h:541
 msgid "Low"
 msgstr "Žema"
 
-#: src/xmoto/GameText.h:156
+#: src/xmoto/GameText.h:158
 msgid "MacOS X Support"
 msgstr "Mac OS X palaikymas"
 
-#: src/xmoto/GameText.h:540
+#: src/xmoto/GameText.h:542
 msgid "Main"
 msgstr "Pagrindinis"
 
-#: src/xmoto/GameText.h:1032
+#: src/xmoto/GameText.h:1034
 msgid "Main options"
 msgstr "Pagrindiniai nustatymai"
 
-#: src/xmoto/GameText.h:205
+#: src/xmoto/GameText.h:207
 msgid "Main testers"
 msgstr "Pagrindiniai testuotojai"
 
-#: src/xmoto/GameText.h:862
+#: src/xmoto/GameText.h:864
 msgid "Make console messages not disappear"
 msgstr ""
 
-#: src/xmoto/GameText.h:932
+#: src/xmoto/GameText.h:934
 msgid ""
 "Make motion blur effect for the ghost (if supported by your graphics card)"
 msgstr ""
 "Suteikite vaiduokliui judėjimo pėdsakus(jei tai palaikoma jūsų vaizdo "
 "plokštės)"
 
-#: src/xmoto/GameText.h:1049
+#: src/xmoto/GameText.h:1052
 msgid "Master"
 msgstr "Profesionalams"
 
-#: src/xmoto/GameText.h:541
+#: src/xmoto/GameText.h:543
 msgid "Max Framerate"
 msgstr ""
 
-#: src/xmoto/GameText.h:610
+#: src/xmoto/GameText.h:612
 msgid "Medals"
 msgstr "Medaliai"
 
-#: src/xmoto/GameText.h:552
+#: src/xmoto/GameText.h:554
 msgid "Medium"
 msgstr "Vidutinė"
 
-#: src/xmoto/GameText.h:1147
+#: src/xmoto/GameText.h:1143
 msgid "Medium levels"
 msgstr "Vidutiniai lygiai"
 
-#: src/xmoto/GameText.h:553
+#: src/xmoto/GameText.h:555
 msgid "Menu Graphics"
 msgstr "Meniu grafika"
 
-#: src/xmoto/GameText.h:555
+#: src/xmoto/GameText.h:557
 msgid "Message not sent, unknown players :"
 msgstr ""
 
-#: src/xmoto/GameText.h:182
+#: src/xmoto/GameText.h:184
 msgid "Mikhail Brinchuk"
 msgstr "Mikhail Brinchuk"
 
-#: src/xmoto/GameText.h:564
+#: src/xmoto/GameText.h:566
 msgid "Mono"
 msgstr "Mono"
 
-#: src/xmoto/GameText.h:882
+#: src/xmoto/GameText.h:884
 msgid "Mono (single channel) audio"
 msgstr "Mono (vieno kanalo) garsas"
 
-#: src/xmoto/GameText.h:1134
+#: src/xmoto/GameText.h:1130
 msgid "Most played levels"
 msgstr "Žaidžiamiausi lygiai"
 
-#: src/xmoto/GameText.h:567
+#: src/xmoto/GameText.h:569
 msgid "Motion blur ghost"
 msgstr "Vaiduoklio judėjimo pėdsakas"
 
-#: src/xmoto/GameText.h:542
+#: src/xmoto/GameText.h:544
 msgid "Mouse"
 msgstr "Pelė"
 
-#: src/xmoto/GameText.h:71
+#: src/xmoto/GameText.h:73
 msgid "Move Camera down"
 msgstr "Pasukti kamerą į apačią"
 
-#: src/xmoto/GameText.h:69
+#: src/xmoto/GameText.h:71
 msgid "Move Camera to left"
 msgstr "Pasukti kamerą į kairę"
 
-#: src/xmoto/GameText.h:70
+#: src/xmoto/GameText.h:72
 msgid "Move Camera to right"
 msgstr "Pasukti kamerą į dešinę"
 
-#: src/xmoto/GameText.h:72
+#: src/xmoto/GameText.h:74
 msgid "Move Camera up"
 msgstr "Pasukti kamerą į viršų"
 
-#: src/xmoto/GameText.h:568
+#: src/xmoto/GameText.h:570
 msgid "Multi"
 msgstr "Žaidėjai"
 
-#: src/xmoto/GameText.h:149
+#: src/xmoto/GameText.h:151
 msgid "Music"
 msgstr ""
 
-#: src/xmoto/GameText.h:1144
+#: src/xmoto/GameText.h:1140
 msgid "My levels"
 msgstr "Mano lygiai"
 
-#: src/xmoto/GameText.h:993
+#: src/xmoto/GameText.h:995
 msgid "Name of level pack"
 msgstr "Lygio paketo pavadinimas"
 
-#: src/xmoto/GameText.h:987
+#: src/xmoto/GameText.h:989
 msgid "Name of replay"
 msgstr "Pakartojimo pavadinimas"
 
-#: src/xmoto/GameText.h:1023
+#: src/xmoto/GameText.h:1025
 msgid "Name of the language"
 msgstr "Kalbos pavadinimas"
 
-#: src/xmoto/GameText.h:787
+#: src/xmoto/GameText.h:789
 msgid "Network"
 msgstr "Tinklas"
 
-#: src/xmoto/GameText.h:788
+#: src/xmoto/GameText.h:790
 msgid "Network admin console"
 msgstr ""
 
-#: src/xmoto/GameText.h:795
+#: src/xmoto/GameText.h:797
 msgid "Network error: you're disconnected"
 msgstr "Tinklo klaida: jūs atsijungęs"
 
-#: src/xmoto/GameText.h:1113
+#: src/xmoto/GameText.h:1109
 msgid "Network playing mode : just see other players as ghosts"
 msgstr "Tinklo žaidimo režimas: tik stebėkite kitus žaidėjus kaip vaiduokliai"
 
-#: src/xmoto/GameText.h:1133
+#: src/xmoto/GameText.h:1129
 msgid "Never played levels"
 msgstr "Nežaisti lygiai"
 
-#: src/xmoto/GameText.h:573
+#: src/xmoto/GameText.h:575
 msgid "New"
 msgstr "Naujas"
 
-#: src/xmoto/GameText.h:582
+#: src/xmoto/GameText.h:584
 msgid "New Levels"
 msgstr "Nauji lygiai"
 
-#: src/xmoto/GameText.h:584
+#: src/xmoto/GameText.h:586
 msgid "New Profile..."
 msgstr "Naujas profilis..."
 
-#: src/xmoto/GameText.h:1122
+#: src/xmoto/GameText.h:1118
 msgid "New and updated levels"
 msgstr "Nauji ir atnaujinti lygiai"
 
-#: src/xmoto/GameText.h:1160
+#: src/xmoto/GameText.h:1156
 msgid "New and updated levels since your last check"
 msgstr "Nauji ir atnaujinti lygiai nuo paskutinio patikrinimo"
 
-#: src/xmoto/GameText.h:576
+#: src/xmoto/GameText.h:578
 msgid "New highscore!"
 msgstr "Naujas rekordas!"
 
-#: src/xmoto/GameText.h:927
+#: src/xmoto/GameText.h:929
 msgid "New levels and levels updated from the Internet"
 msgstr "Nauji ir atnaujinti lygiai iš interneto"
 
-#: src/xmoto/GameText.h:583
+#: src/xmoto/GameText.h:585
 msgid "New levels available!"
 msgstr "Atsisiųsk naujų lygių!"
 
-#: src/xmoto/GameText.h:577
+#: src/xmoto/GameText.h:579
 msgid "New personal highscore!"
 msgstr "Naujas asmeninis rekordas!"
 
-#: src/xmoto/GameText.h:1060
+#: src/xmoto/GameText.h:1063
 msgid "Next level"
 msgstr ""
 
-#: src/xmoto/GameText.h:1054
+#: src/xmoto/GameText.h:1057
 msgid "Nice"
 msgstr "Graži"
 
@@ -1882,39 +1878,39 @@ msgstr "Gražus šuolis! :)"
 msgid "Nice! Now try the next one, it's a bit more difficult..."
 msgstr "Gražu! Dabar pabandykite kitą, bus truputį sudėtingiau..."
 
-#: src/xmoto/GameText.h:1094
+#: src/xmoto/GameText.h:1090
 msgid "Nice, could be better"
 msgstr "Gražu, bet galėjo būti geriau"
 
-#: src/xmoto/GameText.h:1164
+#: src/xmoto/GameText.h:1160
 msgid "Nicest X-Moto levels according to the web votes"
 msgstr "Gražiausi X-Moto lygiai pagal tinklo balsus"
 
-#: src/xmoto/GameText.h:1125
+#: src/xmoto/GameText.h:1121
 msgid "Nicest levels"
 msgstr "Gražiausi lygiai"
 
-#: src/xmoto/GameText.h:585
+#: src/xmoto/GameText.h:587
 msgid "No"
 msgstr "Ne"
 
-#: src/xmoto/GameText.h:1046
+#: src/xmoto/GameText.h:1049
 msgid "No idea"
 msgstr "Neturiu nuomonės"
 
-#: src/xmoto/GameText.h:113
+#: src/xmoto/GameText.h:115
 msgid "No joystick found"
 msgstr "Vairalazdė nerasta"
 
-#: src/xmoto/GameText.h:588
+#: src/xmoto/GameText.h:590
 msgid "No level following this one, sorry."
 msgstr "Po šio lygio daugiau nieko nėra, gaila."
 
-#: src/xmoto/GameText.h:1143
+#: src/xmoto/GameText.h:1139
 msgid "No medal"
 msgstr "Be medalio"
 
-#: src/xmoto/GameText.h:587
+#: src/xmoto/GameText.h:589
 msgid ""
 "No new or updated levels available.\n"
 "\n"
@@ -1924,47 +1920,47 @@ msgstr ""
 "\n"
 "Bandykite vėliau."
 
-#: src/xmoto/GameText.h:589
+#: src/xmoto/GameText.h:591
 msgid "No statistics for this profile."
 msgstr "Nėra šio profilio statistikos."
 
-#: src/xmoto/GameText.h:1087
+#: src/xmoto/GameText.h:1083
 msgid "No technical difficulty"
 msgstr "Nėra techninių sunkumų"
 
-#: src/xmoto/GameText.h:1238
+#: src/xmoto/GameText.h:1234
 msgid "No training positions stored"
 msgstr "Nėra išsaugota mokomųjų padėčių"
 
-#: src/xmoto/GameText.h:1214
+#: src/xmoto/GameText.h:1210
 msgid "Normal mode enabled"
 msgstr ""
 
-#: src/xmoto/GameText.h:878
+#: src/xmoto/GameText.h:880
 msgid "Normal sound quality"
 msgstr "Normali garso kokybė"
 
-#: src/xmoto/GameText.h:164
+#: src/xmoto/GameText.h:166
 msgid "Norwegian"
 msgstr "norvegų"
 
-#: src/xmoto/GameText.h:590
+#: src/xmoto/GameText.h:592
 msgid "Not finished"
 msgstr "Nepabaigtas"
 
-#: src/xmoto/GameText.h:1053
+#: src/xmoto/GameText.h:1056
 msgid "Not nice"
 msgstr "Negraži"
 
-#: src/xmoto/GameText.h:1052
+#: src/xmoto/GameText.h:1055
 msgid "Not nice at all"
 msgstr "Bjauri"
 
-#: src/xmoto/GameText.h:1093
+#: src/xmoto/GameText.h:1089
 msgid "Not original"
 msgstr "Neoriginalus"
 
-#: src/xmoto/GameText.h:868
+#: src/xmoto/GameText.h:870
 msgid "Not so fancy menu graphics"
 msgstr "Ne tokia įmantri meniu grafika"
 
@@ -1999,15 +1995,15 @@ msgstr ""
 "krypčių klavišų, jie nėra gana jautrūs, kad padėtų jums\n"
 "išlaikyti pusiausvyrą."
 
-#: src/xmoto/GameText.h:572
+#: src/xmoto/GameText.h:574
 msgid "Number of players"
 msgstr "Žaidėjų skaičius"
 
-#: src/xmoto/GameText.h:603
+#: src/xmoto/GameText.h:605
 msgid "OK"
 msgstr "Gerai"
 
-#: src/xmoto/GameText.h:730
+#: src/xmoto/GameText.h:732
 msgid "Oh no !"
 msgstr "O ne!"
 
@@ -2015,89 +2011,89 @@ msgstr "O ne!"
 msgid "Okay. The red dot on your minimap is a strawberry."
 msgstr "Gerai. Raudonas taškas jūsų mažame žemėlapyje yra žemuogė."
 
-#: src/xmoto/GameText.h:1138
+#: src/xmoto/GameText.h:1134
 msgid "Oldest highscores"
 msgstr "Seniausias rekordai"
 
-#: src/xmoto/GameText.h:900
+#: src/xmoto/GameText.h:902
 msgid "Only show personal best times for this level"
 msgstr "Rodyti tik asmeninius šio lygio geriausius laikus"
 
-#: src/xmoto/GameText.h:903
+#: src/xmoto/GameText.h:905
 msgid "Only show personal replays for this level"
 msgstr "Rodyti tik asmeninius lygio pakartojimus"
 
-#: src/xmoto/GameText.h:498
+#: src/xmoto/GameText.h:500
 msgid "Oops!"
 msgstr "Oooi!"
 
-#: src/xmoto/GameText.h:604
+#: src/xmoto/GameText.h:606
 msgid "Open"
 msgstr "Atverti"
 
-#: src/xmoto/GameText.h:80
+#: src/xmoto/GameText.h:82
 msgid "Open chat dialog box"
 msgstr ""
 
-#: src/xmoto/GameText.h:452
+#: src/xmoto/GameText.h:454
 msgid "Open options menu"
 msgstr "Atverti parinkčių meniu"
 
-#: src/xmoto/GameText.h:81
+#: src/xmoto/GameText.h:83
 msgid "Open private chat dialog box"
 msgstr ""
 
-#: src/xmoto/GameText.h:605
+#: src/xmoto/GameText.h:607
 msgid "Operation completed"
 msgstr "Veiksmas baigtas"
 
-#: src/xmoto/GameText.h:606
+#: src/xmoto/GameText.h:608
 msgid "Options"
 msgstr "Parinktys"
 
-#: src/xmoto/GameText.h:619
+#: src/xmoto/GameText.h:621
 msgid "Password"
 msgstr "Slaptažodis"
 
-#: src/xmoto/GameText.h:1031
+#: src/xmoto/GameText.h:1033
 msgid "Password associated to your profile for web access"
 msgstr "Slaptažodis sujungtas su jūsų profiliu tinklo prieigai"
 
-#: src/xmoto/GameText.h:374 src/xmoto/GameText.h:439 src/xmoto/GameText.h:618
+#: src/xmoto/GameText.h:376 src/xmoto/GameText.h:441 src/xmoto/GameText.h:620
 msgid "Pause"
 msgstr "Pristabdyti"
 
-#: src/xmoto/GameText.h:1059
+#: src/xmoto/GameText.h:1062
 msgid "Pause to watch the level"
 msgstr ""
 
-#: src/xmoto/GameText.h:625
+#: src/xmoto/GameText.h:627
 msgid "Pause when playing X-Moto"
 msgstr ""
 
-#: src/xmoto/GameText.h:658
+#: src/xmoto/GameText.h:660
 msgid "Pause while replaying"
 msgstr ""
 
-#: src/xmoto/GameText.h:229
+#: src/xmoto/GameText.h:231
 msgid "People who have provided bug reports"
 msgstr "Žmonėms, kurie pranešė apie klaidas"
 
-#: src/xmoto/GameText.h:892
+#: src/xmoto/GameText.h:894
 msgid "Permanently delete selected player profile, including best times"
 msgstr ""
 "Nesugrąžinamai ištrinti pasirinkto žaidėjo profilį, įskaitant ir geriausius "
 "laikus"
 
-#: src/xmoto/GameText.h:842
+#: src/xmoto/GameText.h:844
 msgid "Permanently delete the selected replay"
 msgstr "Nesugrąžinamai ištrinti pasirinktą pakartojimą"
 
-#: src/xmoto/GameText.h:620 src/xmoto/GameText.h:621
+#: src/xmoto/GameText.h:622 src/xmoto/GameText.h:623
 msgid "Personal"
 msgstr "Asmeninis"
 
-#: src/xmoto/GameText.h:1130
+#: src/xmoto/GameText.h:1126
 msgid "Physics levels"
 msgstr "Fizikiniai lygiai"
 
@@ -2105,75 +2101,75 @@ msgstr "Fizikiniai lygiai"
 msgid "Pick up the strawberry by touching it"
 msgstr "Paimkite žemuogę, paliesdami ją"
 
-#: src/xmoto/GameText.h:551 src/xmoto/GameText.h:1139
+#: src/xmoto/GameText.h:553 src/xmoto/GameText.h:1135
 msgid "Platinum"
 msgstr "Platina"
 
-#: src/xmoto/GameText.h:626
+#: src/xmoto/GameText.h:628
 msgid "Play Next Level"
 msgstr "Žaisti sekantį lygį"
 
-#: src/xmoto/GameText.h:661
+#: src/xmoto/GameText.h:663
 msgid "Play a bit faster while replaying"
 msgstr ""
 
-#: src/xmoto/GameText.h:663
+#: src/xmoto/GameText.h:665
 msgid "Play a bit slower while replaying"
 msgstr ""
 
-#: src/xmoto/GameText.h:660
+#: src/xmoto/GameText.h:662
 msgid "Play faster while replaying"
 msgstr ""
 
-#: src/xmoto/GameText.h:236
+#: src/xmoto/GameText.h:238
 msgid "Play music on all levels"
 msgstr "Įjungti muziką visuose lygiuose"
 
-#: src/xmoto/GameText.h:821
+#: src/xmoto/GameText.h:823
 msgid "Play next level"
 msgstr "Žaisti sekantį lygį"
 
-#: src/xmoto/GameText.h:827
+#: src/xmoto/GameText.h:829
 msgid "Play next level instead"
 msgstr "Žaisti sekantį lygį"
 
-#: src/xmoto/GameText.h:235
+#: src/xmoto/GameText.h:237
 msgid "Play now !"
 msgstr ""
 
-#: src/xmoto/GameText.h:662
+#: src/xmoto/GameText.h:664
 msgid "Play slower while replaying"
 msgstr ""
 
-#: src/xmoto/GameText.h:838
+#: src/xmoto/GameText.h:840
 msgid "Play the selected level"
 msgstr "Žaisti pasirinktą lygį"
 
-#: src/xmoto/GameText.h:819
+#: src/xmoto/GameText.h:821
 msgid "Play this level again"
 msgstr "Žaisti šį lygį dar kartą"
 
-#: src/xmoto/GameText.h:837
+#: src/xmoto/GameText.h:839
 msgid "Play tutorial of how to play the game"
 msgstr "Pamoka, kaip žaisti žaidimą"
 
-#: src/xmoto/GameText.h:684
+#: src/xmoto/GameText.h:686
 msgid "Play!"
 msgstr "Žaisti!"
 
-#: src/xmoto/GameText.h:234
+#: src/xmoto/GameText.h:236
 msgid "Player"
 msgstr "Žaidėjas"
 
-#: src/xmoto/GameText.h:623
+#: src/xmoto/GameText.h:625
 msgid "Player Profile"
 msgstr "Žaidėjo profilis"
 
-#: src/xmoto/GameText.h:624
+#: src/xmoto/GameText.h:626
 msgid "Player Profiles"
 msgstr "Žaidėjų profiliai"
 
-#: src/xmoto/GameText.h:989
+#: src/xmoto/GameText.h:991
 msgid "Player who recorded the replay"
 msgstr "Žaidėjas, kuris įrašė pakartojimą"
 
@@ -2181,7 +2177,7 @@ msgstr "Žaidėjas, kuris įrašė pakartojimą"
 msgid "Please stay put and follow the instructions! :)"
 msgstr "Prašom sekti savo padėti ir instrukcijas! :)"
 
-#: src/xmoto/GameText.h:334
+#: src/xmoto/GameText.h:336
 msgid ""
 "Please wait the next party\n"
 "Or press escape to disconnect"
@@ -2190,84 +2186,85 @@ msgstr ""
 "arba atsijunkite paspaudę ESCPalaukite kito žaidėjo\n"
 "arba atsijunkite paspaudę ESC"
 
-#: src/xmoto/GameText.h:174
+#: src/xmoto/GameText.h:176
 msgid "Polish"
 msgstr "lenkų"
 
-#: src/xmoto/GameText.h:877
+#: src/xmoto/GameText.h:879
 msgid "Poor sound quality"
 msgstr "Prasta garso kokybė"
 
-#: src/xmoto/GameText.h:627 src/xmoto/GameText.h:779
+#: src/xmoto/GameText.h:629 src/xmoto/GameText.h:781
 msgid "Port"
 msgstr "Prievadas"
 
-#: src/xmoto/GameText.h:1103
+#: src/xmoto/GameText.h:1099
 msgid "Port on which the server must listen to"
 msgstr "Prievadas, į kurį serveris turi kreiptis"
 
-#: src/xmoto/GameText.h:197
+#: src/xmoto/GameText.h:199
 msgid "Portuguese"
 msgstr ""
 
-#: src/xmoto/GameText.h:1043
-msgid "Preselect the retry button when dying or finishing a level"
+#: src/xmoto/GameText.h:1045
+msgid ""
+"Preselect the retry button when dying or finishing a level,\n"
+"and allow levels to be restarted with 'return to checkpoint' key"
 msgstr ""
-"Iš anksto pasirinkti pakartotinio bandymo mygtuką, mirus arba pabaigus lygį"
 
-#: src/xmoto/GameText.h:630
+#: src/xmoto/GameText.h:632
 #, c-format
 msgid "Press %s to chat"
 msgstr "Spauskite %s pokalbiui"
 
-#: src/xmoto/GameText.h:501
+#: src/xmoto/GameText.h:503
 msgid "Press BACKSPACE to return to Checkpoint"
 msgstr ""
 
-#: src/xmoto/GameText.h:499
+#: src/xmoto/GameText.h:501
 msgid "Press ENTER to try again"
 msgstr "Spauskite ENTER ir bandykite dar kartą"
 
-#: src/xmoto/GameText.h:502
+#: src/xmoto/GameText.h:504
 msgid "Press ESC to display the menu"
 msgstr "Spauskite ESC, kad matytumėte meniu"
 
-#: src/xmoto/GameText.h:629
+#: src/xmoto/GameText.h:631
 #, c-format
 msgid "Press key you want to '%s' or ESC to cancel..."
 msgstr "Spauskite raktą, kokį norite \"%s\" arba ESC, kad atšauktumėte"
 
-#: src/xmoto/GameText.h:1004
+#: src/xmoto/GameText.h:1006
 msgid "Press to play X-Moto immediately"
 msgstr "Paspauskite ir pradėkite žaisti X-Moto"
 
-#: src/xmoto/GameText.h:1061
+#: src/xmoto/GameText.h:1064
 msgid "Previous level"
 msgstr ""
 
-#: src/xmoto/GameText.h:379 src/xmoto/GameText.h:444
+#: src/xmoto/GameText.h:381 src/xmoto/GameText.h:446
 msgid "Previous/Next level"
 msgstr "Ankstesnis/Sekantis lygis"
 
-#: src/xmoto/GameText.h:631
+#: src/xmoto/GameText.h:633
 msgid "Proxy Server"
 msgstr "Tarpinis serveris"
 
-#: src/xmoto/GameText.h:997
+#: src/xmoto/GameText.h:999
 msgid "Puzzle the levels pack list"
 msgstr "Sumaišyti lygių paketo sąrašą"
 
-#: src/xmoto/GameText.h:633
+#: src/xmoto/GameText.h:635
 msgid "Quality"
 msgstr "Kokybė"
 
-#: src/xmoto/GameText.h:637
+#: src/xmoto/GameText.h:639
 msgid "Quick start"
 msgstr ""
 "Greitas\n"
 "paleidimas"
 
-#: src/xmoto/GameText.h:638
+#: src/xmoto/GameText.h:640
 msgid "Quit Game"
 msgstr "Išeiti"
 
@@ -2275,54 +2272,54 @@ msgstr "Išeiti"
 msgid "Quit level"
 msgstr "Išeiti iš lygio"
 
-#: src/xmoto/GameText.h:823
+#: src/xmoto/GameText.h:825
 msgid "Quit the game"
 msgstr "Išeiti iš žaidimo"
 
-#: src/xmoto/GameText.h:640
+#: src/xmoto/GameText.h:642
 msgid "Randomize"
 msgstr "Sumaišytas"
 
-#: src/xmoto/GameText.h:400
+#: src/xmoto/GameText.h:402
 msgid ""
 "Read the README file or check out the website at\n"
 "https://xmoto.tuxfamily.org\n"
 "for more information."
 msgstr ""
 
-#: src/xmoto/GameText.h:1086
+#: src/xmoto/GameText.h:1082
 msgid "Really easy"
 msgstr "Išties lengvas"
 
-#: src/xmoto/GameText.h:1055
+#: src/xmoto/GameText.h:1058
 msgid "Really nice"
 msgstr "Puiki"
 
-#: src/xmoto/GameText.h:748
+#: src/xmoto/GameText.h:750
 msgid "Reference room"
 msgstr "Nurodytas kambarys"
 
-#: src/xmoto/GameText.h:775
+#: src/xmoto/GameText.h:777
 msgid "Reinitialize zoom"
 msgstr "Atstatyti pradinį mastelį"
 
-#: src/xmoto/GameText.h:641
+#: src/xmoto/GameText.h:643
 msgid "Reload files to the database"
 msgstr ""
 
-#: src/xmoto/GameText.h:387
+#: src/xmoto/GameText.h:389
 msgid "Reload levels, themes and replays from directories"
 msgstr "Perkrauti lygius, temas ir pakartojimus iš aplankalo"
 
-#: src/xmoto/GameText.h:642
+#: src/xmoto/GameText.h:644
 msgid "Reloading levels..."
 msgstr "Perkraunami lygiai..."
 
-#: src/xmoto/GameText.h:643
+#: src/xmoto/GameText.h:645
 msgid "Reloading replays..."
 msgstr "Perkraunami pakartojimai..."
 
-#: src/xmoto/GameText.h:644
+#: src/xmoto/GameText.h:646
 msgid "Reloading themes..."
 msgstr "Perkraunamos temos..."
 
@@ -2334,520 +2331,520 @@ msgstr ""
 "Atsiminkite, kad jūs galite apsukti savo motociklą,\n"
 "spausdami:"
 
-#: src/xmoto/GameText.h:1028
+#: src/xmoto/GameText.h:1030
 msgid "Remove levels not suitable for children"
 msgstr "Pašalinti lygius, kurie netinka vaikams"
 
-#: src/xmoto/GameText.h:645
+#: src/xmoto/GameText.h:647
 msgid "Replay"
 msgstr "Pakartojimas"
 
-#: src/xmoto/GameText.h:1227
+#: src/xmoto/GameText.h:1223
 msgid "Replay interpolation disabled"
 msgstr "Pakartojimo įterpimas išjungtas"
 
-#: src/xmoto/GameText.h:1226
+#: src/xmoto/GameText.h:1222
 msgid "Replay interpolation enabled"
 msgstr "Pakartojimo įterpimas įjungtas"
 
-#: src/xmoto/GameText.h:654
+#: src/xmoto/GameText.h:656
 #, c-format
 msgid "Replay of %s"
 msgstr "%s pakartojimas"
 
-#: src/xmoto/GameText.h:655
+#: src/xmoto/GameText.h:657
 msgid "Replays"
 msgstr "Pakartojimai"
 
-#: src/xmoto/GameText.h:1243
+#: src/xmoto/GameText.h:1239
 msgid "Restart Level to activate!"
 msgstr ""
 
-#: src/xmoto/GameText.h:666
+#: src/xmoto/GameText.h:668
 msgid "Restart This Level"
 msgstr "Perkrauti šį lygį"
 
-#: src/xmoto/GameText.h:668
+#: src/xmoto/GameText.h:670
 msgid "Restart level"
 msgstr "Perkrauti lygį"
 
-#: src/xmoto/GameText.h:376 src/xmoto/GameText.h:441
+#: src/xmoto/GameText.h:378 src/xmoto/GameText.h:443
 msgid "Restart the level"
 msgstr "Perkrauti lygį"
 
-#: src/xmoto/GameText.h:667
+#: src/xmoto/GameText.h:669
 msgid "Restart to the last checkpoint"
 msgstr ""
 
-#: src/xmoto/GameText.h:669
+#: src/xmoto/GameText.h:671
 msgid "Resume Playing"
 msgstr "Tęsti žaidimą"
 
-#: src/xmoto/GameText.h:852
+#: src/xmoto/GameText.h:854
 msgid "Revert options to defaults"
 msgstr "Sugrąžinti numatytas parinktis"
 
-#: src/xmoto/GameText.h:656
+#: src/xmoto/GameText.h:658
 msgid "Rewind while replaying"
 msgstr ""
 
-#: src/xmoto/GameText.h:611 src/xmoto/GameText.h:670
+#: src/xmoto/GameText.h:613 src/xmoto/GameText.h:672
 msgid "Room"
 msgstr "Kambarys"
 
-#: src/xmoto/GameText.h:749
+#: src/xmoto/GameText.h:751
 #, c-format
 msgid "Room %i"
 msgstr "%i kambarys"
 
-#: src/xmoto/GameText.h:368 src/xmoto/GameText.h:431
+#: src/xmoto/GameText.h:370 src/xmoto/GameText.h:433
 msgid "Rotates it clockwise"
 msgstr "Suktis pagal laikrodžio rodyklę"
 
-#: src/xmoto/GameText.h:366 src/xmoto/GameText.h:429
+#: src/xmoto/GameText.h:368 src/xmoto/GameText.h:431
 msgid "Rotates it counter-clockwise"
 msgstr "Suktis prieš laikrodžio rodyklę"
 
-#: src/xmoto/GameText.h:671
+#: src/xmoto/GameText.h:673
 msgid "Run Windowed"
 msgstr "Paleisti lange"
 
-#: src/xmoto/GameText.h:983
+#: src/xmoto/GameText.h:985
 msgid "Run a dynamic zoom while playing"
 msgstr "Žaidimo metu keičiasi vaizdo mastelis"
 
-#: src/xmoto/GameText.h:907
+#: src/xmoto/GameText.h:909
 msgid "Run selected replay"
 msgstr "Rodyti pasirinktą pakartojimą"
 
-#: src/xmoto/GameText.h:866
+#: src/xmoto/GameText.h:868
 msgid "Run the game in a window"
 msgstr "Paleisti žaidimą lange"
 
-#: src/xmoto/GameText.h:841
+#: src/xmoto/GameText.h:843
 msgid "Run the selected replay"
 msgstr "Rodyti pasirinktą pakartojimą"
 
-#: src/xmoto/GameText.h:182
+#: src/xmoto/GameText.h:184
 msgid "Russian"
 msgstr "rusų"
 
-#: src/xmoto/GameText.h:686
+#: src/xmoto/GameText.h:688
 msgid "STATS"
 msgstr "STATISTIKA"
 
-#: src/xmoto/GameText.h:673
+#: src/xmoto/GameText.h:675
 #, fuzzy
 msgid "Safemode Disabled"
 msgstr "Temų režimas išjungtas"
 
-#: src/xmoto/GameText.h:672
+#: src/xmoto/GameText.h:674
 #, fuzzy
 msgid "Safemode Enabled"
 msgstr "Temų režimas įjungtas"
 
-#: src/xmoto/GameText.h:674
+#: src/xmoto/GameText.h:676
 msgid "Save"
 msgstr "Išsaugoti"
 
-#: src/xmoto/GameText.h:676
+#: src/xmoto/GameText.h:678
 msgid "Save Replay"
 msgstr "Išsaugoti pakartojimą"
 
-#: src/xmoto/GameText.h:820
+#: src/xmoto/GameText.h:822
 msgid "Save a replay for later viewing"
 msgstr "Išsaugoti pakartojimą vėlesniam peržiūrėjimui"
 
-#: src/xmoto/GameText.h:851
+#: src/xmoto/GameText.h:853
 msgid "Save options"
 msgstr "Išsaugoti parinktis"
 
-#: src/xmoto/GameText.h:675
+#: src/xmoto/GameText.h:677
 #, c-format
 msgid "Saved as %s"
 msgstr "Išsaugoti kaip %s"
 
-#: src/xmoto/GameText.h:677
+#: src/xmoto/GameText.h:679
 msgid "Screen Resolution"
 msgstr "Ekrano raiška"
 
-#: src/xmoto/GameText.h:678
+#: src/xmoto/GameText.h:680
 msgid "Screenshot"
 msgstr ""
 
-#: src/xmoto/GameText.h:127
+#: src/xmoto/GameText.h:129
 msgid "Script action"
 msgstr "Skripto veiksmas"
 
-#: src/xmoto/GameText.h:1129
+#: src/xmoto/GameText.h:1125
 msgid "Scripted levels"
 msgstr "Senarijaus lygiai"
 
-#: src/xmoto/GameText.h:894
+#: src/xmoto/GameText.h:896
 msgid "Select a level in the level pack to play"
 msgstr "Pasirinkite lygį iš sąrašo"
 
-#: src/xmoto/GameText.h:888
+#: src/xmoto/GameText.h:890
 msgid "Select a player profile to use"
 msgstr "Naudojimui pasirinkite žaidėjo profilį"
 
-#: src/xmoto/GameText.h:886
+#: src/xmoto/GameText.h:888
 msgid "Select action to re-configure to another key"
 msgstr "Pasirinkite veiksmą, kad performuotumėte kitą raktą"
 
-#: src/xmoto/GameText.h:865
+#: src/xmoto/GameText.h:867
 msgid "Select graphics resolution"
 msgstr "Pasirinkti grafikos raišką"
 
-#: src/xmoto/GameText.h:918
+#: src/xmoto/GameText.h:920
 msgid "Select this if you connect to the Internet through a SOCKS4 proxy"
 msgstr ""
 "Pasirinkite šį punktą, jei jungiatės prie interneto per SOCKS4 tarpinį "
 "serverį"
 
-#: src/xmoto/GameText.h:920
+#: src/xmoto/GameText.h:922
 msgid "Select this if you connect to the Internet through a SOCKS5 proxy"
 msgstr ""
 "Pasirinkite šį punktą, jei jungiatės prie interneto per SOCKS5 tarpinį "
 "serverį"
 
-#: src/xmoto/GameText.h:916
+#: src/xmoto/GameText.h:918
 msgid "Select this if you connect to the Internet through an HTTP proxy"
 msgstr ""
 "Pasirinkite šį punktą, jei jungiatės prie interneto per HTTP tarpinį serverį"
 
-#: src/xmoto/GameText.h:914
+#: src/xmoto/GameText.h:916
 msgid "Select this if you got a direct connection to the Internet"
 msgstr "Pasirinkite šį punktą, jei turite tiesioginį ryšį prie interneto"
 
-#: src/xmoto/GameText.h:569
+#: src/xmoto/GameText.h:571
 msgid "Semi-cooperative mode"
 msgstr "Pusiau jungtinis režimas"
 
-#: src/xmoto/GameText.h:1056
+#: src/xmoto/GameText.h:1059
 msgid "Send this report"
 msgstr "Siųsti šią apklausą"
 
-#: src/xmoto/GameText.h:1096
+#: src/xmoto/GameText.h:1092
 msgid "Send this report on the webserver"
 msgstr "Siųsti šią apklausą į web serverį"
 
-#: src/xmoto/GameText.h:525
+#: src/xmoto/GameText.h:527
 msgid "Sending the report..."
 msgstr ""
 
-#: src/xmoto/GameText.h:526
+#: src/xmoto/GameText.h:528
 msgid "Sending the vote..."
 msgstr ""
 
-#: src/xmoto/GameText.h:778
+#: src/xmoto/GameText.h:780
 msgid "Server"
 msgstr "Serveris"
 
-#: src/xmoto/GameText.h:1100
+#: src/xmoto/GameText.h:1096
 msgid "Server configuration to play via the network"
 msgstr "Serverio formavimas žaidimui per tinklą"
 
-#: src/xmoto/GameText.h:783
+#: src/xmoto/GameText.h:785
 msgid "Server is currently started"
 msgstr "Serveris įjungtas"
 
-#: src/xmoto/GameText.h:784
+#: src/xmoto/GameText.h:786
 msgid "Server is currently stopped"
 msgstr "Serveris išjungtas"
 
-#: src/xmoto/GameText.h:1104
+#: src/xmoto/GameText.h:1100
 msgid "Server on which you want to connect"
 msgstr "Serveris, prie kurio norite prisijungti"
 
-#: src/xmoto/GameText.h:867
+#: src/xmoto/GameText.h:869
 msgid "Set the maximum framerate the game can run at"
 msgstr ""
 
-#: src/xmoto/GameText.h:1089
+#: src/xmoto/GameText.h:1085
 msgid "Several difficulties"
 msgstr "Keletas sunkumų"
 
-#: src/xmoto/GameText.h:1095
+#: src/xmoto/GameText.h:1091
 msgid "Several textures, sprites, ..."
 msgstr "Keletas struktūrų, spruklių, ..."
 
-#: src/xmoto/GameText.h:1146
+#: src/xmoto/GameText.h:1142
 msgid "Shortest levels"
 msgstr "Trumpiausi lygiai"
 
-#: src/xmoto/GameText.h:679
+#: src/xmoto/GameText.h:681
 msgid "Show"
 msgstr "Rodyti"
 
-#: src/xmoto/GameText.h:683
+#: src/xmoto/GameText.h:685
 msgid "Show Mini Map"
 msgstr "Rodyti mažą žemėlapį"
 
-#: src/xmoto/GameText.h:290
+#: src/xmoto/GameText.h:292
 msgid "Show World Record in-game"
 msgstr "Rodyti žaidime pasaulio rekordus"
 
-#: src/xmoto/GameText.h:853
+#: src/xmoto/GameText.h:855
 msgid "Show a map of your surroundings when playing"
 msgstr "Žaidimo metu rodyti fragmentinį lygio žemėlapį"
 
-#: src/xmoto/GameText.h:901
+#: src/xmoto/GameText.h:903
 msgid "Show all best times for this level"
 msgstr "Rodyti visus lygio geriausius laikus"
 
-#: src/xmoto/GameText.h:904
+#: src/xmoto/GameText.h:906
 msgid "Show all replays for this level"
 msgstr "Rodyti visus lygio pakartojimus"
 
-#: src/xmoto/GameText.h:680
+#: src/xmoto/GameText.h:682
 msgid "Show console"
 msgstr "Rodyti komandinę eilutę"
 
-#: src/xmoto/GameText.h:59
+#: src/xmoto/GameText.h:61
 msgid "Show game information in the console"
 msgstr ""
 
-#: src/xmoto/GameText.h:909
+#: src/xmoto/GameText.h:911
 msgid "Show helpful help strings such as this one"
 msgstr "Parodo naudingas pagalbos eilutes, tokias kaip ši"
 
-#: src/xmoto/GameText.h:906
+#: src/xmoto/GameText.h:908
 msgid "Show information about new players and played levels in the console"
 msgstr ""
 
-#: src/xmoto/GameText.h:485
+#: src/xmoto/GameText.h:487
 msgid "Show level info"
 msgstr ""
 
-#: src/xmoto/GameText.h:291
+#: src/xmoto/GameText.h:293
 msgid "Show next medal in-game"
 msgstr ""
 
-#: src/xmoto/GameText.h:843
+#: src/xmoto/GameText.h:845
 msgid "Show replays of all players in list"
 msgstr "Rodyti sąraše visų žaidėjų pakartojimus"
 
-#: src/xmoto/GameText.h:857
+#: src/xmoto/GameText.h:859
 msgid "Show the World Record for a given level when playing"
 msgstr "Rodyti pasaulio rekordą duotam lygiui, kai žaidžiama"
 
-#: src/xmoto/GameText.h:929
+#: src/xmoto/GameText.h:931
 msgid "Show the ghost if possible in the game"
 msgstr "Rodyti vaiduoklį, jeigu yra galimybė žaidime"
 
-#: src/xmoto/GameText.h:978
+#: src/xmoto/GameText.h:980
 msgid "Show the speedometer when playing"
 msgstr "Žaidimo metu rodyti spidometrą"
 
-#: src/xmoto/GameText.h:859
+#: src/xmoto/GameText.h:861
 msgid "Show the time you need before achieving the next medal"
 msgstr ""
 
-#: src/xmoto/GameText.h:460
+#: src/xmoto/GameText.h:462
 msgid "Show this help"
 msgstr "Rodyti šią pagalbą"
 
-#: src/xmoto/GameText.h:954
+#: src/xmoto/GameText.h:956
 msgid "Show various statistics about X-Moto"
 msgstr "Rodyti įvairią statistiką apie X-Moto"
 
-#: src/xmoto/GameText.h:550 src/xmoto/GameText.h:1141
+#: src/xmoto/GameText.h:552 src/xmoto/GameText.h:1137
 msgid "Silver"
 msgstr "Sidabras"
 
-#: src/xmoto/GameText.h:789
+#: src/xmoto/GameText.h:791
 msgid "Simple ghost mode"
 msgstr "Paprastas vaiduoklio režimas"
 
-#: src/xmoto/GameText.h:1057
+#: src/xmoto/GameText.h:1060
 msgid "Skip this report"
 msgstr "Praleisti šią apklausą"
 
-#: src/xmoto/GameText.h:160
+#: src/xmoto/GameText.h:162
 msgid "Slovak"
 msgstr "slovakų"
 
-#: src/xmoto/GameText.h:608
+#: src/xmoto/GameText.h:610
 msgid "Some options will not take effect before next restart!"
 msgstr "Kai kurios parinktys neįsigalios po naujo paleidimo!"
 
-#: src/xmoto/GameText.h:1157
+#: src/xmoto/GameText.h:1153
 msgid "Somebody in the room made a better highscore than yours"
 msgstr "Kažkas kambaryje pagerino jūsų rekordą"
 
-#: src/xmoto/GameText.h:635
+#: src/xmoto/GameText.h:637
 msgid ""
 "Sorry, but there aren't enough levels matching your choice.\n"
 "Choosing random levels instead"
 msgstr ""
 
-#: src/xmoto/GameText.h:153
+#: src/xmoto/GameText.h:155
 msgid "Sound Effects"
 msgstr ""
 
-#: src/xmoto/GameText.h:171
+#: src/xmoto/GameText.h:173
 msgid "Spanish"
 msgstr "ispanų"
 
-#: src/xmoto/GameText.h:612
+#: src/xmoto/GameText.h:614
 msgid "Special"
 msgstr "Specialus"
 
-#: src/xmoto/GameText.h:681
+#: src/xmoto/GameText.h:683
 msgid "Speedometer"
 msgstr "Spidometras"
 
-#: src/xmoto/GameText.h:613
+#: src/xmoto/GameText.h:615
 msgid "Standard"
 msgstr "Standartinis"
 
-#: src/xmoto/GameText.h:781
+#: src/xmoto/GameText.h:783
 msgid "Start the server"
 msgstr "Įjungti serverį"
 
-#: src/xmoto/GameText.h:1101
+#: src/xmoto/GameText.h:1097
 msgid "Start the server at X-Moto startup"
 msgstr "Įjungti serverį paleidus X-Moto"
 
-#: src/xmoto/GameText.h:1108
+#: src/xmoto/GameText.h:1104
 msgid "Start to play with other connected players"
 msgstr ""
 
-#: src/xmoto/GameText.h:1102
+#: src/xmoto/GameText.h:1098
 msgid "Start/stop the server"
 msgstr "Įjungti/išjungti serverį"
 
-#: src/xmoto/GameText.h:615 src/xmoto/GameText.h:685
+#: src/xmoto/GameText.h:617 src/xmoto/GameText.h:687
 msgid "Statistics"
 msgstr "Statistika"
 
-#: src/xmoto/GameText.h:757
+#: src/xmoto/GameText.h:759
 #, c-format
 msgid "Stats since: %s"
 msgstr "Statistika nuo: %s"
 
-#: src/xmoto/GameText.h:688
+#: src/xmoto/GameText.h:690
 msgid "Stereo"
 msgstr "Stereo"
 
-#: src/xmoto/GameText.h:883
+#: src/xmoto/GameText.h:885
 msgid "Stereo (two channel) audio"
 msgstr "Stereo (dviejų kanalų) garsas"
 
-#: src/xmoto/GameText.h:1150
+#: src/xmoto/GameText.h:1146
 msgid "Stolen highscores"
 msgstr "Pasisavinti rekordai"
 
-#: src/xmoto/GameText.h:571
+#: src/xmoto/GameText.h:573
 msgid "Stop the game once a player ends the level"
 msgstr "Sustabdyti žaidimą, kai tik žaidėjas baigia lygį"
 
-#: src/xmoto/GameText.h:1010
+#: src/xmoto/GameText.h:1012
 msgid ""
 "Stop the game once a player ends the level or continue while a player is "
 "running"
 msgstr ""
 "Sustabdyti žaidimą, kai žaidėjas baigia lygį arba tęsti kol žaidėjas važiuoja"
 
-#: src/xmoto/GameText.h:782
+#: src/xmoto/GameText.h:784
 msgid "Stop the server"
 msgstr "Išjungti serverį"
 
-#: src/xmoto/GameText.h:659
+#: src/xmoto/GameText.h:661
 msgid "Stop while replaying"
 msgstr ""
 
-#: src/xmoto/GameText.h:1240
+#: src/xmoto/GameText.h:1236
 #, c-format
 msgid "Stored as training position %i"
 msgstr "Išsaugotas kaip mokomoji padėtis %i"
 
-#: src/xmoto/GameText.h:178
+#: src/xmoto/GameText.h:180
 msgid "Swedish"
 msgstr "švedų"
 
-#: src/xmoto/GameText.h:696
+#: src/xmoto/GameText.h:698
 msgid "Switch FPS"
 msgstr ""
 
-#: src/xmoto/GameText.h:700
+#: src/xmoto/GameText.h:702
 msgid "Switch WWW access"
 msgstr ""
 
-#: src/xmoto/GameText.h:462
+#: src/xmoto/GameText.h:464
 msgid "Switch biker"
 msgstr ""
 
-#: src/xmoto/GameText.h:1064
+#: src/xmoto/GameText.h:1067
 msgid "Switch ghosttrail rendering"
 msgstr ""
 
-#: src/xmoto/GameText.h:702
+#: src/xmoto/GameText.h:704
 msgid "Switch graphics mode"
 msgstr ""
 
-#: src/xmoto/GameText.h:701
+#: src/xmoto/GameText.h:703
 msgid "Switch graphics quality mode"
 msgstr ""
 
-#: src/xmoto/GameText.h:699
+#: src/xmoto/GameText.h:701
 msgid "Switch highscore information"
 msgstr ""
 
-#: src/xmoto/GameText.h:698
+#: src/xmoto/GameText.h:700
 msgid "Switch net game mode"
 msgstr ""
 
-#: src/xmoto/GameText.h:1062
+#: src/xmoto/GameText.h:1065
 msgid "Switch player"
 msgstr ""
 
-#: src/xmoto/GameText.h:703
+#: src/xmoto/GameText.h:705
 msgid "Switch safe mode"
 msgstr ""
 
-#: src/xmoto/GameText.h:1063
+#: src/xmoto/GameText.h:1066
 msgid "Switch trackingshot mode"
 msgstr ""
 
-#: src/xmoto/GameText.h:691
+#: src/xmoto/GameText.h:693
 msgid "Synchronisation done successfully"
 msgstr "Sinchronizacija atlikta sėkmingai"
 
-#: src/xmoto/GameText.h:689
+#: src/xmoto/GameText.h:691
 msgid "Synchronisation down"
 msgstr "Sinchronizuoja iš serverio"
 
-#: src/xmoto/GameText.h:690
+#: src/xmoto/GameText.h:692
 msgid "Synchronisation up"
 msgstr "Sinchronizuoja į serverį"
 
-#: src/xmoto/GameText.h:249
+#: src/xmoto/GameText.h:251
 msgid "Synchronise"
 msgstr "Sinchronizuoti"
 
-#: src/xmoto/GameText.h:1038
+#: src/xmoto/GameText.h:1040
 msgid "Synchronise your database on the web"
 msgstr "Sinchronizuoti jūsų duomenų bazę tinklapyje"
 
-#: src/xmoto/GameText.h:1040
+#: src/xmoto/GameText.h:1042
 msgid "Synchronise your database when your quit X-Moto"
 msgstr "Sinchronizuoti jūsų duomenų bazę, kai išeinate iš X-Moto"
 
-#: src/xmoto/GameText.h:250
+#: src/xmoto/GameText.h:252
 msgid "Synchronize when X-Moto ends"
 msgstr "Sinchronizuoti, kai X-Moto išjungiamas"
 
-#: src/xmoto/GameText.h:201
+#: src/xmoto/GameText.h:203
 msgid "Taiwanese"
 msgstr ""
 
-#: src/xmoto/GameText.h:390 src/xmoto/GameText.h:483
+#: src/xmoto/GameText.h:392 src/xmoto/GameText.h:485
 msgid "Take a screenshot"
 msgstr "Gauti ekrano vaizdą"
 
-#: src/xmoto/GameText.h:209
+#: src/xmoto/GameText.h:211
 msgid "Thanks to"
 msgstr "Ačiū"
 
@@ -2872,11 +2869,11 @@ msgstr ""
 "Pagrindinė mintis yra tokia, kad, važiuodami ant\n"
 "užpakalinio rato, jūsų galva turi būti nuleista gana žemai..."
 
-#: src/xmoto/GameText.h:329 src/xmoto/GameText.h:1013
+#: src/xmoto/GameText.h:331 src/xmoto/GameText.h:1015
 msgid "The best of my replays (on this computer)"
 msgstr "Geriausi mano pakartojimai (šiame kompiuteryje)"
 
-#: src/xmoto/GameText.h:331 src/xmoto/GameText.h:1015
+#: src/xmoto/GameText.h:333 src/xmoto/GameText.h:1017
 msgid "The best of the replays (on this computer)"
 msgstr "Geriausi pakartojimai (šiame kompiuteryje)"
 
@@ -2898,11 +2895,11 @@ msgstr ""
 msgid "The first jump you're going to perform is very easy."
 msgstr "Pirmas šuolis, kurį ketinate atlikti, yra labai lengvas."
 
-#: src/xmoto/GameText.h:327 src/xmoto/GameText.h:1019
+#: src/xmoto/GameText.h:329 src/xmoto/GameText.h:1021
 msgid "The highscore of the other rooms"
 msgstr "Kitų kambarių rekordai"
 
-#: src/xmoto/GameText.h:325 src/xmoto/GameText.h:1017
+#: src/xmoto/GameText.h:327 src/xmoto/GameText.h:1019
 msgid "The highscore of the reference room"
 msgstr "Nurodyto kambario rekordai"
 
@@ -2914,19 +2911,19 @@ msgstr ""
 "Žemuogė, esanti dešinėje jūsų laiko, rodo,\n"
 "kiek žemuogių vis dar liko."
 
-#: src/xmoto/GameText.h:521
+#: src/xmoto/GameText.h:523
 msgid "The level failed while loading with the following error :"
 msgstr ""
 
-#: src/xmoto/GameText.h:1206
+#: src/xmoto/GameText.h:1202
 msgid "The long levels (1 minute to 2 minutes)"
 msgstr "Ilgi lygiai (nuo 1 iki 2 minučių)"
 
-#: src/xmoto/GameText.h:1208
+#: src/xmoto/GameText.h:1204
 msgid "The longest levels (more than 2 minutes)"
 msgstr "Ilgiausi lygiai (daugiau negu 2 minutės)"
 
-#: src/xmoto/GameText.h:1204
+#: src/xmoto/GameText.h:1200
 msgid "The medium levels (25 seconds to 60)"
 msgstr "Vidutiniai lygiai (nuo 25 iki 60 sekundžių)"
 
@@ -2946,19 +2943,19 @@ msgstr ""
 "Pagrindinis žaidimo tikslas yra surinkti\n"
 "visas žemuoges ir paskui surasti gėlę."
 
-#: src/xmoto/GameText.h:653
+#: src/xmoto/GameText.h:655
 msgid "The replay can't be played!"
 msgstr "Pakartojimo negalima paleisti!"
 
-#: src/xmoto/GameText.h:1194
+#: src/xmoto/GameText.h:1190
 msgid "The room highscore is really better than your own highscore"
 msgstr "Kambario rekordas iš tiesų geresnis negu jūsų rekordas"
 
-#: src/xmoto/GameText.h:1021
+#: src/xmoto/GameText.h:1023
 msgid "The scene is shared by all the players"
 msgstr "Scena pasidalinta visų žaidėjų"
 
-#: src/xmoto/GameText.h:1202
+#: src/xmoto/GameText.h:1198
 msgid "The shortest levels (less than 25 seconds)"
 msgstr "Trumpiausi lygiai (mažiau negu 25 sekundės)"
 
@@ -2970,29 +2967,29 @@ msgstr ""
 "Mažas laikmatis dešinėje rodo jūsų geriausią laiką\n"
 "šiame lygyje..."
 
-#: src/xmoto/GameText.h:708
+#: src/xmoto/GameText.h:710
 msgid "The theme is now up to date"
 msgstr "Tema dabar yra naujausia"
 
-#: src/xmoto/GameText.h:543 src/xmoto/GameText.h:704
+#: src/xmoto/GameText.h:545 src/xmoto/GameText.h:706
 msgid "Theme"
 msgstr "Tema"
 
-#: src/xmoto/GameText.h:1218
+#: src/xmoto/GameText.h:1214
 msgid "Theme mode disabled"
 msgstr "Temų režimas išjungtas"
 
-#: src/xmoto/GameText.h:1217
+#: src/xmoto/GameText.h:1213
 msgid "Theme mode enabled"
 msgstr "Temų režimas įjungtas"
 
-#: src/xmoto/GameText.h:298
+#: src/xmoto/GameText.h:300
 msgid "There are errors in the level, don't expect it to be playable!"
 msgstr "Lygyje yra klaidų, padėkite ištaisyti jas!"
 
-#: src/xmoto/GameText.h:90
-msgid "There is no replay to clean"
-msgstr "Pakartojimai išvalyti"
+#: src/xmoto/GameText.h:92
+msgid "There are no replays to clean"
+msgstr ""
 
 #: src/xmoto/LevelsText.h:43
 msgid ""
@@ -3000,7 +2997,7 @@ msgid ""
 "how you play the game."
 msgstr "Šis lygis pamokys, kaip žaisti žaidimą."
 
-#: src/xmoto/GameText.h:1242
+#: src/xmoto/GameText.h:1238
 msgid ""
 "This level is not recordable (feature still not implemented).\n"
 "Sorry."
@@ -3024,56 +3021,56 @@ msgstr ""
 "per vietas, kur lubos yra žemos.\n"
 "Saugokitės, tai gali būti gana sudėtinga :)"
 
-#: src/xmoto/GameText.h:709
+#: src/xmoto/GameText.h:711
 msgid "Time"
 msgstr "Laikas"
 
-#: src/xmoto/GameText.h:762
+#: src/xmoto/GameText.h:764
 #, c-format
 msgid "Time played: %s"
 msgstr "Žaidimo laikas: %s"
 
-#: src/xmoto/GameText.h:707
+#: src/xmoto/GameText.h:709
 msgid "To be updated"
 msgstr "Bus atnaujintas"
 
-#: src/xmoto/GameText.h:706
+#: src/xmoto/GameText.h:708
 msgid "To download"
 msgstr "Atsisiųsti"
 
-#: src/xmoto/GameText.h:478
+#: src/xmoto/GameText.h:480
 msgid "Toggle Contrast, Light and Full Graphics"
 msgstr ""
 
-#: src/xmoto/GameText.h:458
+#: src/xmoto/GameText.h:460
 msgid "Toggle Display Medals,Display WR"
 msgstr ""
 
-#: src/xmoto/GameText.h:454
+#: src/xmoto/GameText.h:456
 msgid "Toggle Ghost Trail Rendering"
 msgstr ""
 
-#: src/xmoto/GameText.h:467
+#: src/xmoto/GameText.h:469
 msgid "Toggle Ghost Trail Tracking Shot"
 msgstr ""
 
-#: src/xmoto/GameText.h:456
+#: src/xmoto/GameText.h:458
 msgid "Toggle Trail Cam"
 msgstr ""
 
-#: src/xmoto/GameText.h:448
+#: src/xmoto/GameText.h:450
 msgid "Toggle blacklist"
 msgstr "Toggle juodasis sąrašas"
 
-#: src/xmoto/GameText.h:464
+#: src/xmoto/GameText.h:466
 msgid "Toggle favorite"
 msgstr "Toogle parankiniai"
 
-#: src/xmoto/GameText.h:481
+#: src/xmoto/GameText.h:483
 msgid "Toggle theme and ugly over mode"
 msgstr ""
 
-#: src/xmoto/GameText.h:561
+#: src/xmoto/GameText.h:563
 msgid "Total time you scored / total highscore time for levels you finished"
 msgstr ""
 "Visas laikas, kurį jūs skaičiavote / visų rekordų laikai lygiams, kuriuos "
@@ -3083,20 +3080,20 @@ msgstr ""
 msgid "Touch it to finish the level. Good luck with the rest :)"
 msgstr "Palieskite gėlę, kad baigtumėte lygį. Sėkmės su likusiais :)"
 
-#: src/xmoto/GameText.h:1232
+#: src/xmoto/GameText.h:1228
 msgid "Trail Cam activated"
 msgstr ""
 
-#: src/xmoto/GameText.h:1233
+#: src/xmoto/GameText.h:1229
 msgid "Trail Cam deactivated"
 msgstr ""
 
-#: src/xmoto/GameText.h:1239
+#: src/xmoto/GameText.h:1235
 #, c-format
 msgid "Training position %i/%i restored"
 msgstr "Mokomoji padėtis %i/%i atkurta"
 
-#: src/xmoto/GameText.h:710
+#: src/xmoto/GameText.h:712
 msgid "Try This Level Again"
 msgstr "Bandyti šį lygį dar kartą"
 
@@ -3104,155 +3101,155 @@ msgstr "Bandyti šį lygį dar kartą"
 msgid "Try getting under the next obstacle when you feel you're ready."
 msgstr "Kai jausitės pasiruošę, pabandykite patekti po kita kliūtimi."
 
-#: src/xmoto/GameText.h:828
+#: src/xmoto/GameText.h:830
 msgid "Try this level again"
 msgstr "Bandyti šį lygį dar kartą"
 
-#: src/xmoto/GameText.h:826
+#: src/xmoto/GameText.h:828
 msgid "Try this level again from the beginning"
 msgstr "Pabandykite šį lygį vėl nuo pradžios"
 
-#: src/xmoto/GameText.h:193
+#: src/xmoto/GameText.h:195
 msgid "Turkish"
 msgstr "turkų"
 
-#: src/xmoto/GameText.h:884
+#: src/xmoto/GameText.h:886
 msgid "Turn on engine noise"
 msgstr "Įjungti variklio triukšmą"
 
-#: src/xmoto/GameText.h:876
+#: src/xmoto/GameText.h:878
 msgid "Turn on sound effects"
 msgstr "Įjungti garso efektus"
 
-#: src/xmoto/GameText.h:372 src/xmoto/GameText.h:435
+#: src/xmoto/GameText.h:374 src/xmoto/GameText.h:437
 msgid "Turns around and drives in the other direction"
 msgstr "Apsiversti ir važiuoti kita kryptimi"
 
-#: src/xmoto/GameText.h:711
+#: src/xmoto/GameText.h:713
 msgid "Tutorial"
 msgstr "Pamoka"
 
-#: src/xmoto/GameText.h:323
+#: src/xmoto/GameText.h:325
 msgid "Type"
 msgstr "Tipas"
 
-#: src/xmoto/GameText.h:1216
+#: src/xmoto/GameText.h:1212
 msgid "Ugly mode disabled"
 msgstr "Netvarkingas režimas išjungtas"
 
-#: src/xmoto/GameText.h:1215
+#: src/xmoto/GameText.h:1211
 msgid "Ugly mode enabled"
 msgstr "Netvarkingas režimas įjungtas"
 
-#: src/xmoto/GameText.h:1220
+#: src/xmoto/GameText.h:1216
 msgid "UglyOver mode disabled"
 msgstr "Virš bjaurumo režimas išjungtas"
 
-#: src/xmoto/GameText.h:1219
+#: src/xmoto/GameText.h:1215
 msgid "UglyOver mode enabled"
 msgstr "Virš bjaurumo režimas įjungtas"
 
-#: src/xmoto/GameText.h:1249
+#: src/xmoto/GameText.h:1245
 msgid "Unable to build the report"
 msgstr ""
 
-#: src/xmoto/GameText.h:794
+#: src/xmoto/GameText.h:796
 msgid "Unable to connect on the server"
 msgstr "Neįmanoma prisijungti prie serverio"
 
-#: src/xmoto/GameText.h:712
+#: src/xmoto/GameText.h:714
 msgid "Undefined"
 msgstr "Neapibrėžtas"
 
-#: src/xmoto/GameText.h:713
+#: src/xmoto/GameText.h:715
 msgid "Unknown"
 msgstr "Nežinomas"
 
-#: src/xmoto/GameText.h:714
+#: src/xmoto/GameText.h:716
 msgid "Unknown players :"
 msgstr ""
 
-#: src/xmoto/GameText.h:715
+#: src/xmoto/GameText.h:717
 msgid "Unpacked levels"
 msgstr "Neišpakuoti lygiai"
 
-#: src/xmoto/GameText.h:719
+#: src/xmoto/GameText.h:721
 msgid "Update"
 msgstr "Atnaujinti"
 
-#: src/xmoto/GameText.h:956
+#: src/xmoto/GameText.h:958
 msgid "Update statistics (also happens each time X-Moto is started)"
 msgstr ""
 "Atnaujinti statistika (taip pat atnaujinti kaskart,\n"
 "kai X-Moto paleidžiamas)"
 
-#: src/xmoto/GameText.h:722
+#: src/xmoto/GameText.h:724
 msgid "Update the rooms list"
 msgstr "Atnaujinti kambarių sąrašą"
 
-#: src/xmoto/GameText.h:723
+#: src/xmoto/GameText.h:725
 msgid "Update the theme list"
 msgstr "Atnaujinti temų sąrašą"
 
-#: src/xmoto/GameText.h:720
+#: src/xmoto/GameText.h:722
 msgid "Updated"
 msgstr "Atnaujintas"
 
-#: src/xmoto/GameText.h:724
+#: src/xmoto/GameText.h:726
 msgid "Updating level lists..."
 msgstr "Atnaujinamas lygių sąrašas..."
 
-#: src/xmoto/GameText.h:251
+#: src/xmoto/GameText.h:253
 msgid "Upgrading database"
 msgstr "Atnaujinama duomenų bazę"
 
-#: src/xmoto/GameText.h:254
+#: src/xmoto/GameText.h:256
 msgid "Upgrading database profile"
 msgstr "Atnaujinama profilio duomenų bazė"
 
-#: src/xmoto/GameText.h:253
+#: src/xmoto/GameText.h:255
 msgid "Upgrading database stats for the profile"
 msgstr "Atnaujinama duomenų bazės statistika profiliui"
 
-#: src/xmoto/GameText.h:725
+#: src/xmoto/GameText.h:727
 msgid "Upload"
 msgstr "Nusiųsti"
 
-#: src/xmoto/GameText.h:726
+#: src/xmoto/GameText.h:728
 msgid "Upload all highscores"
 msgstr "Nusiųsti visus rekordus"
 
-#: src/xmoto/GameText.h:977
+#: src/xmoto/GameText.h:979
 msgid "Upload of highscore requires a password (Except for WR)"
 msgstr "Nusiųsti rekordus, reikalaujančius slaptažodžio (išskyrus WR)"
 
-#: src/xmoto/GameText.h:975
+#: src/xmoto/GameText.h:977
 msgid "Upload of highscore requires to log in (Except for WR)"
 msgstr "Nusiųsti rekordus, reikalaujančius prisijungti (išskyrus WR)"
 
-#: src/xmoto/GameText.h:964
+#: src/xmoto/GameText.h:966
 msgid "Upload the replay on the website of highscores"
 msgstr "Nusiųsti pakartojimą į rekordų tinklapį"
 
-#: src/xmoto/GameText.h:966
+#: src/xmoto/GameText.h:968
 msgid "Upload your best replays to your room (useful when it is just created)"
 msgstr ""
 "Nusiųskite savo geriausius pakartojimus į savo kambarį (naudinga naujai "
 "sukurtame kambaryje)"
 
-#: src/xmoto/GameText.h:731
+#: src/xmoto/GameText.h:733
 msgid "Uploading the highscore..."
 msgstr "Išsiunčiamas rekordas..."
 
-#: src/xmoto/GameText.h:734
+#: src/xmoto/GameText.h:736
 msgid "Use Environment Vars"
 msgstr "Naudoti terpės kintamuosius"
 
-#: src/xmoto/GameText.h:735
+#: src/xmoto/GameText.h:737
 msgid "Use Profile"
 msgstr "Naudoti profilį"
 
-#: src/xmoto/GameText.h:392
+#: src/xmoto/GameText.h:394
 msgid ""
 "Use Quick Play button to immediately start a game with a random level,\n"
 "or use Levels button to select from level packs."
@@ -3262,120 +3259,120 @@ msgstr ""
 "su skirtingais lygiais arba naudokite mygtuką „Lygiai“, kuriuos pasirinksite "
 "iš lygių paketo."
 
-#: src/xmoto/GameText.h:63
+#: src/xmoto/GameText.h:65
 msgid "Use Trail Cam"
 msgstr ""
 
-#: src/xmoto/GameText.h:985
+#: src/xmoto/GameText.h:987
 msgid "Use a camera that directs to the shortest path through the level"
 msgstr ""
 
-#: src/xmoto/GameText.h:732
+#: src/xmoto/GameText.h:734
 msgid "Use crappy information"
 msgstr "Naudoti niekam tikusią informaciją"
 
-#: src/xmoto/GameText.h:861
+#: src/xmoto/GameText.h:863
 msgid "Use crappy information from the website to update the crappy pack"
 msgstr ""
 "Naudoti netikusią informaciją iš tinklapio, kad atnaujintumėte netikusį "
 "paketą"
 
-#: src/xmoto/GameText.h:733
+#: src/xmoto/GameText.h:735
 msgid "Use permanent console"
 msgstr ""
 
-#: src/xmoto/GameText.h:889
+#: src/xmoto/GameText.h:891
 msgid "Use the selected player profile"
 msgstr "Naudoti pasirinktą žaidėjo profilį"
 
-#: src/xmoto/GameText.h:78
+#: src/xmoto/GameText.h:80
 msgid ""
 "Use the tabulation key to complete player names. Use the * to send private "
 "messages."
 msgstr ""
 
-#: src/xmoto/GameText.h:57
+#: src/xmoto/GameText.h:59
 msgid "Use theme cursor"
 msgstr ""
 
-#: src/xmoto/GameText.h:921
+#: src/xmoto/GameText.h:923
 msgid "Use these settings"
 msgstr "Naudoti šiuos nustatymus"
 
-#: src/xmoto/GameText.h:737
+#: src/xmoto/GameText.h:739
 msgid "Using HTTP Proxy"
 msgstr "Naudoti HTTP tarpinį serverį"
 
-#: src/xmoto/GameText.h:738
+#: src/xmoto/GameText.h:740
 msgid "Using SOCKS4 Proxy"
 msgstr "Naudoti SOCKS4 tarpinį serverį"
 
-#: src/xmoto/GameText.h:739
+#: src/xmoto/GameText.h:741
 msgid "Using SOCKS5 Proxy"
 msgstr "Naudoti SOCKS5 tarpinį serverį"
 
-#: src/xmoto/GameText.h:1149
+#: src/xmoto/GameText.h:1145
 msgid "Very long levels"
 msgstr "Labai ilgi lygiai"
 
-#: src/xmoto/GameText.h:740
+#: src/xmoto/GameText.h:742
 msgid "Video"
 msgstr "Vaizdas"
 
-#: src/xmoto/GameText.h:741
+#: src/xmoto/GameText.h:743
 msgid "View"
 msgstr "Rodyti"
 
-#: src/xmoto/GameText.h:495
+#: src/xmoto/GameText.h:497
 msgid "View Level Initially"
 msgstr "Aprodyti lygį, prieš važiavimą"
 
-#: src/xmoto/GameText.h:897
+#: src/xmoto/GameText.h:899
 msgid "View best times for the level"
 msgstr "Rodyti lygio geriausius laikus"
 
-#: src/xmoto/GameText.h:887
+#: src/xmoto/GameText.h:889
 msgid "View contents of level pack"
 msgstr "Rodyti lygių paketo turinį"
 
-#: src/xmoto/GameText.h:840
+#: src/xmoto/GameText.h:842
 msgid "View general information about the level, best times, and replays"
 msgstr ""
 "Žiūrėti bendrą informaciją apie lygius, geriausius laikus ir pakartojimus"
 
-#: src/xmoto/GameText.h:833
+#: src/xmoto/GameText.h:835
 msgid "View list of recorded replays"
 msgstr "Rodyti įrašytų pakartojimų sąrašą"
 
-#: src/xmoto/GameText.h:898
+#: src/xmoto/GameText.h:900
 msgid "View locally stored replays of the level"
 msgstr "Rodyti išsaugotus vietinius lygio pakartojimus"
 
-#: src/xmoto/GameText.h:986
+#: src/xmoto/GameText.h:988
 msgid "View the X-Moto credits"
 msgstr "X-Moto padėkos"
 
-#: src/xmoto/GameText.h:743
+#: src/xmoto/GameText.h:745
 msgid "View the highscore"
 msgstr "Rodyti rekordus"
 
-#: src/xmoto/GameText.h:742 src/xmoto/GameText.h:846
+#: src/xmoto/GameText.h:744 src/xmoto/GameText.h:848
 msgid "View the replay"
 msgstr ""
 
-#: src/xmoto/GameText.h:947
+#: src/xmoto/GameText.h:949
 msgid "View the replay of the room's highscore"
 msgstr "Kambario rekordo pakartojimas"
 
-#: src/xmoto/GameText.h:1151
+#: src/xmoto/GameText.h:1147
 msgid "Vote unlocked levels"
 msgstr ""
 
-#: src/xmoto/GameText.h:747
+#: src/xmoto/GameText.h:749
 msgid "WWW"
 msgstr "WWW"
 
-#: src/xmoto/GameText.h:745
+#: src/xmoto/GameText.h:747
 msgid "Warning"
 msgstr "Dėmesio"
 
@@ -3384,20 +3381,20 @@ msgstr "Dėmesio"
 msgid "Web account password for profile '%s':"
 msgstr "Tinklapio paskyros slaptažodis profiliui '%s':"
 
-#: src/xmoto/GameText.h:1225
+#: src/xmoto/GameText.h:1221
 msgid "Web connection disabled"
 msgstr "Tinklo ryšys išjungtas"
 
-#: src/xmoto/GameText.h:1224
+#: src/xmoto/GameText.h:1220
 msgid "Web connection enabled"
 msgstr "Tinklo ryšys įjungtas"
 
-#: src/xmoto/GameText.h:335
+#: src/xmoto/GameText.h:337
 #, c-format
 msgid "Web ghost of %s"
 msgstr "%s tinklo vaiduoklis"
 
-#: src/xmoto/GameText.h:614
+#: src/xmoto/GameText.h:616
 msgid "Web votes"
 msgstr "Tinklo balsai"
 
@@ -3413,56 +3410,56 @@ msgstr ""
 "Kai atliksite, ieškokite gėlės.\n"
 "Tai purpurinis taškas ant jūsų mažo žemėlapio."
 
-#: src/xmoto/GameText.h:935
+#: src/xmoto/GameText.h:937
 msgid "When starting a level with a ghost, display who the ghost is of"
 msgstr "Kai pradėdamas lygis su vaiduokliu, rodyti, kuris yra vaiduoklis"
 
-#: src/xmoto/GameText.h:945
+#: src/xmoto/GameText.h:947
 msgid "Whether to show the theme cursor or the system cursor"
 msgstr ""
 
-#: src/xmoto/GameText.h:923
+#: src/xmoto/GameText.h:925
 msgid "Write the IP address or host name of proxy server to use"
 msgstr "Naudojimui įrašykite tarpinio serverio IP adresą arba vardą"
 
-#: src/xmoto/GameText.h:925
+#: src/xmoto/GameText.h:927
 msgid "Write the port number used by the proxy server"
 msgstr "Įrašykite tarpinio serverio naudojamo prievado numerį"
 
-#: src/xmoto/GameText.h:575
+#: src/xmoto/GameText.h:577
 #, c-format
 msgid "X-Moto %s or newer required to load level"
 msgstr "X-Moto %s arba naujesnis reikalauja įkelti lygį"
 
-#: src/xmoto/GameText.h:1180
+#: src/xmoto/GameText.h:1176
 msgid "X-Moto levels having a recent highscore in your room"
 msgstr "X-Moto lygiai, kurie turi neseniai pagerintus rekordus jūsų kambaryje"
 
-#: src/xmoto/GameText.h:1183
+#: src/xmoto/GameText.h:1179
 msgid "X-Moto levels having an old highscore in your room"
 msgstr "X-Moto lygiai, turintys senus rekordus jūsų kambaryje"
 
-#: src/xmoto/GameText.h:1172
+#: src/xmoto/GameText.h:1168
 msgid "X-Moto levels using strongly physics"
 msgstr "X-Moto lygiai, naudojantys ypatingąją fiziką"
 
-#: src/xmoto/GameText.h:1171
+#: src/xmoto/GameText.h:1167
 msgid "X-Moto levels which are dynamic"
 msgstr "Dinamiški X-Moto lygiai"
 
-#: src/xmoto/GameText.h:1178
+#: src/xmoto/GameText.h:1174
 msgid "X-Moto levels you have played only a few times"
 msgstr "X-Moto lygiai, kuriuos žaidėte tik kelis kartus"
 
-#: src/xmoto/GameText.h:1176
+#: src/xmoto/GameText.h:1172
 msgid "X-Moto levels you have played the most"
 msgstr "X-Moto lygiai, kuriuos žaidėte dažniausiai"
 
-#: src/xmoto/GameText.h:1174
+#: src/xmoto/GameText.h:1170
 msgid "X-Moto levels you never played"
 msgstr "X-Moto lygiai, kurių niekada nežaidėte"
 
-#: src/xmoto/GameText.h:759
+#: src/xmoto/GameText.h:761
 #, fuzzy, c-format
 msgid "X-Moto started %d time"
 msgid_plural "X-Moto started %d times"
@@ -3470,7 +3467,7 @@ msgstr[0] "X-Moto paleistas %d kartą"
 msgstr[1] "X-Moto paleistas %d kartą"
 msgstr[2] "X-Moto paleistas %d kartą"
 
-#: src/xmoto/GameText.h:240
+#: src/xmoto/GameText.h:242
 msgid ""
 "X-Moto uses a database on your computer to save all your scores and "
 "statistics. You can send these data using your web account on the X-Moto "
@@ -3482,108 +3479,108 @@ msgstr ""
 "Moto serveryje. Tai naudinga išsaugoti jūsų duomenis, jeigu žaidžiate X-Moto "
 "iš skirtingų vietų."
 
-#: src/xmoto/GameText.h:771
+#: src/xmoto/GameText.h:773
 msgid "Yes"
 msgstr "Taip"
 
-#: src/xmoto/GameText.h:772
+#: src/xmoto/GameText.h:774
 msgid "Yes to all"
 msgstr "Taip visus"
 
-#: src/xmoto/GameText.h:687
+#: src/xmoto/GameText.h:689
 msgid "You are currently disconnected"
 msgstr "Jūs esate atsijungęs"
 
-#: src/xmoto/GameText.h:359
+#: src/xmoto/GameText.h:361
 msgid "You control your bike using the keyboard"
 msgstr "Motociklo valdymui naudokite klaviatūrą"
 
-#: src/xmoto/GameText.h:1085
+#: src/xmoto/GameText.h:1081
 msgid "You don't want to vote"
 msgstr "Jūs nenorite balsuoti"
 
-#: src/xmoto/GameText.h:556
+#: src/xmoto/GameText.h:558
 #, c-format
 msgid "You got a %s medal"
 msgstr ""
 
-#: src/xmoto/GameText.h:1184
+#: src/xmoto/GameText.h:1180
 msgid "You have the room highscore"
 msgstr "Jūs esate kambario rekordininkas"
 
-#: src/xmoto/GameText.h:126
+#: src/xmoto/GameText.h:128
 msgid "You must reconnect to the server so that this option takes effect"
 msgstr ""
 "Jūs turite iš naujo prisijungti prie serverio, kad šį parinktis "
 "aktyvuotųsiJūs turite iš naujo prisijungti prie serverio, kad šį parinktis "
 "aktyvuotųsi"
 
-#: src/xmoto/GameText.h:124
+#: src/xmoto/GameText.h:126
 msgid "You must restart so that this option takes effect"
 msgstr "Jūs turite įkelti iš naujo žaidimą, kad šį parinktis aktyvuotusi"
 
-#: src/xmoto/GameText.h:790
+#: src/xmoto/GameText.h:792
 msgid "You're currently connected"
 msgstr "Jūs estae prisijungęs"
 
-#: src/xmoto/GameText.h:791
+#: src/xmoto/GameText.h:793
 msgid "You're currently disconnected"
 msgstr "Jūs esate atsijungęs"
 
-#: src/xmoto/GameText.h:1120
+#: src/xmoto/GameText.h:1116
 msgid "You're not the highscore holder"
 msgstr "Jūs nesate rekordo savininkas"
 
-#: src/xmoto/GameText.h:322
+#: src/xmoto/GameText.h:324
 msgid "Your best"
 msgstr "Jūsų geriausias"
 
-#: src/xmoto/GameText.h:773
+#: src/xmoto/GameText.h:775
 msgid "Your best time"
 msgstr "Jūsų geriausias laikas"
 
-#: src/xmoto/GameText.h:1162
+#: src/xmoto/GameText.h:1158
 msgid "Your blacklisted levels"
 msgstr "Jūsų juodojo sąrašo lygiai"
 
-#: src/xmoto/GameText.h:1161
+#: src/xmoto/GameText.h:1157
 msgid "Your favorite levels"
 msgstr "Jūsų parankiniai lygiai"
 
-#: src/xmoto/GameText.h:1001
+#: src/xmoto/GameText.h:1003
 msgid "Your password associated with your login"
 msgstr "Jūsų slaptaždis susijęs su jūsų vartotoju"
 
-#: src/xmoto/GameText.h:1191
+#: src/xmoto/GameText.h:1187
 msgid ""
 "Your personal highscore finish time is almost the room highscore (80%-90%)"
 msgstr ""
 "Jūsų pasiekto asmeninio rekordo laikas yra beveik kambario rekordas (80%-90%)"
 
-#: src/xmoto/GameText.h:1188
+#: src/xmoto/GameText.h:1184
 msgid ""
 "Your personal highscore finish time is almost the room highscore (90%-95%)"
 msgstr ""
 "Jūsų pasiekto asmeninio rekordo laikas yra beveik kambario rekordas (90%-95%)"
 
-#: src/xmoto/GameText.h:1186
+#: src/xmoto/GameText.h:1182
 msgid "Your personal highscore finish time is almost the room highscore (95%)"
 msgstr ""
 "Jūsų pasiekto asmeninio rekordo laikas yra beveik kambario rekordas (95 %)"
 
-#: src/xmoto/GameText.h:1000
+#: src/xmoto/GameText.h:1002
 msgid "Your proxy login"
 msgstr "Jūsų tarpinio serverio vartotojas"
 
-#: src/xmoto/GameText.h:774
+#: src/xmoto/GameText.h:776
 msgid "Zoom in"
 msgstr "Padidinti"
 
-#: src/xmoto/GameText.h:776
+#: src/xmoto/GameText.h:778
 msgid "Zoom out"
 msgstr "Sumažinti"
 
-#: src/xmoto/GameText.h:651
+#: src/xmoto/GameText.h:653
 msgid ""
 "[esc] , [space]\n"
 "[left/right keys]\n"
@@ -3593,7 +3590,7 @@ msgstr ""
 "[kairinis/dešininis mygtukai]\n"
 "[aukštyn/žemyn mygtukai]\n"
 
-#: src/xmoto/GameText.h:648
+#: src/xmoto/GameText.h:650
 msgid ""
 "[esc] , [space]\n"
 "[right key]\n"
@@ -3603,21 +3600,17 @@ msgstr ""
 "[dešininis mygtukas]\n"
 "[aukštyn/žemyn mygtukai]\n"
 
-#: src/xmoto/GameText.h:116
+#: src/xmoto/GameText.h:118
 #, c-format
 msgid "axis %i"
 msgstr "%i ašis"
 
-#: src/xmoto/GameText.h:107 src/xmoto/GameText.h:122
+#: src/xmoto/GameText.h:109 src/xmoto/GameText.h:124
 #, c-format
 msgid "button %i"
 msgstr "%i mygtukas"
 
-#: src/xmoto/GameText.h:446
-msgid "change mirror mode"
-msgstr "Keisti veidrodžio režimą"
-
-#: src/xmoto/GameText.h:120
+#: src/xmoto/GameText.h:122
 msgid "down"
 msgstr "žemyn"
 
@@ -3625,71 +3618,71 @@ msgstr "žemyn"
 msgid "en_EN"
 msgstr "lt_LT"
 
-#: src/xmoto/GameText.h:212
+#: src/xmoto/GameText.h:214
 msgid "for Debian packaging"
 msgstr "Debian pakavimui"
 
-#: src/xmoto/GameText.h:218
+#: src/xmoto/GameText.h:220
 msgid "for FreeBSD packaging"
 msgstr "FreeBSD pakavimui"
 
-#: src/xmoto/GameText.h:214
+#: src/xmoto/GameText.h:216
 msgid "for Gentoo packaging"
 msgstr "Gentoo pakavimui"
 
-#: src/xmoto/GameText.h:210
+#: src/xmoto/GameText.h:212
 msgid "for KDE/gnome integration"
 msgstr "KDE/gnome integracijai"
 
-#: src/xmoto/GameText.h:216
+#: src/xmoto/GameText.h:218
 msgid "for Mandriva packaging"
 msgstr "Mandriva pakavimui"
 
-#: src/xmoto/GameText.h:220
+#: src/xmoto/GameText.h:222
 msgid "for across/elma"
 msgstr "Across/Elma"
 
-#: src/xmoto/GameText.h:222
+#: src/xmoto/GameText.h:224
 msgid "for making tinyxml"
 msgstr "TinyXML darymui"
 
-#: src/xmoto/GameText.h:224
+#: src/xmoto/GameText.h:226
 msgid "for the MD5 code"
 msgstr "MD5 kodui"
 
-#: src/xmoto/GameText.h:117
+#: src/xmoto/GameText.h:119
 msgid "left"
 msgstr "kairėn"
 
-#: src/xmoto/GameText.h:102
+#: src/xmoto/GameText.h:104
 msgid "left alt"
 msgstr "kairinis alt"
 
-#: src/xmoto/GameText.h:108
+#: src/xmoto/GameText.h:110
 msgid "left button"
 msgstr "kairinis mygtukas"
 
-#: src/xmoto/GameText.h:98
+#: src/xmoto/GameText.h:100
 msgid "left control"
 msgstr "kairinis valdymas"
 
-#: src/xmoto/GameText.h:104
+#: src/xmoto/GameText.h:106
 msgid "left meta"
 msgstr "kairinis meta"
 
-#: src/xmoto/GameText.h:100
+#: src/xmoto/GameText.h:102
 msgid "left shift"
 msgstr "kairinis shift"
 
-#: src/xmoto/GameText.h:109
+#: src/xmoto/GameText.h:111
 msgid "middle button"
 msgstr "vidurinis mygtukas"
 
-#: src/xmoto/GameText.h:121
+#: src/xmoto/GameText.h:123
 msgid "none"
 msgstr "nėra"
 
-#: src/xmoto/GameText.h:755
+#: src/xmoto/GameText.h:757
 #, c-format
 msgid "only %i"
 msgid_plural "only %i"
@@ -3697,39 +3690,39 @@ msgstr[0] ""
 msgstr[1] ""
 msgstr[2] ""
 
-#: src/xmoto/GameText.h:118
+#: src/xmoto/GameText.h:120
 msgid "right"
 msgstr "dešinėn"
 
-#: src/xmoto/GameText.h:103
+#: src/xmoto/GameText.h:105
 msgid "right alt"
 msgstr "dešininis alt"
 
-#: src/xmoto/GameText.h:110
+#: src/xmoto/GameText.h:112
 msgid "right button"
 msgstr "dešininis mygtukas"
 
-#: src/xmoto/GameText.h:99
+#: src/xmoto/GameText.h:101
 msgid "right control"
 msgstr "dešininis valdymas"
 
-#: src/xmoto/GameText.h:105
+#: src/xmoto/GameText.h:107
 msgid "right meta"
 msgstr "dešininis meta"
 
-#: src/xmoto/GameText.h:101
+#: src/xmoto/GameText.h:103
 msgid "right shift"
 msgstr "dešininis shift"
 
-#: src/xmoto/GameText.h:119
+#: src/xmoto/GameText.h:121
 msgid "up"
 msgstr "viršun"
 
-#: src/xmoto/GameText.h:112
+#: src/xmoto/GameText.h:114
 msgid "wheel down"
 msgstr "nuleisti ratą"
 
-#: src/xmoto/GameText.h:111
+#: src/xmoto/GameText.h:113
 msgid "wheel up"
 msgstr "pakelti ratą"
 
@@ -3738,6 +3731,13 @@ msgstr "pakelti ratą"
 
 #~ msgid "32 bits per pixel"
 #~ msgstr "32 bitai į tašką"
+
+#, fuzzy, c-format
+#~ msgid "Are you sure you want to delete %i replay"
+#~ msgid_plural "Are you sure you want to delete %i replay"
+#~ msgstr[0] "Ar tikrai ištrinti %i pakartojimą?"
+#~ msgstr[1] "Ar tikrai ištrinti %i pakartojimą?"
+#~ msgstr[2] "Ar tikrai ištrinti %i pakartojimą?"
 
 #~ msgid "Configure options linked to your X-Moto dabatase"
 #~ msgstr "Formuoti parinktis, sujungtas su jūsų X-Moto duomenų baze"
@@ -3816,6 +3816,11 @@ msgstr "pakelti ratą"
 #~ "Fizikinių lygių įrašymas dar nėra įgyvendintas.\n"
 #~ "Atsiprašome."
 
+#~ msgid "Preselect the retry button when dying or finishing a level"
+#~ msgstr ""
+#~ "Iš anksto pasirinkti pakartotinio bandymo mygtuką, mirus arba pabaigus "
+#~ "lygį"
+
 #~ msgid ""
 #~ "Read the README file or check out the website at\n"
 #~ "http://xmoto.tuxfamily.org\n"
@@ -3840,6 +3845,9 @@ msgstr "pakelti ratą"
 
 #~ msgid "Stop[esc] ||[space] >>[right key] < >[up/down keys]   Speed:"
 #~ msgstr "Sustoti[esc] ||[tarpas] >>[į dešinę] < >[aukštyn/žemyn]   Greitis:"
+
+#~ msgid "There is no replay to clean"
+#~ msgstr "Pakartojimai išvalyti"
 
 #~ msgid "X-Moto levels with a background music"
 #~ msgstr "X-Moto lygiai su fonine muzika"

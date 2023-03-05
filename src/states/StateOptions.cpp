@@ -852,7 +852,7 @@ void StateOptions::checkEvents() {
   //}
 
   v_button = reinterpret_cast<UIButton *>(
-      m_GUI->getChild("MAIN:TABS:GENERAL_TAB:TABS:INFOS_TAB:CLEARLEVELCACHE_BUTTON"));
+      m_GUI->getChild("MAIN:TABS:GENERAL_TAB:TABS:INFO_TAB:CLEARLEVELCACHE_BUTTON"));
   if (v_button->isClicked()) {
     v_button->setClicked(false);
 
@@ -1723,10 +1723,10 @@ UIWindow *StateOptions::makeWindowOptions_infos(UIWindow *i_parent) {
   v_window = new UIWindow(i_parent,
                           0,
                           26,
-                          GAMETEXT_INFOS,
+                          GAMETEXT_INFO,
                           i_parent->getPosition().nWidth,
                           i_parent->getPosition().nHeight - 26);
-  v_window->setID("INFOS_TAB");
+  v_window->setID("INFO_TAB");
   v_window->showWindow(false);
 
   int p = 25;
