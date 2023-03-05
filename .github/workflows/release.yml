@@ -191,21 +191,3 @@ jobs:
             ${{ github.workspace }}/release/**/*
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
-
-  release:
-    runs-on: ubuntu-latest
-
-    steps:
-      - uses: softprops/action-gh-release@v1
-
-        name: Set release name
-
-        with:
-          name: X-Moto ${{ GITHUB_REF_NAME }}
-
-          files:
-            ${{ github.workspace }}/release/**/*
-
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
