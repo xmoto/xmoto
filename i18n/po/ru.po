@@ -2,7 +2,7 @@
 # This file is distributed under the same license as the PACKAGE package.
 #
 # Mikhail Brinchuk <thecentury@gmail.com>, 2007, 2010.
-# Andrei Stepanov, 2020, 2022.
+# Andrei Stepanov, 2020-2023.
 msgid ""
 msgstr ""
 "Project-Id-Version: X-Moto\n"
@@ -325,7 +325,7 @@ msgstr "Вы действительно хотите очистить кэш у�
 #, c-format
 msgid "Are you sure you want to delete %i replay?"
 msgid_plural "Are you sure you want to delete %i replays?"
-msgstr[0] ""
+msgstr[0] "Уверены, что хотите удалить %i повторов?"
 msgstr[1] ""
 msgstr[2] ""
 
@@ -1350,11 +1350,11 @@ msgstr "Скрыть призраков"
 
 #: src/xmoto/GameText.h:58
 msgid "Hide sprites from the minimap"
-msgstr ""
+msgstr "Скрыть спрайты с миникарты"
 
 #: src/xmoto/GameText.h:57
 msgid "Hide sprites in ugly mode"
-msgstr ""
+msgstr "Скрыть спрайты в уродливом режиме"
 
 #: src/xmoto/GameText.h:490
 msgid "High"
@@ -1439,7 +1439,7 @@ msgstr "Улучшить или ухудшить качество выбранн
 
 #: src/xmoto/GameText.h:496
 msgid "Info"
-msgstr ""
+msgstr "Информация"
 
 #: src/xmoto/GameText.h:684
 msgid "Info..."
@@ -2217,6 +2217,8 @@ msgid ""
 "Preselect the retry button when dying or finishing a level,\n"
 "and allow levels to be restarted with 'return to checkpoint' key"
 msgstr ""
+"Предвыберите кнопку повтора при завершении уровня и разрешите\n"
+"перезапуск уровней с помощью клавиши «вернуться к контрольной точке»."
 
 #: src/xmoto/GameText.h:632
 #, c-format
@@ -2989,7 +2991,7 @@ msgstr "В уровне есть ошибки, не надейтесь, что �
 
 #: src/xmoto/GameText.h:92
 msgid "There are no replays to clean"
-msgstr ""
+msgstr "Нет повторов для удаления"
 
 #: src/xmoto/LevelsText.h:43
 msgid ""
