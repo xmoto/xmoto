@@ -44,6 +44,7 @@ private:
   int m_enterTime;
 
   void toCheckpointBeeingDead();
+  bool checkpointReached() const;
 };
 
 #endif

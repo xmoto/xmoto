@@ -17,16 +17,17 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "svn_version.h"
 #include <sstream>
 
-#include "XMBuild_info.h"
+#include "common/XMBuildConfig.h"
 
 std::string XMBuild::getVersionString(bool i_extended) {
   std::ostringstream v_version;
 
-  v_version << BUILD_MAJORVERSION;
-  v_version << ".";
-  v_version << BUILD_VERSION;
-  v_version << ".";
-  v_version << BUILD_MINORVERSION;
+  v_version
+    << BUILD_MAJORVERSION
+    << "."
+    << BUILD_MINORVERSION
+    << "."
+    << BUILD_PATCHVERSION;
 
   if (i_extended) {
     std::string v_svn = svn_version();
@@ -44,6 +45,6 @@ std::string XMBuild::getVersionString(bool i_extended) {
   return v_version.str();
 }
 
-std::string XMBuild::getCopyRight() {
+std::string XMBuild::getCopyright() {
   return BUILD_COPYRIGHT;
 }

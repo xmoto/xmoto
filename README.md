@@ -1,4 +1,4 @@
-# X-Moto 0.6.1 [![Build Status](https://github.com/xmoto/xmoto/actions/workflows/ci.yml/badge.svg)](https://github.com/xmoto/xmoto/actions/) [![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=xmoto_xmoto&metric=alert_status)](https://sonarcloud.io/dashboard?id=xmoto_xmoto) [![Discord](https://img.shields.io/discord/256286284039847937?color=5865f2&label=Discord&logo=discord&logoColor=white)](https://discord.gg/W33yTUd)
+# X-Moto 0.6.2 [![Build Status](https://github.com/xmoto/xmoto/actions/workflows/ci.yml/badge.svg)](https://github.com/xmoto/xmoto/actions/) [![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=xmoto_xmoto&metric=alert_status)](https://sonarcloud.io/dashboard?id=xmoto_xmoto) [![Discord](https://img.shields.io/discord/256286284039847937?color=5865f2&label=Discord&logo=discord&logoColor=white)](https://discord.gg/W33yTUd)
 Copyright (C) 2005-2023
 
 # Introduction

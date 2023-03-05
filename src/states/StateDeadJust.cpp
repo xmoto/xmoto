@@ -47,36 +47,46 @@ void StateDeadJust::enter() {
   StateScene::enter();
   m_enterTime = 0;
 
-  if (m_universe != NULL) {
-    for (unsigned int i = 0; i < m_universe->getScenes().size(); i++) {
-      m_universe->getScenes()[i]->clearGameMessages();
-      m_universe->getScenes()[i]->setInfos(
-        m_universe->getScenes()[i]->getLevelSrc()->Name());
-    }
-    m_universe->getScenes()[0]->gameMessage(
-      (m_universe->getScenes()[0]->getCheckpoint() != NULL
-         ? GAMETEXT_JUSTDEAD_CHECKPOINT
-         : std::string("")) +
-        std::string("\n") + GAMETEXT_JUSTDEAD_RESTART + std::string("\n") +
-        GAMETEXT_JUSTDEAD_DISPLAYMENU,
-      true,
-      260,
-      gameMsg); // in multiplayer its good, to have it displayed only once
+  if (!m_universe) {
+    return;
   }
 
-  if (m_universe != NULL) {
-    if (m_universe->getScenes().size() == 1) {
-      if (SendVoteThread::isToPropose(
-            xmDatabase::instance("main"),
-            m_universe->getScenes()[0]->getLevelSrc()->Id())) {
-        StateManager::instance()->pushState(
-          new StateVote(m_universe->getScenes()[0]->getLevelSrc()->Id()));
-      }
+  bool safemode = XMSession::instance()->isSafemodeActive();
+
+  for (unsigned int i = 0; i < m_universe->getScenes().size(); i++) {
+    m_universe->getScenes()[i]->clearGameMessages();
+    m_universe->getScenes()[i]->setInfos(
+      m_universe->getScenes()[i]->getLevelSrc()->Name());
+  }
+
+  std::string message;
+
+  if (checkpointReached()) {
+    message = GAMETEXT_JUSTDEAD_CHECKPOINT;
+  }
+
+  if (!safemode || !checkpointReached()) {
+    message += "\n" + std::string(GAMETEXT_JUSTDEAD_RESTART);
+  }
+
+  message += "\n" + std::string(GAMETEXT_JUSTDEAD_DISPLAYMENU);
+
+  // in multiplayer its good, to have it displayed only once
+  m_universe->getScenes()[0]->gameMessage(message, true, 260, gameMsg);
+
+  if (m_universe->getScenes().size() == 1) {
+    if (SendVoteThread::isToPropose(
+          xmDatabase::instance("main"),
+          m_universe->getScenes()[0]->getLevelSrc()->Id())) {
+      StateManager::instance()->pushState(
+        new StateVote(m_universe->getScenes()[0]->getLevelSrc()->Id()));
     }
   }
 }
 
 void StateDeadJust::xmKey(InputEventType i_type, const XMKey &i_xmkey) {
+  bool safemode = XMSession::instance()->isSafemodeActive();
+
   if (i_type == INPUT_DOWN && (i_xmkey == XMKey(SDLK_ESCAPE, KMOD_NONE) ||
                                i_xmkey.getJoyButton() == SDL_CONTROLLER_BUTTON_START)) {
     StateManager::instance()->pushState(
@@ -86,13 +96,16 @@ void StateDeadJust::xmKey(InputEventType i_type, const XMKey &i_xmkey) {
   else if (i_type == INPUT_DOWN &&
            i_xmkey ==
              (*Input::instance()->getGlobalKey(INPUT_RESTARTLEVEL))) {
-    /* retart immediatly the level */
-    restartLevel();
+    if (!safemode || !checkpointReached()) {
+      /* restart the level immediately */
+      restartLevel();
+    }
   }
 
   else if (i_type == INPUT_DOWN &&
            i_xmkey == (*Input::instance()->getGlobalKey(
                         INPUT_RESTARTCHECKPOINT))) {
+
     toCheckpointBeeingDead();
   }
 
@@ -112,13 +125,13 @@ void StateDeadJust::nextLevel(bool i_positifOrder) {
 bool StateDeadJust::update() {
   float v_torsoVelocity = 0.0;
 
-  if (XMSession::instance()->enableDeadAnimation() == false) {
+  if (!XMSession::instance()->enableDeadAnimation()) {
     StateManager::instance()->pushState(
       new StateDeadMenu(m_universe, getStateId()));
     return false;
   }
 
-  if (m_universe == NULL) {
+  if (!m_universe) {
     return false;
   }
 
@@ -202,7 +215,7 @@ void StateDeadJust::executeOneCommand(std::string cmd, std::string args) {
 void StateDeadJust::toCheckpointBeeingDead() {
   bool v_isCheckpoint = false;
 
-  // resussite players
+  // resuscitate players
   for (unsigned int j = 0; j < m_universe->getScenes().size(); j++) {
     if (m_universe->getScenes()[j]->getCheckpoint() != NULL) {
       v_isCheckpoint = true;
@@ -219,5 +232,13 @@ void StateDeadJust::toCheckpointBeeingDead() {
     StateScene::playToCheckpoint();
     StateManager::instance()->replaceState(
       new StatePlayingLocal(m_universe, m_renderer), getStateId());
+  } else {
+    if (XMSession::instance()->beatingMode()) {
+      restartLevel();
+    }
   }
+}
+
+bool StateDeadJust::checkpointReached() const {
+ return m_universe->getScenes()[0]->getCheckpoint() != nullptr;
 }

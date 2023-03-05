@@ -1042,7 +1042,8 @@ Central place to keep many in-game text strings
   _("Synchronise your database when your quit X-Moto")
 #define CONTEXTHELP_ENABLEJOYSTICKS _("Enable joysticks events")
 #define CONTEXTHELP_BEATINGMODE \
-  _("Preselect the retry button when dying or finishing a level")
+  _("Preselect the retry button when dying or finishing a level,\n" \
+    "and allow levels to be restarted with 'return to checkpoint' key")
 
 #define GAMETEXT_GIVEYOURMING _("Give your mind about this level")
 #define GAMETEXT_NOIDEA _("No idea")
