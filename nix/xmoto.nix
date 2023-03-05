@@ -47,7 +47,7 @@ let
 in
 stdenv.mkDerivation rec {
   pname = "xmoto";
-  version = "0.6.1-head";
+  version = "0.6.2-head";
 
   src = nix-gitignore.gitignoreSource [ "/nix" ] ../.;
 

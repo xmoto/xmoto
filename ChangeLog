@@ -1,3 +1,41 @@
+X-Moto 0.6.2 2023-03-05
+--------------------------------
+ * X-Moto now uses SDL2 for window handling, input etc
+
+ * Added:
+   * Shortcut to view level info
+   * Shortcut for connecting / disconnecting from the server
+   * Button for clearing level cache
+   * File drag & drop support
+   * File associations
+   * Support for high refresh rate screens
+
+ * Improved controller support in menus
+ * Default theme changed to 'Classic'
+ * Safemode now prevents you from restarting in the death screen
+   if a checkpoint has been reached
+ * In 'beating mode', if you have not reached a checkpoint,
+   the 'return to checkpoint' key takes you to the start of the level
+ * Log files are now kept for longer
+
+ * UI improvements:
+   * Improved text boxes (with pasting support and word jumping etc)
+   * Scrollable admin console
+
+ * Added new options:
+   * Hide sprites in ugly mode and minimap
+   * Max frame rate
+   * Native/software cursor
+
+ * Updated translations:
+   * Russian
+   * Swedish
+   * Danish
+
+ * Bug fixes:
+   * The window is now properly focused when alt-tabbing
+   * Fixed various memory leaks and crashes
+
 X-Moto 0.6.1 2020-06-20
 --------------------------------
  * macOS and FreeBSD support is back!
@@ -10,7 +48,6 @@ X-Moto 0.6.1 2020-06-20
    locales using comma (,) as the decimal separator
  * No more crashing on non-existent db entries
    when migrating from an old version
-
 
 X-Moto 0.6.0 2020-05-03
 --------------------------------
