@@ -96,7 +96,7 @@ void xmDatabase::preInitForProfileLoading(const std::string &i_dbFileUTF8) {
 
 void xmDatabase::backupXmDb(const std::string &dbFile) {
   std::ostringstream backupName;
-  backupName << "xm.v" << m_openingVersion << "." << iso8601Date() << ".db";
+  backupName << "xm.v" << m_openingVersion << "." << currentDateTime() << ".db";
 
   std::string outputPath;
   if (!XMFS::copyFile(FDT_DATA,
@@ -150,21 +150,23 @@ bool xmDatabase::init(const std::string &i_dbFileUTF8,
   }
 
   if (m_openingVersion < XMDB_VERSION) {
-    LogInfo("Backing up XmDb");
+    if (m_openingVersion != 0) {
+      LogInfo("Backing up XmDb");
 
-    try {
-      backupXmDb(i_dbFileUTF8);
-    } catch (Exception &e) {
-      LogError("Failed to backup database:");
-      LogError(e.getMsg().c_str());
-      LogError("Bailing out..");
+      try {
+        backupXmDb(i_dbFileUTF8);
+      } catch (Exception &e) {
+        LogError("Failed to backup database:");
+        LogError(e.getMsg().c_str());
+        LogError("Bailing out..");
 
-      if (m_db != NULL) {
-        sqlite3_close(m_db);
-        m_db = NULL;
+        if (m_db != NULL) {
+          sqlite3_close(m_db);
+          m_db = NULL;
+        }
+
+        return false;
       }
-
-      return false;
     }
 
     LogInfo(
