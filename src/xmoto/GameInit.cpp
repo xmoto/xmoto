@@ -128,7 +128,7 @@ int main(int nNumArgs, char **ppcArgs) {
     snprintf(cBuf,
              1024,
              "Fatal exception occurred: %s\n"
-             "Consult the logs/latest.log file for more information about what\n"
+             "Consult the logs/xmoto.log file for more information about what\n"
              "might has occurred.\n",
              e.getMsg().c_str());
     MessageBox(NULL, cBuf, "X-Moto Error", MB_OK | MB_ICONERROR);

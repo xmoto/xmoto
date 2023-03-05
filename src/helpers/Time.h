@@ -5,4 +5,7 @@
 
 std::string iso8601Date();
 
+// Safe for use in file paths
+std::string currentDateTime();
+
 #endif // __XMOTO_TIME_H__

@@ -96,7 +96,7 @@ void xmDatabase::preInitForProfileLoading(const std::string &i_dbFileUTF8) {
 
 void xmDatabase::backupXmDb(const std::string &dbFile) {
   std::ostringstream backupName;
-  backupName << "xm.v" << m_openingVersion << "." << iso8601Date() << ".db";
+  backupName << "xm.v" << m_openingVersion << "." << currentDateTime() << ".db";
 
   std::string outputPath;
   if (!XMFS::copyFile(FDT_DATA,
