@@ -28,5 +28,6 @@ if(BUILD_MACOS_BUNDLE)
   install(CODE "
     include(BundleUtilities)
     fixup_bundle(\"\${CMAKE_INSTALL_PREFIX}/${CPACK_BUNDLE_NAME}.app\"  \"\"  \"\")
+    execute_process(COMMAND codesign --deep --force --sign - \"\${CMAKE_INSTALL_PREFIX}/${CPACK_BUNDLE_NAME}.app\")
     " COMPONENT Runtime)
 endif()
