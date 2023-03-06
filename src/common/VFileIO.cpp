@@ -18,6 +18,7 @@ along with XMOTO; if not, write to the Free Software
 Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 =============================================================================*/
 
+#include "helpers/Environment.h"
 #ifdef WIN32
   #include <windows.h>
   #include <direct.h>
@@ -1335,11 +1336,23 @@ void XMFS::init(const std::string &AppDir,
       break;
     }
   }
+
+  /* Check if this is an AppImage */
+  if (!m_bGotSystemDataDir) {
+    std::string appDir = Environment::get_variable("APPDIR");
+
+    if (appDir.length() > 0 && doesRealFileOrDirectoryExists(appDir)) {
+      m_SystemDataDir = appDir + "/usr/share";
+      m_bGotSystemDataDir = true;
+    }
+  }
+
   /* Try some default fallbacks */
   if (!m_bGotSystemDataDir) {
     const std::vector<std::string> dataDirs = {
       "/usr/share", "/usr/local/share",
     };
+
     for (auto &dir : dataDirs) {
       if (isDir(dir + "/xmoto")) {
         m_SystemDataDir = dir;
@@ -1348,6 +1361,7 @@ void XMFS::init(const std::string &AppDir,
       }
     }
   }
+
   /* Default to /usr/share */
   if (!m_bGotSystemDataDir) {
     m_SystemDataDir = "/usr/share";
