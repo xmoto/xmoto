@@ -75,7 +75,11 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #define GT_UGLY_MODE_MULTIPLYER 2
 
 bool isEntityInsignificant(Entity *entity) {
-  return entity->Speciality() & (ET_NONE | ET_PARTICLES_SOURCE | ET_JOINT);
+  auto &&speciality = entity->Speciality();
+
+  return speciality == ET_NONE
+      || speciality == ET_PARTICLES_SOURCE
+      || speciality == ET_JOINT;
 }
 
 /* to sort blocks on their texture */
