@@ -1605,17 +1605,17 @@ void UITexture::setApp(GameApp *pApp) {
 
   pSprite = Theme::instance()->getSprite(SPRITE_TYPE_UI, "Misc");
   if (pSprite != NULL) {
-    m_pUIElemTexture = pSprite->getTexture(false, true, FM_NEAREST);
+    m_pUIElemTexture = pSprite->getTexture(false, WrapMode::Clamp, FM_NEAREST);
   }
 
   pSprite = Theme::instance()->getSprite(SPRITE_TYPE_UI, "MiscDisabled");
   if (pSprite != NULL) {
-    m_pUIElemTextureD = pSprite->getTexture(false, true, FM_NEAREST);
+    m_pUIElemTextureD = pSprite->getTexture(false, WrapMode::Clamp, FM_NEAREST);
   }
 
   pSprite = Theme::instance()->getSprite(SPRITE_TYPE_UI, "MiscActive");
   if (pSprite != NULL) {
-    m_pUIElemTextureA = pSprite->getTexture(false, true, FM_NEAREST);
+    m_pUIElemTextureA = pSprite->getTexture(false, WrapMode::Clamp, FM_NEAREST);
   }
 }
 

@@ -792,7 +792,7 @@ void StateManager::drawCursor() {
     /* load cursor */
     pSprite = Theme::instance()->getSprite(SPRITE_TYPE_UI, "Cursor");
     if (pSprite != NULL) {
-      m_cursor = pSprite->getTexture(false, true, FM_LINEAR);
+      m_cursor = pSprite->getTexture(false, WrapMode::Clamp, FM_LINEAR);
     }
   }
 

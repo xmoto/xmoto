@@ -27,9 +27,6 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "drawlib/DrawLib.h"
 #include "helpers/Log.h"
 #include "xmoto/Game.h"
-#ifdef ENABLE_OPENGL
-#include "include/xm_OpenGL.h"
-#endif
 #include "Theme.h"
 #include "XMSession.h"
 
@@ -81,7 +78,7 @@ Texture *TextureManager::createTexture(const std::string &Name,
                                        int nWidth,
                                        int nHeight,
                                        bool bAlpha,
-                                       bool bClamp,
+                                       WrapMode wrapMode,
                                        FilterMode eFilterMode) {
   /* Name free? */
   if (getTexture(Name) != NULL) {
@@ -126,13 +123,23 @@ Texture *TextureManager::createTexture(const std::string &Name,
       break;
   }
 
-  if (bClamp) {
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP);
-  } else {
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+  GLenum wrapParam;
+  switch (wrapMode) {
+    case WrapMode::Clamp:
+      wrapParam = GL_CLAMP;
+      break;
+
+    case WrapMode::ClampToEdge:
+      wrapParam = GL_CLAMP_TO_EDGE;
+      break;
+
+    case WrapMode::Repeat:
+      wrapParam = GL_REPEAT;
+      break;
   }
+
+  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, wrapParam);
+  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, wrapParam);
 
   /* Adapted from Extreme Tuxracer by Antti Harri and Lasse Collin */
   GLint max_texture_size;
@@ -285,7 +292,7 @@ Shortcut to loading textures from image files
 ===========================================================================*/
 Texture *TextureManager::loadTexture(const std::string &Path,
                                      bool bSmall,
-                                     bool bClamp,
+                                     WrapMode wrapMode,
                                      FilterMode eFilterMode,
                                      bool persistent,
                                      Sprite *associatedSprite) {
@@ -342,7 +349,7 @@ Texture *TextureManager::loadTexture(const std::string &Path,
                              TextureImage.getWidth(),
                              TextureImage.getHeight(),
                              bAlpha,
-                             bClamp,
+                             wrapMode,
                              eFilterMode);
     pTexture->addAssociatedSprite(associatedSprite);
   } else {

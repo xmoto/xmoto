@@ -3400,7 +3400,7 @@ void GameRenderer::renderBodyPart(const Vector2f &i_from,
 
   if (i_sprite == NULL)
     return;
-  pTexture = i_sprite->getTexture(false, false, FM_LINEAR); // FM_LINEAR
+  pTexture = i_sprite->getTexture(false, WrapMode::Repeat, FM_LINEAR); // FM_LINEAR
   if (pTexture == NULL)
     return;
 
@@ -3493,7 +3493,7 @@ void GameRenderer::_RenderBike(Biker *i_biker,
       XMSession::instance()->gameGraphics() != GFX_LOW) {
     pSprite = p_theme->getWheel();
     if (pSprite != NULL) {
-      pTexture = pSprite->getTexture(false, false, FM_LINEAR);
+      pTexture = pSprite->getTexture(false, WrapMode::Repeat, FM_LINEAR);
       if (pTexture != NULL) {
         _RenderAlphaBlendedSection(pTexture, p0 + C, p1 + C, p2 + C, p3 + C);
       }
@@ -3577,7 +3577,7 @@ void GameRenderer::_RenderBike(Biker *i_biker,
       XMSession::instance()->gameGraphics() != GFX_LOW) {
     pSprite = p_theme->getWheel();
     if (pSprite != NULL) {
-      pTexture = pSprite->getTexture(false, false, FM_LINEAR);
+      pTexture = pSprite->getTexture(false, WrapMode::Repeat, FM_LINEAR);
       if (pTexture != NULL) {
         _RenderAlphaBlendedSection(pTexture, p0 + C, p1 + C, p2 + C, p3 + C);
       }
@@ -3654,7 +3654,7 @@ void GameRenderer::_RenderBike(Biker *i_biker,
 
     pSprite = p_theme->getRear();
     if (pSprite != NULL) {
-      pTexture = pSprite->getTexture(false, false, FM_LINEAR);
+      pTexture = pSprite->getTexture(false, WrapMode::Repeat, FM_LINEAR);
       if (pTexture != NULL) {
         _RenderAlphaBlendedSection(pTexture, p0, p1, p2, p3);
       }
@@ -3688,7 +3688,7 @@ void GameRenderer::_RenderBike(Biker *i_biker,
     if (i_renderBikeFront) {
       pSprite = p_theme->getFront();
       if (pSprite != NULL) {
-        pTexture = pSprite->getTexture(false, false, FM_LINEAR);
+        pTexture = pSprite->getTexture(false, WrapMode::Repeat, FM_LINEAR);
         if (pTexture != NULL) {
           _RenderAlphaBlendedSection(pTexture, p3, p0, p1, p2);
         }
@@ -3719,7 +3719,7 @@ void GameRenderer::_RenderBike(Biker *i_biker,
 
     pSprite = p_theme->getBody();
     if (pSprite != NULL) {
-      pTexture = pSprite->getTexture(false, false, FM_LINEAR);
+      pTexture = pSprite->getTexture(false, WrapMode::Repeat, FM_LINEAR);
       if (pTexture != NULL) {
         if (pBike->Dir == DD_RIGHT) {
           _RenderAlphaBlendedSection(pTexture, p3, p2, p1, p0, i_filterColor);

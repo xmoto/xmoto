@@ -25,11 +25,26 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "helpers/VExcept.h"
 #include "include/xm_SDL.h"
 #include "include/xm_hashmap.h"
+
+#ifdef ENABLE_OPENGL
+#include "include/xm_OpenGL.h"
+#endif
+
 #include <vector>
 
 class Sprite;
 
-enum FilterMode { FM_NEAREST, FM_LINEAR, FM_MIPMAP };
+enum FilterMode {
+  FM_NEAREST,
+  FM_LINEAR,
+  FM_MIPMAP
+};
+
+enum class WrapMode {
+  Clamp       = GL_CLAMP,
+  ClampToEdge = GL_CLAMP_TO_EDGE,
+  Repeat      = GL_REPEAT,
+};
 
 // Our friendly texture exception friend
 class TextureError : public Exception {
@@ -97,12 +112,12 @@ public:
                          int nWidth,
                          int nHeight,
                          bool bAlpha = false,
-                         bool bClamp = false,
+                         WrapMode wrapMode = WrapMode::Repeat,
                          FilterMode eFilterMode = FM_MIPMAP);
   void destroyTexture(Texture *pTexture);
   Texture *loadTexture(const std::string &Path,
                        bool bSmall = false,
-                       bool bClamp = false,
+                       WrapMode wrapMode = WrapMode::Repeat,
                        FilterMode eFilterMode = FM_MIPMAP,
                        bool persistent = false,
                        Sprite *associatedSprite = NULL);

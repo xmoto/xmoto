@@ -154,7 +154,7 @@ public:
      only the first time that getTexture is called for a given sprite
   */
   Texture *getTexture(bool bSmall = false,
-                      bool bClamp = false,
+                      WrapMode wrapMode = WrapMode::Repeat,
                       FilterMode eFilterMode = FM_MIPMAP);
   // do not load the texture in opengl, just get its size.
   // returns 0 on error
@@ -318,7 +318,7 @@ public:
                    float fDepth);
   virtual ~EdgeEffectSprite();
   Texture *getTexture(bool bSmall = false,
-                      bool bClamp = false,
+                      WrapMode wrapMode = WrapMode::Repeat,
                       FilterMode eFilterMode = FM_LINEAR);
 
   float getScale() const;
@@ -393,7 +393,7 @@ public:
   ThemeSound *getSound(std::string i_name);
   Texture *loadTexture(std::string p_fileName,
                        bool bSmall = false,
-                       bool bClamp = false,
+                       WrapMode wrapMode = WrapMode::Repeat,
                        FilterMode eFilterMode = FM_MIPMAP,
                        bool persistent = false,
                        Sprite *associateSprite = NULL);

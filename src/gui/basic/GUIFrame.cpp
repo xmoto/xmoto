@@ -54,22 +54,22 @@ UIFrame::UIFrame(UIWindow *pParent,
   Sprite *pSprite;
   pSprite = Theme::instance()->getSprite(SPRITE_TYPE_UI, "MenuTL");
   if (pSprite != NULL) {
-    m_pMenuTL = pSprite->getTexture(false, true, FM_NEAREST);
+    m_pMenuTL = pSprite->getTexture(false, WrapMode::Clamp, FM_NEAREST);
   }
 
   pSprite = Theme::instance()->getSprite(SPRITE_TYPE_UI, "MenuTR");
   if (pSprite != NULL) {
-    m_pMenuTR = pSprite->getTexture(false, true, FM_NEAREST);
+    m_pMenuTR = pSprite->getTexture(false, WrapMode::Clamp, FM_NEAREST);
   }
 
   pSprite = Theme::instance()->getSprite(SPRITE_TYPE_UI, "MenuBL");
   if (pSprite != NULL) {
-    m_pMenuBL = pSprite->getTexture(false, true, FM_NEAREST);
+    m_pMenuBL = pSprite->getTexture(false, WrapMode::Clamp, FM_NEAREST);
   }
 
   pSprite = Theme::instance()->getSprite(SPRITE_TYPE_UI, "MenuBR");
   if (pSprite != NULL) {
-    m_pMenuBR = pSprite->getTexture(false, true, FM_NEAREST);
+    m_pMenuBR = pSprite->getTexture(false, WrapMode::Clamp, FM_NEAREST);
   }
 }
 
