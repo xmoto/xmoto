@@ -1819,7 +1819,7 @@ void ServerThread::manageSrvCmd(unsigned int i_client,
     if (v_args.size() != 1) {
       v_answer += "lsplayers: invalid arguments\n";
     } else {
-      char v_clientstr[90];
+      char v_clientstr[94];
       std::string v_mode;
 
       v_answer += "+----+-----------------+----+----------------+-----+----------"
@@ -1850,7 +1850,7 @@ void ServerThread::manageSrvCmd(unsigned int i_client,
         }
 
         snprintf(v_clientstr,
-                 90,
+                 94,
                  "%5u %-17s %-5s %15s %5s %-26s %5i %8s",
                  m_clients[i]->id(),
                  m_clients[i]->name().c_str(),
@@ -1860,6 +1860,7 @@ void ServerThread::manageSrvCmd(unsigned int i_client,
                  m_clients[i]->xmversion().c_str(),
                  m_clients[i]->protocolVersion(),
                  v_ping.str().c_str());
+
         v_answer += v_clientstr;
         v_answer += "\n";
       }

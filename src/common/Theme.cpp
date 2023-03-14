@@ -466,7 +466,7 @@ void Theme::newAnimationSpriteFromXML(xmlNodePtr pElem,
   v_anim->setOrder(m_sprites.size());
   m_sprites.push_back(v_anim);
 
-  int n = 0;
+  unsigned int n = 0;
   char buf[3];
 
   for (xmlNodePtr pSubElem = XMLDocument::subElement(pElem, "frame");
@@ -517,7 +517,7 @@ void Theme::newAnimationSpriteFromXML(xmlNodePtr pElem,
     v_sum = XMLDocument::getOption(pSubElem, "sum");
 
     if (n < 100) {
-      snprintf(buf, 3, "%02i", n);
+      snprintf(buf, 3, "%02u", n);
 
       if (isAFileOutOfDate(fileDir + std::string("/") + v_fileBase +
                            std::string(buf) + std::string(".") +
