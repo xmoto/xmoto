@@ -26,6 +26,64 @@
 
 #define DEFAULT_WWW_MSGFILE(A) "wwwMsg" A ".xml"
 
+HTTPForm::HTTPForm(CURL *curl) {
+  m_curl = curl;
+
+#if USE_CURL_MIME_API
+  m_mime = curl_mime_init(curl);
+
+  if (!m_mime) {
+    throw Exception("`curl_mime_init()` failed");
+  }
+#else
+  m_post = nullptr;
+  m_last = nullptr;
+#endif
+}
+
+HTTPForm::~HTTPForm() {
+#if USE_CURL_MIME_API
+  curl_mime_free(m_mime);
+#else
+  curl_formfree(m_post);
+#endif
+}
+
+void HTTPForm::add(const std::string &name, const std::string &data, bool file) {
+#if USE_CURL_MIME_API
+  curl_mimepart *part = curl_mime_addpart(m_mime);
+
+  if (!part) {
+    throw Exception("`curl_mime_addpart()` failed");
+  }
+
+  curl_mime_name(part, name.c_str());
+
+  if (file) {
+    curl_mime_filedata(part, data.c_str());
+  } else {
+    curl_mime_data(part, data.c_str(), CURL_ZERO_TERMINATED);
+  }
+
+#else
+  curl_formadd(&m_post,
+               &m_last,
+               CURLFORM_COPYNAME,
+               name.c_str(),
+               file ? CURLFORM_FILE : CURLFORM_PTRCONTENTS,
+               data.c_str(),
+               CURLFORM_END);
+#endif
+}
+
+void HTTPForm::addData(const std::string &name, const std::string &data) {
+  return add(name, data, false);
+}
+
+void HTTPForm::addFile(const std::string &name, const std::string &filename) {
+  return add(name, filename, true);
+}
+
 bool WebRoom::downloadReplayExists(const std::string &i_url) {
   std::string i_rplFilename =
     XMFS::getUserReplaysDir() + "/" + XMFS::getFileBaseName(i_url) + ".rpl";
@@ -98,11 +156,7 @@ size_t FSWeb::writeData(void *ptr, size_t size, size_t nmemb, FILE *stream) {
 void FSWeb::downloadFileBz2(
   const std::string &p_local_file,
   const std::string &p_web_file,
-  int (*curl_progress_callback_download)(void *clientp,
-                                         double dltotal,
-                                         double dlnow,
-                                         double ultotal,
-                                         double ulnow),
+  ProgressCallback progressCallback,
   void *p_data,
   const ProxySettings *p_proxy_settings) {
   std::string v_bzFile = p_local_file + ".bz2";
@@ -111,7 +165,7 @@ void FSWeb::downloadFileBz2(
   remove(v_bzFile.c_str());
   downloadFile(v_bzFile,
                p_web_file + ".bz2",
-               curl_progress_callback_download,
+               progressCallback,
                p_data,
                p_proxy_settings);
 
@@ -127,11 +181,7 @@ void FSWeb::downloadFileBz2(
 void FSWeb::downloadFileBz2UsingMd5(
   const std::string &p_local_file,
   const std::string &p_web_file,
-  int (*curl_progress_callback_download)(void *clientp,
-                                         double dltotal,
-                                         double dlnow,
-                                         double ultotal,
-                                         double ulnow),
+  ProgressCallback progressCallback,
   void *p_data,
   const ProxySettings *p_proxy_settings) {
   bool require_dwd = true;
@@ -164,7 +214,7 @@ void FSWeb::downloadFileBz2UsingMd5(
   if (require_dwd) {
     FSWeb::downloadFileBz2(p_local_file,
                            p_web_file,
-                           curl_progress_callback_download,
+                           progressCallback,
                            p_data,
                            p_proxy_settings);
   }
@@ -172,11 +222,7 @@ void FSWeb::downloadFileBz2UsingMd5(
 
 void FSWeb::downloadFile(const std::string &p_local_file,
                          const std::string &p_web_file,
-                         int (*curl_progress_callback_download)(void *clientp,
-                                                                double dltotal,
-                                                                double dlnow,
-                                                                double ultotal,
-                                                                double ulnow),
+                         ProgressCallback progressCallback,
                          void *p_data,
                          const ProxySettings *p_proxy_settings) {
   LogInfo(
@@ -243,10 +289,10 @@ void FSWeb::downloadFile(const std::string &p_local_file,
   }
   /* ***** */
 
-  if (curl_progress_callback_download != NULL) {
+  if (progressCallback != NULL) {
     curl_easy_setopt(v_curl, CURLOPT_NOPROGRESS, false);
     curl_easy_setopt(
-      v_curl, CURLOPT_PROGRESSFUNCTION, curl_progress_callback_download);
+      v_curl, CURLOPT_XFERINFOFUNCTION, progressCallback);
     curl_easy_setopt(v_curl, CURLOPT_PROGRESSDATA, p_data);
   }
 
@@ -304,7 +350,6 @@ void FSWeb::uploadReplay(const std::string &p_replayFilename,
   std::string v_local_file;
   v_local_file = XMFS::getUserDir(FDT_CACHE) + "/" + DEFAULT_WWW_MSGFILE("UR");
 
-  struct curl_httppost *v_post, *v_last;
 
   LogInfo(std::string("Uploading replay " + p_replayFilename).c_str());
 
@@ -321,43 +366,15 @@ void FSWeb::uploadReplay(const std::string &p_replayFilename,
     throw Exception("error : unable to init curl");
   }
 
-  v_post = NULL;
-  v_last = NULL;
+  HTTPForm form{v_curl};
 
-  curl_formadd(&v_post,
-               &v_last,
-               CURLFORM_COPYNAME,
-               "id_room",
-               CURLFORM_PTRCONTENTS,
-               p_id_room.c_str(),
-               CURLFORM_END);
-
-  curl_formadd(&v_post,
-               &v_last,
-               CURLFORM_COPYNAME,
-               "login",
-               CURLFORM_PTRCONTENTS,
-               p_login.c_str(),
-               CURLFORM_END);
-
-  curl_formadd(&v_post,
-               &v_last,
-               CURLFORM_COPYNAME,
-               "password",
-               CURLFORM_PTRCONTENTS,
-               p_password.c_str(),
-               CURLFORM_END);
-
-  curl_formadd(&v_post,
-               &v_last,
-               CURLFORM_COPYNAME,
-               "replay",
-               CURLFORM_FILE,
-               p_replayFilename.c_str(),
-               CURLFORM_END);
+  form.addData("id_room", p_id_room);
+  form.addData("login", p_login);
+  form.addData("password", p_password);
+  form.addFile("replay", p_replayFilename);
 
   v_res = performPostCurl(v_curl,
-                          v_post,
+                          form,
                           p_url_to_transfert,
                           v_destinationFile,
                           p_WebApp,
@@ -382,6 +399,7 @@ void FSWeb::uploadReplay(const std::string &p_replayFilename,
       throw Exception(v_err);
     }
   }
+
   curl_easy_cleanup(v_curl);
 
   /* analyse de la réponse */
@@ -399,21 +417,21 @@ void FSWeb::uploadReplay(const std::string &p_replayFilename,
 }
 
 CURLcode FSWeb::performPostCurl(CURL *p_curl,
-                                struct curl_httppost *p_post,
+                                HTTPForm &form,
                                 const std::string &p_url_to_transfert,
                                 FILE *p_destinationFile,
                                 WWWAppInterface *p_WebApp,
                                 const ProxySettings *p_proxy_settings) {
   CURLcode v_res;
   std::string v_www_agent = WWW_AGENT;
-  struct curl_slist *v_headers;
+  curl_slist *v_headers;
   f_curl_upload_data v_data;
   std::string v_accept_language;
   std::string v_proxy_server;
   std::string v_proxy_auth_str;
 
   curl_easy_setopt(p_curl, CURLOPT_URL, p_url_to_transfert.c_str());
-  curl_easy_setopt(p_curl, CURLOPT_HTTPPOST, p_post);
+  curl_easy_setopt(p_curl, HTTP_FORM_TYPE, form.handle());
   curl_easy_setopt(p_curl, CURLOPT_TIMEOUT, DEFAULT_TRANSFERT_TIMEOUT);
   curl_easy_setopt(
     p_curl, CURLOPT_CONNECTTIMEOUT, DEFAULT_TRANSFERT_CONNECT_TIMEOUT);
@@ -462,7 +480,7 @@ CURLcode FSWeb::performPostCurl(CURL *p_curl,
 
     curl_easy_setopt(p_curl, CURLOPT_NOPROGRESS, false);
     curl_easy_setopt(
-      p_curl, CURLOPT_PROGRESSFUNCTION, FSWeb::f_curl_progress_callback_upload);
+      p_curl, CURLOPT_XFERINFOFUNCTION, FSWeb::f_curl_progress_callback_upload);
     curl_easy_setopt(p_curl, CURLOPT_PROGRESSDATA, &v_data);
   }
 
@@ -492,8 +510,6 @@ void FSWeb::sendVote(const std::string &p_id_level,
   std::string v_local_file;
   v_local_file = XMFS::getUserDir(FDT_CACHE) + "/" + DEFAULT_WWW_MSGFILE("SV");
 
-  struct curl_httppost *v_post, *v_last;
-
   LogInfo("Sending vote");
 
   /* open the file */
@@ -509,53 +525,19 @@ void FSWeb::sendVote(const std::string &p_id_level,
     throw Exception("error : unable to init curl");
   }
 
-  v_post = NULL;
-  v_last = NULL;
+  HTTPForm form{v_curl};
 
-  curl_formadd(&v_post,
-               &v_last,
-               CURLFORM_COPYNAME,
-               "game_id",
-               CURLFORM_PTRCONTENTS,
-               p_id_level.c_str(),
-               CURLFORM_END);
-
-  curl_formadd(&v_post,
-               &v_last,
-               CURLFORM_COPYNAME,
-               "difficulty",
-               CURLFORM_PTRCONTENTS,
-               p_difficulty_value.c_str(),
-               CURLFORM_END);
-
-  curl_formadd(&v_post,
-               &v_last,
-               CURLFORM_COPYNAME,
-               "quality",
-               CURLFORM_PTRCONTENTS,
-               p_quality_value.c_str(),
-               CURLFORM_END);
+  form.addData("game_id", p_id_level);
+  form.addData("difficulty", p_difficulty_value);
+  form.addData("quality", p_quality_value);
 
   if (p_adminMode) {
-    curl_formadd(&v_post,
-                 &v_last,
-                 CURLFORM_COPYNAME,
-                 "login",
-                 CURLFORM_PTRCONTENTS,
-                 p_id_profile.c_str(),
-                 CURLFORM_END);
-
-    curl_formadd(&v_post,
-                 &v_last,
-                 CURLFORM_COPYNAME,
-                 "password",
-                 CURLFORM_PTRCONTENTS,
-                 p_password.c_str(),
-                 CURLFORM_END);
+    form.addData("login", p_id_profile);
+    form.addData("password", p_password);
   }
 
   v_res = performPostCurl(v_curl,
-                          v_post,
+                          form,
                           p_url_to_transfert,
                           v_destinationFile,
                           p_WebApp,
@@ -609,8 +591,6 @@ void FSWeb::sendReport(const std::string &p_reportauthor,
   std::string v_local_file;
   v_local_file = XMFS::getUserDir(FDT_CACHE) + "/" + DEFAULT_WWW_MSGFILE("SR");
 
-  struct curl_httppost *v_post, *v_last;
-
   LogInfo("Sending report");
 
   /* open the file */
@@ -626,25 +606,13 @@ void FSWeb::sendReport(const std::string &p_reportauthor,
     throw Exception("error : unable to init curl");
   }
 
-  v_post = NULL;
-  v_last = NULL;
+  HTTPForm form{v_curl};
 
-  curl_formadd(&v_post,
-               &v_last,
-               CURLFORM_COPYNAME,
-               "author",
-               CURLFORM_PTRCONTENTS,
-               p_reportauthor.c_str(),
-               CURLFORM_END);
-  curl_formadd(&v_post,
-               &v_last,
-               CURLFORM_COPYNAME,
-               "msg",
-               CURLFORM_PTRCONTENTS,
-               p_reportmsg.c_str(),
-               CURLFORM_END);
+  form.addData("author", p_reportauthor);
+  form.addData("msg", p_reportmsg);
+
   v_res = performPostCurl(v_curl,
-                          v_post,
+                          form,
                           p_url_to_transfert,
                           v_destinationFile,
                           p_WebApp,
@@ -739,8 +707,6 @@ void FSWeb::uploadDbSync(const std::string &p_dbSyncFilename,
 
   FILE *v_destinationFile;
 
-  struct curl_httppost *v_post, *v_last;
-
   // std::ostringstream v_dbSyncServerStr;
   // curl seems not to like .str().c_str()
   char v_syncStr[256];
@@ -761,53 +727,18 @@ void FSWeb::uploadDbSync(const std::string &p_dbSyncFilename,
     throw Exception("error : unable to init curl");
   }
 
-  v_post = NULL;
-  v_last = NULL;
-
   snprintf(v_syncStr, 256, "%i", p_dbSyncServer);
 
-  curl_formadd(&v_post,
-               &v_last,
-               CURLFORM_COPYNAME,
-               "login",
-               CURLFORM_PTRCONTENTS,
-               p_login.c_str(),
-               CURLFORM_END);
+  HTTPForm form{v_curl};
 
-  curl_formadd(&v_post,
-               &v_last,
-               CURLFORM_COPYNAME,
-               "password",
-               CURLFORM_PTRCONTENTS,
-               p_password.c_str(),
-               CURLFORM_END);
-
-  curl_formadd(&v_post,
-               &v_last,
-               CURLFORM_COPYNAME,
-               "downSiteKey",
-               CURLFORM_PTRCONTENTS,
-               p_siteKey.c_str(),
-               CURLFORM_END);
-
-  curl_formadd(&v_post,
-               &v_last,
-               CURLFORM_COPYNAME,
-               "downDbSync",
-               CURLFORM_PTRCONTENTS,
-               v_syncStr,
-               CURLFORM_END);
-
-  curl_formadd(&v_post,
-               &v_last,
-               CURLFORM_COPYNAME,
-               "dbSync",
-               CURLFORM_FILE,
-               p_dbSyncFilename.c_str(),
-               CURLFORM_END);
+  form.addData("login", p_login);
+  form.addData("password", p_password);
+  form.addData("downSiteKey", p_siteKey);
+  form.addData("downDbSync", v_syncStr);
+  form.addFile("dbSync", p_dbSyncFilename);
 
   v_res = performPostCurl(v_curl,
-                          v_post,
+                          form,
                           p_url_to_transfert,
                           v_destinationFile,
                           p_WebApp,
@@ -902,40 +833,37 @@ void WebLevels::update(xmDatabase *i_db) {
 }
 
 int FSWeb::f_curl_progress_callback_upload(void *clientp,
-                                           double dltotal,
-                                           double dlnow,
-                                           double ultotal,
-                                           double ulnow) {
+                                           curl_off_t dltotal,
+                                           curl_off_t dlnow,
+                                           curl_off_t ultotal,
+                                           curl_off_t ulnow) {
   f_curl_download_data *data = ((f_curl_download_data *)clientp);
-  float v_percentage;
 
   /* cancel if it's wanted */
   if (data->v_WebApp->isCancelAsSoonAsPossible()) {
     return 1;
   }
 
-  /* we can't make trust to the web server information */
-  v_percentage = 0.0;
-  if (ultotal > 0.0) {
-    if ((ulnow / ultotal) >= 0.0 && (ulnow / ultotal) <= 1.0) {
-      v_percentage = (ulnow * 100.0) / ultotal;
+  /* we can't trust the web server information */
+  float percentage = 0.0f;
+  float fract = ulnow / (float)ultotal;
+  if (ultotal > 0.0f) {
+    if (fract >= 0.0f && fract <= 1.0f) {
+      percentage = fract * 100.0f;
     }
   }
 
-  data->v_WebApp->setTaskProgress(v_percentage);
+  data->v_WebApp->setTaskProgress(percentage);
 
   return 0;
 }
 
 int FSWeb::f_curl_progress_callback_download(void *clientp,
-                                             double dltotal,
-                                             double dlnow,
-                                             double ultotal,
-                                             double ulnow) {
+                                             curl_off_t dltotal,
+                                             curl_off_t dlnow,
+                                             curl_off_t ultotal,
+                                             curl_off_t ulnow) {
   f_curl_download_data *data = ((f_curl_download_data *)clientp);
-  float real_percentage_already_done;
-  float real_percentage_of_current_file;
-
   /* cancel if it's wanted */
   if (data->v_WebApp != NULL) {
     if (data->v_WebApp->isCancelAsSoonAsPossible()) {
@@ -943,15 +871,15 @@ int FSWeb::f_curl_progress_callback_download(void *clientp,
     }
   }
 
-  real_percentage_already_done = (((float)data->v_nb_files_performed) * 100.0) /
-                                 ((float)data->v_nb_files_to_download);
+  float real_percentage_already_done =
+    (data->v_nb_files_performed * 100.0f) / (float)data->v_nb_files_to_download;
 
-  /* we can't make trust to the web server information */
-  real_percentage_of_current_file = 0.0;
-  if (dltotal > 0.0) {
-    if ((dlnow / dltotal) >= 0.0 && (dlnow / dltotal) <= 1.0) {
-      real_percentage_of_current_file =
-        (dlnow * 100.0) / (((float)data->v_nb_files_to_download) * dltotal);
+  /* we can't trust the web server information */
+  float real_percentage_of_current_file = 0.0f;
+  float fract = dlnow / (float)dltotal;
+  if (dltotal > 0.0f) {
+    if (fract >= 0.0f && fract <= 1.0f) {
+      real_percentage_of_current_file = (fract * 100.0f) / (float)data->v_nb_files_to_download;
     }
   }
 

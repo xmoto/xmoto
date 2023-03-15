@@ -37,6 +37,8 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "XMSession.h"
 
 class ThemeChoice;
+class WebRoom;
+class xmDatabase;
 
 #define DEFAULT_WEBHIGHSCORES_URL "https://xmoto.tuxfamily.org/highscores.xml"
 #define DEFAULT_WEBHIGHSCORES_FILENAME_PREFIX "webhighscores"
@@ -60,6 +62,47 @@ class ThemeChoice;
 
 #define WWW_AGENT ("xmoto-" + XMBuild::getVersionString(true))
 
+#if CURL_AT_LEAST_VERSION(7, 56, 0)
+  #define USE_CURL_MIME_API 1
+  #define HTTP_FORM_TYPE CURLOPT_MIMEPOST
+#else
+  #define USE_CURL_MIME_API 0
+  #define HTTP_FORM_TYPE CURLOPT_HTTPPOST
+#endif
+
+class HTTPForm {
+public:
+  HTTPForm(CURL *curl);
+  ~HTTPForm();
+
+#if USE_CURL_MIME_API
+  const curl_mime *const handle() const {
+    return m_mime;
+  }
+#else
+  const curl_httppost *const handle() const {
+    return m_post;
+  }
+#endif
+
+  void addData(const std::string &name, const std::string &data);
+  void addFile(const std::string &name, const std::string &filename);
+
+private:
+  void add(const std::string &name, const std::string &data, bool file);
+
+private:
+  CURL *m_curl;
+
+#if USE_CURL_MIME_API
+  curl_mime *m_mime;
+#else
+  curl_httppost *m_post;
+  curl_httppost *m_last;
+#endif
+
+};
+
 struct f_curl_download_data {
   WWWAppInterface *v_WebApp;
   int v_nb_files_to_download;
@@ -70,41 +113,32 @@ struct f_curl_upload_data {
   WWWAppInterface *v_WebApp;
 };
 
-class WebRoom;
-class xmDatabase;
+using ProgressCallback = int (*)(void *clientp,
+                                 curl_off_t dltotal,
+                                 curl_off_t dlnow,
+                                 curl_off_t ultotal,
+                                 curl_off_t ulnow);
 
 class FSWeb {
 public:
   static void downloadFile(
     const std::string &p_local_file,
     const std::string &p_web_file,
-    int (*curl_progress_callback_download)(void *clientp,
-                                           double dltotal,
-                                           double dlnow,
-                                           double ultotal,
-                                           double ulnow),
+    ProgressCallback progressCallback,
     void *p_data,
     const ProxySettings *p_proxy_settings);
 
   static void downloadFileBz2(
     const std::string &p_local_file,
     const std::string &p_web_file,
-    int (*curl_progress_callback_download)(void *clientp,
-                                           double dltotal,
-                                           double dlnow,
-                                           double ultotal,
-                                           double ulnow),
+    ProgressCallback progressCallback,
     void *p_data,
     const ProxySettings *p_proxy_settings);
 
   static void downloadFileBz2UsingMd5(
     const std::string &p_local_file,
     const std::string &p_web_file,
-    int (*curl_progress_callback_download)(void *clientp,
-                                           double dltotal,
-                                           double dlnow,
-                                           double ultotal,
-                                           double ulnow),
+    ProgressCallback progressCallback,
     void *p_data,
     const ProxySettings *p_proxy_settings);
 
@@ -151,16 +185,16 @@ public:
                          std::string &p_msg);
 
   static int f_curl_progress_callback_upload(void *clientp,
-                                             double dltotal,
-                                             double dlnow,
-                                             double ultotal,
-                                             double ulnow);
+                                             curl_off_t dltotal,
+                                             curl_off_t dlnow,
+                                             curl_off_t ultotal,
+                                             curl_off_t ulnow);
 
   static int f_curl_progress_callback_download(void *clientp,
-                                               double dltotal,
-                                               double dlnow,
-                                               double ultotal,
-                                               double ulnow);
+                                               curl_off_t dltotal,
+                                               curl_off_t dlnow,
+                                               curl_off_t ultotal,
+                                               curl_off_t ulnow);
 
 private:
   static size_t writeData(void *ptr, size_t size, size_t nmemb, FILE *stream);
@@ -170,7 +204,7 @@ private:
                                std::string &p_msg);
 
   static CURLcode performPostCurl(CURL *p_curl,
-                                  struct curl_httppost *p_post,
+                                  HTTPForm &form,
                                   const std::string &p_url_to_transfert,
                                   FILE *p_destinationFile,
                                   WWWAppInterface *p_WebApp,
