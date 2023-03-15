@@ -107,13 +107,13 @@ std::string Theme::Name() const {
 
 Texture *Theme::loadTexture(std::string p_fileName,
                             bool bSmall,
-                            bool bClamp,
+                            WrapMode wrapMode,
                             FilterMode eFilterMode,
                             bool persistent,
                             Sprite *associateSprite) {
   return m_texMan.loadTexture(p_fileName.c_str(),
                               bSmall,
-                              bClamp,
+                              wrapMode,
                               eFilterMode,
                               persistent,
                               associateSprite);
@@ -466,7 +466,7 @@ void Theme::newAnimationSpriteFromXML(xmlNodePtr pElem,
   v_anim->setOrder(m_sprites.size());
   m_sprites.push_back(v_anim);
 
-  int n = 0;
+  unsigned int n = 0;
   char buf[3];
 
   for (xmlNodePtr pSubElem = XMLDocument::subElement(pElem, "frame");
@@ -517,7 +517,7 @@ void Theme::newAnimationSpriteFromXML(xmlNodePtr pElem,
     v_sum = XMLDocument::getOption(pSubElem, "sum");
 
     if (n < 100) {
-      snprintf(buf, 3, "%02i", n);
+      snprintf(buf, 3, "%02u", n);
 
       if (isAFileOutOfDate(fileDir + std::string("/") + v_fileBase +
                            std::string(buf) + std::string(".") +
@@ -698,7 +698,7 @@ Sprite::Sprite(Theme *p_associated_theme, std::string v_name) {
 
 Sprite::~Sprite() {}
 
-Texture *Sprite::getTexture(bool bSmall, bool bClamp, FilterMode eFilterMode) {
+Texture *Sprite::getTexture(bool bSmall, WrapMode wrapMode, FilterMode eFilterMode) {
   Texture *v_currentTexture;
 
   v_currentTexture = getCurrentTexture();
@@ -706,7 +706,7 @@ Texture *Sprite::getTexture(bool bSmall, bool bClamp, FilterMode eFilterMode) {
     v_currentTexture =
       m_associated_theme->loadTexture(getCurrentTextureFileName(),
                                       bSmall,
-                                      bClamp,
+                                      wrapMode,
                                       eFilterMode,
                                       m_persistent,
                                       this);
@@ -983,9 +983,9 @@ float EdgeEffectSprite::getDepth() const {
 }
 
 Texture *EdgeEffectSprite::getTexture(bool bSmall,
-                                      bool bClamp,
+                                      WrapMode wrapMode,
                                       FilterMode eFilterMode) {
-  return Sprite::getTexture(bSmall, bClamp, eFilterMode);
+  return Sprite::getTexture(bSmall, wrapMode, eFilterMode);
 }
 
 FontSprite::FontSprite(Theme *p_associated_theme,

@@ -65,28 +65,30 @@ StateMainMenu::StateMainMenu(bool drawStateBehind, bool updateStatesBehind)
   m_checkWwwThread = NULL;
 
   /* Load title screen textures */
+  auto bgWrapMode = WrapMode::ClampToEdge;
+  auto bgFilterMode = FM_LINEAR;
   m_pTitleBL = NULL;
   pSprite = Theme::instance()->getSprite(SPRITE_TYPE_UI, "TitleBL");
   if (pSprite != NULL) {
-    m_pTitleBL = pSprite->getTexture(false, true, FM_LINEAR);
+    m_pTitleBL = pSprite->getTexture(false, bgWrapMode, bgFilterMode);
   }
 
   m_pTitleBR = NULL;
   pSprite = Theme::instance()->getSprite(SPRITE_TYPE_UI, "TitleBR");
   if (pSprite != NULL) {
-    m_pTitleBR = pSprite->getTexture(false, true, FM_LINEAR);
+    m_pTitleBR = pSprite->getTexture(false, bgWrapMode, bgFilterMode);
   }
 
   m_pTitleTL = NULL;
   pSprite = Theme::instance()->getSprite(SPRITE_TYPE_UI, "TitleTL");
   if (pSprite != NULL) {
-    m_pTitleTL = pSprite->getTexture(false, true, FM_LINEAR);
+    m_pTitleTL = pSprite->getTexture(false, bgWrapMode, bgFilterMode);
   }
 
   m_pTitleTR = NULL;
   pSprite = Theme::instance()->getSprite(SPRITE_TYPE_UI, "TitleTR");
   if (pSprite != NULL) {
-    m_pTitleTR = pSprite->getTexture(false, true, FM_LINEAR);
+    m_pTitleTR = pSprite->getTexture(false, bgWrapMode, bgFilterMode);
   }
 
   m_require_updateFavoriteLevelsList = false;
@@ -1751,18 +1753,19 @@ void StateMainMenu::drawBackground() {
     int w = m_screen.getDispWidth();
     int h = m_screen.getDispHeight();
 
+    Color tint = 0xFFFFFFFF;
     if (m_pTitleTL != NULL)
       drawlib->drawImage(
-        Vector2f(0, 0), Vector2f(w / 2, h / 2), m_pTitleTL, 0xFFFFFFFF, true);
+        Vector2f(0, 0), Vector2f(w / 2.0f, h / 2.0f), m_pTitleTL, tint, true);
     if (m_pTitleTR != NULL)
       drawlib->drawImage(
-        Vector2f(w / 2, 0), Vector2f(w, h / 2), m_pTitleTR, 0xFFFFFFFF, true);
+        Vector2f(w / 2.0f, 0), Vector2f(w, h / 2.0f), m_pTitleTR, tint, true);
     if (m_pTitleBR != NULL)
       drawlib->drawImage(
-        Vector2f(w / 2, h / 2), Vector2f(w, h), m_pTitleBR, 0xFFFFFFFF, true);
+        Vector2f(w / 2.0f, h / 2.0f), Vector2f(w, h), m_pTitleBR, tint, true);
     if (m_pTitleBL != NULL)
       drawlib->drawImage(
-        Vector2f(0, h / 2), Vector2f(w / 2, h), m_pTitleBL, 0xFFFFFFFF, true);
+        Vector2f(0, h / 2.0f), Vector2f(w / 2.0f, h), m_pTitleBL, tint, true);
   } else {
     drawlib->clearGraphics();
   }

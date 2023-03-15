@@ -437,7 +437,6 @@ void GameApp::run_load(int nNumArgs, char **ppcArgs) {
     switchTestThemeMode(XMSession::instance()->testTheme());
   }
 
-  //
   bool v_updateAfterInitDone = false;
 
   /* load theme */

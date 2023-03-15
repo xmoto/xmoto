@@ -37,28 +37,73 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "XMSession.h"
 
 class ThemeChoice;
+class WebRoom;
+class xmDatabase;
 
-#define DEFAULT_WEBHIGHSCORES_URL "https://xmoto.tuxfamily.org/highscores.xml"
+#define DEFAULT_SITE_URL "https://xmoto.tuxfamily.org"
+
+#define DEFAULT_TRANSFER_TIMEOUT 240
+#define DEFAULT_TRANSFER_CONNECT_TIMEOUT 15
+
+#define DEFAULT_WEBHIGHSCORES_URL             DEFAULT_SITE_URL "/highscores.xml"
+#define DEFAULT_WEBLEVELS_URL                 DEFAULT_SITE_URL "/levels.xml"
+#define DEFAULT_UPLOADDBSYNC_URL              DEFAULT_SITE_URL "/tools/UploadDbSync.php"
+#define DEFAULT_WEBTHEMES_URL                 DEFAULT_SITE_URL "/themes.xml"
+#define DEFAULT_WEBTHEMES_SPRITESURLBASE      DEFAULT_SITE_URL "/sprites"
+#define DEFAULT_UPLOADREPLAY_URL              DEFAULT_SITE_URL "/tools/UploadReplay.php"
+#define DEFAULT_SENDVOTE_URL                  DEFAULT_SITE_URL "/tools/SendVote.php"
+#define DEFAULT_SENDREPORT_URL                DEFAULT_SITE_URL "/tools/SendReport.php"
+#define DEFAULT_WEBROOMS_URL                  DEFAULT_SITE_URL "/rooms.xml"
+
 #define DEFAULT_WEBHIGHSCORES_FILENAME_PREFIX "webhighscores"
-#define DEFAULT_TRANSFERT_TIMEOUT 240
-#define DEFAULT_TRANSFERT_CONNECT_TIMEOUT 15
-#define DEFAULT_WEBLEVELS_URL "https://xmoto.tuxfamily.org/levels.xml"
-#define DEFAULT_UPLOADDBSYNC_URL \
-  "https://xmoto.tuxfamily.org/tools/UploadDbSync.php"
-#define DEFAULT_WEBLEVELS_FILENAME "weblevels.xml"
-#define DEFAULT_WEBLEVELS_DIR "downloaded"
-#define DEFAULT_WEBTHEMES_URL "https://xmoto.tuxfamily.org/themes.xml"
-#define DEFAULT_WEBTHEMES_FILENAME "webthemes.xml"
-#define DEFAULT_WEBTHEMES_SPRITESURLBASE "https://xmoto.tuxfamily.org/sprites"
-#define DEFAULT_UPLOADREPLAY_URL \
-  "https://xmoto.tuxfamily.org/tools/UploadReplay.php"
-#define DEFAULT_SENDVOTE_URL "https://xmoto.tuxfamily.org/tools/SendVote.php"
-#define DEFAULT_SENDREPORT_URL "https://xmoto.tuxfamily.org/tools/SendReport.php"
-#define DEFAULT_WEBROOMS_URL "https://xmoto.tuxfamily.org/rooms.xml"
-#define DEFAULT_WEBROOMS_FILENAME "webrooms.xml"
-#define DEFAULT_WEBROOM_NAME "WR"
+#define DEFAULT_WEBLEVELS_FILENAME            "weblevels.xml"
+#define DEFAULT_WEBLEVELS_DIR                 "downloaded"
+#define DEFAULT_WEBTHEMES_FILENAME            "webthemes.xml"
+#define DEFAULT_WEBROOMS_FILENAME             "webrooms.xml"
+#define DEFAULT_WEBROOM_NAME                  "WR"
 
 #define WWW_AGENT ("xmoto-" + XMBuild::getVersionString(true))
+
+#if CURL_AT_LEAST_VERSION(7, 56, 0)
+  #define USE_CURL_MIME_API 1
+  #define HTTP_FORM_TYPE CURLOPT_MIMEPOST
+#else
+  #define USE_CURL_MIME_API 0
+  #define HTTP_FORM_TYPE CURLOPT_HTTPPOST
+#endif
+
+class HTTPForm {
+public:
+  HTTPForm(CURL *curl);
+  ~HTTPForm();
+
+#if USE_CURL_MIME_API
+  const curl_mime *const handle() const {
+    return m_mime;
+  }
+#else
+  const curl_httppost *const handle() const {
+    return m_post;
+  }
+#endif
+
+  void addData(const std::string &name, const std::string &data);
+  void addFile(const std::string &name, const std::string &filename);
+
+private:
+  void add(const std::string &name, const std::string &data, bool file);
+
+private:
+  CURL *m_curl;
+
+#if USE_CURL_MIME_API
+  curl_mime *m_mime;
+#else
+  curl_httppost *m_post;
+  curl_httppost *m_last;
+#endif
+
+};
 
 struct f_curl_download_data {
   WWWAppInterface *v_WebApp;
@@ -70,41 +115,32 @@ struct f_curl_upload_data {
   WWWAppInterface *v_WebApp;
 };
 
-class WebRoom;
-class xmDatabase;
+using ProgressCallback = int (*)(void *clientp,
+                                 curl_off_t dltotal,
+                                 curl_off_t dlnow,
+                                 curl_off_t ultotal,
+                                 curl_off_t ulnow);
 
 class FSWeb {
 public:
   static void downloadFile(
     const std::string &p_local_file,
     const std::string &p_web_file,
-    int (*curl_progress_callback_download)(void *clientp,
-                                           double dltotal,
-                                           double dlnow,
-                                           double ultotal,
-                                           double ulnow),
+    ProgressCallback progressCallback,
     void *p_data,
     const ProxySettings *p_proxy_settings);
 
   static void downloadFileBz2(
     const std::string &p_local_file,
     const std::string &p_web_file,
-    int (*curl_progress_callback_download)(void *clientp,
-                                           double dltotal,
-                                           double dlnow,
-                                           double ultotal,
-                                           double ulnow),
+    ProgressCallback progressCallback,
     void *p_data,
     const ProxySettings *p_proxy_settings);
 
   static void downloadFileBz2UsingMd5(
     const std::string &p_local_file,
     const std::string &p_web_file,
-    int (*curl_progress_callback_download)(void *clientp,
-                                           double dltotal,
-                                           double dlnow,
-                                           double ultotal,
-                                           double ulnow),
+    ProgressCallback progressCallback,
     void *p_data,
     const ProxySettings *p_proxy_settings);
 
@@ -112,7 +148,7 @@ public:
                            const std::string &p_id_room,
                            const std::string &p_login,
                            const std::string &p_password,
-                           const std::string &p_url_to_transfert,
+                           const std::string &p_url_to_transfer,
                            WWWAppInterface *p_WebApp,
                            const ProxySettings *p_proxy_settings,
                            bool &p_msg_status,
@@ -123,7 +159,7 @@ public:
                            const std::string &p_password,
                            const std::string &p_siteKey,
                            int p_dbSyncServer,
-                           const std::string &p_url_to_transfert,
+                           const std::string &p_url_to_transfer,
                            WWWAppInterface *p_WebApp,
                            const ProxySettings *p_proxy_settings,
                            bool &p_msg_status,
@@ -136,7 +172,7 @@ public:
                        bool p_adminMode,
                        const std::string &p_id_profile,
                        const std::string &p_password,
-                       const std::string &p_url_to_transfert,
+                       const std::string &p_url_to_transfer,
                        WWWAppInterface *p_WebApp,
                        const ProxySettings *p_proxy_settings,
                        bool &p_msg_status,
@@ -144,23 +180,23 @@ public:
 
   static void sendReport(const std::string &p_reportauthor,
                          const std::string &p_reportmsg,
-                         const std::string &p_url_to_transfert,
+                         const std::string &p_url_to_transfer,
                          WWWAppInterface *p_WebApp,
                          const ProxySettings *p_proxy_settings,
                          bool &p_msg_status,
                          std::string &p_msg);
 
   static int f_curl_progress_callback_upload(void *clientp,
-                                             double dltotal,
-                                             double dlnow,
-                                             double ultotal,
-                                             double ulnow);
+                                             curl_off_t dltotal,
+                                             curl_off_t dlnow,
+                                             curl_off_t ultotal,
+                                             curl_off_t ulnow);
 
   static int f_curl_progress_callback_download(void *clientp,
-                                               double dltotal,
-                                               double dlnow,
-                                               double ultotal,
-                                               double ulnow);
+                                               curl_off_t dltotal,
+                                               curl_off_t dlnow,
+                                               curl_off_t ultotal,
+                                               curl_off_t ulnow);
 
 private:
   static size_t writeData(void *ptr, size_t size, size_t nmemb, FILE *stream);
@@ -170,8 +206,8 @@ private:
                                std::string &p_msg);
 
   static CURLcode performPostCurl(CURL *p_curl,
-                                  struct curl_httppost *p_post,
-                                  const std::string &p_url_to_transfert,
+                                  HTTPForm &form,
+                                  const std::string &p_url_to_transfer,
                                   FILE *p_destinationFile,
                                   WWWAppInterface *p_WebApp,
                                   const ProxySettings *p_proxy_settings);
