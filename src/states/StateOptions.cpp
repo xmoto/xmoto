@@ -41,6 +41,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "xmoto/GameText.h"
 #include "xmoto/Sound.h"
 #include "xmoto/SysMessage.h"
+#include <algorithm>
 #include <sstream>
 
 /* static members */
@@ -1242,21 +1243,24 @@ UIWindow *StateOptions::makeWindowOptions_video(UIWindow *i_parent) {
   v_button->setFont(drawlib->getFontSmall());
   v_button->setContextHelp(CONTEXTHELP_RUN_IN_WINDOW);
 
+  auto maxFramerateLabel = std::string(GAMETEXT_MAX_FRAMERATE) + ":";
+
   v_someText = new UIStatic(
     v_window,
     5+2,
     v_window->getPosition().nHeight - 43 - 10 - 90 - 2,
-    std::string(GAMETEXT_MAX_FRAMERATE) + ":",
+    maxFramerateLabel,
     v_window->getPosition().nWidth - 40,
     28);
-
 
   v_someText->setID("MAX_FRAMERATE_LABEL");
   v_someText->setHAlign(UI_ALIGN_LEFT);
   v_someText->setFont(drawlib->getFontSmall());
 
+  int padding = v_someText->getFont()->getGlyph(maxFramerateLabel)->realWidth();
+
   v_edit = new UIEdit(v_window,
-      120+8,
+      padding + 8 + 8,
       v_window->getPosition().nHeight - 43 - 10 - 90 - 2,
       "",
       60,
@@ -1266,16 +1270,25 @@ UIWindow *StateOptions::makeWindowOptions_video(UIWindow *i_parent) {
   v_edit->setContextHelp(CONTEXTHELP_MAX_FRAMERATE);
 
 
+
+  auto gfxLabelFont = drawlib->getFontSmall();
+  auto menuGfxLabel = std::string(GAMETEXT_MENUGFX) + ":";
+  auto gameGfxLabel = std::string(GAMETEXT_GAMEGFX) + ":";
+  int menuGfxLabelWidth = gfxLabelFont->getGlyph(menuGfxLabel)->realWidth();
+  int gameGfxLabelWidth = gfxLabelFont->getGlyph(gameGfxLabel)->realWidth();
+
+  padding = std::max(menuGfxLabelWidth, gameGfxLabelWidth) + 8;
+
   v_someText = new UIStatic(v_window,
-                            5,
+                            8,
                             v_window->getPosition().nHeight - 43 - 10 - 60,
-                            std::string(GAMETEXT_MENUGFX) + ":",
-                            120,
+                            menuGfxLabel,
+                            menuGfxLabelWidth,
                             28);
-  v_someText->setFont(drawlib->getFontSmall());
+  v_someText->setFont(gfxLabelFont);
 
   v_button = new UIButton(v_window,
-                          120,
+                          padding,
                           v_window->getPosition().nHeight - 43 - 10 - 60,
                           GAMETEXT_LOW,
                           (v_window->getPosition().nWidth - 120) / 3,
@@ -1287,7 +1300,7 @@ UIWindow *StateOptions::makeWindowOptions_video(UIWindow *i_parent) {
   v_button->setContextHelp(CONTEXTHELP_LOW_MENU);
 
   v_button = new UIButton(v_window,
-                          120 + (v_window->getPosition().nWidth - 120) / 3,
+                          padding + (v_window->getPosition().nWidth - 120) / 3,
                           v_window->getPosition().nHeight - 43 - 10 - 60,
                           GAMETEXT_MEDIUM,
                           (v_window->getPosition().nWidth - 120) / 3,
@@ -1299,7 +1312,7 @@ UIWindow *StateOptions::makeWindowOptions_video(UIWindow *i_parent) {
   v_button->setContextHelp(CONTEXTHELP_MEDIUM_MENU);
 
   v_button = new UIButton(v_window,
-                          120 + (v_window->getPosition().nWidth - 120) / 3 * 2,
+                          padding + (v_window->getPosition().nWidth - 120) / 3 * 2,
                           v_window->getPosition().nHeight - 43 - 10 - 60,
                           GAMETEXT_HIGH,
                           (v_window->getPosition().nWidth - 120) / 3,
@@ -1311,15 +1324,15 @@ UIWindow *StateOptions::makeWindowOptions_video(UIWindow *i_parent) {
   v_button->setContextHelp(CONTEXTHELP_HIGH_MENU);
 
   v_someText = new UIStatic(v_window,
-                            5,
+                            8,
                             v_window->getPosition().nHeight - 43 - 10 - 30,
-                            std::string(GAMETEXT_GAMEGFX) + ":",
-                            120,
+                            gameGfxLabel,
+                            gameGfxLabelWidth,
                             28);
-  v_someText->setFont(drawlib->getFontSmall());
+  v_someText->setFont(gfxLabelFont);
 
   v_button = new UIButton(v_window,
-                          120,
+                          padding,
                           v_window->getPosition().nHeight - 43 - 10 - 30,
                           GAMETEXT_CONTRAST,
                           (v_window->getPosition().nWidth - 120) / 3,
@@ -1331,7 +1344,7 @@ UIWindow *StateOptions::makeWindowOptions_video(UIWindow *i_parent) {
   v_button->setContextHelp(CONTEXTHELP_LOW_GAME);
 
   v_button = new UIButton(v_window,
-                          120 + (v_window->getPosition().nWidth - 120) / 3,
+                          padding + (v_window->getPosition().nWidth - 120) / 3,
                           v_window->getPosition().nHeight - 43 - 10 - 30,
                           GAMETEXT_LIGHT,
                           (v_window->getPosition().nWidth - 120) / 3,
@@ -1343,7 +1356,7 @@ UIWindow *StateOptions::makeWindowOptions_video(UIWindow *i_parent) {
   v_button->setContextHelp(CONTEXTHELP_MEDIUM_GAME);
 
   v_button = new UIButton(v_window,
-                          120 + (v_window->getPosition().nWidth - 120) / 3 * 2,
+                          padding + (v_window->getPosition().nWidth - 120) / 3 * 2,
                           v_window->getPosition().nHeight - 43 - 10 - 30,
                           GAMETEXT_FULL,
                           (v_window->getPosition().nWidth - 120) / 3,
