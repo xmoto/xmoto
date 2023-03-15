@@ -40,25 +40,27 @@ class ThemeChoice;
 class WebRoom;
 class xmDatabase;
 
-#define DEFAULT_WEBHIGHSCORES_URL "https://xmoto.tuxfamily.org/highscores.xml"
+#define DEFAULT_SITE_URL "https://xmoto.tuxfamily.org"
+
+#define DEFAULT_TRANSFER_TIMEOUT 240
+#define DEFAULT_TRANSFER_CONNECT_TIMEOUT 15
+
+#define DEFAULT_WEBHIGHSCORES_URL             DEFAULT_SITE_URL "/highscores.xml"
+#define DEFAULT_WEBLEVELS_URL                 DEFAULT_SITE_URL "/levels.xml"
+#define DEFAULT_UPLOADDBSYNC_URL              DEFAULT_SITE_URL "/tools/UploadDbSync.php"
+#define DEFAULT_WEBTHEMES_URL                 DEFAULT_SITE_URL "/themes.xml"
+#define DEFAULT_WEBTHEMES_SPRITESURLBASE      DEFAULT_SITE_URL "/sprites"
+#define DEFAULT_UPLOADREPLAY_URL              DEFAULT_SITE_URL "/tools/UploadReplay.php"
+#define DEFAULT_SENDVOTE_URL                  DEFAULT_SITE_URL "/tools/SendVote.php"
+#define DEFAULT_SENDREPORT_URL                DEFAULT_SITE_URL "/tools/SendReport.php"
+#define DEFAULT_WEBROOMS_URL                  DEFAULT_SITE_URL "/rooms.xml"
+
 #define DEFAULT_WEBHIGHSCORES_FILENAME_PREFIX "webhighscores"
-#define DEFAULT_TRANSFERT_TIMEOUT 240
-#define DEFAULT_TRANSFERT_CONNECT_TIMEOUT 15
-#define DEFAULT_WEBLEVELS_URL "https://xmoto.tuxfamily.org/levels.xml"
-#define DEFAULT_UPLOADDBSYNC_URL \
-  "https://xmoto.tuxfamily.org/tools/UploadDbSync.php"
-#define DEFAULT_WEBLEVELS_FILENAME "weblevels.xml"
-#define DEFAULT_WEBLEVELS_DIR "downloaded"
-#define DEFAULT_WEBTHEMES_URL "https://xmoto.tuxfamily.org/themes.xml"
-#define DEFAULT_WEBTHEMES_FILENAME "webthemes.xml"
-#define DEFAULT_WEBTHEMES_SPRITESURLBASE "https://xmoto.tuxfamily.org/sprites"
-#define DEFAULT_UPLOADREPLAY_URL \
-  "https://xmoto.tuxfamily.org/tools/UploadReplay.php"
-#define DEFAULT_SENDVOTE_URL "https://xmoto.tuxfamily.org/tools/SendVote.php"
-#define DEFAULT_SENDREPORT_URL "https://xmoto.tuxfamily.org/tools/SendReport.php"
-#define DEFAULT_WEBROOMS_URL "https://xmoto.tuxfamily.org/rooms.xml"
-#define DEFAULT_WEBROOMS_FILENAME "webrooms.xml"
-#define DEFAULT_WEBROOM_NAME "WR"
+#define DEFAULT_WEBLEVELS_FILENAME            "weblevels.xml"
+#define DEFAULT_WEBLEVELS_DIR                 "downloaded"
+#define DEFAULT_WEBTHEMES_FILENAME            "webthemes.xml"
+#define DEFAULT_WEBROOMS_FILENAME             "webrooms.xml"
+#define DEFAULT_WEBROOM_NAME                  "WR"
 
 #define WWW_AGENT ("xmoto-" + XMBuild::getVersionString(true))
 
@@ -146,7 +148,7 @@ public:
                            const std::string &p_id_room,
                            const std::string &p_login,
                            const std::string &p_password,
-                           const std::string &p_url_to_transfert,
+                           const std::string &p_url_to_transfer,
                            WWWAppInterface *p_WebApp,
                            const ProxySettings *p_proxy_settings,
                            bool &p_msg_status,
@@ -157,7 +159,7 @@ public:
                            const std::string &p_password,
                            const std::string &p_siteKey,
                            int p_dbSyncServer,
-                           const std::string &p_url_to_transfert,
+                           const std::string &p_url_to_transfer,
                            WWWAppInterface *p_WebApp,
                            const ProxySettings *p_proxy_settings,
                            bool &p_msg_status,
@@ -170,7 +172,7 @@ public:
                        bool p_adminMode,
                        const std::string &p_id_profile,
                        const std::string &p_password,
-                       const std::string &p_url_to_transfert,
+                       const std::string &p_url_to_transfer,
                        WWWAppInterface *p_WebApp,
                        const ProxySettings *p_proxy_settings,
                        bool &p_msg_status,
@@ -178,7 +180,7 @@ public:
 
   static void sendReport(const std::string &p_reportauthor,
                          const std::string &p_reportmsg,
-                         const std::string &p_url_to_transfert,
+                         const std::string &p_url_to_transfer,
                          WWWAppInterface *p_WebApp,
                          const ProxySettings *p_proxy_settings,
                          bool &p_msg_status,
@@ -205,7 +207,7 @@ private:
 
   static CURLcode performPostCurl(CURL *p_curl,
                                   HTTPForm &form,
-                                  const std::string &p_url_to_transfert,
+                                  const std::string &p_url_to_transfer,
                                   FILE *p_destinationFile,
                                   WWWAppInterface *p_WebApp,
                                   const ProxySettings *p_proxy_settings);

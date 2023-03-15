@@ -253,9 +253,9 @@ void FSWeb::downloadFile(const std::string &p_local_file,
   curl_easy_setopt(v_curl, CURLOPT_URL, p_web_file.c_str());
   curl_easy_setopt(v_curl, CURLOPT_WRITEDATA, v_destinationFile);
   curl_easy_setopt(v_curl, CURLOPT_WRITEFUNCTION, FSWeb::writeData);
-  curl_easy_setopt(v_curl, CURLOPT_TIMEOUT, DEFAULT_TRANSFERT_TIMEOUT);
+  curl_easy_setopt(v_curl, CURLOPT_TIMEOUT, DEFAULT_TRANSFER_TIMEOUT);
   curl_easy_setopt(
-    v_curl, CURLOPT_CONNECTTIMEOUT, DEFAULT_TRANSFERT_CONNECT_TIMEOUT);
+    v_curl, CURLOPT_CONNECTTIMEOUT, DEFAULT_TRANSFER_CONNECT_TIMEOUT);
   curl_easy_setopt(v_curl, CURLOPT_USERAGENT, v_www_agent.c_str());
   curl_easy_setopt(v_curl, CURLOPT_NOSIGNAL, 1);
   curl_easy_setopt(v_curl, CURLOPT_FAILONERROR, 1);
@@ -334,7 +334,7 @@ void FSWeb::uploadReplay(const std::string &p_replayFilename,
                          const std::string &p_id_room,
                          const std::string &p_login,
                          const std::string &p_password,
-                         const std::string &p_url_to_transfert,
+                         const std::string &p_url_to_transfer,
                          WWWAppInterface *p_WebApp,
                          const ProxySettings *p_proxy_settings,
                          bool &p_msg_status,
@@ -375,7 +375,7 @@ void FSWeb::uploadReplay(const std::string &p_replayFilename,
 
   v_res = performPostCurl(v_curl,
                           form,
-                          p_url_to_transfert,
+                          p_url_to_transfer,
                           v_destinationFile,
                           p_WebApp,
                           p_proxy_settings);
@@ -418,7 +418,7 @@ void FSWeb::uploadReplay(const std::string &p_replayFilename,
 
 CURLcode FSWeb::performPostCurl(CURL *p_curl,
                                 HTTPForm &form,
-                                const std::string &p_url_to_transfert,
+                                const std::string &p_url_to_transfer,
                                 FILE *p_destinationFile,
                                 WWWAppInterface *p_WebApp,
                                 const ProxySettings *p_proxy_settings) {
@@ -430,11 +430,11 @@ CURLcode FSWeb::performPostCurl(CURL *p_curl,
   std::string v_proxy_server;
   std::string v_proxy_auth_str;
 
-  curl_easy_setopt(p_curl, CURLOPT_URL, p_url_to_transfert.c_str());
+  curl_easy_setopt(p_curl, CURLOPT_URL, p_url_to_transfer.c_str());
   curl_easy_setopt(p_curl, HTTP_FORM_TYPE, form.handle());
-  curl_easy_setopt(p_curl, CURLOPT_TIMEOUT, DEFAULT_TRANSFERT_TIMEOUT);
+  curl_easy_setopt(p_curl, CURLOPT_TIMEOUT, DEFAULT_TRANSFER_TIMEOUT);
   curl_easy_setopt(
-    p_curl, CURLOPT_CONNECTTIMEOUT, DEFAULT_TRANSFERT_CONNECT_TIMEOUT);
+    p_curl, CURLOPT_CONNECTTIMEOUT, DEFAULT_TRANSFER_CONNECT_TIMEOUT);
   curl_easy_setopt(p_curl, CURLOPT_WRITEDATA, p_destinationFile);
   curl_easy_setopt(p_curl, CURLOPT_WRITEFUNCTION, FSWeb::writeData);
   curl_easy_setopt(p_curl, CURLOPT_USERAGENT, v_www_agent.c_str());
@@ -498,7 +498,7 @@ void FSWeb::sendVote(const std::string &p_id_level,
                      bool p_adminMode,
                      const std::string &p_id_profile,
                      const std::string &p_password,
-                     const std::string &p_url_to_transfert,
+                     const std::string &p_url_to_transfer,
                      WWWAppInterface *p_WebApp,
                      const ProxySettings *p_proxy_settings,
                      bool &p_msg_status,
@@ -538,7 +538,7 @@ void FSWeb::sendVote(const std::string &p_id_level,
 
   v_res = performPostCurl(v_curl,
                           form,
-                          p_url_to_transfert,
+                          p_url_to_transfer,
                           v_destinationFile,
                           p_WebApp,
                           p_proxy_settings);
@@ -579,7 +579,7 @@ void FSWeb::sendVote(const std::string &p_id_level,
 
 void FSWeb::sendReport(const std::string &p_reportauthor,
                        const std::string &p_reportmsg,
-                       const std::string &p_url_to_transfert,
+                       const std::string &p_url_to_transfer,
                        WWWAppInterface *p_WebApp,
                        const ProxySettings *p_proxy_settings,
                        bool &p_msg_status,
@@ -613,7 +613,7 @@ void FSWeb::sendReport(const std::string &p_reportauthor,
 
   v_res = performPostCurl(v_curl,
                           form,
-                          p_url_to_transfert,
+                          p_url_to_transfer,
                           v_destinationFile,
                           p_WebApp,
                           p_proxy_settings);
@@ -692,7 +692,7 @@ void FSWeb::uploadDbSync(const std::string &p_dbSyncFilename,
                          const std::string &p_password,
                          const std::string &p_siteKey,
                          int p_dbSyncServer,
-                         const std::string &p_url_to_transfert,
+                         const std::string &p_url_to_transfer,
                          WWWAppInterface *p_WebApp,
                          const ProxySettings *p_proxy_settings,
                          bool &p_msg_status,
@@ -712,7 +712,7 @@ void FSWeb::uploadDbSync(const std::string &p_dbSyncFilename,
   char v_syncStr[256];
 
   LogInfo(std::string("Uploading dbsync " + p_dbSyncFilename + " to " +
-                      p_url_to_transfert)
+                      p_url_to_transfer)
             .c_str());
 
   /* open the file */
@@ -739,7 +739,7 @@ void FSWeb::uploadDbSync(const std::string &p_dbSyncFilename,
 
   v_res = performPostCurl(v_curl,
                           form,
-                          p_url_to_transfert,
+                          p_url_to_transfer,
                           v_destinationFile,
                           p_WebApp,
                           p_proxy_settings);
