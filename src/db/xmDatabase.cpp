@@ -129,8 +129,8 @@ bool xmDatabase::init(const std::string &i_dbFileUTF8,
   // if the previous value was not 0, force update
   std::string v_previousRequireUpdateAfterInit;
 
-  if (m_openingVersion >
-      0) { // the version 0 is special => xm_parameters still doesn't exist
+  // the version 0 is special (in that xm_parameters doesn't exist yet)
+  if (m_openingVersion > 0) {
     if (getXmParameterKey("requireUpdateAfterInit",
                           v_previousRequireUpdateAfterInit) == false) {
       m_requiredLevelsUpdateAfterInit = true;
@@ -184,14 +184,11 @@ bool xmDatabase::init(const std::string &i_dbFileUTF8,
     upgradeXmDbToVersion(m_openingVersion, i_profile, i_interface);
   }
 
-  /* check if gameDir and userDataDir are the same - otherwise, the computer
-   * probably changed */
   std::string v_oldGameDataDir = getXmDbGameDataDir();
   std::string v_oldUserDataDir = getXmDbUserDataDir();
-  bool v_areDirectoryOK = XMFS::areSamePath(i_gameDataDir, v_oldGameDataDir) &&
-                          XMFS::areSamePath(i_userDataDir, v_oldUserDataDir);
+  bool v_areDirectoryOK = XMFS::areSamePath(i_userDataDir, v_oldUserDataDir);
 
-  if ((v_areDirectoryOK == false && i_dbDirsCheck) ||
+  if ((!v_areDirectoryOK && i_dbDirsCheck) ||
       i_binPackCheckSum != getXmDbBinPackCheckSum()) {
     m_requiredLevelsUpdateAfterInit = true;
     m_requiredReplaysUpdateAfterInit = true;
@@ -209,7 +206,7 @@ bool xmDatabase::init(const std::string &i_dbFileUTF8,
   } else {
     // directory are not ok, but check directory is disabled => update the
     // directories anyway
-    if (v_areDirectoryOK == false) {
+    if (!v_areDirectoryOK) {
       // now, mark it as required in any case if case the player kills xmoto
       setXmParameterKey("requireUpdateAfterInit", "1");
 
