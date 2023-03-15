@@ -242,6 +242,7 @@ void StatePreplaying::sendFromMessageBox(const std::string &i_id,
     i_db->read_DB_free(v_result);
     m_requestForEnd = true;
     SysMessage::instance()->displayError(SYS_MSG_UNABLE_TO_BUILD_THE_REPORT);
+    return;
   }
 
   // read data
@@ -256,6 +257,7 @@ void StatePreplaying::sendFromMessageBox(const std::string &i_id,
   if (m_idlevel == "" || v_name == "" || v_sum == "") {
     m_requestForEnd = true;
     SysMessage::instance()->displayError(SYS_MSG_UNABLE_TO_BUILD_THE_REPORT);
+    return;
   }
 
   // send the message
