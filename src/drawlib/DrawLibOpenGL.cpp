@@ -439,6 +439,10 @@ void DrawLibOpenGL::unInit() {
     SDL_GL_DeleteContext(m_glContext);
     m_glContext = NULL;
   }
+  if (m_window) {
+    SDL_DestroyWindow(m_window);
+    m_window = NULL;
+  }
 }
 
 /*===========================================================================
