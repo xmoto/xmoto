@@ -18,6 +18,7 @@ ${APP_VERSION_PATCH}")
 include(CheckCXXCompilerFlag)
 include(CheckPrototypeDefinition)
 include(CheckSymbolExists)
+include(TestBigEndian)
 
 include(CMake/mxe.cmake)
 

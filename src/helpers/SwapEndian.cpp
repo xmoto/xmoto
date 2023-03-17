@@ -82,7 +82,7 @@ static void SerializedBikeStateNoSwap(SerializedBikeState &sbs) {
   ================
 */
 
-bool SwapEndian::bigendien = false;
+bool SwapEndian::bigendian = false;
 short (*SwapEndian::_BigShort)(short s) = NULL;
 short (*SwapEndian::_LittleShort)(short s) = NULL;
 int (*SwapEndian::_BigLong)(int l) = NULL;
@@ -99,7 +99,7 @@ void SwapEndian::Swap_Init() {
 
   // set the byte swapping variables in a portable manner
   if (*(short *)swaptest == 1) {
-    bigendien = false;
+    bigendian = false;
     _BigShort = ShortSwap;
     _LittleShort = ShortNoSwap;
     _BigLong = LongSwap;
@@ -111,7 +111,7 @@ void SwapEndian::Swap_Init() {
     _BigSerializedBikeState = SerializedBikeStateSwap;
     _LittleSerializedBikeState = SerializedBikeStateNoSwap;
   } else {
-    bigendien = true;
+    bigendian = true;
     _BigShort = ShortNoSwap;
     _LittleShort = ShortSwap;
     _BigLong = LongNoSwap;
