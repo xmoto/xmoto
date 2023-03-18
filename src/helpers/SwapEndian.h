@@ -1,13 +1,13 @@
 #ifndef __SWAPENDIAN_H__
 #define __SWAPENDIAN_H__
 
-#include "common/VCommon.h" // For XMOTO_LITTLE_ENDIAN
+#include "common/BuildConfig.h" // For XMOTO_BIG_ENDIAN
 #include "xmscene/Scene.h" // For SerializedBikeState
 #include <iterator>
 
 class SwapEndian {
 public:
-  static bool bigendien;
+  static bool bigendian;
 
   static void Swap_Init();
 
@@ -30,7 +30,7 @@ public:
     _LittleSerializedBikeState(sbs);
   }
 
-#ifdef XMOTO_LITTLE_ENDIAN
+#if !XMOTO_BIG_ENDIAN
   template<typename _T>
   static _T LittleIter(_T p, int) {
     return p;

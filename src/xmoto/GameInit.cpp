@@ -260,7 +260,7 @@ void GameApp::run_load(int nNumArgs, char **ppcArgs) {
 
   LogInfo(std::string("X-Moto " + XMBuild::getVersionString(true)).c_str());
   LogInfo("Started at %s", iso8601Date().c_str());
-  auto endianness = SwapEndian::bigendien ? "big" : "little";
+  auto endianness = SwapEndian::bigendian ? "big" : "little";
   LogInfo("System is %s-endian", endianness);
 
   LogInfo("User data   directory: %s", XMFS::getUserDir(FDT_DATA).c_str());

@@ -92,7 +92,7 @@ template void DBuffer::writeBuf(const char *, int);
 template void DBuffer::writeBuf(char *, int);
 
 void DBuffer::writeBuf_LE(const char *pcBuf, int nBufSize) {
-  if (SwapEndian::bigendien) {
+  if (SwapEndian::bigendian) {
     writeBuf(std::reverse_iterator<const char *>(pcBuf + nBufSize), nBufSize);
   } else {
     writeBuf(pcBuf, nBufSize);

@@ -56,4 +56,8 @@ Build configuration
 #define USE_GETTEXT 1
 #endif
 
+#ifndef XMOTO_BIG_ENDIAN
+#define XMOTO_BIG_ENDIAN 0
+#endif
+
 #endif
