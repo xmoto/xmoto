@@ -541,10 +541,13 @@ target_compile_definitions(xmoto PRIVATE CONFIGURE_DEFAULT_THEME=\"Classic\")
 
 if(CMAKE_SYSTEM_NAME MATCHES Windows)
   target_compile_definitions(xmoto PRIVATE
-    DEFAULT_ASIAN_TTF_FILE=\"Textures/Fonts/bkai00mp.ttf\")
+    ASIAN_TTF_FILE=\"Textures/Fonts/bkai00mp.ttf\")
+elseif(CMAKE_SYSTEM_NAME MATCHES FreeBSD)
+  target_compile_definitions(xmoto PRIVATE
+    ASIAN_TTF_FILE=\"/usr/local/share/fonts/TrueType/bkai00mp.ttf\")
 else()
   target_compile_definitions(xmoto PRIVATE
-    DEFAULT_ASIAN_TTF_FILE=\"/usr/share/fonts/truetype/arphic/bkai00mp.ttf\")
+    ASIAN_TTF_FILE=\"/usr/share/fonts/truetype/arphic/bkai00mp.ttf\")
 endif()
 
 # Handle localization
