@@ -448,6 +448,15 @@ target_include_directories(xmoto
 
   "${PROJECT_SOURCE_DIR}/src"
 
+  "$<$<NOT:${USE_SYSTEM_Lua}>:${PROJECT_SOURCE_DIR}/vendor/lua/lua>"
+
+  # Needed for files generated through configure_file()
+  "${PROJECT_BINARY_DIR}/src"
+)
+
+target_include_directories(xmoto
+  SYSTEM PRIVATE
+
   "${CURL_INCLUDE_DIR}"
   "${LIBXML2_INCLUDE_DIR}"
   "${Intl_INCLUDE_DIRS}"
@@ -458,10 +467,6 @@ target_include_directories(xmoto
   "${SDL2_TTF_INCLUDE_DIR}"
 
   "$<${USE_SYSTEM_Lua}:${LUA_INCLUDE_DIR}>"
-  "$<$<NOT:${USE_SYSTEM_Lua}>:${PROJECT_SOURCE_DIR}/vendor/lua/lua>"
-
-  # Needed for files generated through configure_file()
-  "${PROJECT_BINARY_DIR}/src"
 )
 
 target_link_libraries(xmoto PUBLIC
