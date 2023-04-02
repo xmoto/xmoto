@@ -75,9 +75,9 @@ msgstr[2] "%d файлов"
 #, c-format
 msgid "%d finished"
 msgid_plural "%d finished"
-msgstr[0] "%d раз закончен"
-msgstr[1] "%d раза закончен"
-msgstr[2] "%d раз закончен"
+msgstr[0] "%d финиш"
+msgstr[1] "%d финиша"
+msgstr[2] "%d финишей"
 
 #: src/xmoto/GameText.h:755
 #, c-format
@@ -93,17 +93,17 @@ msgstr "%d минут"
 #, c-format
 msgid "%d play"
 msgid_plural "%d plays"
-msgstr[0] "%d игра"
-msgstr[1] "%d игры"
-msgstr[2] "%d игр"
+msgstr[0] "%d заезд"
+msgstr[1] "%d заезда"
+msgstr[2] "%d заездов"
 
 #: src/xmoto/GameText.h:770
 #, c-format
 msgid "%d restart"
 msgid_plural "%d restarts"
-msgstr[0] "%d раз перезапущен"
-msgstr[1] "%d раза перезапущен"
-msgstr[2] "%d раз перезапущен"
+msgstr[0] "%d перезапуск"
+msgstr[1] "%d перезапуска"
+msgstr[2] "%d перезапусков"
 
 #: src/xmoto/GameText.h:772
 #, c-format
@@ -1299,7 +1299,7 @@ msgstr "Призрак %s"
 
 #: src/xmoto/GameText.h:1048
 msgid "Give your mind about this level"
-msgstr "Сообщите своё мнения об этом уровне"
+msgstr "Сообщите своё мнение об этом уровне"
 
 #: src/xmoto/GameText.h:1054
 msgid "Go !"
@@ -1767,7 +1767,7 @@ msgstr "Наиболее наигранные уровни"
 
 #: src/xmoto/GameText.h:569
 msgid "Motion blur ghost"
-msgstr "Размытие призрака"
+msgstr "Размывать призрака"
 
 #: src/xmoto/GameText.h:544
 msgid "Mouse"
@@ -2420,7 +2420,7 @@ msgstr "Запускать в окне"
 
 #: src/xmoto/GameText.h:985
 msgid "Run a dynamic zoom while playing"
-msgstr "Запустить динамическое приближение во время игры"
+msgstr "Динамически приближать камеру во время игры"
 
 #: src/xmoto/GameText.h:909
 msgid "Run selected replay"
@@ -3281,7 +3281,7 @@ msgstr "Использовать сведения о плохих уровнях
 
 #: src/xmoto/GameText.h:863
 msgid "Use crappy information from the website to update the crappy pack"
-msgstr "Скачать с сервера список плохих уровней для плохого пака"
+msgstr "Получать данные о плохих уровнях с веб-сайта для обновления набора неудачных"
 
 #: src/xmoto/GameText.h:735
 msgid "Use permanent console"
