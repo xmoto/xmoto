@@ -1,4 +1,4 @@
-name: CI
+name: SonarCloud
 
 on:
   push:
@@ -10,25 +10,19 @@ on:
 
 jobs:
   build:
+    name: SonarCloud
     runs-on: ubuntu-20.04
-
-    env:
-      CCACHE_MAXSIZE: 400M
-      CCACHE_DIR: ${{ github.workspace }}/.ccache
-      CCACHE_COMPRESS: 1
 
     steps:
       - uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+
+      - name: Install SonarCloud tools
+        uses: SonarSource/sonarcloud-github-c-cpp@v2
 
       - name: Install dependencies
         run: ./.github/workflows/deps/linux.sh
-
-      - name: Retrieve cache
-        uses: actions/cache@v3
-        with:
-          path: ${{ env.CCACHE_DIR }}
-          key: ${{ runner.os }}-ccache-${{ github.sha }}
-          restore-keys: ${{ runner.os }}-ccache-
 
       - name: Configure build
         run: |
@@ -36,9 +30,8 @@ jobs:
           cd build
 
           cmake \
-            -DCMAKE_C_COMPILER_LAUNCHER=ccache \
-            -DCMAKE_CXX_COMPILER_LAUNCHER=ccache \
             -DCMAKE_BUILD_TYPE=Debug \
+            -DCMAKE_EXPORT_COMPILE_COMMANDS=ON \
             -G Ninja \
             ..
 
@@ -47,4 +40,9 @@ jobs:
           cd build
           cmake --build .
 
-          ccache -s
+      - name: Run sonar-scanner
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+        run: |
+          sonar-scanner -X
