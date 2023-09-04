@@ -1,29 +1,22 @@
 name: SonarCloud
-
 on:
   push:
     branches:
-      - '*'
-  pull_request:
-    branches:
       - master
-
+  pull_request:
+    types: [opened, synchronize, reopened]
 jobs:
   build:
-    name: SonarCloud
+    name: Build and analyze
     runs-on: ubuntu-20.04
-
+    env:
+      BUILD_WRAPPER_OUT_DIR: build_wrapper_output_directory # Directory where build-wrapper output will be placed
     steps:
       - uses: actions/checkout@v3
         with:
-          fetch-depth: 0
-
-      - name: Install SonarCloud tools
+          fetch-depth: 0  # Shallow clones should be disabled for a better relevancy of analysis
+      - name: Install sonar-scanner and build-wrapper
         uses: SonarSource/sonarcloud-github-c-cpp@v2
-
-      - name: Install dependencies
-        run: ./.github/workflows/deps/linux.sh
-
       - name: Configure build
         run: |
           mkdir build
@@ -35,13 +28,14 @@ jobs:
             -G Ninja \
             ..
 
-      - name: Build
+      - name: Run build-wrapper
         run: |
+          build-wrapper-linux-x86-64 --out-dir ${{ env.BUILD_WRAPPER_OUT_DIR }}
           cd build
           cmake --build .
-
       - name: Run sonar-scanner
-        uses: SonarSource/sonarcloud-github-action@master
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}  # Needed to get PR information, if any
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+        run: |
+          sonar-scanner --define sonar.cfamily.build-wrapper-output="${{ env.BUILD_WRAPPER_OUT_DIR }}"
