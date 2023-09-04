@@ -11,7 +11,7 @@ jobs:
     name: Build and analyze
     runs-on: ubuntu-20.04
     env:
-      BUILD_WRAPPER_OUT_DIR: . # Directory where build-wrapper output will be placed
+      BUILD_WRAPPER_OUT_DIR: /home/runner/work/xmoto/xmoto/build # Directory where build-wrapper output will be placed
     steps:
       - uses: actions/checkout@v3
         with:
