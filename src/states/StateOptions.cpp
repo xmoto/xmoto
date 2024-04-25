@@ -2866,14 +2866,14 @@ void StateOptions::updateControlsList() {
 
     // player script keys
     for (unsigned int k = 0; k < MAX_SCRIPT_KEY_HOOKS; k++) {
-      std::ostringstream v_k;
-      v_k << (k + 1);
-
-      p = pList->addEntry(GAMETEXT_SCRIPTACTION + std::string(" ") + v_k.str());
-      p->Text.push_back(
-        Input::instance()->getSCRIPTACTION(i, k).toFancyString());
-      p->Text.push_back(
-        Input::instance()->getSCRIPTACTION(i, k).toString());
+      std::ostringstream keyName;
+      keyName
+        << GAMETEXT_SCRIPTACTION
+        << " "
+        << (k + 1);
+      p = pList->addEntry(keyName.str());
+      p->Text.push_back(Input::instance()->getSCRIPTACTION(i, k).toFancyString());
+      p->Text.push_back(Input::instance()->getSCRIPTACTION(i, k).toString());
     }
   }
 }
@@ -3236,20 +3236,28 @@ void StateOptions::sendFromMessageBox(const std::string &i_id,
 void StateOptions::setInputKey(const std::string &i_strKey,
                                const std::string &i_key) {
   for (int i = 0; i < INPUT_NB_PLAYERS; i++) {
-    std::string v_n = " " + std::to_string(i + 1);
+    std::string playerNumber = std::to_string(i + 1);
 
     // player keys
     for (unsigned int j = 0; j < INPUT_NB_PLAYERKEYS; j++) {
-      if (i_strKey == Input::instance()->getPlayerKeyHelp(j, i) + v_n) {
+      std::string keyName = Input::instance()->getPlayerKeyHelp(j, i) + " " + playerNumber;
+
+      if (i_strKey == keyName) {
         Input::instance()->setPlayerKey(j, i, XMKey(i_key));
       }
     }
 
     // player script keys
     for (unsigned int k = 0; k < MAX_SCRIPT_KEY_HOOKS; k++) {
-      std::string v_k = " " + std::to_string(k + 1);
+      std::ostringstream keyName;
+      keyName
+        << GAMETEXT_SCRIPTACTION
+        << " "
+        << (k + 1)
+        << " "
+        << playerNumber;
 
-      if (i_strKey == GAMETEXT_SCRIPTACTION + v_k + v_n) {
+      if (i_strKey == keyName.str()) {
         Input::instance()->setSCRIPTACTION(i, k, XMKey(i_key));
       }
     }

@@ -95,14 +95,13 @@ void Input::loadConfig(UserConfig *pConfig,
 
   /* Get settings for mode */
   for (unsigned int player = 0; player < INPUT_NB_PLAYERS; player++) {
-    std::ostringstream v_n;
-    v_n << (player + 1);
+    std::string playerNumber = std::to_string(player + 1);
 
     for (IFullKey &f : m_controls[player].playerKeys) {
       try {
         f.key =
           XMKey(pDb->config_getString(i_id_profile,
-                                      f.name + v_n.str(),
+                                      f.name + playerNumber,
                                       f.key.toString()));
       } catch (InvalidSystemKeyException &e) {
         /* keep default key */
@@ -117,11 +116,9 @@ void Input::loadConfig(UserConfig *pConfig,
     // script keys
     for (unsigned int k = 0; k < MAX_SCRIPT_KEY_HOOKS; k++) {
       IFullKey &f = m_controls[player].scriptActionKeys[k];
-      std::ostringstream v_k;
-      v_k << (k);
 
       v_key = pDb->config_getString(
-        i_id_profile, "KeyActionScript" + v_n.str() + "_" + v_k.str(), "");
+        i_id_profile, "KeyActionScript" + playerNumber + "_" + std::to_string(k), "");
       if (v_key != "") { // don't override the default key if there is nothing
         // in the config
         try {
@@ -407,10 +404,12 @@ bool Input::isANotGameSetKey(XMKey *i_xmkey) const {
     }
 
     for (unsigned int k = 0; k < MAX_SCRIPT_KEY_HOOKS; k++) {
-      if (m_controls[i].scriptActionKeys[k].key == *i_xmkey)
+      if (m_controls[i].scriptActionKeys[k].key == *i_xmkey) {
         return false;
+      }
     }
   }
+
   return true;
 }
 
