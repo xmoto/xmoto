@@ -3236,22 +3236,20 @@ void StateOptions::sendFromMessageBox(const std::string &i_id,
 void StateOptions::setInputKey(const std::string &i_strKey,
                                const std::string &i_key) {
   for (int i = 0; i < INPUT_NB_PLAYERS; i++) {
-    std::ostringstream v_n;
-    v_n << " " << (i + 1);
+    std::string v_n = " " + std::to_string(i + 1);
 
     // player keys
     for (unsigned int j = 0; j < INPUT_NB_PLAYERKEYS; j++) {
-      if (i_strKey ==
-          Input::instance()->getPlayerKeyHelp(j, i) + v_n.str()) {
+      if (i_strKey == Input::instance()->getPlayerKeyHelp(j, i) + v_n) {
         Input::instance()->setPlayerKey(j, i, XMKey(i_key));
       }
     }
 
     // player script keys
     for (unsigned int k = 0; k < MAX_SCRIPT_KEY_HOOKS; k++) {
-      std::ostringstream v_k;
-      v_k << (k + 1);
-      if (i_strKey == GAMETEXT_SCRIPTACTION + v_n.str() + " " + v_k.str()) {
+      std::string v_k = " " + std::to_string(k + 1);
+
+      if (i_strKey == GAMETEXT_SCRIPTACTION + v_k + v_n) {
         Input::instance()->setSCRIPTACTION(i, k, XMKey(i_key));
       }
     }
