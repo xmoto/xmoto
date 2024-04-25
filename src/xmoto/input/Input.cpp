@@ -324,22 +324,27 @@ void Input::saveConfig(UserConfig *pConfig,
 
     // player keys
     for (unsigned int j = 0; j < INPUT_NB_PLAYERKEYS; j++) {
-      if (m_controls[i].playerKeys[j].key.isDefined()) {
+      auto &playerKey = m_controls[i].playerKeys[j];
+      auto &key = playerKey.key;
+
+      if (key.isDefined() || isANotGameSetKey(&key)) {
         pDb->config_setString(i_id_profile,
-                              m_controls[i].playerKeys[j].name + v_n.str(),
-                              m_controls[i].playerKeys[j].key.toString());
+                              playerKey.name + v_n.str(),
+                              key.toString());
       }
     }
 
     // script keys
     for (unsigned int k = 0; k < MAX_SCRIPT_KEY_HOOKS; k++) {
-      if (m_controls[i].scriptActionKeys[k].key.isDefined()) {
+      auto &key = m_controls[i].scriptActionKeys[k].key;
+
+      if (key.isDefined() || isANotGameSetKey(&key)) {
         std::ostringstream v_k;
         v_k << (k);
 
         pDb->config_setString(i_id_profile,
                               "KeyActionScript" + v_n.str() + "_" + v_k.str(),
-                              m_controls[i].scriptActionKeys[k].key.toString());
+                              key.toString());
       }
     }
   }
