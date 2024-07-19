@@ -1,11 +1,11 @@
-# Alma Linux Dependencies to Install the game using cmake
-# just paste the below given dependencies in the terminal in the build folder of the xmoto like most probably /Downloads/xmoto-0.6.2/build 
-# in the build folder open the terminal 
-# paste the given below dependencies 
-# then cmake .. to check the dependencies resolved or not 
-# then cmake to compile 
-# then make install 
-# @DEV you may add it to the wiki as per your liking i dont know how to do that cant see the add page option.
+# Alma Linux Dependencies
+` just paste the below given dependencies in the terminal in the build folder of the xmoto like most probably /Downloads/xmoto-0.6.2/build `
+` in the build folder open the terminal `
+` paste the given below dependencies `
+` then cmake .. to check the dependencies resolved or not `
+` then cmake to compile `
+` then make install `
+` @DEV you may add it to the wiki as per your liking i dont know how to do that cant see the add page option.`
 
 sudo dnf install -y \
     cmake \
