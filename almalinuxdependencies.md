@@ -5,6 +5,7 @@
 # then cmake .. to check the dependencies resolved or not 
 # then cmake to compile 
 # then make install 
+# @DEV you may add it to the wiki as per your liking i dont know how to do that cant see the add page option.
 
 sudo dnf install -y \
     cmake \
