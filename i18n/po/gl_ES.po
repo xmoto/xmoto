@@ -3,12 +3,13 @@
 #
 # Adrián Chaves Fernández <adriyetichaves@gmail.com>, 2010.
 # Adrián Chaves Fernández (Gallaecio) <adriyetichaves@gmail.com>, 2011.
+# Anónimo engadidas liñas faltantes 2024.
 msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-03-03 11:38+0200\n"
-"PO-Revision-Date: 2011-01-18 23:54+0100\n"
+"PO-Revision-Date: 2024-07-23 20:18+0200\n"
 "Last-Translator: Adrián Chaves Fernández (Gallaecio) <adriyetichaves@gmail."
 "com>\n"
 "Language-Team: Galician <proxecto@trasno.net>\n"
@@ -17,7 +18,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Lokalize 1.2\n"
+"X-Generator: Poedit 3.4.4\n"
 
 #: src/xmoto/GameText.h:648
 msgid ""
@@ -48,32 +49,32 @@ msgid "# Levels"
 msgstr "# Niveis"
 
 #: src/xmoto/GameText.h:766
-#, fuzzy, c-format
+#, c-format
 msgid "%d death"
 msgid_plural "%d deaths"
 msgstr[0] "%d morte"
-msgstr[1] "%d morte"
+msgstr[1] "%d mortes"
 
 #: src/xmoto/GameText.h:763
-#, fuzzy, c-format
+#, c-format
 msgid "%d different level"
 msgid_plural "%d different levels"
 msgstr[0] "%d nivel distinto"
-msgstr[1] "%d nivel distinto"
+msgstr[1] "%d niveis distintos"
 
 #: src/xmoto/GameText.h:753
 #, c-format
 msgid "%d file"
 msgid_plural "%d files"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "%d ficheiro"
+msgstr[1] "%d ficheiros"
 
 #: src/xmoto/GameText.h:768
-#, fuzzy, c-format
+#, c-format
 msgid "%d finished"
 msgid_plural "%d finished"
 msgstr[0] "%d rematada"
-msgstr[1] "%d rematada"
+msgstr[1] "%d rematadas"
 
 #: src/xmoto/GameText.h:755
 #, c-format
@@ -86,18 +87,18 @@ msgid "%d minutes"
 msgstr "%d minutos"
 
 #: src/xmoto/GameText.h:765
-#, fuzzy, c-format
+#, c-format
 msgid "%d play"
 msgid_plural "%d plays"
 msgstr[0] "%d partida"
-msgstr[1] "%d partida"
+msgstr[1] "%d partidas"
 
 #: src/xmoto/GameText.h:770
-#, fuzzy, c-format
+#, c-format
 msgid "%d restart"
 msgid_plural "%d restarts"
 msgstr[0] "%d reiniciada"
-msgstr[1] "%d reiniciada"
+msgstr[1] "%d reiniciadas"
 
 #: src/xmoto/GameText.h:772
 #, c-format
@@ -105,27 +106,27 @@ msgid "%d seconds"
 msgstr "%d segundos"
 
 #: src/xmoto/GameText.h:117
-#, fuzzy, c-format
+#, c-format
 msgid "%i joystick found"
 msgid_plural "%i joysticks found"
 msgstr[0] "Atopouse %i mando"
-msgstr[1] "Atopouse %i mando"
+msgstr[1] "Atoparonse %i mandos"
 
 #: src/xmoto/GameText.h:581
-#, fuzzy, c-format
+#, c-format
 msgid "%i new or updated level available. Download now ?"
 msgid_plural "%i new or updated levels available. Download now ?"
 msgstr[0] ""
 "Hai %i nivel novo ou actualizado dispoñible. Quere descargalo agora?"
 msgstr[1] ""
-"Hai %i nivel novo ou actualizado dispoñible. Quere descargalo agora?"
+"Hai %i niveis novos ou actualizados dispoñibles. Quere descargalos agora?"
 
 #: src/xmoto/GameText.h:624
-#, fuzzy, c-format
+#, c-format
 msgid "%i player"
 msgid_plural "%i players"
 msgstr[0] "%i xogador"
-msgstr[1] "%i xogador"
+msgstr[1] "%i xogadores"
 
 #: src/xmoto/GameText.h:802
 #, c-format
@@ -311,14 +312,14 @@ msgstr "Calquera que colaborase dun ou doutro xeito"
 
 #: src/xmoto/GameText.h:1072
 msgid "Are you sure you want to clear the level cache?"
-msgstr ""
+msgstr "Estás seguro de que queres borrar a caché de niveis?"
 
 #: src/xmoto/GameText.h:89
 #, c-format
 msgid "Are you sure you want to delete %i replay?"
 msgid_plural "Are you sure you want to delete %i replays?"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "Seguro que queres borrar %i repetición?"
+msgstr[1] "Seguro que queres borrar %i repeticións?"
 
 #: src/xmoto/GameText.h:667
 msgid "Are you sure you want to reset config to defaults ?"
@@ -434,7 +435,7 @@ msgstr "Procura niveis dispoñibles para ti"
 
 #: src/xmoto/GameText.h:520
 msgid "Built-in"
-msgstr ""
+msgstr "Integrado"
 
 #: src/xmoto/GameText.h:832
 msgid "Built-in and stand-alone external levels"
@@ -454,18 +455,18 @@ msgstr "Por duración"
 
 #: src/xmoto/GameText.h:1075
 msgid "Cache file deleted"
-msgstr ""
+msgstr "Ficheiro de caché eliminado"
 
 #: src/xmoto/GameText.h:64
 msgid "Camera Active Zoom"
 msgstr "Proximidade activa da cámara"
 
 #: src/xmoto/GameText.h:1242
-#, fuzzy, c-format
+#, c-format
 msgid "Can't find a highscore in the next %i level"
 msgid_plural "Can't find a highscore in the next %i levels"
-msgstr[0] "Non se pode atopar un récord no seguinte nivel"
-msgstr[1] "Non se pode atopar un récord no seguinte nivel"
+msgstr[0] "Non se pode atopar un récord no seguinte nivel %i"
+msgstr[1] "Non se pode atopar un récord nos seguintes niveis %i"
 
 #: src/xmoto/GameText.h:719
 msgid ""
@@ -495,7 +496,7 @@ msgstr "Cambiar a dirección"
 
 #: src/xmoto/GameText.h:448
 msgid "Change mirror mode"
-msgstr "cambiar ao modo espello"
+msgstr "Cambiar ao modo espello"
 
 #: src/xmoto/GameText.h:838
 msgid "Change player profile"
@@ -592,7 +593,7 @@ msgstr "Limpar"
 
 #: src/xmoto/GameText.h:1069 src/xmoto/GameText.h:1077
 msgid "Clear level cache"
-msgstr ""
+msgstr "Limpar a caché dos niveis"
 
 #: src/xmoto/GameText.h:992
 msgid "Click to select screen resolution"
@@ -680,7 +681,7 @@ msgstr "Conectarse"
 
 #: src/xmoto/GameText.h:805
 msgid "Connect to/disconnect from the server"
-msgstr ""
+msgstr "Conectar/desconectar do servidor"
 
 #: src/xmoto/GameText.h:1102
 msgid "Connect/disconnect the client to the server"
@@ -708,7 +709,7 @@ msgstr "Controis"
 
 #: src/xmoto/GameText.h:519
 msgid "Copy path"
-msgstr ""
+msgstr "Copiar camiño"
 
 #: src/xmoto/GameText.h:1166
 msgid "Crappiest X-Moto levels according to the web votes"
@@ -772,11 +773,13 @@ msgstr "Borrar"
 
 #: src/xmoto/GameText.h:1074
 msgid "Delete cache file"
-msgstr ""
+msgstr "Eliminar o ficheiro da caché"
 
 #: src/xmoto/GameText.h:1079
 msgid "Delete cached level file from disk to force a clean state (safe)"
 msgstr ""
+"Eliminar o ficheiro de nivel caché do disco para forzar un estado limpo "
+"(seguro)"
 
 #: src/xmoto/GameText.h:263
 msgid "Delete from blacklist"
@@ -816,7 +819,7 @@ msgstr "Conexión directa"
 
 #: src/xmoto/GameText.h:56
 msgid "Disable Animations"
-msgstr "Desactivar as animacións."
+msgstr "Desactivar as animacións"
 
 #: src/xmoto/GameText.h:945
 msgid "Disable block animations (if X-Moto runs slowly)"
@@ -878,7 +881,7 @@ msgstr ""
 
 #: src/xmoto/GameText.h:526
 msgid "Do you want to send a report to website administrators ?"
-msgstr ""
+msgstr "Queres enviar un informe aos administradores do sitio web?"
 
 #: src/xmoto/GameText.h:746
 #, c-format
@@ -1098,7 +1101,7 @@ msgstr "Non se puideron buscar novos niveis."
 
 #: src/xmoto/GameText.h:524
 msgid "Failed to copy to clipboard"
-msgstr ""
+msgstr "Non se puido copiar ao portapapeis"
 
 #: src/xmoto/GameText.h:303
 msgid "Failed to download high-scores."
@@ -1110,7 +1113,7 @@ msgstr "Non se puideron descargar os niveis."
 
 #: src/xmoto/GameText.h:305
 msgid "Failed to download the replay."
-msgstr "non se puido descargar a repetición."
+msgstr "Non se puido descargar a repetición."
 
 #: src/xmoto/GameText.h:306
 msgid "Failed to download the rooms list."
@@ -1336,11 +1339,11 @@ msgstr "Agochar as pantasmas"
 
 #: src/xmoto/GameText.h:58
 msgid "Hide sprites from the minimap"
-msgstr ""
+msgstr "Ocultar sprites do minimapa"
 
 #: src/xmoto/GameText.h:57
 msgid "Hide sprites in ugly mode"
-msgstr ""
+msgstr "Ocultar sprites no modo feo"
 
 #: src/xmoto/GameText.h:490
 msgid "High"
@@ -1392,6 +1395,17 @@ msgid ""
 "Also visit https://xmoto.tuxfamily.org to make sure you've\n"
 "got the latest version."
 msgstr ""
+"Nota importante!\n"
+"\n"
+"Esta é unha versión en desenvolvemento de X-Moto!\n"
+"Todo tipo de comentarios son moi apreciados, polo que o xogo\n"
+"pode mellorar.\n"
+"Correo de erros, ideas, comentarios, solicitudes de funcións, correos de "
+"odio, etc\n"
+"a xmoto@tuxfamily.org\n"
+"\n"
+"Tamén visita https://xmoto.tuxfamily.org para asegurarte de que o fixeches\n"
+"obtivo a última versión."
 
 #: src/xmoto/GameText.h:1086
 msgid "Impossible"
@@ -1415,7 +1429,7 @@ msgstr "Aumentar ou reducir a calidade dos niveis seleccionados"
 
 #: src/xmoto/GameText.h:496
 msgid "Info"
-msgstr ""
+msgstr "Info"
 
 #: src/xmoto/GameText.h:684
 msgid "Info..."
@@ -1530,11 +1544,11 @@ msgstr "A repetición necesita o nivel “%s”!"
 
 #: src/xmoto/GameText.h:517
 msgid "Level File"
-msgstr ""
+msgstr "Ficheiro de nivel"
 
 #: src/xmoto/GameText.h:518
 msgid "Level ID"
-msgstr ""
+msgstr "ID de nivel"
 
 #: src/xmoto/GameText.h:515
 msgid "Level Info"
@@ -1554,7 +1568,7 @@ msgstr "Grupos de niveis"
 
 #: src/xmoto/GameText.h:1070
 msgid "Level cache cleared"
-msgstr ""
+msgstr "Borrouse a caché de nivel"
 
 #: src/xmoto/GameText.h:1191
 #, c-format
@@ -1702,7 +1716,7 @@ msgstr "Mestre"
 
 #: src/xmoto/GameText.h:543
 msgid "Max Framerate"
-msgstr ""
+msgstr "Velocidade de fotogramas máxima"
 
 #: src/xmoto/GameText.h:612
 msgid "Medals"
@@ -1795,7 +1809,7 @@ msgstr "Rede"
 
 #: src/xmoto/GameText.h:790
 msgid "Network admin console"
-msgstr ""
+msgstr "Consola de administración de rede"
 
 #: src/xmoto/GameText.h:797
 msgid "Network error: you're disconnected"
@@ -2025,7 +2039,7 @@ msgstr "Abrir o menú de opcións"
 
 #: src/xmoto/GameText.h:83
 msgid "Open private chat dialog box"
-msgstr ""
+msgstr "Abre o cadro de diálogo de chat privado"
 
 #: src/xmoto/GameText.h:607
 msgid "Operation completed"
@@ -2194,6 +2208,8 @@ msgid ""
 "Preselect the retry button when dying or finishing a level,\n"
 "and allow levels to be restarted with 'return to checkpoint' key"
 msgstr ""
+"Preselecciona o botón Reintentar ao morrer ou rematar un nivel,\n"
+"e permite que os niveis se reinicien coa tecla \"volver ao punto de control\""
 
 #: src/xmoto/GameText.h:632
 #, c-format
@@ -2267,6 +2283,9 @@ msgid ""
 "https://xmoto.tuxfamily.org\n"
 "for more information."
 msgstr ""
+"Le o ficheiro README ou consulta o sitio web en\n"
+"https://xmoto.tuxfamily.org\n"
+"para máis información."
 
 #: src/xmoto/GameText.h:1082
 msgid "Really easy"
@@ -2413,14 +2432,12 @@ msgid "STATS"
 msgstr "ESTATÍSTICAS"
 
 #: src/xmoto/GameText.h:675
-#, fuzzy
 msgid "Safemode Disabled"
-msgstr "Desactivouse o modo do tema visual"
+msgstr "Desactivouse o modo seguro"
 
 #: src/xmoto/GameText.h:674
-#, fuzzy
 msgid "Safemode Enabled"
-msgstr "Activouse o modo do tema visual"
+msgstr "Activouse o modo seguro"
 
 #: src/xmoto/GameText.h:676
 msgid "Save"
@@ -2505,11 +2522,11 @@ msgstr "Enviar o informe ao servidor web"
 
 #: src/xmoto/GameText.h:527
 msgid "Sending the report..."
-msgstr ""
+msgstr "Enviando informe..."
 
 #: src/xmoto/GameText.h:528
 msgid "Sending the vote..."
-msgstr ""
+msgstr "Enviando a votación..."
 
 #: src/xmoto/GameText.h:780
 msgid "Server"
@@ -2534,6 +2551,7 @@ msgstr "Servidor ao que queres conectarte"
 #: src/xmoto/GameText.h:869
 msgid "Set the maximum framerate the game can run at"
 msgstr ""
+"Establece a velocidade de fotogramas máxima á que se pode executar o xogo"
 
 #: src/xmoto/GameText.h:1085
 msgid "Several difficulties"
@@ -2577,7 +2595,7 @@ msgstr "Amosar a consola"
 
 #: src/xmoto/GameText.h:61
 msgid "Show game information in the console"
-msgstr "Amosar información sobre o xogo no terminal."
+msgstr "Amosar información sobre o xogo no terminal"
 
 #: src/xmoto/GameText.h:911
 msgid "Show helpful help strings such as this one"
@@ -2589,7 +2607,7 @@ msgstr "Amosar información sobre os xogadores e os niveis xogados no terminal"
 
 #: src/xmoto/GameText.h:487
 msgid "Show level info"
-msgstr ""
+msgstr "Mostrar información de nivel"
 
 #: src/xmoto/GameText.h:293
 msgid "Show next medal in-game"
@@ -2767,20 +2785,19 @@ msgstr "Cambiar o modo de cualidade gráfica"
 
 #: src/xmoto/GameText.h:701
 msgid "Switch highscore information"
-msgstr ""
+msgstr "Cambiar a información de puntuación máis alta"
 
 #: src/xmoto/GameText.h:700
 msgid "Switch net game mode"
-msgstr ""
+msgstr "Cambia o modo de xogo en rede"
 
 #: src/xmoto/GameText.h:1065
 msgid "Switch player"
 msgstr "Cambiar de xogador"
 
 #: src/xmoto/GameText.h:705
-#, fuzzy
 msgid "Switch safe mode"
-msgstr "Cambiar o modo gráfico"
+msgstr "Cambiar o modo seguro"
 
 #: src/xmoto/GameText.h:1066
 msgid "Switch trackingshot mode"
@@ -2892,7 +2909,7 @@ msgstr ""
 
 #: src/xmoto/GameText.h:523
 msgid "The level failed while loading with the following error :"
-msgstr ""
+msgstr "O nivel fallou ao cargar co seguinte erro:"
 
 #: src/xmoto/GameText.h:1202
 msgid "The long levels (1 minute to 2 minutes)"
@@ -2968,7 +2985,7 @@ msgstr "Hai erros no nivel, non te sorprendas se non se pode xogar ben!"
 
 #: src/xmoto/GameText.h:92
 msgid "There are no replays to clean"
-msgstr ""
+msgstr "Non hai repeticións que limpar"
 
 #: src/xmoto/LevelsText.h:43
 msgid ""
@@ -3132,7 +3149,7 @@ msgstr "Activouse o modo moi feo"
 
 #: src/xmoto/GameText.h:1245
 msgid "Unable to build the report"
-msgstr ""
+msgstr "Non se puido crear o informe"
 
 #: src/xmoto/GameText.h:796
 msgid "Unable to connect on the server"
@@ -3272,7 +3289,7 @@ msgstr ""
 
 #: src/xmoto/GameText.h:59
 msgid "Use theme cursor"
-msgstr ""
+msgstr "Usa o cursor do tema"
 
 #: src/xmoto/GameText.h:923
 msgid "Use these settings"
@@ -3395,7 +3412,7 @@ msgstr "Ao iniciar un nivel cunha pantasma, amosar o nome da pantasma"
 
 #: src/xmoto/GameText.h:947
 msgid "Whether to show the theme cursor or the system cursor"
-msgstr ""
+msgstr "Indica se mostrar o cursor do tema ou o cursor do sistema"
 
 #: src/xmoto/GameText.h:925
 msgid "Write the IP address or host name of proxy server to use"
@@ -3439,11 +3456,11 @@ msgid "X-Moto levels you never played"
 msgstr "Niveis do X-Moto aos que nunca xogaches"
 
 #: src/xmoto/GameText.h:761
-#, fuzzy, c-format
+#, c-format
 msgid "X-Moto started %d time"
 msgid_plural "X-Moto started %d times"
-msgstr[0] "O X-Moto iniciouse unha vez"
-msgstr[1] "O X-Moto iniciouse unha vez"
+msgstr[0] "O X-Moto iniciouse %d vez"
+msgstr[1] "O X-Moto iniciouse %d veces"
 
 #: src/xmoto/GameText.h:242
 msgid ""
@@ -3656,11 +3673,11 @@ msgid "none"
 msgstr "nada"
 
 #: src/xmoto/GameText.h:757
-#, fuzzy, c-format
+#, c-format
 msgid "only %i"
 msgid_plural "only %i"
 msgstr[0] "só %i"
-msgstr[1] "só %i"
+msgstr[1] "sós %i"
 
 #: src/xmoto/GameText.h:120
 msgid "right"
