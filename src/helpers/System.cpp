@@ -40,10 +40,6 @@ std::vector<std::string> *System::getDisplayModes(int windowed) {
     { 800, 600 }, { 1024, 768 }, { 1280, 1024 }, { 1600, 1200 }
   });
 
-  /* Always use the fullscreen flags to be sure to
-     always get a result (no any modes available like in windowed) */
-  //nFlags = SDL_WINDOW_OPENGL | SDL_WINDOW_FULLSCREEN;
-
   const int displayIndex = 0;
   int displayModeCount = 0;
   if ((displayModeCount = SDL_GetNumDisplayModes(displayIndex)) < 1) {

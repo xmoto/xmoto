@@ -117,7 +117,17 @@ bool Sound::isInitialized() {
 void Sound::update(void) {}
 
 int64_t Sound::RWops_size(SDL_RWops *context) {
-  return -1;
+  FileHandle *pf = (FileHandle *)context->hidden.unknown.data1;
+  int length = XMFS::getLength(pf);
+
+  // This is technically valid, but the stb vorbis library
+  // optionally used by SDL_mixer may not be able to decode the file
+  // if the length can't be determined for whatever reason
+  if (length < 0) {
+    return -1;
+  }
+
+  return static_cast<int64_t>(length);
 }
 
 int64_t Sound::RWops_seek(SDL_RWops *context, int64_t offset, int whence) {
