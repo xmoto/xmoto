@@ -1,4 +1,4 @@
-/* Copyright (c) 2007 Scott Lembcke
+/* Copyright (c) 2013 Scott Lembcke and Howling Moon Software
  * 
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -18,29 +18,28 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
- 
-#include <math.h>
 
-#include "chipmunk.h"
+/// @defgroup cpGearJoint cpGearJoint
+/// @{
 
-cpVect
-cpBBClampVect(const cpBB bb, const cpVect v)
-{
-	cpFloat x = cpfmin(cpfmax(bb.l, v.x), bb.r);
-	cpFloat y = cpfmin(cpfmax(bb.b, v.y), bb.t);
-	return cpv(x, y);
-}
+/// Check if a constraint is a damped rotary springs.
+CP_EXPORT cpBool cpConstraintIsGearJoint(const cpConstraint *constraint);
 
-cpVect
-cpBBWrapVect(const cpBB bb, const cpVect v)
-{
-	cpFloat ix = fabsf(bb.r - bb.l);
-	cpFloat modx = fmodf(v.x - bb.l, ix);
-	cpFloat x = (modx > 0.0f) ? modx : modx + ix;
-	
-	cpFloat iy = fabsf(bb.t - bb.b);
-	cpFloat mody = fmodf(v.y - bb.b, iy);
-	cpFloat y = (mody > 0.0f) ? mody : mody + iy;
-	
-	return cpv(x + bb.l, y + bb.b);
-}
+/// Allocate a gear joint.
+CP_EXPORT cpGearJoint* cpGearJointAlloc(void);
+/// Initialize a gear joint.
+CP_EXPORT cpGearJoint* cpGearJointInit(cpGearJoint *joint, cpBody *a, cpBody *b, cpFloat phase, cpFloat ratio);
+/// Allocate and initialize a gear joint.
+CP_EXPORT cpConstraint* cpGearJointNew(cpBody *a, cpBody *b, cpFloat phase, cpFloat ratio);
+
+/// Get the phase offset of the gears.
+CP_EXPORT cpFloat cpGearJointGetPhase(const cpConstraint *constraint);
+/// Set the phase offset of the gears.
+CP_EXPORT void cpGearJointSetPhase(cpConstraint *constraint, cpFloat phase);
+
+/// Get the angular distance of each ratchet.
+CP_EXPORT cpFloat cpGearJointGetRatio(const cpConstraint *constraint);
+/// Set the ratio of a gear joint.
+CP_EXPORT void cpGearJointSetRatio(cpConstraint *constraint, cpFloat ratio);
+
+/// @}

@@ -1,4 +1,4 @@
-/* Copyright (c) 2007 Scott Lembcke
+/* Copyright (c) 2013 Scott Lembcke and Howling Moon Software
  * 
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -18,46 +18,26 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
- 
-#include "stdio.h"
-#include "math.h"
 
-#include "chipmunk.h"
+/// @defgroup cpSimpleMotor cpSimpleMotor
+/// @{
 
-cpFloat
-cpvlength(const cpVect v)
-{
-	return sqrtf( cpvdot(v, v) );
-}
+/// Opaque struct type for damped rotary springs.
+typedef struct cpSimpleMotor cpSimpleMotor;
 
-cpFloat
-cpvlengthsq(const cpVect v)
-{
-	return cpvdot(v, v);
-}
+/// Check if a constraint is a damped rotary springs.
+CP_EXPORT cpBool cpConstraintIsSimpleMotor(const cpConstraint *constraint);
 
-cpVect
-cpvnormalize(const cpVect v)
-{
-	return cpvmult( v, 1.0f/cpvlength(v) );
-}
+/// Allocate a simple motor.
+CP_EXPORT cpSimpleMotor* cpSimpleMotorAlloc(void);
+/// initialize a simple motor.
+CP_EXPORT cpSimpleMotor* cpSimpleMotorInit(cpSimpleMotor *joint, cpBody *a, cpBody *b, cpFloat rate);
+/// Allocate and initialize a simple motor.
+CP_EXPORT cpConstraint* cpSimpleMotorNew(cpBody *a, cpBody *b, cpFloat rate);
 
-cpVect
-cpvforangle(const cpFloat a)
-{
-	return cpv(cos(a), sin(a));
-}
+/// Get the rate of the motor.
+CP_EXPORT cpFloat cpSimpleMotorGetRate(const cpConstraint *constraint);
+/// Set the rate of the motor.
+CP_EXPORT void cpSimpleMotorSetRate(cpConstraint *constraint, cpFloat rate);
 
-cpFloat
-cpvtoangle(const cpVect v)
-{
-	return atan2(v.x, v.y);
-}
-
-char*
-cpvstr(const cpVect v)
-{
-	static char str[256];
-	sprintf(str, "(% .3f, % .3f)", v.x, v.y);
-	return str;
-}
+/// @}
