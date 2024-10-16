@@ -25,7 +25,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
 class cpSpace;
 class cpBody;
-class cpJoint;
+class cpConstraint;
 class cpShape;
 class PlayerLocalBiker;
 class Biker;
@@ -61,7 +61,7 @@ private:
   std::vector<cpBody *> m_af;
   std::vector<cpBody *> m_wb; // wheel bodies
   std::vector<cpBody *> m_wf;
-  std::vector<cpJoint *> m_joints;
+  std::vector<cpConstraint *> m_joints;
   std::vector<cpShape *> m_shapes;
 };
 
