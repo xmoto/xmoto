@@ -157,12 +157,8 @@ jobs:
           mkdir build
           cd build
 
-          # CMAKE_FIND_FRAMEWORK=LAST needs to be set to fix
-          # a header/dylib version mismatch caused by Mono being present:
-          # https://gitlab.kitware.com/cmake/cmake/-/issues/18921#note_601123
           cmake \
             -DCMAKE_BUILD_TYPE=Release \
-            -DCMAKE_FIND_FRAMEWORK=LAST \
             -DBUILD_MACOS_BUNDLE=ON \
             -G Ninja \
             ..
