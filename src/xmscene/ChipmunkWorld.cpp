@@ -24,7 +24,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "PhysicsSettings.h"
 #include "helpers/Log.h"
 #include "xmoto/PhysSettings.h"
-#include <chipmunk.h>
+#include <chipmunk/chipmunk.h>
 
 #define CHIPMUNK_ITERATION 8
 
@@ -35,7 +35,7 @@ ChipmunkWorld::ChipmunkWorld(PhysicsSettings *i_physicsSettings,
 
 ChipmunkWorld::~ChipmunkWorld() {
   for (size_t i = 0;i < m_joints.size();i++) {
-    cpJointFree(m_joints[i]);
+    cpConstraintFree(m_joints[i]);
   }
   for (size_t i = 0;i < m_shapes.size();i++) {
     cpShapeFree(m_shapes[i]);
@@ -60,7 +60,7 @@ ChipmunkWorld::~ChipmunkWorld() {
 }
 
 void ChipmunkWorld::setGravity(float i_x, float i_y) {
-  m_space->gravity = cpv(i_x * CHIP_GRAVITY_RATIO, i_y * CHIP_GRAVITY_RATIO);
+  cpSpaceSetGravity(m_space, cpv(i_x * CHIP_GRAVITY_RATIO, i_y * CHIP_GRAVITY_RATIO));
 }
 
 void ChipmunkWorld::initPhysics(PhysicsSettings *i_physicsSettings,
@@ -69,19 +69,14 @@ void ChipmunkWorld::initPhysics(PhysicsSettings *i_physicsSettings,
   float v_dm;
   int v_count;
 
-  cpInitChipmunk();
-
   cpSpace *space = cpSpaceNew();
   setSpace(space);
 
-  cpResetShapeIdCounter();
-
   // do need to resolve gravity between ODE and Chipmunk
-  space->gravity =
-    cpv(0.0f, -i_physicsSettings->WorldGravity() * CHIP_GRAVITY_RATIO);
+  cpSpaceSetGravity(space, cpv(0.0f, -i_physicsSettings->WorldGravity() * CHIP_GRAVITY_RATIO));
 
   // static body to 'hang' the ground segments on -- never moves
-  staticBody = cpBodyNew(INFINITY, INFINITY);
+  staticBody = cpBodyNewStatic();
   setBody(staticBody);
 
   // The spatial hashes used by Chipmunk’s collision detection are fairly size
@@ -99,7 +94,7 @@ void ChipmunkWorld::initPhysics(PhysicsSettings *i_physicsSettings,
   v_count = i_level->nbPhysicBlocks() * 10;
 
   resizeHashes(v_dm, v_count);
-  m_space->iterations = CHIPMUNK_ITERATION;
+  cpSpaceSetIterations(m_space, CHIPMUNK_ITERATION);
 
   LogInfo("Chipmunk init : hash (dimension=%.2f, count=%i), iteration=%i",
           v_dm,
@@ -109,8 +104,7 @@ void ChipmunkWorld::initPhysics(PhysicsSettings *i_physicsSettings,
 
 void ChipmunkWorld::resizeHashes(float i_dim, unsigned int i_size) {
   if (m_space != NULL) {
-    cpSpaceResizeActiveHash(m_space, i_dim, i_size);
-    cpSpaceResizeStaticHash(m_space, i_dim, i_size);
+    cpSpaceUseSpatialHash(m_space, i_dim, i_size);
   }
 }
 
@@ -153,8 +147,8 @@ void ChipmunkWorld::addPlayer(PlayerLocalBiker *i_biker) {
   cpBody *v_wb;
   cpBody *v_wf;
 
-  cpJoint *v_jb;
-  cpJoint *v_jf;
+  cpConstraint *v_jb;
+  cpConstraint *v_jf;
 
   // Wheel mass.. as above ODE/Chipmunk
   cpFloat mass = CHIP_WHEEL_MASS;
@@ -165,8 +159,8 @@ void ChipmunkWorld::addPlayer(PlayerLocalBiker *i_biker) {
     cpvzero);
   cpShape *shape;
 
-  v_ab = cpBodyNew(INFINITY, INFINITY);
-  v_af = cpBodyNew(INFINITY, INFINITY);
+  v_ab = cpBodyNewKinematic();
+  v_af = cpBodyNewKinematic();
 
   // Create the wheels which will be ODE's surrogates in Chipmunk
   v_wb = cpBodyNew(mass, wheel_moment);
@@ -176,11 +170,11 @@ void ChipmunkWorld::addPlayer(PlayerLocalBiker *i_biker) {
   cpSpaceAddBody(m_space, v_wb);
   cpSpaceAddBody(m_space, v_wf);
 
-  // Pin-joint the wheels to the anchors
-  v_jb = cpPinJointNew(v_ab, v_wb, cpvzero, cpvzero);
-  v_jf = cpPinJointNew(v_af, v_wf, cpvzero, cpvzero);
-  cpSpaceAddJoint(m_space, v_jb);
-  cpSpaceAddJoint(m_space, v_jf);
+  // Pivot-joint the wheels to the anchors
+  v_jb = cpPivotJointNew(v_ab, v_wb, cpvzero);
+  v_jf = cpPivotJointNew(v_af, v_wf, cpvzero);
+  cpSpaceAddConstraint(m_space, v_jb);
+  cpSpaceAddConstraint(m_space, v_jf);
 
   // creating collision shapes for the wheels
   //   change to collision group 1
@@ -189,9 +183,11 @@ void ChipmunkWorld::addPlayer(PlayerLocalBiker *i_biker) {
                            i_biker->getPhysicsSettings()->BikeWheelRadius() *
                              CHIP_SCALE_RATIO,
                            cpvzero);
-  shape->u = CHIP_WHEEL_FRICTION;
-  shape->e = CHIP_WHEEL_ELASTICITY;
-  shape->group = 1;
+  cpShapeSetFriction(shape, CHIP_WHEEL_FRICTION);
+  cpShapeSetElasticity(shape, CHIP_WHEEL_ELASTICITY);
+  cpShapeFilter filter = cpShapeGetFilter(shape);
+  filter.group = 1;
+  cpShapeSetFilter(shape, filter);
   cpSpaceAddShape(m_space, shape);
   m_shapes.push_back(shape);
 
@@ -199,9 +195,11 @@ void ChipmunkWorld::addPlayer(PlayerLocalBiker *i_biker) {
                            i_biker->getPhysicsSettings()->BikeWheelRadius() *
                              CHIP_SCALE_RATIO,
                            cpvzero);
-  shape->u = CHIP_WHEEL_FRICTION;
-  shape->e = CHIP_WHEEL_ELASTICITY;
-  shape->group = 1;
+  cpShapeSetFriction(shape, CHIP_WHEEL_FRICTION);
+  cpShapeSetElasticity(shape, CHIP_WHEEL_ELASTICITY);
+  filter = cpShapeGetFilter(shape);
+  filter.group = 1;
+  cpShapeSetFilter(shape, filter);
   cpSpaceAddShape(m_space, shape);
   m_shapes.push_back(shape);
 
@@ -214,38 +212,41 @@ void ChipmunkWorld::addPlayer(PlayerLocalBiker *i_biker) {
   m_joints.push_back(v_jf);
 
   /* init position */
-  v_af->p = cpv(i_biker->getState()->FrontWheelP.x * CHIP_SCALE_RATIO,
-                i_biker->getState()->FrontWheelP.y * CHIP_SCALE_RATIO);
-  v_ab->p = cpv(i_biker->getState()->RearWheelP.x * CHIP_SCALE_RATIO,
-                i_biker->getState()->RearWheelP.y * CHIP_SCALE_RATIO);
-  v_wf->p = v_af->p;
-  v_wb->p = v_ab->p;
+  cpBodySetPosition(v_af,
+                    cpv(i_biker->getState()->FrontWheelP.x * CHIP_SCALE_RATIO,
+                        i_biker->getState()->FrontWheelP.y * CHIP_SCALE_RATIO));
+  cpBodySetPosition(v_ab,
+                    cpv(i_biker->getState()->RearWheelP.x * CHIP_SCALE_RATIO,
+                        i_biker->getState()->RearWheelP.y * CHIP_SCALE_RATIO));
+  cpBodySetPosition(v_wf, cpBodyGetPosition(v_af));
+  cpBodySetPosition(v_wb, cpBodyGetPosition(v_ab));
 }
 
 void ChipmunkWorld::updateWheelsPosition(
   const std::vector<Biker *> &i_players) {
   cpBody *b;
   cpFloat dx, dy;
+  cpVect pos;
 
   for (unsigned int i = 0; i < i_players.size(); i++) {
     // inform chipmunk of ODE pos of front wheel
     b = getFrontWheel(i);
 
-    b->w = i_players[i]->getFrontWheelVelocity();
-    dx = i_players[i]->getState()->FrontWheelP.x * CHIP_SCALE_RATIO - b->p.x;
-    dy = i_players[i]->getState()->FrontWheelP.y * CHIP_SCALE_RATIO - b->p.y;
+    cpBodySetAngularVelocity(b, i_players[i]->getFrontWheelVelocity());
+    pos = cpBodyGetPosition(b);
+    dx = i_players[i]->getState()->FrontWheelP.x * CHIP_SCALE_RATIO - pos.x;
+    dy = i_players[i]->getState()->FrontWheelP.y * CHIP_SCALE_RATIO - pos.y;
 
-    b->p.x += dx / CHIP_WHEEL_DAMPENING;
-    b->p.y += dy / CHIP_WHEEL_DAMPENING;
+    cpBodySetPosition(b, cpv(pos.x + dx/CHIP_WHEEL_DAMPENING, pos.y + dy/CHIP_WHEEL_DAMPENING));
 
     // inform chipmunk of ODE pos of back wheel
     b = getBackWheel(i);
 
-    b->w = i_players[i]->getRearWheelVelocity();
-    dx = i_players[i]->getState()->RearWheelP.x * CHIP_SCALE_RATIO - b->p.x;
-    dy = i_players[i]->getState()->RearWheelP.y * CHIP_SCALE_RATIO - b->p.y;
+    cpBodySetAngularVelocity(b, i_players[i]->getRearWheelVelocity());
+    pos = cpBodyGetPosition(b);
+    dx = i_players[i]->getState()->RearWheelP.x * CHIP_SCALE_RATIO - pos.x;
+    dy = i_players[i]->getState()->RearWheelP.y * CHIP_SCALE_RATIO - pos.y;
 
-    b->p.x += dx / CHIP_WHEEL_DAMPENING;
-    b->p.y += dy / CHIP_WHEEL_DAMPENING;
+    cpBodySetPosition(b, cpv(pos.x + dx/CHIP_WHEEL_DAMPENING, pos.y + dy/CHIP_WHEEL_DAMPENING));
   }
 }

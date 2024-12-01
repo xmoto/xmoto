@@ -30,7 +30,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "helpers/Log.h"
 #include "helpers/Random.h"
 #include "xmoto/PhysSettings.h"
-#include <chipmunk.h>
+#include <chipmunk/chipmunk.h>
 #include <sstream>
 
 // don't excceed this number of particles to not reduce significantly the fps
@@ -621,8 +621,8 @@ void Joint::loadToPlay(Level *i_level, ChipmunkWorld *i_chipmunkWorld) {
 
   // we don't want them to collide. if a block is already attached to
   // a joint, reuse its collision group
-  int group1 = getStartBlock()->getPhysicShape()->group;
-  int group2 = getEndBlock()->getPhysicShape()->group;
+  int group1 = cpShapeGetFilter(getStartBlock()->getPhysicShape()).group;
+  int group2 = cpShapeGetFilter(getEndBlock()->getPhysicShape()).group;
   int group;
   // we don't handle the case where the two blocks are already
   // attached to other joints and already have a group.
@@ -639,10 +639,16 @@ void Joint::loadToPlay(Level *i_level, ChipmunkWorld *i_chipmunkWorld) {
   }
 
   // update only if not background block
-  if (group1 != 1)
-    getStartBlock()->getPhysicShape()->group = group;
-  if (group2 != 1)
-    getEndBlock()->getPhysicShape()->group = group;
+  if(group1 != 1) {
+    cpShapeFilter filter = cpShapeGetFilter(getStartBlock()->getPhysicShape());
+    filter.group = group;
+    cpShapeSetFilter(getStartBlock()->getPhysicShape(), filter);
+  }
+  if(group2 != 1) {
+    cpShapeFilter filter = cpShapeGetFilter(getEndBlock()->getPhysicShape());
+    filter.group = group;
+    cpShapeSetFilter(getEndBlock()->getPhysicShape(), filter);
+  }
 
   switch (getJointType()) {
     case Pivot:
@@ -650,12 +656,12 @@ void Joint::loadToPlay(Level *i_level, ChipmunkWorld *i_chipmunkWorld) {
       v.x = DynamicPosition().x * CHIP_SCALE_RATIO;
       v.y = DynamicPosition().y * CHIP_SCALE_RATIO;
 
-      cpSpaceAddJoint(i_chipmunkWorld->getSpace(),
-                      cpPivotJointNew(body1, body2, v));
+      cpSpaceAddConstraint(i_chipmunkWorld->getSpace(),
+                           cpPivotJointNew(body1, body2, v));
       break;
     case Pin:
-      cpSpaceAddJoint(i_chipmunkWorld->getSpace(),
-                      cpPinJointNew(body1, body2, cpvzero, cpvzero));
+      cpSpaceAddConstraint(i_chipmunkWorld->getSpace(),
+                           cpPinJointNew(body1, body2, cpvzero, cpvzero));
       break;
     case JointNone:
     default:

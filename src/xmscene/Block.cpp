@@ -30,7 +30,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "xmoto/GameEvents.h"
 #include "xmoto/PhysSettings.h"
 #include <algorithm>
-#include <chipmunk.h>
+#include <chipmunk/chipmunk.h>
 
 #define XM_DEFAULT_BLOCK_TEXTURE "default"
 #define XM_DEFAULT_PHYS_BLOCK_MASS 30.0
@@ -243,8 +243,7 @@ void Block::setDynamicPosition(const Vector2f &i_dynamicPosition) {
 }
 
 void Block::setPhysicsPosition(float ix, float iy) {
-  mBody->p.x = ix * CHIP_SCALE_RATIO;
-  mBody->p.y = iy * CHIP_SCALE_RATIO;
+  cpBodySetPosition(mBody, cpv(ix * CHIP_SCALE_RATIO, iy * CHIP_SCALE_RATIO));
 }
 
 void Block::setDynamicPositionAccordingToCenter(
@@ -300,15 +299,16 @@ void Block::updatePhysics(int i_time,
   // move block according to chipmunk, only if they have moved
   bool moved = false;
 
-  Vector2f newPos = Vector2f(((mBody->p.x) / CHIP_SCALE_RATIO),
-                             (mBody->p.y) / CHIP_SCALE_RATIO);
+  cpVect newVect = cpBodyGetPosition(mBody);
+  Vector2f newPos = Vector2f(newVect.x / CHIP_SCALE_RATIO,
+                             newVect.y / CHIP_SCALE_RATIO);
   if (DynamicPosition() != newPos) {
     setDynamicPosition(newPos);
     moved = true;
   }
 
-  if (DynamicRotation() != mBody->a) {
-    setDynamicRotation(mBody->a);
+  if (DynamicRotation() != cpBodyGetAngle(mBody)) {
+    setDynamicRotation(cpBodyGetAngle(mBody));
     moved = true;
   }
 
@@ -317,7 +317,8 @@ void Block::updatePhysics(int i_time,
     io_collisionSystem->moveDynBlock(this);
   }
 
-  cpBodyResetForces(mBody);
+  cpBodySetForce(mBody, cpvzero);
+  cpBodySetTorque(mBody, 0);
 }
 
 int Block::loadToPlay(CollisionSystem *io_collisionSystem,
@@ -375,10 +376,9 @@ int Block::loadToPlay(CollisionSystem *io_collisionSystem,
 
         cpShape *seg =
           cpSegmentShapeNew(i_chipmunkWorld->getBody(), a, b, 0.0f);
-        seg->group = 0;
-        seg->u = m_friction;
-        seg->e = m_elasticity;
-        cpSpaceAddStaticShape(i_chipmunkWorld->getSpace(), seg);
+        cpShapeSetFriction(seg, m_friction);
+        cpShapeSetElasticity(seg, m_elasticity);
+        cpSpaceAddShape(i_chipmunkWorld->getSpace(), seg);
         m_shapes.push_back(seg);
       }
     }
@@ -508,16 +508,18 @@ int Block::loadToPlay(CollisionSystem *io_collisionSystem,
         cpFloat circle_moment =
           cpMomentForCircle(m_mass, radius, 0.0f, cpvzero);
         myBody = cpBodyNew(m_mass, circle_moment);
-        myBody->p = cpv((DynamicPosition().x * CHIP_SCALE_RATIO),
-                        (DynamicPosition().y * CHIP_SCALE_RATIO));
+        cpBodySetPosition(myBody, cpv((DynamicPosition().x * CHIP_SCALE_RATIO),
+                                      (DynamicPosition().y * CHIP_SCALE_RATIO)));
         cpSpaceAddBody(i_chipmunkWorld->getSpace(), myBody);
         mBody = myBody;
 
         m_shape = cpCircleShapeNew(mBody, radius * CHIP_SCALE_RATIO, cpvzero);
-        m_shape->u = m_friction;
-        m_shape->e = m_elasticity;
+        cpShapeSetFriction(m_shape, m_friction);
+        cpShapeSetElasticity(m_shape, m_elasticity);
         if (isBackground() == true) {
-          m_shape->group = 1;
+          cpShapeFilter filter = cpShapeGetFilter(m_shape);
+          filter.group = 1;
+          cpShapeSetFilter(m_shape, filter);
         }
 
         cpSpaceAddShape(i_chipmunkWorld->getSpace(), m_shape);
@@ -533,13 +535,13 @@ int Block::loadToPlay(CollisionSystem *io_collisionSystem,
 
         // Create body to attach shapes to
         cpFloat bMoment =
-          cpMomentForPoly(m_mass, Vertices().size(), myVerts, cpvzero);
+          cpMomentForPoly(m_mass, Vertices().size(), myVerts, cpvzero, 0);
         free(myVerts);
 
         // create body
         myBody = cpBodyNew(m_mass, bMoment);
-        myBody->p = cpv((DynamicPosition().x * CHIP_SCALE_RATIO),
-                        (DynamicPosition().y * CHIP_SCALE_RATIO));
+        cpBodySetPosition(myBody, cpv((DynamicPosition().x * CHIP_SCALE_RATIO),
+                                      (DynamicPosition().y * CHIP_SCALE_RATIO)));
         cpSpaceAddBody(i_chipmunkWorld->getSpace(), myBody);
         mBody = myBody;
 
@@ -562,11 +564,14 @@ int Block::loadToPlay(CollisionSystem *io_collisionSystem,
 
             // collision shape
             m_shape = cpPolyShapeNew(
-              myBody, (*v_BSPPolys)[i]->Vertices().size(), myVerts, cpvzero);
-            m_shape->u = m_friction;
-            m_shape->e = m_elasticity;
+              myBody, (*v_BSPPolys)[i]->Vertices().size(), myVerts,
+              cpTransformIdentity, 0);
+            cpShapeSetFriction(m_shape, m_friction);
+            cpShapeSetElasticity(m_shape, m_elasticity);
             if (isBackground()) {
-              m_shape->group = 1;
+              cpShapeFilter filter = cpShapeGetFilter(m_shape);
+              filter.group = 1;
+              cpShapeSetFilter(m_shape, filter);
             }
 
             cpSpaceAddShape(i_chipmunkWorld->getSpace(), m_shape);
