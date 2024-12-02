@@ -20,7 +20,6 @@ include(CheckPrototypeDefinition)
 include(CheckSymbolExists)
 include(TestBigEndian)
 
-include(CMake/macos.cmake)
 include(CMake/mxe.cmake)
 
 add_subdirectory(src)

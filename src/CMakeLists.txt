@@ -23,6 +23,8 @@ if(POLICY CMP0072)
 endif()
 
 # find dependencies
+find_package(PkgConfig)
+
 find_package(BZip2)
 set(USE_SYSTEM_BZip2 $<AND:$<BOOL:${PREFER_SYSTEM_BZip2}>,$<BOOL:${BZIP2_FOUND}>,$<NOT:$<BOOL:${WIN32}>>>)
 
@@ -39,7 +41,18 @@ find_package(LibXml2 REQUIRED)
 if(USE_OPENGL)
   find_package(OpenGL REQUIRED)
 endif()
-find_package(PNG REQUIRED)
+
+if(APPLE)
+  if(NOT PKG_CONFIG_FOUND)
+    message(FATAL_ERROR "pkg-config is required on macOS to find the correct libpng headers")
+  endif()
+
+  pkg_check_modules(LIBPNG libpng16 REQUIRED)
+  set(PNG_LIBRARIES "${LIBPNG_LINK_LIBRARIES}")
+  set(PNG_INCLUDE_DIRS "${LIBPNG_INCLUDE_DIRS}")
+else()
+  find_package(PNG REQUIRED)
+endif()
 
 find_package(Lua)
 set(USE_SYSTEM_Lua $<AND:$<BOOL:${PREFER_SYSTEM_Lua}>,$<BOOL:${LUA_FOUND}>,$<NOT:$<BOOL:${WIN32}>>>)
@@ -454,8 +467,16 @@ target_include_directories(xmoto
   "${PROJECT_BINARY_DIR}/src"
 )
 
+#message(FATAL_ERROR "${PNG_INCLUDE_DIRS}")
+
 target_include_directories(xmoto
   SYSTEM PRIVATE
+
+  # On macOS systems with Mono installed, libpng needs to appear before any of
+  # the other libraries shipped by it, otherwise Mono's png.h takes precedence.
+  # It also appears that setting CMAKE_FIND_FRAMEWORK=LAST causes unintended
+  # side effects on arm64. See PR #194 for more details
+  "${PNG_INCLUDE_DIRS}"
 
   "${CURL_INCLUDE_DIR}"
   "${LIBXML2_INCLUDE_DIR}"
@@ -496,7 +517,7 @@ target_link_libraries(xmoto PUBLIC
   glad
   ${CMAKE_DL_LIBS}
   ${OPENGL_LIBRARIES}
-  ${PNG_LIBRARY}
+  ${PNG_LIBRARIES}
   ${SDL2_LIBRARIES}
   ${SDL2_MIXER_LIBRARY}
   ${SDL2_NET_LIBRARY}
@@ -697,7 +718,7 @@ message("LibXml2    libraries: ${LIBXML2_LIBRARIES}")
 message("LibLZMA    libraries: ${LIBLZMA_LIBRARIES}")
 message("Lua        libraries: ${LUA_LIBRARIES}")
 message("OpenGL     libraries: ${OPENGL_LIBRARIES}")
-message("Png        libraries: ${PNG_LIBRARY}")
+message("Png        libraries: ${PNG_LIBRARIES}")
 message("SDL2       libraries: ${SDL2_LIBRARIES}")
 message("SDL2_mixer libraries: ${SDL2_MIXER_LIBRARY}")
 message("SDL2_net   libraries: ${SDL2_NET_LIBRARY}")
