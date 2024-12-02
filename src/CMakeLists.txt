@@ -39,7 +39,7 @@ find_package(LibXml2 REQUIRED)
 if(USE_OPENGL)
   find_package(OpenGL REQUIRED)
 endif()
-find_package(PNG REQUIRED)
+find_package(PNG 1.6 REQUIRED)
 
 find_package(Lua)
 set(USE_SYSTEM_Lua $<AND:$<BOOL:${PREFER_SYSTEM_Lua}>,$<BOOL:${LUA_FOUND}>,$<NOT:$<BOOL:${WIN32}>>>)
