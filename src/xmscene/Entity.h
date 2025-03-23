@@ -177,6 +177,8 @@ private:
 
 typedef enum jointType { JointNone, Pivot, Pin } jointType;
 
+class cpSpace;
+class cpJoint;
 class Joint : public Entity {
 public:
   Joint(const std::string &i_id)
@@ -215,6 +217,8 @@ private:
 
   Block *m_startBlock;
   Block *m_endBlock;
+  cpSpace *m_associatedSpace = nullptr; // not an owning pointer
+  cpJoint *m_joint = nullptr; // underlying Chipmunk joint
 
   static unsigned int getCurrentCollisionGroup();
   static void setNextCollisionGroup();
