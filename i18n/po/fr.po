@@ -219,7 +219,8 @@ msgid ""
 "Try it..."
 msgstr ""
 "Accélérez (doucement) vers la droite avec la roue avant qui se lève.\n"
-"Juste avant que votre tête heurte le bloc, pressez rapidement gauche/droite,\n"
+"Juste avant que votre tête heurte le bloc, pressez rapidement gauche/"
+"droite,\n"
 "et vous serez de l'autre côté.\n"
 "Essayez..."
 
@@ -292,9 +293,12 @@ msgid "Allow web forms"
 msgstr "Formulaires web"
 
 #: src/xmoto/GameText.h:730
-msgid "An unexpected error has occurred. There may be some problems with the web site."
+msgid ""
+"An unexpected error has occurred. There may be some problems with the web "
+"site."
 msgstr ""
-"Une erreur innopinée s'est produite. Le site internet rencontre peut être des problèmes."
+"Une erreur innopinée s'est produite. Le site internet rencontre peut être "
+"des problèmes."
 
 #: src/xmoto/GameText.h:233
 msgid "Anyone who has helped in any way"
@@ -565,8 +569,8 @@ msgid ""
 "Choose where to upload/download replays, highscore lists (for more "
 "information, check the website)"
 msgstr ""
-"Choisir les chemins pour uploader/télécharger les replays et records (plus d'information "
-"sur le site officiel)"
+"Choisir les chemins pour uploader/télécharger les replays et records (plus "
+"d'information sur le site officiel)"
 
 #: src/xmoto/GameText.h:932
 msgid "Choose which ghost to display"
@@ -766,7 +770,8 @@ msgstr "Supprimer le fichier cache"
 
 #: src/xmoto/GameText.h:1079
 msgid "Delete cached level file from disk to force a clean state (safe)"
-msgstr "Supprimer le fichier de niveau stocké sur le disque pour nettoyage (plus sûr)"
+msgstr ""
+"Supprimer le fichier de niveau stocké sur le disque pour nettoyage (plus sûr)"
 
 #: src/xmoto/GameText.h:263
 msgid "Delete from blacklist"
@@ -834,7 +839,8 @@ msgstr "Afficher la différence de temps avec le fantôme"
 
 #: src/xmoto/GameText.h:939
 msgid "Display an arrow to display where are located the bikes on the map"
-msgstr "Afficher une flèche pour indiquer où se trouvent les motos sur la carte"
+msgstr ""
+"Afficher une flèche pour indiquer où se trouvent les motos sur la carte"
 
 #: src/xmoto/GameText.h:268
 msgid "Display bike arrow indication"
@@ -897,7 +903,8 @@ msgstr "Télécharger ou mettre à jour le thème sélectionné"
 
 #: src/xmoto/GameText.h:818
 msgid "Download the latest X-Moto world records and check for new levels"
-msgstr "Télécharger les derniers records de X-Moto et rechercher de nouveaux niveaux"
+msgstr ""
+"Télécharger les derniers records de X-Moto et rechercher de nouveaux niveaux"
 
 #: src/xmoto/GameText.h:274
 msgid ""
@@ -1368,6 +1375,7 @@ msgstr ""
 "supprimer les copies faites."
 
 #: src/xmoto/GameText.h:594
+#, fuzzy
 msgid ""
 "Important note!\n"
 "\n"
@@ -1380,17 +1388,29 @@ msgid ""
 "Also visit https://xmoto.org to make sure you've\n"
 "got the latest version."
 msgstr ""
+"#-#-#-#-#  fr.po (X-Moto)  #-#-#-#-#\n"
 "Note importante!\n"
 "\n"
 "Il s'agit d'une version en développement de X-Moto !\n"
 "Toutes sortes de commentaires sont très appréciés, donc le jeu\n"
 "peut aller mieux.\n"
-"Bogues de messagerie, idées, commentaires, demandes de\n "
-"fonctionnalités, courriers haineux, etc.\n"
+"Bogues de messagerie, idées, commentaires, demandes de\n"
+" fonctionnalités, courriers haineux, etc.\n"
 "à support@xmoto.org\n"
 "\n"
 "Visitez également https://xmoto.org pour vous assurer\n"
-"que vous avez obtenu la dernière version."
+"que vous avez obtenu la dernière version.\n"
+"#-#-#-#-#  fr.po (X-Moto)  #-#-#-#-#\n"
+"Note importante !\n"
+"\n"
+"Ceci est une version de X-Moto en développement!\n"
+"Tout retour intelligent est apprecié afin d'améliorer\n"
+"le jeu.\n"
+"Bugs, idées, commentaires, fonctionnalités, insultes, etc\n"
+"à support@xmoto.org\n"
+"\n"
+"Allez aussi sur https://xmoto.org vérifier que vous\n"
+"avez la dernière version."
 
 #: src/xmoto/GameText.h:1086
 msgid "Impossible"
@@ -2256,14 +2276,20 @@ msgid "Randomize"
 msgstr "Mélanger"
 
 #: src/xmoto/GameText.h:402
+#, fuzzy
 msgid ""
 "Read the README file or check out the website at\n"
 "https://xmoto.org\n"
 "for more information."
 msgstr ""
+"#-#-#-#-#  fr.po (X-Moto)  #-#-#-#-#\n"
 "Lisez le fichier README ou consultez le site Web\n"
 "à l'adresse https://xmoto.org\n"
-"pour plus d'informations."
+"pour plus d'informations.\n"
+"#-#-#-#-#  fr.po (X-Moto)  #-#-#-#-#\n"
+"Pour plus d'information,\n"
+"lisez le fichier README ou regarder sur le site web\n"
+"https://xmoto.org."
 
 #: src/xmoto/GameText.h:1082
 msgid "Really easy"
@@ -2964,7 +2990,9 @@ msgstr "Mode thème activé"
 
 #: src/xmoto/GameText.h:300
 msgid "There are errors in the level, don't expect it to be playable!"
-msgstr "Il y a des erreurs dans le niveau, il est possible qu'il ne soit pas jouable !"
+msgstr ""
+"Il y a des erreurs dans le niveau, il est possible qu'il ne soit pas "
+"jouable !"
 
 #: src/xmoto/GameText.h:92
 msgid "There are no replays to clean"
@@ -3055,7 +3083,8 @@ msgstr "Changer entre thème et mode ugly over"
 
 #: src/xmoto/GameText.h:563
 msgid "Total time you scored / total highscore time for levels you finished"
-msgstr "Votre temps total / temps total des records des niveaux que vous avez finis"
+msgstr ""
+"Votre temps total / temps total des records des niveaux que vous avez finis"
 
 #: src/xmoto/LevelsText.h:46
 msgid "Touch it to finish the level. Good luck with the rest :)"
@@ -3160,7 +3189,8 @@ msgstr "Actualiser"
 
 #: src/xmoto/GameText.h:958
 msgid "Update statistics (also happens each time X-Moto is started)"
-msgstr "Mettre à jour les statistiques (fait aussi automatiquement au démarrage)"
+msgstr ""
+"Mettre à jour les statistiques (fait aussi automatiquement au démarrage)"
 
 #: src/xmoto/GameText.h:724
 msgid "Update the rooms list"
@@ -3212,7 +3242,8 @@ msgstr "Uploader le replay sur le site web des records"
 
 #: src/xmoto/GameText.h:968
 msgid "Upload your best replays to your room (useful when it is just created)"
-msgstr "Uploader vos meilleurs replays sur le salon (pratique lors de sa création)"
+msgstr ""
+"Uploader vos meilleurs replays sur le salon (pratique lors de sa création)"
 
 #: src/xmoto/GameText.h:733
 msgid "Uploading the highscore..."
@@ -3721,29 +3752,6 @@ msgstr "molette haut"
 #~ msgid "Enable/disable ugly over mode"
 #~ msgstr "Activer/désactiver le mode ugly over"
 
-#~ msgid ""
-#~ "Important note!\n"
-#~ "\n"
-#~ "This is an in development version of X-Moto!\n"
-#~ "All kinds of feedback are highly appreciated, so the game\n"
-#~ "can get better.\n"
-#~ "Mail bugs, ideas, comments, feature requests, hatemail, etc\n"
-#~ "to support@xmoto.org\n"
-#~ "\n"
-#~ "Also visit https://xmoto.org to make sure you've\n"
-#~ "got the latest version."
-#~ msgstr ""
-#~ "Note importante !\n"
-#~ "\n"
-#~ "Ceci est une version de X-Moto en développement!\n"
-#~ "Tout retour intelligent est apprecié afin d'améliorer\n"
-#~ "le jeu.\n"
-#~ "Bugs, idées, commentaires, fonctionnalités, insultes, etc\n"
-#~ "à support@xmoto.org\n"
-#~ "\n"
-#~ "Allez aussi sur https://xmoto.org vérifier que vous\n"
-#~ "avez la dernière version."
-
 #~ msgid "Infos"
 #~ msgstr "Infos"
 
@@ -3759,15 +3767,6 @@ msgstr "molette haut"
 
 #~ msgid "Preselect the retry button when dying or finishing a level"
 #~ msgstr "Préselectionner le bouton recommencer dans les menus de jeu"
-
-#~ msgid ""
-#~ "Read the README file or check out the website at\n"
-#~ "https://xmoto.org\n"
-#~ "for more information."
-#~ msgstr ""
-#~ "Pour plus d'information,\n"
-#~ "lisez le fichier README ou regarder sur le site web\n"
-#~ "https://xmoto.org."
 
 #~ msgid ""
 #~ "Stop[esc] ||[space]  << >>[left/right keys]  < >[up/down keys]   Speed:"
