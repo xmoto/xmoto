@@ -34,6 +34,13 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 // database file
 #define DATABASE_FILE "xm.db"
 
+#define WEBSITE_DOMAIN "xmoto.org"
+#define DOWNLOAD_DOMAIN "download.xmoto.org"
+#define GAMES_DOMAIN "online.xmoto.org"
+#define LEGACY_WEBSITE_DOMAIN "xmoto.tuxfamily.org"
+#define LEGACY_DOWNLOAD_DOMAIN "download.tuxfamily.org"
+#define LEGACY_GAMES_DOMAIN "games.tuxfamily.org"
+
 #define DEFAULT_CONTROLLERMODE "Keyboard"
 #define DEFAULT_LANGUAGE ""
 #define DEFAULT_THEME CONFIGURE_DEFAULT_THEME
@@ -135,7 +142,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #define DEFAULT_CLIENTCONNECTATSTARTUP false
 #define DEFAULT_SERVERPORT 4130
 #define DEFAULT_SERVERMAXCLIENTS 64
-#define DEFAULT_CLIENTSERVERNAME "games.tuxfamily.org"
+#define DEFAULT_CLIENTSERVERNAME GAMES_DOMAIN
 #define DEFAULT_CLIENTGHOSTMODE true
 #define DEFAULT_CLIENTSERVERPORT DEFAULT_SERVERPORT
 #define DEFAULT_CLIENTFRAMERATEUPLOAD 10

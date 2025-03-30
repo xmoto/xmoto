@@ -400,7 +400,7 @@ Central place to keep many in-game text strings
                          "finish\nthe level.")) +                             \
     "\n" +                                                                    \
     std::string(_("Read the README file or check out the website "            \
-                  "at\nhttps://xmoto.tuxfamily.org\nfor more information."))
+                  "at\nhttps://xmoto.org\nfor more information."))
 
 #define GAMETEXT_HELPTEXT_PLAYINGLEVEL(accelerate_KEY,                         \
                                        brake_KEY,                              \
@@ -597,9 +597,9 @@ Central place to keep many in-game text strings
     "All kinds of feedback are highly appreciated, so the game\n"   \
     "can get better.\n"                                             \
     "Mail bugs, ideas, comments, feature requests, hatemail, etc\n" \
-    "to xmoto@tuxfamily.org\n"                                      \
+    "to support@xmoto.org\n"                                        \
     "\n"                                                            \
-    "Also visit https://xmoto.tuxfamily.org to make sure you've\n"   \
+    "Also visit https://xmoto.org to make sure you've\n"            \
     "got the latest version.")
 #define GAMETEXT_NUMLEVELS _("# Levels")
 #define GAMETEXT_OK _("OK")

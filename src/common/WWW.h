@@ -40,7 +40,7 @@ class ThemeChoice;
 class WebRoom;
 class xmDatabase;
 
-#define DEFAULT_SITE_URL "https://xmoto.tuxfamily.org"
+#define DEFAULT_SITE_URL "https://" WEBSITE_DOMAIN
 
 #define DEFAULT_TRANSFER_TIMEOUT 240
 #define DEFAULT_TRANSFER_CONNECT_TIMEOUT 15
