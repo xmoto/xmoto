@@ -3,7 +3,7 @@ Copyright (C) 2005-2023
 
 # Introduction
 
-[X-Moto Website](https://xmoto.tuxfamily.org)
+[X-Moto Website](https://xmoto.org)
 
 X-Moto is a challenging 2D motocross platform game, where physics play 
 an all important role in the gameplay. You need to control your bike to 
@@ -13,11 +13,11 @@ the challenges.
 First you'll try just to complete the levels, while later you'll compete 
 with yourself and others, racing against the clock.  
 
-![Screenshot](https://xmoto.tuxfamily.org/images/screenshot.jpg)
+![Screenshot](https://xmoto.org/images/screenshot.jpg)
 
 # Installation
 
-Download and install the game from https://xmoto.tuxfamily.org
+Download and install the game from https://xmoto.org
 
 # Building
 See the wiki:
