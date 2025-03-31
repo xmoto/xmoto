@@ -96,6 +96,7 @@ void Logger::LogRaw(const std::string &s) {
 
   if (m_verbose) {
     printf("%s\n", s.c_str());
+    fflush(stdout);
   }
 }
 
