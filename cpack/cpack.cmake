@@ -8,7 +8,7 @@ if(APPLE)
 else()
 	set(CPACK_PACKAGE_FILE_NAME "xmoto-${APP_VERSION_STRING}")
 endif()
-set(CPACK_PACKAGE_HOMEPAGE_URL "https://xmoto.tuxfamily.org")
+set(CPACK_PACKAGE_HOMEPAGE_URL "https://xmoto.org")
 set(CPACK_PACKAGE_CONTACT "https://github.com/xmoto/xmoto")
 set(CPACK_PACKAGE_VENDOR "X-Moto Developers")
 

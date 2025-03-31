@@ -27,11 +27,13 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "helpers/VExcept.h"
 #include "xmoto/Game.h"
 #include "xmoto/GameText.h"
+#include "xmoto/UserConfig.h"
 #include "xmoto/input/Input.h"
 #include "xmoto/input/InputLegacy.h"
 #include <sstream>
+#include <utility>
 
-#define XMDB_VERSION 37
+#define XMDB_VERSION 38
 #define DB_MAX_SQL_RUNTIME 0.25
 #define DB_BUSY_TIMEOUT 60000 // 60 seconds
 
@@ -1023,6 +1025,79 @@ void xmDatabase::upgradeXmDbToVersion(int i_fromVersion,
         Logger::deleteLegacyLog();
       } catch (Exception &e) {
         throw Exception("Unable to update xmDb from 36: " + e.getMsg());
+      }
+
+    case 37:
+      try {
+        { // Update user config
+          UserConfig defaultConfig;
+          XMSession::createDefaultConfig(&defaultConfig);
+          std::vector<std::string> varsToReset = {
+            "WebLevelsURL",
+            "WebDbSyncUploadURL",
+            "WebThemesURL",
+            "WebThemesURLBase",
+            "WebHighscoreUploadURL",
+          };
+
+          auto userConfig = GameApp::instance()->getUserConfig();
+          for (auto &var : varsToReset) {
+            userConfig->setString(var, defaultConfig.getString(var));
+          }
+
+          XMSession::instance("file")->loadConfig(userConfig, false);
+          userConfig->saveFile();
+        }
+
+        try { // Update db
+          simpleSql("BEGIN TRANSACTION;");
+
+          using StringPair = std::pair<std::string, std::string>;
+
+          std::vector<StringPair> fields = {
+            { "webrooms", "highscoresUrl" },
+            { "webthemes", "fileUrl" },
+            { "weblevels", "fileUrl" },
+            { "webhighscores", "fileUrl" },
+          };
+
+          std::vector<StringPair> domainRenames = {
+            { LEGACY_WEBSITE_DOMAIN, WEBSITE_DOMAIN },
+            { LEGACY_DOWNLOAD_DOMAIN, DOWNLOAD_DOMAIN },
+          };
+
+          for (auto &pair : fields) {
+            auto &table = pair.first;
+            auto &field = pair.second;
+
+            for (auto &renames : domainRenames) {
+              simpleSql("UPDATE " + table + " SET " + field + " = replace(" +
+                        field + ", '" + renames.first +
+                        "', '" + renames.second + "');");
+            }
+          }
+
+          simpleSql(
+            "UPDATE profiles_configs SET value = replace(value, '"
+            LEGACY_GAMES_DOMAIN
+            "', '"
+            GAMES_DOMAIN
+            "') WHERE key = 'ClientServerName'"
+          );
+
+          simpleSql("COMMIT;");
+        } catch (Exception &e) {
+          simpleSql("ROLLBACK;");
+          throw e;
+        }
+
+        auto profile = XMSession::instance()->profile();
+        XMSession::instance()->loadProfile(profile, this);
+        XMSession::instance("file")->loadProfile(profile, this);
+
+        updateXmDbVersion(38, i_interface);
+      } catch (Exception &e) {
+        throw Exception("Unable to update xmDb from 37: " + e.getMsg());
       }
 
       // next
