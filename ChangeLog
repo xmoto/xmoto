@@ -1,3 +1,17 @@
+X-Moto 0.6.3 2025-03-31
+--------------------------------
+ * Website and game server migrated from Tuxfamily to xmoto.org
+ * Updated Russian translation
+ * Updated French translation
+ * Updated Galician translation
+ * Added support for building on macOS arm64
+ * Fullscreen mode now uses borderless fullscreen instead of exclusive fullscreen
+ * Fixed broken AppImage support
+ * Fixed 'Hide sprites in ugly mode' hiding all sprites
+ * Fixed broken script action key assignment
+ * User-defined keys can now be reset to default in the options
+ * Other minor bug fixes
+
 X-Moto 0.6.2 2023-03-05
 --------------------------------
  * X-Moto now uses SDL2 for window handling, input etc
