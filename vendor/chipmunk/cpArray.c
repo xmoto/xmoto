@@ -1,4 +1,4 @@
-/* Copyright (c) 2007 Scott Lembcke
+/* Copyright (c) 2013 Scott Lembcke and Howling Moon Software
  * 
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -18,100 +18,84 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
- 
-#include <stdlib.h>
+
 #include <string.h>
 
-#include "chipmunk.h"
+#include "chipmunk/chipmunk_private.h"
 
 
-#define CP_ARRAY_INCREMENT 10
-
-// NOTE: cpArray is rarely used and will probably go away.
-
-cpArray*
-cpArrayAlloc(void)
-{
-	return (cpArray *)calloc(1, sizeof(cpArray));
-}
-
-cpArray*
-cpArrayInit(cpArray *arr, int size)
-{
-	arr->num = 0;
-	
-	size = (size ? size : CP_ARRAY_INCREMENT);
-	arr->max = size;
-	arr->arr = (void **)malloc(size*sizeof(void**));
-	
-	return arr;
-}
-
-cpArray*
+cpArray *
 cpArrayNew(int size)
 {
-	return cpArrayInit(cpArrayAlloc(), size);
-}
-
-void
-cpArrayDestroy(cpArray *arr)
-{
-	free(arr->arr);
+	cpArray *arr = (cpArray *)cpcalloc(1, sizeof(cpArray));
+	
+	arr->num = 0;
+	arr->max = (size ? size : 4);
+	arr->arr = (void **)cpcalloc(arr->max, sizeof(void*));
+	
+	return arr;
 }
 
 void
 cpArrayFree(cpArray *arr)
 {
-	if(!arr) return;
-	cpArrayDestroy(arr);
-	free(arr);
+	if(arr){
+		cpfree(arr->arr);
+		arr->arr = NULL;
+		
+		cpfree(arr);
+	}
 }
 
 void
 cpArrayPush(cpArray *arr, void *object)
 {
 	if(arr->num == arr->max){
-		arr->max += CP_ARRAY_INCREMENT;
-		arr->arr = (void **)realloc(arr->arr, arr->max*sizeof(void**));
+		arr->max = 3*(arr->max + 1)/2;
+		arr->arr = (void **)cprealloc(arr->arr, arr->max*sizeof(void*));
 	}
 	
 	arr->arr[arr->num] = object;
 	arr->num++;
 }
 
-void
-cpArrayDeleteIndex(cpArray *arr, int index)
+void *
+cpArrayPop(cpArray *arr)
 {
-	int last = --arr->num;
-	arr->arr[index] = arr->arr[last];
+	arr->num--;
+	
+	void *value = arr->arr[arr->num];
+	arr->arr[arr->num] = NULL;
+	
+	return value;
 }
 
 void
 cpArrayDeleteObj(cpArray *arr, void *obj)
 {
-	int i;
-	for(i=0; i<arr->num; i++){
+	for(int i=0; i<arr->num; i++){
 		if(arr->arr[i] == obj){
-			cpArrayDeleteIndex(arr, i);
+			arr->num--;
+			
+			arr->arr[i] = arr->arr[arr->num];
+			arr->arr[arr->num] = NULL;
+			
 			return;
 		}
 	}
 }
 
 void
-cpArrayEach(cpArray *arr, cpArrayIter iterFunc, void *data)
+cpArrayFreeEach(cpArray *arr, void (freeFunc)(void*))
 {
-	int i;
-	for(i=0; i<arr->num; i++)
-		iterFunc(arr->arr[i], data);
+	for(int i=0; i<arr->num; i++) freeFunc(arr->arr[i]);
 }
 
-int
+cpBool
 cpArrayContains(cpArray *arr, void *ptr)
 {
-	int i;
-	for(i=0; i<arr->num; i++)
-		if(arr->arr[i] == ptr) return 1;
+	for(int i=0; i<arr->num; i++)
+		if(arr->arr[i] == ptr) return cpTrue;
 	
-	return 0;
+	return cpFalse;
 }

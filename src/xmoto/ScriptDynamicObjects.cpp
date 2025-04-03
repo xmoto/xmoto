@@ -24,7 +24,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "xmscene/Entity.h"
 #include "xmscene/Level.h"
 #include "xmscene/Scene.h"
-#include <chipmunk.h>
+#include <chipmunk/chipmunk.h>
 
 SDynamicObject::SDynamicObject(int p_startTime, int p_endTime, int pPeriod) {
   m_time = 0;
@@ -383,7 +383,7 @@ void SPhysicBlockSelfRotation::applyForce() {
 
   // in the moon buggy example, the author manually update
   // the torque instead of using applyforce, let's do the same
-  body->t += m_torque;
+  cpBodySetTorque(body, cpBodyGetTorque(body) + m_torque);
 }
 
 SPhysicBlockTranslation::SPhysicBlockTranslation(std::string blockName,
@@ -436,5 +436,5 @@ void SPhysicBlockTranslation::applyForce() {
   // apply a force so that the blocks moves of (x,y)
   // TODO::this mult need tweaking
   float mult = 25000.0f;
-  cpBodyApplyForce(body, cpv(x * mult, y * mult), cpvzero);
+  cpBodyApplyForceAtLocalPoint(body, cpv(x * mult, y * mult), cpvzero);
 }
