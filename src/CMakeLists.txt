@@ -66,7 +66,8 @@ endif()
 if(ON OR USE_SDLGFX)
   # This is a workaround required on some systems that ship a broken sdl2-config.cmake
   find_library(SDL2_LIBRARIES NAMES SDL2 SDL2main)
-  if(NOT SDL2_LIBRARIES)
+  if(NOT SDL2_LIBRARIES OR DEFINED ENV{NIX_STORE})
+    # NixOS include dirs are not in the usual places compared to other distros.
     find_package(SDL2 REQUIRED)
 
     if("${SDL2_LIBRARIES}" STREQUAL "")

@@ -3,8 +3,8 @@
 , enableCmakeNinja ? false
 , enableDev ? false
 , enableGettext ? false
-, enableOpengl ? true, libGL ? null #, libGLU ? null
-, enableSdl ? false, SDL ? null, SDL_gfx ? null, SDL_mixer ? null, SDL_net ? null, SDL_ttf ? null
+, enableOpengl ? true, libGL ? null, libGLU ? null
+, enableSdl ? false, SDL2 ? null, SDL2_gfx ? null, SDL2_mixer ? null, SDL2_net ? null, SDL2_ttf ? null
 , enableSystemBzip2 ? false, bzip2 ? null
 , enableSystemLua ? false, lua ? null
 , enableSystemOde ? false, ode ? null
@@ -22,16 +22,16 @@ assert libGL != null;
 assert enableOpengl -> libGL != null;
 
 # Can't disable SDL yet.
-assert SDL != null;
-assert SDL_mixer != null;
-assert SDL_net != null;
-assert SDL_ttf != null;
+assert SDL2 != null;
+assert SDL2_mixer != null;
+assert SDL2_net != null;
+assert SDL2_ttf != null;
 
-assert enableSdl -> SDL != null;
-assert enableSdl -> SDL_gfx != null;
-assert enableSdl -> SDL_mixer != null;
-assert enableSdl -> SDL_net != null;
-assert enableSdl -> SDL_ttf != null;
+assert enableSdl -> SDL2 != null;
+assert enableSdl -> SDL2_gfx != null;
+assert enableSdl -> SDL2_mixer != null;
+assert enableSdl -> SDL2_net != null;
+assert enableSdl -> SDL2_ttf != null;
 
 assert enableSystemBzip2 -> bzip2 != null;
 assert enableSystemLua -> lua != null;
@@ -69,16 +69,17 @@ stdenv.mkDerivation rec {
     zlib
   ] ++ [
     libGL
+    libGLU
   ] ++ optionals enableOpengl [
     # libGL
   ] ++ [
-    SDL
-    SDL_mixer
-    SDL_net
-    SDL_ttf
+    SDL2
+    SDL2_mixer
+    SDL2_net
+    SDL2_ttf
   ] ++ optionals enableSdl [
     # SDL
-    SDL_gfx
+    SDL2_gfx
     # SDL_mixer
     # SDL_net
     # SDL_ttf

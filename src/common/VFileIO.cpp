@@ -1362,6 +1362,28 @@ void XMFS::init(const std::string &AppDir,
     }
   }
 
+  /* On NixOS, the data is in ../share/xmoto relative to the X-Moto executable, which
+     resides somewhere in the /nix/store directory.
+     Gets the path to the X-Moto executable, removes the last two path
+     components, and adds /share. */
+  if (!m_bGotSystemDataDir) {
+    std::string onNixOS = Environment::get_variable("NIX_PATH");
+    if (onNixOS.length() > 0) {
+      std::string path;
+      path.resize(PATH_MAX + 1);
+      ssize_t length = readlink("/proc/self/exe", path.data(), PATH_MAX);
+      path[length] = '\0';
+      if (path.length() > 0 && doesRealFileOrDirectoryExists(path)) {
+        std::string share = path;
+        share = getFileDir(getFileDir(share)) + "/share";
+        if (isDir(share)) {
+          m_SystemDataDir = share;
+          m_bGotSystemDataDir = true;
+        }
+      }
+    }
+  }
+
   /* Default to /usr/share */
   if (!m_bGotSystemDataDir) {
     m_SystemDataDir = "/usr/share";
