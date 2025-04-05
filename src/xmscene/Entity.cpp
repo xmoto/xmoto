@@ -644,18 +644,22 @@ void Joint::loadToPlay(Level *i_level, ChipmunkWorld *i_chipmunkWorld) {
   if (group2 != 1)
     getEndBlock()->getPhysicShape()->group = group;
 
+  m_associatedSpace = i_chipmunkWorld->getSpace();
   switch (getJointType()) {
     case Pivot:
       cpVect v;
       v.x = DynamicPosition().x * CHIP_SCALE_RATIO;
       v.y = DynamicPosition().y * CHIP_SCALE_RATIO;
 
-      cpSpaceAddJoint(i_chipmunkWorld->getSpace(),
-                      cpPivotJointNew(body1, body2, v));
+      m_joint = cpPivotJointNew(body1, body2, v);
+      cpSpaceAddJoint(m_associatedSpace,
+                      m_joint);
       break;
     case Pin:
-      cpSpaceAddJoint(i_chipmunkWorld->getSpace(),
-                      cpPinJointNew(body1, body2, cpvzero, cpvzero));
+
+      m_joint = cpPinJointNew(body1, body2, cpvzero, cpvzero);
+      cpSpaceAddJoint(m_associatedSpace,
+                      m_joint);
       break;
     case JointNone:
     default:
@@ -664,6 +668,11 @@ void Joint::loadToPlay(Level *i_level, ChipmunkWorld *i_chipmunkWorld) {
 }
 
 void Joint::unloadToPlay() {
+  if (m_associatedSpace && m_joint) {
+    cpSpaceRemoveJoint(m_associatedSpace, m_joint);
+    cpJointFree(m_joint);
+    m_joint = nullptr;
+  }
   // is cpSpaceRemoveJoint needed ?
 }
 

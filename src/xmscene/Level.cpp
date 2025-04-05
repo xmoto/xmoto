@@ -1468,6 +1468,12 @@ void Level::unloadLevelBody() {
   }
   m_entities.clear();
 
+  /* joints */
+  for (unsigned int i = 0; i < m_joints.size(); i++) {
+    delete m_joints[i];
+  }
+  m_joints.clear();
+
   m_numberLayer = 0;
   m_layerOffsets.clear();
   m_isLayerFront.clear();
