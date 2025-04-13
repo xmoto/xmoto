@@ -94,7 +94,7 @@ class XMSession : public MultiSingleton<XMSession> {
 
 private:
   XMSession();
-  virtual ~XMSession(){};
+  virtual ~XMSession() {};
 
 public:
   void loadArgs(const XMArguments *i_xmargs);

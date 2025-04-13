@@ -75,7 +75,8 @@ void CameraAnimation::init() {
 
 void CameraAnimation::uninit() {
   m_camera->setAbsoluteZoom(m_initialCameraZoom);
-  m_camera->setCameraPosition(m_initialCameraPosition.x, m_initialCameraPosition.y);
+  m_camera->setCameraPosition(m_initialCameraPosition.x,
+                              m_initialCameraPosition.y);
   resetSizeMultipliers();
 }
 

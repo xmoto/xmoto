@@ -29,8 +29,9 @@ bool xmDatabase::srv_isAdmin(const std::string &i_profile,
   std::string v_md5password = md5sum(i_password);
 
   v_result = readDB("SELECT id FROM srv_admins WHERE id_profile=\"" +
-                      protectString(i_profile) + "\" "
-                                                 "AND password=\"" +
+                      protectString(i_profile) +
+                      "\" "
+                      "AND password=\"" +
                       protectString(v_md5password) + "\";",
                     nrow);
   if (nrow != 1) {
@@ -92,15 +93,16 @@ bool xmDatabase::srv_isBanned(const std::string &i_profile,
   char **v_result;
   unsigned int nrow;
 
-  v_result = readDB(
-    "SELECT id FROM srv_bans "
-    "WHERE (id_profile = '*' OR id_profile=\"" +
-      protectString(i_profile) + "\") "
-                                 "AND   (ip         = '*' OR ip        =\"" +
-      protectString(i_ip) +
-      "\") "
-      "AND   nb_days - (julianday('now')-julianday(from_date)) > 0",
-    nrow);
+  v_result =
+    readDB("SELECT id FROM srv_bans "
+           "WHERE (id_profile = '*' OR id_profile=\"" +
+             protectString(i_profile) +
+             "\") "
+             "AND   (ip         = '*' OR ip        =\"" +
+             protectString(i_ip) +
+             "\") "
+             "AND   nb_days - (julianday('now')-julianday(from_date)) > 0",
+           nrow);
   read_DB_free(v_result);
   return nrow != 0;
 }

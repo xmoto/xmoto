@@ -23,10 +23,10 @@
  */
 #include "DrawLibOpenGL.h"
 #include "common/Image.h"
-#include "common/XMBuild.h"
 #include "common/VFileIO.h"
 #include "common/VFileIO_types.h"
 #include "common/VTexture.h"
+#include "common/XMBuild.h"
 #include "helpers/Log.h"
 #include "helpers/RenderSurface.h"
 #include "helpers/Singleton.h"
@@ -292,8 +292,8 @@ void DrawLibOpenGL::init(unsigned int nDispWidth,
   for (int modeIndex = 0; modeIndex < displayModeCount; ++modeIndex) {
     SDL_DisplayMode mode;
     if (SDL_GetDisplayMode(displayIndex, modeIndex, &mode) != 0) {
-      throw Exception("getDisplayModes: SDL_GetDisplayMode failed: "
-          + std::string(SDL_GetError()));
+      throw Exception("getDisplayModes: SDL_GetDisplayMode failed: " +
+                      std::string(SDL_GetError()));
     }
     modes[modeIndex] = mode;
   }
@@ -312,13 +312,15 @@ void DrawLibOpenGL::init(unsigned int nDispWidth,
   /* At last, try to "set the video mode" */
   std::string title = std::string("X-Moto ") + XMBuild::getVersionString(true);
   if ((m_window = SDL_CreateWindow(title.c_str(),
-          SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED,
-          m_nDispWidth, m_nDispHeight, nFlags)) == NULL) {
-    LogWarning(
-      "Tried with a resolution of %ix%i, but SDL failed (%s)",
-      m_nDispWidth,
-      m_nDispHeight,
-      SDL_GetError());
+                                   SDL_WINDOWPOS_UNDEFINED,
+                                   SDL_WINDOWPOS_UNDEFINED,
+                                   m_nDispWidth,
+                                   m_nDispHeight,
+                                   nFlags)) == NULL) {
+    LogWarning("Tried with a resolution of %ix%i, but SDL failed (%s)",
+               m_nDispWidth,
+               m_nDispHeight,
+               SDL_GetError());
 
     m_nDispWidth = 800;
     m_nDispHeight = 600;
@@ -326,8 +328,12 @@ void DrawLibOpenGL::init(unsigned int nDispWidth,
     LogWarning("Trying %ix%i in windowed mode", m_nDispWidth, m_nDispHeight);
 
     if ((m_window = SDL_CreateWindow(title.c_str(),
-            SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED,
-            m_nDispWidth, m_nDispHeight, SDL_WINDOW_SHOWN | SDL_WINDOW_OPENGL)) == NULL) {
+                                     SDL_WINDOWPOS_UNDEFINED,
+                                     SDL_WINDOWPOS_UNDEFINED,
+                                     m_nDispWidth,
+                                     m_nDispHeight,
+                                     SDL_WINDOW_SHOWN | SDL_WINDOW_OPENGL)) ==
+        NULL) {
       throw Exception("SDL_CreateWindow: " + std::string(SDL_GetError()));
     }
   }
@@ -338,12 +344,11 @@ void DrawLibOpenGL::init(unsigned int nDispWidth,
   SDL_SetWindowTitle(m_window, title.c_str());
 
 #if !defined(WIN32) && !defined(__APPLE__) && !defined(__amigaos4__)
-  SDL_Surface *v_icon = SDL_LoadBMP(
-    (XMFS::getSystemDataDir() + std::string("/xmoto.bmp")).c_str());
+  SDL_Surface *v_icon =
+    SDL_LoadBMP((XMFS::getSystemDataDir() + std::string("/xmoto.bmp")).c_str());
   if (v_icon != NULL) {
     SDL_SetSurfaceBlendMode(v_icon, SDL_BLENDMODE_BLEND);
-    SDL_SetColorKey(
-      v_icon, SDL_TRUE, SDL_MapRGB(v_icon->format, 236, 45, 211));
+    SDL_SetColorKey(v_icon, SDL_TRUE, SDL_MapRGB(v_icon->format, 236, 45, 211));
     SDL_SetWindowIcon(m_window, v_icon);
     SDL_FreeSurface(v_icon);
   }
@@ -357,7 +362,7 @@ void DrawLibOpenGL::init(unsigned int nDispWidth,
   if (!gladLoadGLLoader((GLADloadproc)SDL_GL_GetProcAddress)) {
     /* Try without SDL's loader */
     if (!gladLoadGL()) {
-      const char* err = "Failed to load OpenGL functions!";
+      const char *err = "Failed to load OpenGL functions!";
       LogError("%s", err);
       throw Exception(err);
     }
@@ -424,9 +429,11 @@ void DrawLibOpenGL::init(unsigned int nDispWidth,
   }
 
   if (m_bShadersSupported == true) {
-    LogInfo("GL: using ARB_fragment_shader/ARB_vertex_shader/ARB_shader_objects");
+    LogInfo(
+      "GL: using ARB_fragment_shader/ARB_vertex_shader/ARB_shader_objects");
   } else {
-    LogInfo("GL: not using ARB_fragment_shader/ARB_vertex_shader/ARB_shader_objects");
+    LogInfo(
+      "GL: not using ARB_fragment_shader/ARB_vertex_shader/ARB_shader_objects");
   }
 
   /* Set background color to black */
@@ -628,7 +635,7 @@ SDL_Surface *createSDLSurface(unsigned int width, unsigned int height) {
                                            0x0000FF00,
                                            0x000000FF
 #endif
-                                           );
+  );
   if (surf == NULL) {
     SDL_FreeSurface(surf);
     throw Exception("SDL_CreateRGBSurface failed");
@@ -1136,9 +1143,8 @@ void GLFontManager::printStringGradOne(DrawLib *pDrawLib,
     v_longuest_linesize = getLonguestLineSize(v_value);
     v_size = v_value.size();
     v_current_linesize = getLonguestLineSize(v_value, 0, 1);
-    v_x =
-      i_x +
-      (v_longuest_linesize - v_current_linesize) / 2 * (i_perCentered + 1.0);
+    v_x = i_x + (v_longuest_linesize - v_current_linesize) / 2 *
+                  (i_perCentered + 1.0);
 
     /* vertical position of the first line */
     v_y = -i_y + pDrawLib->getRenderSurface()->size().y -
@@ -1151,9 +1157,8 @@ void GLFontManager::printStringGradOne(DrawLib *pDrawLib,
       utf8::getNextChar(v_value, n, v_char);
       if (v_char == "\n") {
         v_current_linesize = getLonguestLineSize(v_value, n, 1);
-        v_x = i_x +
-              (v_longuest_linesize - v_current_linesize) / 2 *
-                (i_perCentered + 1.0);
+        v_x = i_x + (v_longuest_linesize - v_current_linesize) / 2 *
+                      (i_perCentered + 1.0);
         v_y -= v_lineHeight + UTF8_INTERLINE_SPACE;
         /* check if the previous character was a newline too */
         if (prevNewline) {

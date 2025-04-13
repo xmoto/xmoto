@@ -21,13 +21,13 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #ifndef __GAME_H__
 #define __GAME_H__
 
-#include "input/Input.h"
 #include "LevelsManager.h"
 #include "common/VCommon.h"
 #include "common/WWW.h"
 #include "common/XMotoLoadLevelsInterface.h"
 #include "db/xmDatabaseUpdateInterface.h"
 #include "helpers/Singleton.h"
+#include "input/Input.h"
 #include "xmscene/Scene.h"
 
 class XMArguments;
@@ -55,9 +55,10 @@ class XMDemo;
 /*===========================================================================
   Game application
   ===========================================================================*/
-class GameApp : public XMotoLoadLevelsInterface,
-                public XmDatabaseUpdateInterface,
-                public Singleton<GameApp> {
+class GameApp
+  : public XMotoLoadLevelsInterface
+  , public XmDatabaseUpdateInterface
+  , public Singleton<GameApp> {
   friend class Singleton<GameApp>;
 
 private:
@@ -97,9 +98,7 @@ public:
 
   DrawLib *getDrawLib() { return drawLib; };
 
-  UserConfig *getUserConfig() { /* to remove */
-    return m_userConfig;
-  }
+  UserConfig *getUserConfig() { /* to remove */ return m_userConfig; }
 
   void switchLevelToFavorite(const std::string &i_levelId,
                              bool v_displayMessage = false);

@@ -22,14 +22,14 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  *  In-game graphical user interface
  */
 #include "GUI.h"
-#include "common/VXml.h"
 #include "common/TextEdit.h"
+#include "common/VXml.h"
 #include "drawlib/DrawLib.h"
 #include "helpers/Log.h"
 #include "helpers/RenderSurface.h"
 #include "helpers/System.h"
-#include "helpers/utf8.h"
 #include "helpers/VMath.h"
+#include "helpers/utf8.h"
 #include "xmoto/Game.h"
 #include "xmoto/GameText.h"
 #include "xmoto/input/Joystick.h"
@@ -409,7 +409,8 @@ void UIMsgBox::paint(void) {
   // For future use
   bool selection = false;
 
-  std::string s = utf8::utf8_substring(m_textEdit.text(), 0, m_textEdit.cursorPos());
+  std::string s =
+    utf8::utf8_substring(m_textEdit.text(), 0, m_textEdit.cursorPos());
 
   if (m_textInputFont) {
     setFont(m_textInputFont);
@@ -427,7 +428,8 @@ void UIMsgBox::paint(void) {
     if (m_textEdit.cursorPos() >= utf8::utf8_length(m_textEdit.text())) {
       nCursorWidth = BlockCursorWidth;
     } else {
-      std::string s = utf8::utf8_substring(m_textEdit.text(), m_textEdit.cursorPos(), 1);
+      std::string s =
+        utf8::utf8_substring(m_textEdit.text(), m_textEdit.cursorPos(), 1);
       FontManager *fm = getFont();
       FontGlyph *fg = fm->getGlyph(s);
       nCursorWidth = fg->realWidth();
@@ -465,7 +467,9 @@ void UIMsgBox::paint(void) {
   }
 }
 
-bool UIMsgBox::textInput(int nKey, SDL_Keymod mod, const std::string &i_utf8Char) {
+bool UIMsgBox::textInput(int nKey,
+                         SDL_Keymod mod,
+                         const std::string &i_utf8Char) {
   // alt/... and special keys must not be kept
   if (utf8::utf8_length(i_utf8Char) != 1)
     return true;
@@ -476,7 +480,9 @@ bool UIMsgBox::textInput(int nKey, SDL_Keymod mod, const std::string &i_utf8Char
   return true;
 }
 
-bool UIMsgBox::keyDown(int nKey, SDL_Keymod mod, const std::string &i_utf8Char) {
+bool UIMsgBox::keyDown(int nKey,
+                       SDL_Keymod mod,
+                       const std::string &i_utf8Char) {
   switch (nKey) {
     case SDLK_ESCAPE:
       if (!setClicked(GAMETEXT_CANCEL))
@@ -699,8 +705,7 @@ UIMsgBox *UIWindow::msgBox(std::string Text,
     nCX += v_buttonWidth;
   }
   if (Buttons & UI_MSGBOX_QUIT) {
-    pButton =
-      new UIButton(pMsgBox, nCX, nCY, GAMETEXT_QUIT, v_buttonWidth, 57);
+    pButton = new UIButton(pMsgBox, nCX, nCY, GAMETEXT_QUIT, v_buttonWidth, 57);
     pButton->setFont(getFont());
     if (v_useCustom == false)
       pButton->setType(UI_BUTTON_TYPE_SMALL);
@@ -816,18 +821,17 @@ void UIMsgBox::showMatch(bool reverse) {
     if (match.find(last_word_f) == 0) {
       std::string s = m_textEdit.text().substr(0, last_word_f_pos);
 
-      if ((reverse && i == 0) || (!reverse && i == n-1)) {
-        s += reverse ? matches[n-1] : matches[0];
+      if ((reverse && i == 0) || (!reverse && i == n - 1)) {
+        s += reverse ? matches[n - 1] : matches[0];
         m_textEdit.setText(s);
         m_textEdit.jumpToEnd();
 
         break;
       } else {
-        s += reverse ? matches[i-1] : matches[i+1];
+        s += reverse ? matches[i - 1] : matches[i + 1];
         m_textEdit.setText(s);
         m_textEdit.jumpToEnd();
       }
-
     }
   }
 }
@@ -955,25 +959,24 @@ void UIWindow::putRect(int x, int y, int nWidth, int nHeight, Color c) {
 }
 
 void UIWindow::putPolygon(const std::vector<Vector2f> &points, Color c) {
-  putPolygon(
-    points,
-    Vector2f(0,0),
-    c);
+  putPolygon(points, Vector2f(0, 0), c);
 }
 
-void UIWindow::putPolygon(const std::vector<Vector2f> &points, Vector2f shift, Color c) {
+void UIWindow::putPolygon(const std::vector<Vector2f> &points,
+                          Vector2f shift,
+                          Color c) {
   std::vector<Vector2f> shifted_points;
 
-  for(const Vector2f &point : points) {
-    shifted_points.push_back(Vector2f(point.x + shift.x + getAbsPosX(), point.y + shift.y + getAbsPosY()));
+  for (const Vector2f &point : points) {
+    shifted_points.push_back(Vector2f(point.x + shift.x + getAbsPosX(),
+                                      point.y + shift.y + getAbsPosY()));
   }
 
-  m_drawLib->drawPolygon(
-    shifted_points,
-    MAKE_COLOR(GET_RED(c),
-               GET_GREEN(c),
-               GET_BLUE(c),
-               (int)(GET_ALPHA(c) * getOpacity() / 100)));
+  m_drawLib->drawPolygon(shifted_points,
+                         MAKE_COLOR(GET_RED(c),
+                                    GET_GREEN(c),
+                                    GET_BLUE(c),
+                                    (int)(GET_ALPHA(c) * getOpacity() / 100)));
 }
 
 void UIWindow::putElem(int x,
@@ -1345,7 +1348,9 @@ bool UIRoot::keyUp(int nKey, SDL_Keymod mod, const std::string &i_utf8Char) {
   return _RootKeyEvent(this, evt);
 }
 
-bool UIRoot::textInput(int nKey, SDL_Keymod mod, const std::string &i_utf8Char) {
+bool UIRoot::textInput(int nKey,
+                       SDL_Keymod mod,
+                       const std::string &i_utf8Char) {
   UIRootKeyEvent evt = { UI_ROOT_TEXT_INPUT, 0, (SDL_Keymod)0, i_utf8Char };
   return _RootKeyEvent(this, evt);
 }
@@ -1425,15 +1430,15 @@ bool UIRoot::joystickButtonDown(Uint8 i_joyNum, Uint8 i_joyButton) {
   return false;
 }
 
-bool UIRoot::_RootJoystickAxisMotionEvent(UIWindow *pWindow, JoyAxisEvent event) {
+bool UIRoot::_RootJoystickAxisMotionEvent(UIWindow *pWindow,
+                                          JoyAxisEvent event) {
   /* Hidden or disabled? */
   if (pWindow->isHidden() || pWindow->isDisabled())
     return false;
 
   /* First try if any children want it */
   for (unsigned int i = 0; i < pWindow->getChildren().size(); i++) {
-    if (_RootJoystickAxisMotionEvent(
-          pWindow->getChildren()[i], event))
+    if (_RootJoystickAxisMotionEvent(pWindow->getChildren()[i], event))
       return true;
   }
 

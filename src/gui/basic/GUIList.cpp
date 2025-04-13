@@ -23,11 +23,11 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 #include "GUI.h"
 #include "drawlib/DrawLib.h"
-#include "helpers/utf8.h"
 #include "helpers/VMath.h"
+#include "helpers/utf8.h"
 #include "xmoto/Game.h"
-#include "xmoto/input/Joystick.h"
 #include "xmoto/Sound.h"
+#include "xmoto/input/Joystick.h"
 #include <sstream>
 
 #define GUILIST_SCROLL_SIZE 10

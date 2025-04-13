@@ -124,15 +124,16 @@ struct GameMessage {
 
 class SceneHooks {
 public:
-  virtual ~SceneHooks(){};
+  virtual ~SceneHooks() {};
   // some entity are destroyed by scripts for example, not by a player
-  virtual void OnEntityToTakeDestroyed(){}; // for each destroyed entity
-  virtual void OnEntityToTakeTakenByPlayer(unsigned int i_player){};
-  virtual void OnEntityToTakeTakenExternal(){};
-  virtual void OnTakeCheckpoint(unsigned int i_player){};
-  virtual void OnPlayerWins(unsigned int i_player){};
-  virtual void OnPlayerDies(unsigned int i_player){};
-  virtual void OnPlayerSomersault(unsigned int i_player, bool i_counterclock){};
+  virtual void OnEntityToTakeDestroyed() {}; // for each destroyed entity
+  virtual void OnEntityToTakeTakenByPlayer(unsigned int i_player) {};
+  virtual void OnEntityToTakeTakenExternal() {};
+  virtual void OnTakeCheckpoint(unsigned int i_player) {};
+  virtual void OnPlayerWins(unsigned int i_player) {};
+  virtual void OnPlayerDies(unsigned int i_player) {};
+  virtual void OnPlayerSomersault(unsigned int i_player, bool i_counterclock) {
+  };
 };
 
 class Scene {

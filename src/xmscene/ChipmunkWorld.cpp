@@ -34,17 +34,17 @@ ChipmunkWorld::ChipmunkWorld(PhysicsSettings *i_physicsSettings,
 }
 
 ChipmunkWorld::~ChipmunkWorld() {
-  for (size_t i = 0;i < m_joints.size();i++) {
+  for (size_t i = 0; i < m_joints.size(); i++) {
     cpJointFree(m_joints[i]);
   }
-  for (size_t i = 0;i < m_shapes.size();i++) {
+  for (size_t i = 0; i < m_shapes.size(); i++) {
     cpShapeFree(m_shapes[i]);
   }
   m_joints.clear();
   m_shapes.clear();
 
   /* free bodies */
-  for (size_t i = 0;i < m_ab.size();i++) {
+  for (size_t i = 0; i < m_ab.size(); i++) {
     cpBodyFree(m_ab[i]);
     cpBodyFree(m_af[i]);
     cpBodyFree(m_wb[i]);

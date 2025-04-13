@@ -42,7 +42,8 @@ UIStatic::UIStatic(UIWindow *pParent,
   Sprite *pSprite;
   pSprite = Theme::instance()->getSprite(SPRITE_TYPE_UI, "DarkBlob");
   if (pSprite != NULL) {
-    m_pDarkBlobTexture = pSprite->getTexture(false, WrapMode::Clamp, FM_NEAREST);
+    m_pDarkBlobTexture =
+      pSprite->getTexture(false, WrapMode::Clamp, FM_NEAREST);
   }
 
   m_pCustomBackgroundTexture = NULL;

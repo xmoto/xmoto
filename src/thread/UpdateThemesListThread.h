@@ -24,7 +24,9 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "XMThread.h"
 #include "common/WWWAppInterface.h"
 
-class UpdateThemesListThread : public XMThread, public WWWAppInterface {
+class UpdateThemesListThread
+  : public XMThread
+  , public WWWAppInterface {
 public:
   UpdateThemesListThread();
   virtual ~UpdateThemesListThread();

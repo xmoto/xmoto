@@ -122,25 +122,30 @@ void xmDatabase::profiles_addFinishTime(const std::string &i_sitekey,
       "INSERT INTO profile_completedLevels("
       "sitekey, id_profile, id_level, timeStamp, finishTime, synchronized) "
       "VALUES(") +
-    "\"" + protectString(i_sitekey) + "\", "
-                                      "\"" +
-    protectString(i_profile) + "\", "
-                               "\"" +
-    protectString(i_id_level) + "\", "
-                                "\"" +
+    "\"" + protectString(i_sitekey) +
+    "\", "
+    "\"" +
+    protectString(i_profile) +
+    "\", "
+    "\"" +
+    protectString(i_id_level) +
+    "\", "
+    "\"" +
     i_timeStamp + "\", " + v_time_str.str() + ", 0);");
 
   /* keep only the top 10 */
-  v_result =
-    readDB("SELECT finishTime FROM profile_completedLevels "
-           "WHERE id_level=\"" +
-             protectString(i_id_level) + "\" "
-                                         "AND   sitekey=\"" +
-             protectString(i_sitekey) + "\" "
-                                        "AND   id_profile=\"" +
-             protectString(i_profile) + "\" "
-                                        "ORDER BY finishTime ASC LIMIT 10;",
-           nrow);
+  v_result = readDB("SELECT finishTime FROM profile_completedLevels "
+                    "WHERE id_level=\"" +
+                      protectString(i_id_level) +
+                      "\" "
+                      "AND   sitekey=\"" +
+                      protectString(i_sitekey) +
+                      "\" "
+                      "AND   id_profile=\"" +
+                      protectString(i_profile) +
+                      "\" "
+                      "ORDER BY finishTime ASC LIMIT 10;",
+                    nrow);
   if (nrow < 10) {
     read_DB_free(v_result);
     return;
@@ -150,12 +155,15 @@ void xmDatabase::profiles_addFinishTime(const std::string &i_sitekey,
 
   simpleSql("DELETE FROM profile_completedLevels "
             "WHERE id_level=\"" +
-            protectString(i_id_level) + "\" "
-                                        "AND   sitekey=\"" +
-            protectString(i_sitekey) + "\" "
-                                       "AND   id_profile=\"" +
-            protectString(i_profile) + "\" "
-                                       "AND finishTime > " +
+            protectString(i_id_level) +
+            "\" "
+            "AND   sitekey=\"" +
+            protectString(i_sitekey) +
+            "\" "
+            "AND   id_profile=\"" +
+            protectString(i_profile) +
+            "\" "
+            "AND finishTime > " +
             v_timeToKeep + ";");
 }
 
@@ -173,21 +181,24 @@ void xmDatabase::profiles_addFinishTime_nositekey(
   simpleSql(std::string("INSERT INTO profile_completedLevels("
                         "id_profile, id_level, timeStamp, finishTime) "
                         "VALUES(") +
-            "\"" + protectString(i_profile) + "\", "
-                                              "\"" +
-            protectString(i_id_level) + "\", "
-                                        "\"" +
+            "\"" + protectString(i_profile) +
+            "\", "
+            "\"" +
+            protectString(i_id_level) +
+            "\", "
+            "\"" +
             i_timeStamp + "\", " + v_time_str.str() + ");");
 
   /* keep only the top 10 */
-  v_result =
-    readDB("SELECT finishTime FROM profile_completedLevels "
-           "WHERE id_level=\"" +
-             protectString(i_id_level) + "\" "
-                                         "AND   id_profile=\"" +
-             protectString(i_profile) + "\" "
-                                        "ORDER BY finishTime ASC LIMIT 10;",
-           nrow);
+  v_result = readDB("SELECT finishTime FROM profile_completedLevels "
+                    "WHERE id_level=\"" +
+                      protectString(i_id_level) +
+                      "\" "
+                      "AND   id_profile=\"" +
+                      protectString(i_profile) +
+                      "\" "
+                      "ORDER BY finishTime ASC LIMIT 10;",
+                    nrow);
   if (nrow < 10) {
     read_DB_free(v_result);
     return;
@@ -197,9 +208,11 @@ void xmDatabase::profiles_addFinishTime_nositekey(
 
   simpleSql("DELETE FROM profile_completedLevels "
             "WHERE id_level=\"" +
-            protectString(i_id_level) + "\" "
-                                        "AND   id_profile=\"" +
-            protectString(i_profile) + "\" "
-                                       "AND finishTime > " +
+            protectString(i_id_level) +
+            "\" "
+            "AND   id_profile=\"" +
+            protectString(i_profile) +
+            "\" "
+            "AND finishTime > " +
             v_timeToKeep + ";");
 }

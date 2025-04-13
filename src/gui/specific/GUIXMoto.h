@@ -27,7 +27,9 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
 class LevelsPack;
 
-class UILevelList : public UIList, public VirtualLevelsList {
+class UILevelList
+  : public UIList
+  , public VirtualLevelsList {
 public:
   UILevelList(UIWindow *pParent,
               int x = 0,

@@ -48,7 +48,7 @@ void Logger::init() {
   // Log rotation
   for (int i = RETENTION_COUNT - 1; i >= 0; i--) {
     auto old_file = (i == 0) ? LOG_NAME : (LOG_NAME + "." + std::to_string(i));
-    auto new_file = LOG_NAME + "." + std::to_string(i+1);
+    auto new_file = LOG_NAME + "." + std::to_string(i + 1);
 
     if (!XMFS::doesRealFileOrDirectoryExists(logDir + "/" + old_file))
       continue;

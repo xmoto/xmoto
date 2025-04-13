@@ -22,8 +22,8 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
 #ifdef ENABLE_SDLGFX
 
-#include <string.h>
 #include <algorithm>
+#include <string.h>
 
 #include "PolyDraw.h"
 #include "SDL_gfxPrimitives.h"
@@ -289,8 +289,9 @@ void PolyDraw::_RenderHLine(int y,
                             int nPitchSq) {
   /* Determine pointer to beginning of line in target buffer */
   char *pc =
-    &((char *)m_pBuf->pixels)[y * m_pBuf->pitch +
-                              std::max(0, pLeft->x) * m_pBuf->format->BytesPerPixel];
+    &((char *)
+        m_pBuf->pixels)[y * m_pBuf->pitch +
+                        std::max(0, pLeft->x) * m_pBuf->format->BytesPerPixel];
 
   int nXRange = pRight->x - pLeft->x;
   int nURange = pRight->u - pLeft->u;

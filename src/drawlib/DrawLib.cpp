@@ -241,7 +241,7 @@ void DrawLib::drawBox(const Vector2f &A,
 }
 
 /*===========================================================================
-Primitive: polygon 
+Primitive: polygon
 ===========================================================================*/
 void DrawLib::drawPolygon(const std::vector<Vector2f> &Points,
                           Color PolyColor) {
@@ -250,7 +250,7 @@ void DrawLib::drawPolygon(const std::vector<Vector2f> &Points,
 
   /* Alpha? */
   bool bAlpha = false;
-  if (GET_ALPHA(PolyColor) != 255 )
+  if (GET_ALPHA(PolyColor) != 255)
     bAlpha = true;
 
   if (bAlpha) {
@@ -261,8 +261,8 @@ void DrawLib::drawPolygon(const std::vector<Vector2f> &Points,
   if (GET_ALPHA(PolyColor) > 0) {
     startDraw(DRAW_MODE_POLYGON);
     setColor(PolyColor);
-    for( const Vector2f &vertex : Points) {
-        glVertexSP(vertex.x, vertex.y);
+    for (const Vector2f &vertex : Points) {
+      glVertexSP(vertex.x, vertex.y);
     }
     endDraw();
   }

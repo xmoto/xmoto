@@ -36,7 +36,7 @@ class RenderSurface;
 
 class FontGlyph {
 public:
-  virtual ~FontGlyph(){};
+  virtual ~FontGlyph() {};
   virtual unsigned int realWidth() const = 0;
   virtual unsigned int realHeight() const = 0;
 };
@@ -108,10 +108,7 @@ enum BlendMode {
 /**
  * Dimensionality of the camera
  **/
-enum CameraDimension {
-  CAMERA_2D,
-  CAMERA_3D
-};
+enum CameraDimension { CAMERA_2D, CAMERA_3D };
 
 /*===========================================================================
   Class with various drawing functions

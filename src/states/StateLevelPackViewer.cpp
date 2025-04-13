@@ -199,14 +199,14 @@ void StateLevelPackViewer::executeOneCommand(std::string cmd,
 }
 
 void StateLevelPackViewer::xmKey(InputEventType i_type, const XMKey &i_xmkey) {
-  if (i_type == INPUT_DOWN && (i_xmkey == XMKey(SDLK_ESCAPE, KMOD_NONE) ||
-                               i_xmkey.getJoyButton() == SDL_CONTROLLER_BUTTON_B)) {
+  if (i_type == INPUT_DOWN &&
+      (i_xmkey == XMKey(SDLK_ESCAPE, KMOD_NONE) ||
+       i_xmkey.getJoyButton() == SDL_CONTROLLER_BUTTON_B)) {
     m_requestForEnd = true;
   }
 
-  else if (i_type == INPUT_DOWN &&
-           i_xmkey ==
-             (*Input::instance()->getGlobalKey(INPUT_SWITCHFAVORITE))) {
+  else if (i_type == INPUT_DOWN && i_xmkey == (*Input::instance()->getGlobalKey(
+                                                INPUT_SWITCHFAVORITE))) {
     switchtoFavorites();
   }
 

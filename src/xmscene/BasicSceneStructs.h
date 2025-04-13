@@ -25,14 +25,14 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
   An entity can have only one Speciality
 */
 enum EntitySpeciality {
-  ET_NONE             = 1,
-  ET_ISSTART          = 2,
-  ET_MAKEWIN          = 3,
-  ET_KILL             = 4,
-  ET_ISTOTAKE         = 5,
+  ET_NONE = 1,
+  ET_ISSTART = 2,
+  ET_MAKEWIN = 3,
+  ET_KILL = 4,
+  ET_ISTOTAKE = 5,
   ET_PARTICLES_SOURCE = 6,
-  ET_JOINT            = 7,
-  ET_CHECKPOINT       = 8
+  ET_JOINT = 7,
+  ET_CHECKPOINT = 8
 };
 
 /*===========================================================================

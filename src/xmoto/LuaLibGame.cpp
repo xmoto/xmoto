@@ -20,11 +20,11 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
 #include "LuaLibGame.h"
 #include "GameEvents.h"
-#include "input/Input.h"
 #include "common/Locales.h"
 #include "common/XMSession.h"
 #include "helpers/Log.h"
 #include "helpers/VExcept.h"
+#include "input/Input.h"
 #include "xmscene/Block.h"
 #include "xmscene/Level.h"
 #include "xmscene/Scene.h"

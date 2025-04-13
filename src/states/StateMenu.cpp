@@ -28,8 +28,8 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "xmoto/input/Input.h"
 #include "xmoto/input/Joystick.h"
 #include "xmscene/Camera.h"
-#include <stdint.h>
 #include <cstdlib>
+#include <stdint.h>
 #include <utility>
 
 StateMenu::StateMenu(bool drawStateBehind, bool updateStatesBehind)
@@ -89,8 +89,7 @@ void StateMenu::xmKey(InputEventType i_type, const XMKey &i_xmkey) {
   std::string v_utf8Char;
 
   if (i_type == INPUT_DOWN &&
-      i_xmkey ==
-        (*Input::instance()->getGlobalKey(INPUT_RELOADFILESTODB))) {
+      i_xmkey == (*Input::instance()->getGlobalKey(INPUT_RELOADFILESTODB))) {
     StateManager::instance()->pushState(new StateUpdateDb());
   }
 

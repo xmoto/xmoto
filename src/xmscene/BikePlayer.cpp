@@ -1814,7 +1814,7 @@ void PlayerNetClient::updateToTime(int i_time,
     if (m_lastExtrapolateBikeState->Dir != m_previousBikeStates[1]->Dir ||
         v_hasBeenExternallyUpdated ||
         true // the inter/extra polation seems not to work correctly -- disabled
-        ) {
+    ) {
       *m_bikeState = *(m_previousBikeStates[1]);
     } else {
       // interpolate from m_lastExtrapolateBikeState to m_previousBikeStates[1]
@@ -1831,7 +1831,7 @@ void PlayerNetClient::updateToTime(int i_time,
     if (m_previousBikeStates[0]->Dir != m_previousBikeStates[1]->Dir ||
         v_hasBeenExternallyUpdated ||
         true // the inter/extra polation seems not to work correctly -- disabled
-        ) {
+    ) {
       *m_bikeState = *(m_previousBikeStates[1]);
     } else {
       if (m_previousBikeStates[1]->GameTime >

@@ -72,8 +72,8 @@ void StateLevelInfoViewer::enterAfterPop() {
 void StateLevelInfoViewer::checkEvents() {
   UIButton *pOKButton = reinterpret_cast<UIButton *>(
     m_GUI->getChild("LEVEL_VIEWER_FRAME:LEVEL_VIEWER_OK_BUTTON"));
-  UIButton *pDeleteCacheFileBtn = reinterpret_cast<UIButton *>(
-    m_GUI->getChild("LEVEL_VIEWER_FRAME:LEVEL_VIEWER_DELETE_CACHE_FILE_BUTTON"));
+  UIButton *pDeleteCacheFileBtn = reinterpret_cast<UIButton *>(m_GUI->getChild(
+    "LEVEL_VIEWER_FRAME:LEVEL_VIEWER_DELETE_CACHE_FILE_BUTTON"));
   UIButton *pLV_BestTimes_Personal = reinterpret_cast<UIButton *>(
     m_GUI->getChild("LEVEL_VIEWER_FRAME:LEVEL_VIEWER_TABS:LEVEL_VIEWER_"
                     "BESTTIMES_TAB:LEVEL_VIEWER_BESTTIMES_PERSONAL"));
@@ -223,8 +223,9 @@ void StateLevelInfoViewer::executeOneCommand(std::string cmd,
 }
 
 void StateLevelInfoViewer::xmKey(InputEventType i_type, const XMKey &i_xmkey) {
-  if (i_type == INPUT_DOWN && (i_xmkey == XMKey(SDLK_ESCAPE, KMOD_NONE) ||
-                               i_xmkey.getJoyButton() == SDL_CONTROLLER_BUTTON_B)) {
+  if (i_type == INPUT_DOWN &&
+      (i_xmkey == XMKey(SDLK_ESCAPE, KMOD_NONE) ||
+       i_xmkey.getJoyButton() == SDL_CONTROLLER_BUTTON_B)) {
     m_requestForEnd = true;
   }
 
@@ -320,8 +321,13 @@ void StateLevelInfoViewer::createGUIIfNeeded(RenderSurface *i_screen) {
   pOKButton->setID("LEVEL_VIEWER_OK_BUTTON");
   pOKButton->setContextHelp(CONTEXTHELP_BACK_TO_MAIN_MENU);
 
-  UIButton *pDeleteCacheFileBtn = new UIButton(
-    v_frame, v_frame->getPosition().nWidth - 115*2 - 10, v_frame->getPosition().nHeight - 68, GAMETEXT_DELETELEVELCACHEFILE, 115*2, 57);
+  UIButton *pDeleteCacheFileBtn =
+    new UIButton(v_frame,
+                 v_frame->getPosition().nWidth - 115 * 2 - 10,
+                 v_frame->getPosition().nHeight - 68,
+                 GAMETEXT_DELETELEVELCACHEFILE,
+                 115 * 2,
+                 57);
   pDeleteCacheFileBtn->enableWindow(false);
   pDeleteCacheFileBtn->setFont(drawLib->getFontSmall());
   pDeleteCacheFileBtn->setType(UI_BUTTON_TYPE_LARGE);
@@ -353,45 +359,28 @@ void StateLevelInfoViewer::createGUIIfNeeded(RenderSurface *i_screen) {
   pLV_Info_LevelName->setVAlign(UI_ALIGN_TOP);
   pLV_Info_LevelName->setFont(drawLib->getFontSmall());
 
-  UIStatic *pLV_Info_LevelId = new UIStatic(pLVTab_Info,
-                                              0,
-                                              80,
-                                              "",
-                                              pLVTab_Info->getPosition().nWidth,
-                                              40);
+  UIStatic *pLV_Info_LevelId =
+    new UIStatic(pLVTab_Info, 0, 80, "", pLVTab_Info->getPosition().nWidth, 40);
   pLV_Info_LevelId->setID("LEVEL_VIEWER_INFO_LEVELID");
   pLV_Info_LevelId->showWindow(true);
   pLV_Info_LevelId->setHAlign(UI_ALIGN_LEFT);
   pLV_Info_LevelId->setVAlign(UI_ALIGN_TOP);
   pLV_Info_LevelId->setFont(drawLib->getFontSmall());
 
-  UIStatic *pLV_Info_LevelFile = new UIStatic(pLVTab_Info,
-                                              0,
-                                              120,
-                                              "",
-                                              pLVTab_Info->getPosition().nWidth,
-                                              40);
+  UIStatic *pLV_Info_LevelFile = new UIStatic(
+    pLVTab_Info, 0, 120, "", pLVTab_Info->getPosition().nWidth, 40);
   pLV_Info_LevelFile->setID("LEVEL_VIEWER_INFO_LEVELFILE");
   pLV_Info_LevelFile->showWindow(true);
   pLV_Info_LevelFile->setHAlign(UI_ALIGN_LEFT);
   pLV_Info_LevelFile->setVAlign(UI_ALIGN_TOP);
   pLV_Info_LevelFile->setFont(drawLib->getFontSmall());
 
-
-  UIButton *pLV_Info_CopyLevelPath = new UIButton(pLVTab_Info,
-                                              0,
-                                              160 - 28+6,
-                                              GAMETEXT_LEVELCOPYPATH,
-                                              160,
-                                              40);
+  UIButton *pLV_Info_CopyLevelPath =
+    new UIButton(pLVTab_Info, 0, 160 - 28 + 6, GAMETEXT_LEVELCOPYPATH, 160, 40);
   pLV_Info_CopyLevelPath->setID("LEVEL_VIEWER_INFO_COPYLEVELPATH");
   pLV_Info_CopyLevelPath->enableWindow(false);
   pLV_Info_CopyLevelPath->setType(UI_BUTTON_TYPE_LARGE);
   pLV_Info_CopyLevelPath->setFont(drawLib->getFontSmall());
-
-
-
-
 
   UIStatic *pLV_Info_Author = new UIStatic(pLVTab_Info,
                                            0,
@@ -568,7 +557,8 @@ void StateLevelInfoViewer::updateGUI() {
   std::string v_levelDateStr;
 
   v_result = xmDatabase::instance("main")->readDB(
-    "SELECT a.name, a.filepath, a.author, a.description, b.packName, a.date_str "
+    "SELECT a.name, a.filepath, a.author, a.description, b.packName, "
+    "a.date_str "
     "FROM levels AS a LEFT OUTER JOIN weblevels AS b ON "
     "(a.id_level=b.id_level) WHERE a.id_level=\"" +
       xmDatabase::protectString(v_levelId) + "\";",
@@ -606,8 +596,8 @@ void StateLevelInfoViewer::updateGUI() {
     pLevelName->setCaption(v_levelName);
   }
 
-  UIButton *pDeleteCacheFileBtn = reinterpret_cast<UIButton *>(
-    m_GUI->getChild("LEVEL_VIEWER_FRAME:LEVEL_VIEWER_DELETE_CACHE_FILE_BUTTON"));
+  UIButton *pDeleteCacheFileBtn = reinterpret_cast<UIButton *>(m_GUI->getChild(
+    "LEVEL_VIEWER_FRAME:LEVEL_VIEWER_DELETE_CACHE_FILE_BUTTON"));
   pDeleteCacheFileBtn->enableWindow(levelInCache);
 
   UIStatic *pGeneralInfo_LevelPack = reinterpret_cast<UIStatic *>(
@@ -636,29 +626,32 @@ void StateLevelInfoViewer::updateGUI() {
                     "GENERALINFO_TAB:LEVEL_VIEWER_INFO_DESCRIPTION"));
 
   if (pGeneralInfo_LevelPack != NULL)
-    pGeneralInfo_LevelPack->setCaption(std::string(GAMETEXT_LEVELPACK) + ": " + v_levelPack);
+    pGeneralInfo_LevelPack->setCaption(std::string(GAMETEXT_LEVELPACK) + ": " +
+                                       v_levelPack);
 
   if (pGeneralInfo_LevelName != NULL)
-    pGeneralInfo_LevelName->setCaption(std::string(GAMETEXT_LEVELNAME) + ": " + v_levelName);
+    pGeneralInfo_LevelName->setCaption(std::string(GAMETEXT_LEVELNAME) + ": " +
+                                       v_levelName);
 
   if (pGeneralInfo_LevelId != NULL)
-    pGeneralInfo_LevelId->setCaption(std::string(GAMETEXT_LEVELID) + ": " + v_levelId);
+    pGeneralInfo_LevelId->setCaption(std::string(GAMETEXT_LEVELID) + ": " +
+                                     v_levelId);
 
   if (pGeneralInfo_LevelFile != NULL)
-    pGeneralInfo_LevelFile->setCaption(std::string(GAMETEXT_LEVELFILE) +
-                                       ": " +
-                                       (m_levelFullPath == ""
-                                          ? GAMETEXT_LEVELPATHBUILTIN
-                                          : m_levelFullPath));
+    pGeneralInfo_LevelFile->setCaption(
+      std::string(GAMETEXT_LEVELFILE) + ": " +
+      (m_levelFullPath == "" ? GAMETEXT_LEVELPATHBUILTIN : m_levelFullPath));
 
   if (pGeneralInfo_CopyLevelPath != NULL)
     pGeneralInfo_CopyLevelPath->enableWindow(m_levelFullPath != "");
 
   if (pGeneralInfo_Author != NULL)
-    pGeneralInfo_Author->setCaption(std::string(GAMETEXT_AUTHOR) + ": " + v_levelAuthor);
+    pGeneralInfo_Author->setCaption(std::string(GAMETEXT_AUTHOR) + ": " +
+                                    v_levelAuthor);
 
   if (pGeneralInfo_Date != NULL)
-    pGeneralInfo_Date->setCaption(std::string(GAMETEXT_DATE) + ": " + v_levelDateStr);
+    pGeneralInfo_Date->setCaption(std::string(GAMETEXT_DATE) + ": " +
+                                  v_levelDateStr);
 
   if (pGeneralInfo_Description != NULL) {
     if (v_levelDescription.size() <= 50) {
@@ -750,8 +743,9 @@ void StateLevelInfoViewer::updateLevelInfoViewerBestTimes() {
         "FROM webrooms AS a LEFT OUTER JOIN webhighscores AS b "
         "ON (a.id_room = b.id_room "
         "AND b.id_level=\"" +
-          xmDatabase::protectString(m_level) + "\") "
-                                               "WHERE a.id_room=" +
+          xmDatabase::protectString(m_level) +
+          "\") "
+          "WHERE a.id_room=" +
           XMSession::instance()->idRoom(0) + ";",
         nrow);
       if (nrow != 1) {
@@ -819,8 +813,9 @@ void StateLevelInfoViewer::updateLevelInfoViewerReplays() {
     } else if (pLV_Replays_Personal->getChecked()) {
       v_sql = "SELECT name, id_profile, isFinished, finishTime FROM replays "
               "WHERE id_level=\"" +
-              xmDatabase::protectString(m_level) + "\" "
-                                                   "AND   id_profile=\"" +
+              xmDatabase::protectString(m_level) +
+              "\" "
+              "AND   id_profile=\"" +
               xmDatabase::protectString(XMSession::instance()->profile()) +
               "\";";
     }

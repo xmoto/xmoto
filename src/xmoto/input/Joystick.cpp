@@ -98,11 +98,10 @@ bool JoystickInput::joyAxisRepeat(JoyAxisEvent event) {
   m_joystickRepeat = event;
 
   axis.isHeld = true;
-  axis.repeatTimer = SDL_AddTimer(JOYSTICK_REPEAT_DELAY_MS,
-      repeatTimerCallback, &m_joystickRepeat);
+  axis.repeatTimer = SDL_AddTimer(
+    JOYSTICK_REPEAT_DELAY_MS, repeatTimerCallback, &m_joystickRepeat);
   axis.lastDir = axis.dir;
   axis.dir = dir;
 
   return true;
 }
-

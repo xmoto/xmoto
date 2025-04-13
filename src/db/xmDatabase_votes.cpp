@@ -24,8 +24,9 @@ void xmDatabase::markAsVoted(const std::string &i_profile,
                              const std::string &i_id_level) {
   if (checkKey("SELECT count(1) FROM profiles_votes "
                "WHERE id_profile=\"" +
-               protectString(i_profile) + "\" AND "
-                                          "id_level=\"" +
+               protectString(i_profile) +
+               "\" AND "
+               "id_level=\"" +
                protectString(i_id_level) + "\";")) {
     return; // already marked as voted
   }
@@ -40,7 +41,8 @@ bool xmDatabase::isVoted(const std::string &i_profile,
                          const std::string &i_id_level) {
   return checkKey("SELECT count(1) FROM profiles_votes WHERE "
                   "id_profile=\"" +
-                  protectString(i_profile) + "\" AND "
-                                             "id_level=\"" +
+                  protectString(i_profile) +
+                  "\" AND "
+                  "id_level=\"" +
                   protectString(i_id_level) + "\";");
 }

@@ -19,12 +19,12 @@
   =============================================================================*/
 
 #include "GUIConsole.h"
+#include "common/TextEdit.h"
 #include "drawlib/DrawLib.h"
-#include "helpers/utf8.h"
 #include "helpers/VMath.h"
+#include "helpers/utf8.h"
 #include "include/xm_SDL.h"
 #include "xmoto/Game.h"
-#include "common/TextEdit.h"
 
 #include <algorithm> // std::max
 
@@ -102,7 +102,6 @@ void UIConsole::paint() {
           getPosition().nHeight,
           MAKE_COLOR(0, 0, 0, 220));
 
-
   auto drawTextLine = [&](const std::string &line, bool isPrompt) {
     v_fg = v_fm->getGlyphTabExtended(line);
 
@@ -116,7 +115,8 @@ void UIConsole::paint() {
       auto glyph = v_fg;
 
       if (m_textEdit.cursorPos() < utf8::utf8_length(line)) {
-        auto s = utf8::utf8_substring(line, 0, promptLength + m_textEdit.cursorPos());
+        auto s =
+          utf8::utf8_substring(line, 0, promptLength + m_textEdit.cursorPos());
         glyph = v_fm->getGlyph(s);
       }
 
@@ -126,7 +126,6 @@ void UIConsole::paint() {
 
     v_YOffset += m_lineHeight;
   };
-
 
   uint32_t start = (uint32_t)std::max<int32_t>(m_scroll, 0);
   for (uint32_t i = start; i < m_scrollback.size(); i++) {
@@ -139,7 +138,6 @@ void UIConsole::paint() {
     line = PROMPT_CHAR + m_textEdit.text();
 
   drawTextLine(line, true);
-
 
   bool blink = (GameApp::getXMTimeInt() / 100) % 10 < 5;
 
@@ -212,7 +210,9 @@ void UIConsole::output(const std::string &i_line) {
   m_waitForResponse = false;
 }
 
-bool UIConsole::textInput(int nKey, SDL_Keymod mod, const std::string &i_utf8Char) {
+bool UIConsole::textInput(int nKey,
+                          SDL_Keymod mod,
+                          const std::string &i_utf8Char) {
   // alt/... and special keys must not be kept
   if (utf8::utf8_length(i_utf8Char) != 1)
     return true;
@@ -226,7 +226,9 @@ bool UIConsole::textInput(int nKey, SDL_Keymod mod, const std::string &i_utf8Cha
   return true;
 }
 
-bool UIConsole::keyDown(int nKey, SDL_Keymod mod, const std::string &i_utf8Char) {
+bool UIConsole::keyDown(int nKey,
+                        SDL_Keymod mod,
+                        const std::string &i_utf8Char) {
   // EOF
   if (nKey == SDLK_d && (mod & KMOD_CTRL) && m_textEdit.text().empty()) {
     execInternal("exit");
@@ -240,7 +242,6 @@ bool UIConsole::keyDown(int nKey, SDL_Keymod mod, const std::string &i_utf8Char)
 
   if (m_waitForResponse)
     return false;
-
 
   bool needScrollReset = true;
 

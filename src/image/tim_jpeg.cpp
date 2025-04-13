@@ -83,7 +83,9 @@ typedef struct _tim_destination_mgr_t {
 } tim_destination_mgr_t;
 
 /* Jpeg RGB pixel format */
-typedef struct _tim_jpeg_pixel_t { unsigned char r, g, b; } tim_jpeg_pixel_t;
+typedef struct _tim_jpeg_pixel_t {
+  unsigned char r, g, b;
+} tim_jpeg_pixel_t;
 
 /*==============================================================================
 Error stuff

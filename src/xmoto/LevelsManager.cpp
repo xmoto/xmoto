@@ -66,8 +66,9 @@ void LevelsPack::updateCount(xmDatabase *i_db, const std::string &i_profile) {
     "SELECT count(1) FROM (SELECT a.id_level FROM (" + m_sql_levels +
       ") AS a INNER JOIN stats_profiles_levels AS b ON a.id_level=b.id_level "
       "WHERE b.id_profile=\"" +
-      xmDatabase::protectString(i_profile) + "\" AND b.nbCompleted+0 > 0 "
-                                             "GROUP BY a.id_level);",
+      xmDatabase::protectString(i_profile) +
+      "\" AND b.nbCompleted+0 > 0 "
+      "GROUP BY a.id_level);",
     nrow);
 
   if (nrow != 1) {
@@ -94,12 +95,14 @@ std::string LevelsPack::getLevelsWithHighscoresQuery(
   return "SELECT a.id_level AS id_level, MIN(a.name) AS name, "
          "MIN(c.finishTime+0), MIN(b.finishTime+0) "
          "FROM (" +
-         m_sql_levels + ") AS a "
-                        "LEFT OUTER JOIN webhighscores AS b "
-                        "ON (a.id_level = b.id_level AND b.id_room=" +
-         i_id_room + ") "
-                     "LEFT OUTER JOIN profile_completedLevels AS c "
-                     "ON (a.id_level=c.id_level AND c.id_profile=\"" +
+         m_sql_levels +
+         ") AS a "
+         "LEFT OUTER JOIN webhighscores AS b "
+         "ON (a.id_level = b.id_level AND b.id_room=" +
+         i_id_room +
+         ") "
+         "LEFT OUTER JOIN profile_completedLevels AS c "
+         "ON (a.id_level=c.id_level AND c.id_profile=\"" +
          xmDatabase::protectString(i_profile) +
          "\") "
          "GROUP BY a.id_level ORDER BY MIN(a.sort_field) " +
@@ -343,12 +346,14 @@ void LevelsManager::makePacks(const std::string &i_playerName,
     "FROM webhighscores AS a INNER JOIN levels AS b "
     "ON (a.id_level = b.id_level "
     "AND a.id_room=" +
-      i_id_room + ") "
-                  "LEFT OUTER JOIN weblevels AS c ON a.id_level=c.id_level "
-                  "LEFT OUTER JOIN levels_blacklist AS d ON (a.id_level = "
-                  "d.id_level AND d.id_profile=\"" +
-      xmDatabase::protectString(i_playerName) + "\") "
-                                                "WHERE a.id_profile = \"" +
+      i_id_room +
+      ") "
+      "LEFT OUTER JOIN weblevels AS c ON a.id_level=c.id_level "
+      "LEFT OUTER JOIN levels_blacklist AS d ON (a.id_level = "
+      "d.id_level AND d.id_profile=\"" +
+      xmDatabase::protectString(i_playerName) +
+      "\") "
+      "WHERE a.id_profile = \"" +
       xmDatabase::protectString(i_playerName) +
       "\" "
       "AND d.id_level IS NULL "
@@ -359,130 +364,136 @@ void LevelsManager::makePacks(const std::string &i_playerName,
   v_pack->setDescription(VPACKAGENAME_DESC_MEDAL_PLATINIUM);
   m_levelsPacks.push_back(v_pack);
 
-  v_pack = new LevelsPack(
-    std::string(VPACKAGENAME_MEDAL_GOLD),
-    "SELECT id_level, name, sort_field FROM ("
-    "SELECT a.id_level AS id_level, MAX(b.name) AS name, "
-    "UPPER(MAX(b.name)) AS sort_field, "
-    "MIN(c.finishTime+0) AS webFinishTime, MIN(a.finishTime+0) "
-    "AS userFinishTime "
-    "FROM profile_completedLevels AS a INNER JOIN levels AS b "
-    "ON (a.id_level = b.id_level "
-    "AND a.id_profile=\"" +
-      xmDatabase::protectString(i_playerName) +
-      "\") "
-      "LEFT OUTER JOIN webhighscores AS c "
-      "ON (c.id_level = a.id_level AND c.id_room=" +
-      i_id_room + ") "
-                  "LEFT OUTER JOIN weblevels AS d ON a.id_level=d.id_level "
-                  "LEFT OUTER JOIN levels_blacklist AS e ON (a.id_level = "
-                  "e.id_level AND e.id_profile=\"" +
-      xmDatabase::protectString(i_playerName) +
-      "\") "
-      "WHERE (d.crappy IS NULL OR xm_userCrappy(d.crappy)=0) "
-      "AND (d.children_compliant IS NULL OR "
-      "xm_userChildrenCompliant(d.children_compliant)=1) "
-      "AND e.id_level IS NULL "
-      "GROUP BY a.id_level " /* get the best highscores */
-      ") "
-      "WHERE (webFinishTime IS NULL OR webFinishTime+0 >= "
-      "userFinishTime*0.95) "
-      "EXCEPT " /* remove the webhighscores where the player's
-                   name is the same */
-      "SELECT b.id_level AS id_level, b.name AS name, "
-      "UPPER(b.name) AS sort_field "
-      "FROM webhighscores AS a INNER JOIN levels AS b "
-      "ON (a.id_level = b.id_level "
-      "AND a.id_room=" +
-      i_id_room + ") "
-                  "WHERE a.id_profile = \"" +
-      xmDatabase::protectString(i_playerName) + "\"");
+  v_pack =
+    new LevelsPack(std::string(VPACKAGENAME_MEDAL_GOLD),
+                   "SELECT id_level, name, sort_field FROM ("
+                   "SELECT a.id_level AS id_level, MAX(b.name) AS name, "
+                   "UPPER(MAX(b.name)) AS sort_field, "
+                   "MIN(c.finishTime+0) AS webFinishTime, MIN(a.finishTime+0) "
+                   "AS userFinishTime "
+                   "FROM profile_completedLevels AS a INNER JOIN levels AS b "
+                   "ON (a.id_level = b.id_level "
+                   "AND a.id_profile=\"" +
+                     xmDatabase::protectString(i_playerName) +
+                     "\") "
+                     "LEFT OUTER JOIN webhighscores AS c "
+                     "ON (c.id_level = a.id_level AND c.id_room=" +
+                     i_id_room +
+                     ") "
+                     "LEFT OUTER JOIN weblevels AS d ON a.id_level=d.id_level "
+                     "LEFT OUTER JOIN levels_blacklist AS e ON (a.id_level = "
+                     "e.id_level AND e.id_profile=\"" +
+                     xmDatabase::protectString(i_playerName) +
+                     "\") "
+                     "WHERE (d.crappy IS NULL OR xm_userCrappy(d.crappy)=0) "
+                     "AND (d.children_compliant IS NULL OR "
+                     "xm_userChildrenCompliant(d.children_compliant)=1) "
+                     "AND e.id_level IS NULL "
+                     "GROUP BY a.id_level " /* get the best highscores */
+                     ") "
+                     "WHERE (webFinishTime IS NULL OR webFinishTime+0 >= "
+                     "userFinishTime*0.95) "
+                     "EXCEPT " /* remove the webhighscores where the player's
+                                  name is the same */
+                     "SELECT b.id_level AS id_level, b.name AS name, "
+                     "UPPER(b.name) AS sort_field "
+                     "FROM webhighscores AS a INNER JOIN levels AS b "
+                     "ON (a.id_level = b.id_level "
+                     "AND a.id_room=" +
+                     i_id_room +
+                     ") "
+                     "WHERE a.id_profile = \"" +
+                     xmDatabase::protectString(i_playerName) + "\"");
   v_pack->setGroup(GAMETEXT_PACK_MEDALS);
   v_pack->setDescription(VPACKAGENAME_DESC_MEDAL_GOLD);
   m_levelsPacks.push_back(v_pack);
 
-  v_pack = new LevelsPack(
-    std::string(VPACKAGENAME_MEDAL_SILVER),
-    "SELECT id_level, name, sort_field FROM ("
-    "SELECT a.id_level AS id_level, MAX(b.name) AS name, "
-    "UPPER(MAX(b.name)) AS sort_field, "
-    "MIN(c.finishTime+0) AS webFinishTime, MIN(a.finishTime+0) "
-    "AS userFinishTime "
-    "FROM profile_completedLevels AS a INNER JOIN levels AS b "
-    "ON (a.id_level = b.id_level "
-    "AND a.id_profile=\"" +
-      xmDatabase::protectString(i_playerName) +
-      "\") "
-      "LEFT OUTER JOIN webhighscores AS c "
-      "ON (c.id_level = a.id_level AND c.id_room=" +
-      i_id_room + ") "
-                  "LEFT OUTER JOIN weblevels AS d ON a.id_level=d.id_level "
-                  "LEFT OUTER JOIN levels_blacklist AS e ON (a.id_level = "
-                  "e.id_level AND e.id_profile=\"" +
-      xmDatabase::protectString(i_playerName) +
-      "\") "
-      "WHERE (d.crappy IS NULL OR xm_userCrappy(d.crappy)=0) "
-      "AND (d.children_compliant IS NULL OR "
-      "xm_userChildrenCompliant(d.children_compliant)=1) "
-      "AND e.id_level IS NULL "
-      "GROUP BY a.id_level " /* get the best highscores */
-      ") "
-      "WHERE (webFinishTime IS NOT NULL "
-      "AND webFinishTime+0 >= userFinishTime*0.90 "
-      "AND webFinishTime+0 < userFinishTime*0.95) "
-      "EXCEPT " /* remove the webhighscores where the player's
-                   name is the same */
-      "SELECT b.id_level AS id_level, b.name AS name, "
-      "UPPER(b.name) AS sort_field "
-      "FROM webhighscores AS a INNER JOIN levels AS b "
-      "ON (a.id_level = b.id_level "
-      "AND a.id_room=" +
-      i_id_room + ") "
-                  "WHERE a.id_profile = \"" +
-      xmDatabase::protectString(i_playerName) + "\"");
+  v_pack =
+    new LevelsPack(std::string(VPACKAGENAME_MEDAL_SILVER),
+                   "SELECT id_level, name, sort_field FROM ("
+                   "SELECT a.id_level AS id_level, MAX(b.name) AS name, "
+                   "UPPER(MAX(b.name)) AS sort_field, "
+                   "MIN(c.finishTime+0) AS webFinishTime, MIN(a.finishTime+0) "
+                   "AS userFinishTime "
+                   "FROM profile_completedLevels AS a INNER JOIN levels AS b "
+                   "ON (a.id_level = b.id_level "
+                   "AND a.id_profile=\"" +
+                     xmDatabase::protectString(i_playerName) +
+                     "\") "
+                     "LEFT OUTER JOIN webhighscores AS c "
+                     "ON (c.id_level = a.id_level AND c.id_room=" +
+                     i_id_room +
+                     ") "
+                     "LEFT OUTER JOIN weblevels AS d ON a.id_level=d.id_level "
+                     "LEFT OUTER JOIN levels_blacklist AS e ON (a.id_level = "
+                     "e.id_level AND e.id_profile=\"" +
+                     xmDatabase::protectString(i_playerName) +
+                     "\") "
+                     "WHERE (d.crappy IS NULL OR xm_userCrappy(d.crappy)=0) "
+                     "AND (d.children_compliant IS NULL OR "
+                     "xm_userChildrenCompliant(d.children_compliant)=1) "
+                     "AND e.id_level IS NULL "
+                     "GROUP BY a.id_level " /* get the best highscores */
+                     ") "
+                     "WHERE (webFinishTime IS NOT NULL "
+                     "AND webFinishTime+0 >= userFinishTime*0.90 "
+                     "AND webFinishTime+0 < userFinishTime*0.95) "
+                     "EXCEPT " /* remove the webhighscores where the player's
+                                  name is the same */
+                     "SELECT b.id_level AS id_level, b.name AS name, "
+                     "UPPER(b.name) AS sort_field "
+                     "FROM webhighscores AS a INNER JOIN levels AS b "
+                     "ON (a.id_level = b.id_level "
+                     "AND a.id_room=" +
+                     i_id_room +
+                     ") "
+                     "WHERE a.id_profile = \"" +
+                     xmDatabase::protectString(i_playerName) + "\"");
   v_pack->setGroup(GAMETEXT_PACK_MEDALS);
   v_pack->setDescription(VPACKAGENAME_DESC_MEDAL_SILVER);
   m_levelsPacks.push_back(v_pack);
 
-  v_pack = new LevelsPack(
-    std::string(VPACKAGENAME_MEDAL_BRONZE),
-    "SELECT id_level, name, sort_field FROM ("
-    "SELECT a.id_level AS id_level, MAX(b.name) AS name, "
-    "UPPER(MAX(b.name)) AS sort_field, "
-    "MIN(c.finishTime+0) AS webFinishTime, MIN(a.finishTime+0) "
-    "AS userFinishTime "
-    "FROM profile_completedLevels AS a INNER JOIN levels AS b "
-    "ON (a.id_level = b.id_level "
-    "AND a.id_profile=\"" +
-      xmDatabase::protectString(i_playerName) +
-      "\") "
-      "LEFT OUTER JOIN webhighscores AS c "
-      "ON (c.id_level = a.id_level AND c.id_room=" +
-      i_id_room + ") "
-                  "LEFT OUTER JOIN weblevels AS d ON a.id_level=d.id_level "
-                  "LEFT OUTER JOIN levels_blacklist AS e ON (a.id_level = "
-                  "e.id_level AND e.id_profile=\"" +
-      xmDatabase::protectString(i_playerName) +
-      "\") "
-      "WHERE (d.crappy IS NULL OR xm_userCrappy(d.crappy)=0) "
-      "AND (d.children_compliant IS NULL OR "
-      "xm_userChildrenCompliant(d.children_compliant)=1) "
-      "AND e.id_level IS NULL "
-      "GROUP BY a.id_level " /* get the best highscores */
-      ") "
-      "WHERE (webFinishTime IS NOT NULL "
-      "AND webFinishTime+0 >= userFinishTime*0.80 "
-      "AND webFinishTime+0 < userFinishTime*0.90) "
-      "EXCEPT " /* remove the webhighscores where the player's
-                   name is the same */
-      "SELECT b.id_level AS id_level, b.name AS name, "
-      "UPPER(b.name) AS sort_field "
-      "FROM webhighscores AS a INNER JOIN levels AS b "
-      "ON (a.id_level = b.id_level "
-      "AND a.id_room=" +
-      i_id_room + ") "
-                  "WHERE a.id_profile = \"" +
-      xmDatabase::protectString(i_playerName) + "\"");
+  v_pack =
+    new LevelsPack(std::string(VPACKAGENAME_MEDAL_BRONZE),
+                   "SELECT id_level, name, sort_field FROM ("
+                   "SELECT a.id_level AS id_level, MAX(b.name) AS name, "
+                   "UPPER(MAX(b.name)) AS sort_field, "
+                   "MIN(c.finishTime+0) AS webFinishTime, MIN(a.finishTime+0) "
+                   "AS userFinishTime "
+                   "FROM profile_completedLevels AS a INNER JOIN levels AS b "
+                   "ON (a.id_level = b.id_level "
+                   "AND a.id_profile=\"" +
+                     xmDatabase::protectString(i_playerName) +
+                     "\") "
+                     "LEFT OUTER JOIN webhighscores AS c "
+                     "ON (c.id_level = a.id_level AND c.id_room=" +
+                     i_id_room +
+                     ") "
+                     "LEFT OUTER JOIN weblevels AS d ON a.id_level=d.id_level "
+                     "LEFT OUTER JOIN levels_blacklist AS e ON (a.id_level = "
+                     "e.id_level AND e.id_profile=\"" +
+                     xmDatabase::protectString(i_playerName) +
+                     "\") "
+                     "WHERE (d.crappy IS NULL OR xm_userCrappy(d.crappy)=0) "
+                     "AND (d.children_compliant IS NULL OR "
+                     "xm_userChildrenCompliant(d.children_compliant)=1) "
+                     "AND e.id_level IS NULL "
+                     "GROUP BY a.id_level " /* get the best highscores */
+                     ") "
+                     "WHERE (webFinishTime IS NOT NULL "
+                     "AND webFinishTime+0 >= userFinishTime*0.80 "
+                     "AND webFinishTime+0 < userFinishTime*0.90) "
+                     "EXCEPT " /* remove the webhighscores where the player's
+                                  name is the same */
+                     "SELECT b.id_level AS id_level, b.name AS name, "
+                     "UPPER(b.name) AS sort_field "
+                     "FROM webhighscores AS a INNER JOIN levels AS b "
+                     "ON (a.id_level = b.id_level "
+                     "AND a.id_room=" +
+                     i_id_room +
+                     ") "
+                     "WHERE a.id_profile = \"" +
+                     xmDatabase::protectString(i_playerName) + "\"");
   v_pack->setGroup(GAMETEXT_PACK_MEDALS);
   v_pack->setDescription(VPACKAGENAME_DESC_MEDAL_BRONZE);
   m_levelsPacks.push_back(v_pack);
@@ -491,34 +502,38 @@ void LevelsManager::makePacks(const std::string &i_playerName,
     std::string(VPACKAGENAME_MEDAL_NONE),
     "SELECT a.id_level AS id_level, a.name AS name, "
     "UPPER(a.name) AS sort_field "
-    "FROM levels AS a " 
+    "FROM levels AS a "
     "LEFT OUTER JOIN (SELECT id_level, MIN(finishTime+0) AS userFinishTime "
     "FROM profile_completedLevels WHERE id_profile=\"" +
       xmDatabase::protectString(i_playerName) +
-    "\" GROUP BY id_level) b ON a.id_level = b.id_level "
+      "\" GROUP BY id_level) b ON a.id_level = b.id_level "
       "LEFT OUTER JOIN (SELECT id_level, MIN(finishTime+0) AS webFinishTime "
-      "FROM webhighscores WHERE id_room=" + 
-      i_id_room + " GROUP BY id_level) c ON a.id_level = c.id_level "
+      "FROM webhighscores WHERE id_room=" +
+      i_id_room +
+      " GROUP BY id_level) c ON a.id_level = c.id_level "
       "WHERE "
       "(a.id_level IN (SELECT id_level FROM weblevels WHERE "
       "(crappy IS NULL OR xm_userCrappy(crappy)=0) "
       "AND (children_compliant IS NULL OR "
       "xm_userChildrenCompliant(children_compliant)=1)) OR "
-      "a.id_level NOT IN (SELECT id_level FROM weblevels)) " // is local level only
-      "AND a.id_level NOT IN (SELECT id_level FROM levels_blacklist WHERE id_profile=\"" +
+      "a.id_level NOT IN (SELECT id_level FROM weblevels)) " // is local level
+                                                             // only
+      "AND a.id_level NOT IN (SELECT id_level FROM levels_blacklist WHERE "
+      "id_profile=\"" +
       xmDatabase::protectString(i_playerName) +
       "\") "
       "AND ((webFinishTime IS NOT NULL "
       "AND webFinishTime+0 < userFinishTime*0.80) "
       "OR userFinishTime IS NULL) "
-      "AND a.id_level NOT IN ( " /* remove the webhighscores where the player's name is the
-                   same */
+      "AND a.id_level NOT IN ( " /* remove the webhighscores where the player's
+                   name is the same */
       "SELECT b.id_level "
       "FROM webhighscores AS a INNER JOIN levels AS b "
       "ON (a.id_level = b.id_level "
       "AND a.id_room=" +
-      i_id_room + ") "
-                  "WHERE a.id_profile = \"" +
+      i_id_room +
+      ") "
+      "WHERE a.id_profile = \"" +
       xmDatabase::protectString(i_playerName) + "\")");
   v_pack->setGroup(GAMETEXT_PACK_MEDALS);
   v_pack->setDescription(VPACKAGENAME_DESC_MEDAL_NONE);
@@ -738,9 +753,10 @@ void LevelsManager::makePacks(const std::string &i_playerName,
     "sort_field "
     "FROM levels AS a INNER JOIN webhighscores AS b ON (a.id_level=b.id_level "
     "AND b.id_room=" +
-      i_id_room + ") "
-                  "LEFT OUTER JOIN levels_blacklist AS c ON (a.id_level = "
-                  "c.id_level AND c.id_profile=\"" +
+      i_id_room +
+      ") "
+      "LEFT OUTER JOIN levels_blacklist AS c ON (a.id_level = "
+      "c.id_level AND c.id_profile=\"" +
       xmDatabase::protectString(i_playerName) +
       "\") "
       "LEFT OUTER JOIN weblevels AS d ON a.id_level=d.id_level "
@@ -759,9 +775,10 @@ void LevelsManager::makePacks(const std::string &i_playerName,
     "sort_field "
     "FROM levels AS a INNER JOIN webhighscores AS b ON (a.id_level=b.id_level "
     "AND b.id_room=" +
-      i_id_room + ") "
-                  "LEFT OUTER JOIN levels_blacklist AS c ON (a.id_level = "
-                  "c.id_level AND c.id_profile=\"" +
+      i_id_room +
+      ") "
+      "LEFT OUTER JOIN levels_blacklist AS c ON (a.id_level = "
+      "c.id_level AND c.id_profile=\"" +
       xmDatabase::protectString(i_playerName) +
       "\") "
       "LEFT OUTER JOIN weblevels AS d ON a.id_level=d.id_level "
@@ -781,9 +798,10 @@ void LevelsManager::makePacks(const std::string &i_playerName,
     "sort_field "
     "FROM levels AS a INNER JOIN webhighscores AS b ON (a.id_level=b.id_level "
     "AND b.id_room=" +
-      i_id_room + ") "
-                  "LEFT OUTER JOIN levels_blacklist AS c ON (a.id_level = "
-                  "c.id_level AND c.id_profile=\"" +
+      i_id_room +
+      ") "
+      "LEFT OUTER JOIN levels_blacklist AS c ON (a.id_level = "
+      "c.id_level AND c.id_profile=\"" +
       xmDatabase::protectString(i_playerName) +
       "\") "
       "LEFT OUTER JOIN weblevels AS d ON a.id_level=d.id_level "
@@ -803,9 +821,10 @@ void LevelsManager::makePacks(const std::string &i_playerName,
     "sort_field "
     "FROM levels AS a INNER JOIN webhighscores AS b ON (a.id_level=b.id_level "
     "AND b.id_room=" +
-      i_id_room + ") "
-                  "LEFT OUTER JOIN levels_blacklist AS c ON (a.id_level = "
-                  "c.id_level AND c.id_profile=\"" +
+      i_id_room +
+      ") "
+      "LEFT OUTER JOIN levels_blacklist AS c ON (a.id_level = "
+      "c.id_level AND c.id_profile=\"" +
       xmDatabase::protectString(i_playerName) +
       "\") "
       "LEFT OUTER JOIN weblevels AS d ON a.id_level=d.id_level "
@@ -826,9 +845,10 @@ void LevelsManager::makePacks(const std::string &i_playerName,
                  "AND (b.children_compliant IS NULL OR "
                  "xm_userChildrenCompliant(b.children_compliant)=1) "
                  "AND a.id_room=" +
-                   i_id_room + " "
-                               "GROUP BY a.id_profile "
-                               "ORDER BY COUNT(1) DESC LIMIT 10;",
+                   i_id_room +
+                   " "
+                   "GROUP BY a.id_profile "
+                   "ORDER BY COUNT(1) DESC LIMIT 10;",
                  nrow);
   for (unsigned int i = 0; i < nrow; i++) {
     char v_levelPackStr[256];
@@ -847,12 +867,14 @@ void LevelsManager::makePacks(const std::string &i_playerName,
       "FROM levels AS a INNER JOIN "
       "webhighscores AS b ON (a.id_level = b.id_level "
       "AND b.id_room=" +
-        i_id_room + ") "
-                    "LEFT OUTER JOIN weblevels AS c ON a.id_level=c.id_level "
-                    "LEFT OUTER JOIN levels_blacklist AS d ON (a.id_level = "
-                    "d.id_level AND d.id_profile=\"" +
-        xmDatabase::protectString(i_playerName) + "\") "
-                                                  "WHERE b.id_profile=\"" +
+        i_id_room +
+        ") "
+        "LEFT OUTER JOIN weblevels AS c ON a.id_level=c.id_level "
+        "LEFT OUTER JOIN levels_blacklist AS d ON (a.id_level = "
+        "d.id_level AND d.id_profile=\"" +
+        xmDatabase::protectString(i_playerName) +
+        "\") "
+        "WHERE b.id_profile=\"" +
         xmDatabase::protectString(v_id_profile) +
         "\" "
         "AND (c.crappy IS NULL OR xm_userCrappy(c.crappy)=0) "
@@ -931,8 +953,8 @@ void LevelsManager::reloadExternalLevels(
 }
 
 std::string LevelsManager::addExternalLevel(std::string i_levelFile,
-                                     xmDatabase *i_db,
-                                     bool i_loadMainLayerOnly) {
+                                            xmDatabase *i_db,
+                                            bool i_loadMainLayerOnly) {
   std::string id = i_levelFile;
   Level *v_level = new Level();
   try {
@@ -1194,14 +1216,14 @@ bool LevelsManager::isInFavorite(std::string i_profile,
   int v_n;
 
   /* check if the level is already into the favorite list */
-  v_result =
-    i_db->readDB("SELECT COUNT(id_level) "
-                 "FROM levels_favorite "
-                 "WHERE id_level=\"" +
-                   i_db->protectString(i_id_level) + "\" "
-                                                     "AND   id_profile=\"" +
-                   i_db->protectString(i_profile) + "\";",
-                 nrow);
+  v_result = i_db->readDB("SELECT COUNT(id_level) "
+                          "FROM levels_favorite "
+                          "WHERE id_level=\"" +
+                            i_db->protectString(i_id_level) +
+                            "\" "
+                            "AND   id_profile=\"" +
+                            i_db->protectString(i_profile) + "\";",
+                          nrow);
   v_n = atoi(i_db->getResult(v_result, 1, 0, 0));
   i_db->read_DB_free(v_result);
 
@@ -1232,14 +1254,14 @@ bool LevelsManager::isInBlacklist(std::string i_profile,
   int v_n;
 
   /* check if the level is already into the blacklist list */
-  v_result =
-    i_db->readDB("SELECT COUNT(id_level) "
-                 "FROM levels_blacklist "
-                 "WHERE id_level=\"" +
-                   i_db->protectString(i_id_level) + "\" "
-                                                     "AND   id_profile=\"" +
-                   i_db->protectString(i_profile) + "\";",
-                 nrow);
+  v_result = i_db->readDB("SELECT COUNT(id_level) "
+                          "FROM levels_blacklist "
+                          "WHERE id_level=\"" +
+                            i_db->protectString(i_id_level) +
+                            "\" "
+                            "AND   id_profile=\"" +
+                            i_db->protectString(i_profile) + "\";",
+                          nrow);
   v_n = atoi(i_db->getResult(v_result, 1, 0, 0));
   i_db->read_DB_free(v_result);
 
@@ -1299,9 +1321,10 @@ std::string LevelsManager::getQuickStartPackQuery(unsigned int i_qualityMIN,
            "FROM levels AS a "
            "INNER JOIN webhighscores AS b ON (a.id_level = b.id_level AND "
            "b.id_room=" +
-           i_id_room + ") "
-                       "LEFT OUTER JOIN profile_completedLevels AS c "
-                       "ON (a.id_level=c.id_level AND c.id_profile=\"" +
+           i_id_room +
+           ") "
+           "LEFT OUTER JOIN profile_completedLevels AS c "
+           "ON (a.id_level=c.id_level AND c.id_profile=\"" +
            xmDatabase::protectString(i_profile) +
            "\") "
            "WHERE b.packName=\"Tutorials\" "
@@ -1352,14 +1375,18 @@ std::string LevelsManager::getQuickStartPackQuery(unsigned int i_qualityMIN,
     "INNER JOIN weblevels AS b ON a.id_level = b.id_level "
     "LEFT OUTER JOIN levels_blacklist AS c ON (a.id_level = c.id_level AND "
     "c.id_profile = \"" +
-      xmDatabase::protectString(i_profile) + "\") "
-                                             "WHERE b.quality+0    <= " +
-      v_qualityMAXStr.str() + " "
-                              "AND   b.quality+0    >= " +
-      v_qualityMINStr.str() + " "
-                              "AND   b.difficulty+0 <= " +
-      v_difficultyMAXStr.str() + " "
-                                 "AND   b.difficulty+0 >= " +
+      xmDatabase::protectString(i_profile) +
+      "\") "
+      "WHERE b.quality+0    <= " +
+      v_qualityMAXStr.str() +
+      " "
+      "AND   b.quality+0    >= " +
+      v_qualityMINStr.str() +
+      " "
+      "AND   b.difficulty+0 <= " +
+      v_difficultyMAXStr.str() +
+      " "
+      "AND   b.difficulty+0 >= " +
       v_difficultyMINStr.str() +
       " "
       "AND   xm_userCrappy(b.crappy)=0 "
@@ -1378,21 +1405,26 @@ std::string LevelsManager::getQuickStartPackQuery(unsigned int i_qualityMIN,
            "INNER JOIN weblevels AS b ON a.id_level = b.id_level "
            "LEFT OUTER JOIN webhighscores AS c ON (a.id_level = c.id_level AND "
            "c.id_room=" +
-           i_id_room + ") "
-                       "LEFT OUTER JOIN profile_completedLevels AS d "
-                       "ON (a.id_level=d.id_level AND d.id_profile=\"" +
+           i_id_room +
+           ") "
+           "LEFT OUTER JOIN profile_completedLevels AS d "
+           "ON (a.id_level=d.id_level AND d.id_profile=\"" +
            xmDatabase::protectString(i_profile) +
            "\") "
            "LEFT OUTER JOIN levels_blacklist AS e ON (a.id_level = e.id_level "
            "AND e.id_profile=\"" +
-           xmDatabase::protectString(i_profile) + "\") "
-                                                  "WHERE b.quality+0    <= " +
-           v_qualityMAXStr.str() + " "
-                                   "AND   b.quality+0    >= " +
-           v_qualityMINStr.str() + " "
-                                   "AND   b.difficulty+0 <= " +
-           v_difficultyMAXStr.str() + " "
-                                      "AND   b.difficulty+0 >= " +
+           xmDatabase::protectString(i_profile) +
+           "\") "
+           "WHERE b.quality+0    <= " +
+           v_qualityMAXStr.str() +
+           " "
+           "AND   b.quality+0    >= " +
+           v_qualityMINStr.str() +
+           " "
+           "AND   b.difficulty+0 <= " +
+           v_difficultyMAXStr.str() +
+           " "
+           "AND   b.difficulty+0 >= " +
            v_difficultyMINStr.str() +
            " "
            "AND   xm_userCrappy(b.crappy)=0 "
@@ -1407,9 +1439,10 @@ std::string LevelsManager::getQuickStartPackQuery(unsigned int i_qualityMIN,
            "FROM levels AS a "
            "LEFT OUTER JOIN webhighscores AS b ON (a.id_level = b.id_level AND "
            "b.id_room=" +
-           i_id_room + ") "
-                       "LEFT OUTER JOIN profile_completedLevels AS c "
-                       "ON (a.id_level=c.id_level AND c.id_profile=\"" +
+           i_id_room +
+           ") "
+           "LEFT OUTER JOIN profile_completedLevels AS c "
+           "ON (a.id_level=c.id_level AND c.id_profile=\"" +
            xmDatabase::protectString(i_profile) +
            "\") "
            "LEFT OUTER JOIN weblevels AS d ON (a.id_level=d.id_level) "

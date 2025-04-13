@@ -740,9 +740,8 @@ void StateMainMenu::xmKey(InputEventType i_type, const XMKey &i_xmkey) {
     StateManager::instance()->pushState(new StateHelp());
   }
 
-  else if (i_type == INPUT_DOWN &&
-           i_xmkey ==
-             (*Input::instance()->getGlobalKey(INPUT_SWITCHFAVORITE))) {
+  else if (i_type == INPUT_DOWN && i_xmkey == (*Input::instance()->getGlobalKey(
+                                                INPUT_SWITCHFAVORITE))) {
     /* switch favorites */
     v_newLevelsList = (UILevelList *)m_GUI->getChild(
       "MAIN:FRAME_LEVELS:TABS:NEWLEVELS_TAB:NEWLEVELS_LIST");
@@ -766,8 +765,9 @@ void StateMainMenu::xmKey(InputEventType i_type, const XMKey &i_xmkey) {
     }
   }
 
-  else if (i_type == INPUT_DOWN && (i_xmkey == XMKey(SDLK_ESCAPE, KMOD_NONE) ||
-                                    i_xmkey.getJoyButton() == SDL_CONTROLLER_BUTTON_B)) {
+  else if (i_type == INPUT_DOWN &&
+           (i_xmkey == XMKey(SDLK_ESCAPE, KMOD_NONE) ||
+            i_xmkey.getJoyButton() == SDL_CONTROLLER_BUTTON_B)) {
     UIWindow *v_windowLevels =
       reinterpret_cast<UIWindow *>(m_GUI->getChild("MAIN:FRAME_LEVELS"));
     UIWindow *v_windowReplays =
@@ -799,13 +799,16 @@ void StateMainMenu::xmKey(InputEventType i_type, const XMKey &i_xmkey) {
   }
 
   /* the "Back" button is the one on the left side of the guide button */
-  else if (i_type == INPUT_DOWN && i_xmkey.getJoyButton() == SDL_CONTROLLER_BUTTON_BACK) {
-    UIFrame *v_stats = reinterpret_cast<UIFrame *>(m_GUI->getChild("MAIN:STATS"));
+  else if (i_type == INPUT_DOWN &&
+           i_xmkey.getJoyButton() == SDL_CONTROLLER_BUTTON_BACK) {
+    UIFrame *v_stats =
+      reinterpret_cast<UIFrame *>(m_GUI->getChild("MAIN:STATS"));
     v_stats->toggle();
   }
 
   else if (i_type == INPUT_DOWN &&
-           i_xmkey == (*Input::instance()->getGlobalKey(INPUT_TOGGLESERVERCONN)) &&
+           i_xmkey ==
+             (*Input::instance()->getGlobalKey(INPUT_TOGGLESERVERCONN)) &&
            i_xmkey.getRepetition() == 0) {
     StateManager::instance()->connectOrDisconnect();
   }
@@ -822,10 +825,10 @@ void StateMainMenu::fileDrop(const std::string &path) {
   if (ext == "lvl") {
     try {
       levelId = LevelsManager::instance()->addExternalLevel(
-          path, xmDatabase::instance("main"), false);
+        path, xmDatabase::instance("main"), false);
       if (levelId.empty())
         levelId = LevelsManager::instance()->LevelByFileName(
-            path, xmDatabase::instance("main"));
+          path, xmDatabase::instance("main"));
     } catch (Exception &e) {
       levelId = path;
     }
@@ -2030,11 +2033,12 @@ void StateMainMenu::executeOneCommand(std::string cmd, std::string args) {
   }
 
   else if (cmd == "OPEN_OPTIONS") {
-    StateOptions *stateOptions = new StateOptions("MAIN:OPTIONS:GENERAL_TAB:TABS:CONTROLS_TAB");
+    StateOptions *stateOptions =
+      new StateOptions("MAIN:OPTIONS:GENERAL_TAB:TABS:CONTROLS_TAB");
     StateManager::instance()->pushState(stateOptions);
 
     UITabView *v_tabView = reinterpret_cast<UITabView *>(
-          stateOptions->getGUI()->getChild("MAIN:TABS:GENERAL_TAB:TABS"));
+      stateOptions->getGUI()->getChild("MAIN:TABS:GENERAL_TAB:TABS"));
     v_tabView->selectChildrenById("CONTROLS_TAB");
   }
 

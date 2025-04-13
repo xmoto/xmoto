@@ -24,8 +24,6 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
 #include "Game.h"
 #include "GameText.h"
-#include "input/Input.h"
-#include "input/Joystick.h"
 #include "PhysSettings.h"
 #include "Sound.h"
 #include "common/VFileIO.h"
@@ -34,6 +32,8 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "helpers/Log.h"
 #include "helpers/Random.h"
 #include "helpers/Time.h"
+#include "input/Input.h"
+#include "input/Joystick.h"
 
 #include "Credits.h"
 #include "GeomsManager.h"
@@ -55,11 +55,11 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "states/StateMainMenu.h"
 #include "states/StateManager.h"
 #include "states/StateMessageBox.h"
+#include "states/StatePlayingLocal.h"
 #include "states/StatePreplayingGame.h"
 #include "states/StatePreplayingReplay.h"
 #include "states/StateReplaying.h"
 #include "states/StateWaitServerInstructions.h"
-#include "states/StatePlayingLocal.h"
 
 #include "thread/UpgradeLevelsThread.h"
 
@@ -225,8 +225,7 @@ void GameApp::run_load(int nNumArgs, char **ppcArgs) {
                v_xmArgs.isOptServerOnly() == false,
                v_xmArgs.getOpt_configPath_path());
   } else {
-    XMFS::init(
-      "xmoto", "xmoto.bin", v_xmArgs.isOptServerOnly() == false);
+    XMFS::init("xmoto", "xmoto.bin", v_xmArgs.isOptServerOnly() == false);
   }
   Logger::init();
 
@@ -378,10 +377,11 @@ void GameApp::run_load(int nNumArgs, char **ppcArgs) {
             XMSession::instance()->resolutionHeight());
 
     /* set initial focus state */
-    uint32_t wflags = SDL_GetWindowFlags(GameApp::instance()->getDrawLib()->getWindow());
+    uint32_t wflags =
+      SDL_GetWindowFlags(GameApp::instance()->getDrawLib()->getWindow());
     m_hasKeyboardFocus = wflags & SDL_WINDOW_INPUT_FOCUS;
-    m_hasMouseFocus    = wflags & SDL_WINDOW_MOUSE_FOCUS;
-    m_isIconified      = wflags & SDL_WINDOW_HIDDEN;
+    m_hasMouseFocus = wflags & SDL_WINDOW_MOUSE_FOCUS;
+    m_isIconified = wflags & SDL_WINDOW_HIDDEN;
   } else {
     // Doesn't matter anyway
     m_hasKeyboardFocus = m_hasMouseFocus = m_isIconified = false;
@@ -420,9 +420,9 @@ void GameApp::run_load(int nNumArgs, char **ppcArgs) {
   // network requires the input information (to display the chat command)
   if (v_useGraphics) {
     Input::instance()->init(m_userConfig,
-                                   pDb,
-                                   XMSession::instance()->profile(),
-                                   XMSession::instance()->enableJoysticks());
+                            pDb,
+                            XMSession::instance()->profile(),
+                            XMSession::instance()->enableJoysticks());
   }
 
   // no command line need the network for the moment
@@ -724,25 +724,27 @@ void GameApp::manageEvent(SDL_Event *Event) {
     case SDL_TEXTINPUT:
       utf8Char = Event->text.text;
 
-      StateManager::instance()->xmKey(
-        INPUT_TEXT,
-        XMKey(0, (SDL_Keymod)0, utf8Char));
+      StateManager::instance()->xmKey(INPUT_TEXT,
+                                      XMKey(0, (SDL_Keymod)0, utf8Char));
       break;
 
     case SDL_KEYDOWN:
       utf8Char = unicode2utf8(Event->key.keysym.sym);
 
-      StateManager::instance()->xmKey(
-        INPUT_DOWN,
-        XMKey(Event->key.keysym.sym, (SDL_Keymod)Event->key.keysym.mod, utf8Char, Event->key.repeat));
+      StateManager::instance()->xmKey(INPUT_DOWN,
+                                      XMKey(Event->key.keysym.sym,
+                                            (SDL_Keymod)Event->key.keysym.mod,
+                                            utf8Char,
+                                            Event->key.repeat));
       break;
 
     case SDL_KEYUP:
       utf8Char = unicode2utf8(Event->key.keysym.sym);
 
-      StateManager::instance()->xmKey(
-        INPUT_UP,
-        XMKey(Event->key.keysym.sym, (SDL_Keymod)Event->key.keysym.mod, utf8Char));
+      StateManager::instance()->xmKey(INPUT_UP,
+                                      XMKey(Event->key.keysym.sym,
+                                            (SDL_Keymod)Event->key.keysym.mod,
+                                            utf8Char));
       break;
 
     case SDL_QUIT:
@@ -786,8 +788,8 @@ void GameApp::manageEvent(SDL_Event *Event) {
     case SDL_USEREVENT: {
       if (Event->user.code == SDL_CONTROLLERAXISMOTION) {
         const auto &event = *(static_cast<JoyAxisEvent *>(Event->user.data1));
-        StateMenu *state = dynamic_cast<StateMenu *>(
-            StateManager::instance()->getTopState());
+        StateMenu *state =
+          dynamic_cast<StateMenu *>(StateManager::instance()->getTopState());
         if (state) {
           state->getGUI()->joystickAxisMotion(event);
         }
@@ -796,13 +798,12 @@ void GameApp::manageEvent(SDL_Event *Event) {
     }
 
     case SDL_CONTROLLERBUTTONDOWN: {
-    case SDL_CONTROLLERBUTTONUP:
-      InputEventType type = Input::eventState(Event->type);
-      XMKey key = XMKey(
-          Input::instance()->getJoyById(Event->cbutton.which),
-          Event->cbutton.button);
-      StateManager::instance()->xmKey(type, key);
-      break;
+      case SDL_CONTROLLERBUTTONUP:
+        InputEventType type = Input::eventState(Event->type);
+        XMKey key = XMKey(Input::instance()->getJoyById(Event->cbutton.which),
+                          Event->cbutton.button);
+        StateManager::instance()->xmKey(type, key);
+        break;
     }
 
     case SDL_WINDOWEVENT: {
@@ -812,8 +813,12 @@ void GameApp::manageEvent(SDL_Event *Event) {
         case SDL_WINDOWEVENT_ENTER:
         case SDL_WINDOWEVENT_LEAVE: {
           switch (Event->window.event) {
-            case SDL_WINDOWEVENT_ENTER: hasFocus = true;  break;
-            case SDL_WINDOWEVENT_LEAVE: hasFocus = false; break;
+            case SDL_WINDOWEVENT_ENTER:
+              hasFocus = true;
+              break;
+            case SDL_WINDOWEVENT_LEAVE:
+              hasFocus = false;
+              break;
           }
 
           if (!m_hasKeyboardFocus)
@@ -825,23 +830,28 @@ void GameApp::manageEvent(SDL_Event *Event) {
         case SDL_WINDOWEVENT_FOCUS_GAINED: /* fall through */
         case SDL_WINDOWEVENT_FOCUS_LOST: {
           switch (Event->window.event) {
-            case SDL_WINDOWEVENT_FOCUS_GAINED: hasFocus = true;  break;
-            case SDL_WINDOWEVENT_FOCUS_LOST:   hasFocus = false; break;
+            case SDL_WINDOWEVENT_FOCUS_GAINED:
+              hasFocus = true;
+              break;
+            case SDL_WINDOWEVENT_FOCUS_LOST:
+              hasFocus = false;
+              break;
           }
 
           if (hasFocus) {
             // Pending keydown events need to be flushed after gaining focus
-            // because SDL2 will send them for keys that were pressed outside the game
-            // (e.g. when alt-tabbing in)
+            // because SDL2 will send them for keys that were pressed outside
+            // the game (e.g. when alt-tabbing in)
             SDL_FlushEvents(SDL_KEYDOWN, SDL_KEYDOWN);
           } else {
             /*
              * With SDL2, input events come in in the opposite order from SDL1.2
              * (the order used to be: "focus lost" -> "key released").
-             * We need to invalidate the keys here so they don't persist after focus is lost
+             * We need to invalidate the keys here so they don't persist after
+             * focus is lost
              */
             StatePlayingLocal *state = dynamic_cast<StatePlayingLocal *>(
-                StateManager::instance()->getTopState());
+              StateManager::instance()->getTopState());
             if (state)
               state->dealWithActivedKeys();
           }
@@ -1029,13 +1039,12 @@ void GameApp::run_unload() {
     LogDebug("UserUnload saveConfig at %.3f", GameApp::getXMTime());
   }
   auto dbInstance = xmDatabase::instance("main");
-  if (drawLib != NULL && dbInstance->isOpen()) { /* save config only if drawLib was initialized */
+  if (drawLib != NULL &&
+      dbInstance->isOpen()) { /* save config only if drawLib was initialized */
     XMSession::instance("file")->save(m_userConfig,
                                       xmDatabase::instance("main"));
     Input::instance()->saveConfig(
-      m_userConfig,
-      dbInstance,
-      XMSession::instance("file")->profile());
+      m_userConfig, dbInstance, XMSession::instance("file")->profile());
     m_userConfig->saveFile();
   }
 

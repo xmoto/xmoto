@@ -24,8 +24,8 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
 #include "HashTbl.h"
 #include "HighPrecisionTimer.h"
-#include <windows.h>
 #include <string.h>
+#include <windows.h>
 
 #if defined(PROFILE_MAIN_LOOP)
 

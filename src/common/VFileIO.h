@@ -160,7 +160,8 @@ public:
 
   /* File name mangling */
   static std::string getFileDir(const std::string &Path);
-  static std::string getFileBaseName(const std::string &Path, bool withExt = false);
+  static std::string getFileBaseName(const std::string &Path,
+                                     bool withExt = false);
   static std::string getFileExtension(
     const std::string &Path); // do not require FS initialization
 
@@ -194,7 +195,8 @@ public:
 
   // return true if p_filepath is a path from user dir
   static bool isInUserDir(FileDataType i_fdt, const std::string &p_filepath);
-  static bool isFileInDir(const std::string &p_dirpath, const std::string &p_filepath);
+  static bool isFileInDir(const std::string &p_dirpath,
+                          const std::string &p_filepath);
 
   /* return false if the file is in the package */
   static bool isFileReal(const std::string &i_filePath);

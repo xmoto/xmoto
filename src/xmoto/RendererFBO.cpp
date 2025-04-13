@@ -91,19 +91,18 @@ void SFXOverlay::init(DrawLib *i_drawLib,
 
         int nStatus = 0;
         glGetObjectParameterivARB(
-            m_ProgramID, GL_OBJECT_LINK_STATUS_ARB, (GLint *)&nStatus);
+          m_ProgramID, GL_OBJECT_LINK_STATUS_ARB, (GLint *)&nStatus);
         if (!nStatus) {
           LogError("-- Failed to link SFXOverlay shader program --");
 
           /* Retrieve info-log */
           int nInfoLogLen = 0;
-          glGetObjectParameterivARB(m_ProgramID,
-                                        GL_OBJECT_INFO_LOG_LENGTH_ARB,
-                                        (GLint *)&nInfoLogLen);
+          glGetObjectParameterivARB(
+            m_ProgramID, GL_OBJECT_INFO_LOG_LENGTH_ARB, (GLint *)&nInfoLogLen);
           char *pcInfoLog = new char[nInfoLogLen];
           int nCharsWritten = 0;
           glGetInfoLogARB(
-              m_ProgramID, nInfoLogLen, (GLsizei *)&nCharsWritten, pcInfoLog);
+            m_ProgramID, nInfoLogLen, (GLsizei *)&nCharsWritten, pcInfoLog);
           LogInfo(pcInfoLog);
           delete[] pcInfoLog;
 
@@ -139,10 +138,10 @@ void SFXOverlay::beginRendering(void) {
 
     glBindFramebufferEXT(GL_FRAMEBUFFER_EXT, m_FrameBufferID);
     glFramebufferTexture2DEXT(GL_FRAMEBUFFER_EXT,
-                                  GL_COLOR_ATTACHMENT0_EXT,
-                                  GL_TEXTURE_2D,
-                                  m_DynamicTextureID,
-                                  0);
+                              GL_COLOR_ATTACHMENT0_EXT,
+                              GL_TEXTURE_2D,
+                              m_DynamicTextureID,
+                              0);
 
     glDisable(GL_TEXTURE_2D);
 
@@ -209,7 +208,7 @@ bool SFXOverlay::_SetShaderSource(GLhandleARB ShaderID,
   glCompileShaderARB(ShaderID);
   int nStatus = 0;
   glGetObjectParameterivARB(
-      ShaderID, GL_OBJECT_COMPILE_STATUS_ARB, (GLint *)&nStatus);
+    ShaderID, GL_OBJECT_COMPILE_STATUS_ARB, (GLint *)&nStatus);
   if (!nStatus) {
     _FreeShaderSource(ppc, nNumLines);
     LogError("-- Failed to compile shader: %s --", File.c_str());
@@ -217,11 +216,11 @@ bool SFXOverlay::_SetShaderSource(GLhandleARB ShaderID,
     /* Retrieve info-log */
     int nInfoLogLen = 0;
     glGetObjectParameterivARB(
-        ShaderID, GL_OBJECT_INFO_LOG_LENGTH_ARB, (GLint *)&nInfoLogLen);
+      ShaderID, GL_OBJECT_INFO_LOG_LENGTH_ARB, (GLint *)&nInfoLogLen);
     char *pcInfoLog = new char[nInfoLogLen];
     int nCharsWritten = 0;
     glGetInfoLogARB(
-        ShaderID, nInfoLogLen, (GLsizei *)&nCharsWritten, pcInfoLog);
+      ShaderID, nInfoLogLen, (GLsizei *)&nCharsWritten, pcInfoLog);
     LogInfo(pcInfoLog);
     delete[] pcInfoLog;
 

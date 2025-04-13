@@ -201,10 +201,9 @@ std::string utf8::utf8_substring(const std::string &i_a,
 std::string utf8::utf8_substring_abs(const std::string &str,
                                      size_t start,
                                      size_t end) {
-  return utf8::utf8_substring(str, start,
-      (end == std::string::npos) ? end : (end - start));
+  return utf8::utf8_substring(
+    str, start, (end == std::string::npos) ? end : (end - start));
 }
-
 
 void utf8::utf8_split(const std::string &i_line,
                       const std::string &i_char,

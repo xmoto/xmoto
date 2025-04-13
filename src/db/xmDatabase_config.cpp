@@ -31,8 +31,9 @@ std::string xmDatabase::config_getValue(const std::string &i_id_profile,
 
   v_result = readDB("SELECT value FROM profiles_configs "
                     "WHERE id_profile=\"" +
-                      xmDatabase::protectString(i_id_profile) + "\" "
-                                                                "AND key=\"" +
+                      xmDatabase::protectString(i_id_profile) +
+                      "\" "
+                      "AND key=\"" +
                       xmDatabase::protectString(i_key) + "\";",
                     o_nrow);
   if (o_nrow != 1) {
@@ -50,25 +51,31 @@ void xmDatabase::config_setValue(const std::string &i_id_profile,
                                  const std::string &i_value) {
   if (checkKey("SELECT count(1) FROM profiles_configs "
                "WHERE id_profile=\"" +
-               xmDatabase::protectString(i_id_profile) + "\" "
-                                                         "AND   key=\"" +
+               xmDatabase::protectString(i_id_profile) +
+               "\" "
+               "AND   key=\"" +
                xmDatabase::protectString(i_key) + "\";")) {
     simpleSql("UPDATE profiles_configs SET "
               "value=\"" +
-              xmDatabase::protectString(i_value) + "\" "
-                                                   "WHERE id_profile=\"" +
-              xmDatabase::protectString(i_id_profile) + "\" "
-                                                        "AND          key=\"" +
+              xmDatabase::protectString(i_value) +
+              "\" "
+              "WHERE id_profile=\"" +
+              xmDatabase::protectString(i_id_profile) +
+              "\" "
+              "AND          key=\"" +
               xmDatabase::protectString(i_key) + "\";");
   } else {
     simpleSql("INSERT INTO profiles_configs(id_profile, key, value) VALUES("
               "\"" +
-              xmDatabase::protectString(i_id_profile) + "\", "
-                                                        "\"" +
-              xmDatabase::protectString(i_key) + "\", "
-                                                 "\"" +
-              xmDatabase::protectString(i_value) + "\""
-                                                   ");");
+              xmDatabase::protectString(i_id_profile) +
+              "\", "
+              "\"" +
+              xmDatabase::protectString(i_key) +
+              "\", "
+              "\"" +
+              xmDatabase::protectString(i_value) +
+              "\""
+              ");");
   }
 }
 

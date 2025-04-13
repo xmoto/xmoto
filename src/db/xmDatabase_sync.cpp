@@ -86,8 +86,9 @@ void xmDatabase::sync_buildServerFile(const std::string &i_outFile,
                     "FROM stats_profiles_levels "
                     "WHERE sitekey=\"" +
                       protectString(i_sitekey) + "\" AND id_profile=\"" +
-                      protectString(i_profile) + "\" "
-                                                 "AND synchronized=0;",
+                      protectString(i_profile) +
+                      "\" "
+                      "AND synchronized=0;",
                     nrow);
   for (unsigned int i = 0; i < nrow; i++) {
     snprintf(
@@ -116,8 +117,9 @@ void xmDatabase::sync_buildServerFile(const std::string &i_outFile,
                     "FROM profile_completedLevels "
                     "WHERE sitekey=\"" +
                       protectString(i_sitekey) + "\" AND id_profile=\"" +
-                      protectString(i_profile) + "\" "
-                                                 "AND synchronized=0;",
+                      protectString(i_profile) +
+                      "\" "
+                      "AND synchronized=0;",
                     nrow);
   for (unsigned int i = 0; i < nrow; i++) {
     snprintf(v_line,
@@ -209,16 +211,18 @@ void xmDatabase::sync_updateDB(const std::string &i_profile,
 
       // add or update the level stats
       if (checkKey("SELECT COUNT(1) FROM stats_profiles WHERE sitekey=\"" +
-                   protectString(v_siteKey) + "\""
-                                              " AND id_profile=\"" +
+                   protectString(v_siteKey) +
+                   "\""
+                   " AND id_profile=\"" +
                    protectString(i_profile) + "\";")) {
         // update
         simpleSql("UPDATE stats_profiles "
                   "SET nbStarts=\"" +
                   protectString(v_nbStarts) + "\", since=\"" +
                   protectString(v_since) + "\" WHERE sitekey=\"" +
-                  protectString(v_siteKey) + "\""
-                                             " AND id_profile=\"" +
+                  protectString(v_siteKey) +
+                  "\""
+                  " AND id_profile=\"" +
                   protectString(i_profile) + "\";");
 
       } else {
@@ -264,16 +268,17 @@ void xmDatabase::sync_updateDB(const std::string &i_profile,
       }
 
       // add the completed level
-      simpleSql("INSERT INTO profile_completedLevels(id_profile, id_level, "
-                "timeStamp, finishTime, sitekey, synchronized, dbSync)"
-                " VALUES (\"" +
-                protectString(i_profile) + "\", \"" +
-                protectString(v_id_level) + "\", "
-                                            "\"" +
-                protectString(v_timeStamp) + "\", \"" +
-                protectString(v_finishTime) + "\", "
-                                              "\"" +
-                protectString(v_siteKey) + "\", 1, NULL);");
+      simpleSql(
+        "INSERT INTO profile_completedLevels(id_profile, id_level, "
+        "timeStamp, finishTime, sitekey, synchronized, dbSync)"
+        " VALUES (\"" +
+        protectString(i_profile) + "\", \"" + protectString(v_id_level) +
+        "\", "
+        "\"" +
+        protectString(v_timeStamp) + "\", \"" + protectString(v_finishTime) +
+        "\", "
+        "\"" +
+        protectString(v_siteKey) + "\", 1, NULL);");
     }
 
     /* stats levels */
@@ -330,8 +335,9 @@ void xmDatabase::sync_updateDB(const std::string &i_profile,
       // add or update the level stats
       if (checkKey(
             "SELECT COUNT(1) FROM stats_profiles_levels WHERE sitekey=\"" +
-            protectString(v_siteKey) + "\""
-                                       " AND id_profile=\"" +
+            protectString(v_siteKey) +
+            "\""
+            " AND id_profile=\"" +
             protectString(i_profile) + "\" AND id_level=\"" +
             protectString(v_id_level) + "\";")) {
         // update
@@ -342,10 +348,12 @@ void xmDatabase::sync_updateDB(const std::string &i_profile,
                   protectString(v_nbCompleted) + "\", nbRestarted=\"" +
                   protectString(v_nbRestarted) + "\", playedTime=\"" +
                   protectString(v_playedTime) + "\", last_play_date=\"" +
-                  protectString(v_lastPlayDate) + "\""
-                                                  "WHERE sitekey=\"" +
-                  protectString(v_siteKey) + "\""
-                                             " AND id_profile=\"" +
+                  protectString(v_lastPlayDate) +
+                  "\""
+                  "WHERE sitekey=\"" +
+                  protectString(v_siteKey) +
+                  "\""
+                  " AND id_profile=\"" +
                   protectString(i_profile) + "\" AND id_level=\"" +
                   protectString(v_id_level) + "\";");
 

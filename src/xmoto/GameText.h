@@ -85,8 +85,8 @@ Central place to keep many in-game text strings
 #define GAMETEXT_CHILDREN_COMPLIANT _("I'm a child")
 #define GAMETEXT_CHOOSELEVEL _("Choose Level")
 #define GAMETEXT_CLEAN _("Clean")
-#define GAMETEXT_CLEAN_CONFIRM(A)                       \
-  ngettext("Are you sure you want to delete %i replay?", \
+#define GAMETEXT_CLEAN_CONFIRM(A)                         \
+  ngettext("Are you sure you want to delete %i replay?",  \
            "Are you sure you want to delete %i replays?", \
            A)
 #define GAMETEXT_CLEAN_NOTHING_TO_DO _("There are no replays to clean")
@@ -128,108 +128,143 @@ Central place to keep many in-game text strings
   _("You must reconnect to the server so that this option takes effect")
 #define GAMETEXT_SCRIPTACTION _("Script action")
 
-#define GAMETEXT_CREDITS                                                      \
-  std::string(_("Lead Programming")) + ":Nicolas Adenis-Lamarre (2006-2014);" \
-                                       ":Emmanuel Gorse (2007-2011);"         \
-                                       ":Jens Erler (2009-2010);"             \
-                                       ":Rasmus Neckelmann (2005-2006);"      \
-                                       ":;" +                                 \
-    std::string(_("Additional Programming")) + ":Ermicioi Alexandru;"         \
-                                               ":Ville Lahdenvuo;"            \
-                                               ":Richard Franks;"             \
-                                               ":Kees Jongenburger;"          \
-                                               ":Eric Piel;"                  \
-                                               ":Christoph Sommer;"           \
-                                               ":Frederic Huard;"             \
-                                               ":Brice Goglin;"               \
-                                               ":Kristian Jagd;"              \
-                                               ":;" +                         \
-    std::string(_("Graphics")) + ":Rasmus Neckelmann;"                        \
-                                 ":Jens Erler;"                               \
-                                 ":...and all supporters;"                    \
-                                 ":;" +                                       \
-    std::string(_("Music")) + ":'Foxrun' by Ryan Rees;"                       \
-                              ":'Speeditup' by Almcaeobtac;"                  \
-                              ":all further musics by Jens Erler;"            \
-                              ":;" +                                          \
-    std::string(_("Sound Effects")) + ":Brandon Ross;"                        \
-                                      ":Jens Erler;"                          \
-                                      ":;" +                                  \
-    std::string(_("MacOS X Support")) + ":Dave Vasilevsky;"                   \
-                                        ":Maxime Biais;"                      \
-                                        ":;" +                                \
-    std::string(_("Localization")) + ":Jozef Říha (" +                        \
-    std::string(_("Slovak")) + ");"                                           \
-                               ":Nicolas Adenis-Lamarre (" +                  \
-    std::string(_("French")) + ");"                                           \
-                               ":Wilhelm Francke (" +                         \
-    std::string(_("Norwegian")) + " and " + std::string(_("English")) +       \
-    ");"                                                                      \
-    ":Jonathan Sieber, Jens Erler (" +                                        \
-    std::string(_("German")) + ");"                                           \
-                               ":Maximum, Tuomo Koistinen (" +                \
-    std::string(_("Finnish")) + ");"                                          \
-                                ":Trullo (" +                                 \
-    std::string(_("Catalan")) + " and " + std::string(_("Spanish")) +         \
-    ");"                                                                      \
-    ":Mateusz Kosibowicz (" +                                                 \
-    std::string(_("Polish")) + ");"                                           \
-                               ":Lucas Manzari, Carmine 'earcar' Paolino (" + \
-    std::string(_("Italian")) + ");"                                          \
-                                ":Lukas Klingsbo, Nicke (" +                  \
-    std::string(_("Swedish")) + ");"                                          \
-                                ":Jan KalÃ¡b, Tomáš Chvátal (" +              \
-    std::string(_("Czech")) + ");"                                            \
-                              ":" +                                           \
-    std::string(_("Mikhail Brinchuk")) + " (" + std::string(_("Russian")) +   \
-    ");"                                                                      \
-    ":Lucas Hermann Negri (" +                                                \
-    std::string(_("Brazilian Portuguese")) + ");"                             \
-                                             ":Jānis Rūcis (" +               \
-    std::string(_("Latvian")) + ");"                                          \
-                                ":Kristian Jagd (" +                          \
-    std::string(_("Danish")) + ");"                                           \
-                               ":Tadas Masiulionis (" +                       \
-    std::string(_("Lithuanian")) + ");"                                       \
-                                   ":Anil Ozbek (" +                          \
-    std::string(_("Turkish")) + ");"                                          \
-                                ":Zoltán Balogh (" +                          \
-    std::string(_("Hungarian")) + ");"                                        \
-                                  ":Luís Garcia, Sérgio Marques (" +          \
-    std::string(_("Portuguese")) + ");"                                        \
-                                  ":Andre Parhan (" +                         \
-    std::string(_("Dutch")) + ");"                                            \
-                              ":KuanYen (" +                                  \
-    std::string(_("Taiwanese")) + ");"                                        \
-                                  ":Adrián Chaves Fernández (" +              \
-    std::string(_("Galician")) + ");"                                         \
-                                 ":;" +                                       \
-    std::string(_("Main testers")) + ":Jose Alberto Coelho;"                  \
-                                     ":Frederic Huard;"                       \
-                                     ":Jens Erler;"                           \
-                                     ":;" +                                   \
-    std::string(_("Thanks to")) + ":SnowBear (" +                             \
-    std::string(_("for KDE/gnome integration")) + ");"                        \
-                                                  ":Samuel Mimram (" +        \
-    std::string(_("for Debian packaging")) + ");"                             \
-                                             ":Dark (" +                      \
-    std::string(_("for Gentoo packaging")) + ");"                             \
-                                             ":Olivier Blin (" +              \
-    std::string(_("for Mandriva packaging")) + ");"                           \
-                                               ":Dmitry Marakasov (" +        \
-    std::string(_("for FreeBSD packaging")) + ");"                            \
-                                              ":Balazs Rozsa (" +             \
-    std::string(_("for across/elma")) + ");"                                  \
-                                        ":Yves Berquin (" +                   \
-    std::string(_("for making tinyxml")) + ");"                               \
-                                           ":L. Peter Deutsch (" +            \
-    std::string(_("for the MD5 code")) + ");"                                 \
-                                         ":Petter Reinholdtsen;"              \
-                                         ":" +                                \
-    std::string(_("Everyone who have made levels")) + ";"                     \
-                                                      ":" +                   \
-    std::string(_("People who have provided bug reports")) + ";"              \
-                                                             ":" +            \
+#define GAMETEXT_CREDITS                                                    \
+  std::string(_("Lead Programming")) +                                      \
+    ":Nicolas Adenis-Lamarre (2006-2014);"                                  \
+    ":Emmanuel Gorse (2007-2011);"                                          \
+    ":Jens Erler (2009-2010);"                                              \
+    ":Rasmus Neckelmann (2005-2006);"                                       \
+    ":;" +                                                                  \
+    std::string(_("Additional Programming")) +                              \
+    ":Ermicioi Alexandru;"                                                  \
+    ":Ville Lahdenvuo;"                                                     \
+    ":Richard Franks;"                                                      \
+    ":Kees Jongenburger;"                                                   \
+    ":Eric Piel;"                                                           \
+    ":Christoph Sommer;"                                                    \
+    ":Frederic Huard;"                                                      \
+    ":Brice Goglin;"                                                        \
+    ":Kristian Jagd;"                                                       \
+    ":;" +                                                                  \
+    std::string(_("Graphics")) +                                            \
+    ":Rasmus Neckelmann;"                                                   \
+    ":Jens Erler;"                                                          \
+    ":...and all supporters;"                                               \
+    ":;" +                                                                  \
+    std::string(_("Music")) +                                               \
+    ":'Foxrun' by Ryan Rees;"                                               \
+    ":'Speeditup' by Almcaeobtac;"                                          \
+    ":all further musics by Jens Erler;"                                    \
+    ":;" +                                                                  \
+    std::string(_("Sound Effects")) +                                       \
+    ":Brandon Ross;"                                                        \
+    ":Jens Erler;"                                                          \
+    ":;" +                                                                  \
+    std::string(_("MacOS X Support")) +                                     \
+    ":Dave Vasilevsky;"                                                     \
+    ":Maxime Biais;"                                                        \
+    ":;" +                                                                  \
+    std::string(_("Localization")) + ":Jozef Říha (" +                      \
+    std::string(_("Slovak")) +                                              \
+    ");"                                                                    \
+    ":Nicolas Adenis-Lamarre (" +                                           \
+    std::string(_("French")) +                                              \
+    ");"                                                                    \
+    ":Wilhelm Francke (" +                                                  \
+    std::string(_("Norwegian")) + " and " + std::string(_("English")) +     \
+    ");"                                                                    \
+    ":Jonathan Sieber, Jens Erler (" +                                      \
+    std::string(_("German")) +                                              \
+    ");"                                                                    \
+    ":Maximum, Tuomo Koistinen (" +                                         \
+    std::string(_("Finnish")) +                                             \
+    ");"                                                                    \
+    ":Trullo (" +                                                           \
+    std::string(_("Catalan")) + " and " + std::string(_("Spanish")) +       \
+    ");"                                                                    \
+    ":Mateusz Kosibowicz (" +                                               \
+    std::string(_("Polish")) +                                              \
+    ");"                                                                    \
+    ":Lucas Manzari, Carmine 'earcar' Paolino (" +                          \
+    std::string(_("Italian")) +                                             \
+    ");"                                                                    \
+    ":Lukas Klingsbo, Nicke (" +                                            \
+    std::string(_("Swedish")) +                                             \
+    ");"                                                                    \
+    ":Jan KalÃ¡b, Tomáš Chvátal (" +                                        \
+    std::string(_("Czech")) +                                               \
+    ");"                                                                    \
+    ":" +                                                                   \
+    std::string(_("Mikhail Brinchuk")) + " (" + std::string(_("Russian")) + \
+    ");"                                                                    \
+    ":Lucas Hermann Negri (" +                                              \
+    std::string(_("Brazilian Portuguese")) +                                \
+    ");"                                                                    \
+    ":Jānis Rūcis (" +                                                      \
+    std::string(_("Latvian")) +                                             \
+    ");"                                                                    \
+    ":Kristian Jagd (" +                                                    \
+    std::string(_("Danish")) +                                              \
+    ");"                                                                    \
+    ":Tadas Masiulionis (" +                                                \
+    std::string(_("Lithuanian")) +                                          \
+    ");"                                                                    \
+    ":Anil Ozbek (" +                                                       \
+    std::string(_("Turkish")) +                                             \
+    ");"                                                                    \
+    ":Zoltán Balogh (" +                                                    \
+    std::string(_("Hungarian")) +                                           \
+    ");"                                                                    \
+    ":Luís Garcia, Sérgio Marques (" +                                      \
+    std::string(_("Portuguese")) +                                          \
+    ");"                                                                    \
+    ":Andre Parhan (" +                                                     \
+    std::string(_("Dutch")) +                                               \
+    ");"                                                                    \
+    ":KuanYen (" +                                                          \
+    std::string(_("Taiwanese")) +                                           \
+    ");"                                                                    \
+    ":Adrián Chaves Fernández (" +                                          \
+    std::string(_("Galician")) +                                            \
+    ");"                                                                    \
+    ":;" +                                                                  \
+    std::string(_("Main testers")) +                                        \
+    ":Jose Alberto Coelho;"                                                 \
+    ":Frederic Huard;"                                                      \
+    ":Jens Erler;"                                                          \
+    ":;" +                                                                  \
+    std::string(_("Thanks to")) + ":SnowBear (" +                           \
+    std::string(_("for KDE/gnome integration")) +                           \
+    ");"                                                                    \
+    ":Samuel Mimram (" +                                                    \
+    std::string(_("for Debian packaging")) +                                \
+    ");"                                                                    \
+    ":Dark (" +                                                             \
+    std::string(_("for Gentoo packaging")) +                                \
+    ");"                                                                    \
+    ":Olivier Blin (" +                                                     \
+    std::string(_("for Mandriva packaging")) +                              \
+    ");"                                                                    \
+    ":Dmitry Marakasov (" +                                                 \
+    std::string(_("for FreeBSD packaging")) +                               \
+    ");"                                                                    \
+    ":Balazs Rozsa (" +                                                     \
+    std::string(_("for across/elma")) +                                     \
+    ");"                                                                    \
+    ":Yves Berquin (" +                                                     \
+    std::string(_("for making tinyxml")) +                                  \
+    ");"                                                                    \
+    ":L. Peter Deutsch (" +                                                 \
+    std::string(_("for the MD5 code")) +                                    \
+    ");"                                                                    \
+    ":Petter Reinholdtsen;"                                                 \
+    ":" +                                                                   \
+    std::string(_("Everyone who have made levels")) +                       \
+    ";"                                                                     \
+    ":" +                                                                   \
+    std::string(_("People who have provided bug reports")) +                \
+    ";"                                                                     \
+    ":" +                                                                   \
     std::string(_("Anyone who has helped in any way")) + ";"
 
 #define GAMETEXT_CREDITSBUTTON _("Credits")
@@ -338,68 +373,79 @@ Central place to keep many in-game text strings
 #define GAMETEXT_GHOSTTAB _("Ghost")
 #define GAMETEXT_HELP _("Help")
 
-#define GAMETEXT_HELPTEXT(accelerate_KEY,                                     \
-                          brake_KEY,                                          \
-                          rotate_counter_clockwise_KEY,                       \
-                          rotate_clockwise_KEY,                               \
-                          change_direction_KEY,                               \
-                          restart_level_KEY,                                  \
-                          previous_level_KEY,                                 \
-                          next_level_KEY,                                     \
-                          switch_wwwaccess_KEY,                               \
-                          screenshot_KEY,                                     \
-                          fps_KEY,                                            \
-                          switch_uglymode_KEY,                                \
-                          switch_player_KEY,                                  \
-                          toogle_favorite_KEY,                                \
-                          help_KEY,                                           \
-                          reload_files_to_db_KEY,                             \
-                          playing_pause_KEY,                                  \
-                          switch_trackingshot_mode_KEY,                       \
-                          switch_gfxquality_mode_KEY,                         \
-                          switch_gfx_mode_KEY)                                \
-  std::string(_("You control your bike using the keyboard")) + ":\n"          \
-                                                               "  " +         \
-    accelerate_KEY + " - " + _("Accelerates") + "\n"                          \
-                                                "  " +                        \
-    brake_KEY + " - " + std::string(_("Brakes")) + "\n"                       \
-                                                   "  " +                     \
-    rotate_counter_clockwise_KEY + " - " +                                    \
-    std::string(_("Rotates it counter-clockwise")) + "\n"                     \
-                                                     "  " +                   \
-    rotate_clockwise_KEY + " - " + std::string(_("Rotates it clockwise")) +   \
-    "\n"                                                                      \
-    "  " +                                                                    \
-    change_direction_KEY + " - " +                                            \
-    std::string(_("Turns around and drives in the other direction")) + "\n"   \
-                                                                       "  " + \
-    playing_pause_KEY + " - " + std::string(_("Pause")) + "\n"                \
-                                                          "  " +              \
-    restart_level_KEY + " - " + std::string(_("Restart the level")) + "\n"    \
-                                                                      "  " +  \
-    previous_level_KEY + "/" + next_level_KEY + " - " +                       \
-    std::string(_("Previous/Next level")) + "\n"                              \
-                                            "  " +                            \
-    "\n"                                                                      \
-    "  " +                                                                    \
-    switch_wwwaccess_KEY + " - " + std::string(_("Enable/disable web")) +     \
-    "\n"                                                                      \
-    "  " +                                                                    \
-    reload_files_to_db_KEY + " - " +                                          \
-    std::string(_("Reload levels, themes and replays from directories")) +    \
-    "\n"                                                                      \
-    "  " +                                                                    \
-    screenshot_KEY + " - " + std::string(_("Take a screenshot")) + "\n"       \
-                                                                   "  " +     \
-    "\n" + std::string(_("Use Quick Play button to immediately start a game " \
-                         "with a random level,\nor use Levels button to "     \
-                         "select from level packs.")) +                       \
-    "\n"                                                                      \
-    "  " +                                                                    \
-    "\n" + std::string(_("Find all the strawberries and touch the flower to " \
-                         "finish\nthe level.")) +                             \
-    "\n" +                                                                    \
-    std::string(_("Read the README file or check out the website "            \
+#define GAMETEXT_HELPTEXT(accelerate_KEY,                                   \
+                          brake_KEY,                                        \
+                          rotate_counter_clockwise_KEY,                     \
+                          rotate_clockwise_KEY,                             \
+                          change_direction_KEY,                             \
+                          restart_level_KEY,                                \
+                          previous_level_KEY,                               \
+                          next_level_KEY,                                   \
+                          switch_wwwaccess_KEY,                             \
+                          screenshot_KEY,                                   \
+                          fps_KEY,                                          \
+                          switch_uglymode_KEY,                              \
+                          switch_player_KEY,                                \
+                          toogle_favorite_KEY,                              \
+                          help_KEY,                                         \
+                          reload_files_to_db_KEY,                           \
+                          playing_pause_KEY,                                \
+                          switch_trackingshot_mode_KEY,                     \
+                          switch_gfxquality_mode_KEY,                       \
+                          switch_gfx_mode_KEY)                              \
+  std::string(_("You control your bike using the keyboard")) +              \
+    ":\n"                                                                   \
+    "  " +                                                                  \
+    accelerate_KEY + " - " + _("Accelerates") +                             \
+    "\n"                                                                    \
+    "  " +                                                                  \
+    brake_KEY + " - " + std::string(_("Brakes")) +                          \
+    "\n"                                                                    \
+    "  " +                                                                  \
+    rotate_counter_clockwise_KEY + " - " +                                  \
+    std::string(_("Rotates it counter-clockwise")) +                        \
+    "\n"                                                                    \
+    "  " +                                                                  \
+    rotate_clockwise_KEY + " - " + std::string(_("Rotates it clockwise")) + \
+    "\n"                                                                    \
+    "  " +                                                                  \
+    change_direction_KEY + " - " +                                          \
+    std::string(_("Turns around and drives in the other direction")) +      \
+    "\n"                                                                    \
+    "  " +                                                                  \
+    playing_pause_KEY + " - " + std::string(_("Pause")) +                   \
+    "\n"                                                                    \
+    "  " +                                                                  \
+    restart_level_KEY + " - " + std::string(_("Restart the level")) +       \
+    "\n"                                                                    \
+    "  " +                                                                  \
+    previous_level_KEY + "/" + next_level_KEY + " - " +                     \
+    std::string(_("Previous/Next level")) +                                 \
+    "\n"                                                                    \
+    "  " +                                                                  \
+    "\n"                                                                    \
+    "  " +                                                                  \
+    switch_wwwaccess_KEY + " - " + std::string(_("Enable/disable web")) +   \
+    "\n"                                                                    \
+    "  " +                                                                  \
+    reload_files_to_db_KEY + " - " +                                        \
+    std::string(_("Reload levels, themes and replays from directories")) +  \
+    "\n"                                                                    \
+    "  " +                                                                  \
+    screenshot_KEY + " - " + std::string(_("Take a screenshot")) +          \
+    "\n"                                                                    \
+    "  " +                                                                  \
+    "\n" +                                                                  \
+    std::string(_("Use Quick Play button to immediately start a game "      \
+                  "with a random level,\nor use Levels button to "          \
+                  "select from level packs.")) +                            \
+    "\n"                                                                    \
+    "  " +                                                                  \
+    "\n" +                                                                  \
+    std::string(_("Find all the strawberries and touch the flower to "      \
+                  "finish\nthe level.")) +                                  \
+    "\n" +                                                                  \
+    std::string(_("Read the README file or check out the website "          \
                   "at\nhttps://xmoto.org\nfor more information."))
 
 #define GAMETEXT_HELPTEXT_PLAYINGLEVEL(accelerate_KEY,                         \
@@ -423,53 +469,72 @@ Central place to keep many in-game text strings
                                        switch_trackingshot_mode_KEY,           \
                                        switch_gfxquality_mode_KEY,             \
                                        switch_gfx_mode_KEY)                    \
-  "  " + accelerate_KEY + " - " + _("Accelerates") + "\n"                      \
-                                                     "  " +                    \
-    brake_KEY + " - " + std::string(_("Brakes")) + "\n"                        \
-                                                   "  " +                      \
+  "  " + accelerate_KEY + " - " + _("Accelerates") +                           \
+    "\n"                                                                       \
+    "  " +                                                                     \
+    brake_KEY + " - " + std::string(_("Brakes")) +                             \
+    "\n"                                                                       \
+    "  " +                                                                     \
     rotate_counter_clockwise_KEY + " - " +                                     \
-    std::string(_("Rotates it counter-clockwise")) + "\n"                      \
-                                                     "  " +                    \
+    std::string(_("Rotates it counter-clockwise")) +                           \
+    "\n"                                                                       \
+    "  " +                                                                     \
     rotate_clockwise_KEY + " - " + std::string(_("Rotates it clockwise")) +    \
     "\n"                                                                       \
     "  " +                                                                     \
     change_direction_KEY + " - " +                                             \
-    std::string(_("Turns around and drives in the other direction")) + "\n"    \
-                                                                       "  " +  \
+    std::string(_("Turns around and drives in the other direction")) +         \
     "\n"                                                                       \
     "  " +                                                                     \
-    playing_pause_KEY + " - " + std::string(_("Pause")) + "\n"                 \
-                                                          "  " +               \
-    restart_level_KEY + " - " + std::string(_("Restart the level")) + "\n"     \
-                                                                      "  " +   \
+    "\n"                                                                       \
+    "  " +                                                                     \
+    playing_pause_KEY + " - " + std::string(_("Pause")) +                      \
+    "\n"                                                                       \
+    "  " +                                                                     \
+    restart_level_KEY + " - " + std::string(_("Restart the level")) +          \
+    "\n"                                                                       \
+    "  " +                                                                     \
     previous_level_KEY + "/" + next_level_KEY + " - " +                        \
-    std::string(_("Previous/Next level")) + "\n"                               \
-                                            "  ctrl+M - " +                    \
-    std::string(_("Change mirror mode")) + "\n"                                \
-                                           "  ctrl+B - " +                     \
-    std::string(_("Toggle blacklist")) + "\n"                                  \
-                                         "  ctrl+S - " +                       \
-    std::string(_("Enable/disable audio")) + "\n"                              \
-                                             "  ctrl+O - " +                   \
-    std::string(_("Open options menu")) + "\n"                                 \
-                                          "  ctrl+G - " +                      \
-    std::string(_("Toggle Ghost Trail Rendering")) + "\n"                      \
-                                                     "  ctrl+T - " +           \
-    std::string(_("Toggle Trail Cam")) + "\n"                                  \
-                                         "  ctrl+N - " +                       \
-    std::string(_("Toggle Display Medals,Display WR")) + "\n"                  \
-                                                         "  " +                \
-    help_KEY + " - " + std::string(_("Show this help")) + "\n"                 \
-                                                          "  " +               \
-    switch_player_KEY + " - " + std::string(_("Switch biker")) + "\n"          \
-                                                                 "  " +        \
-    toogle_favorite_KEY + " - " + std::string(_("Toggle favorite")) + "\n"     \
-                                                                      "  " +   \
+    std::string(_("Previous/Next level")) +                                    \
+    "\n"                                                                       \
+    "  ctrl+M - " +                                                            \
+    std::string(_("Change mirror mode")) +                                     \
+    "\n"                                                                       \
+    "  ctrl+B - " +                                                            \
+    std::string(_("Toggle blacklist")) +                                       \
+    "\n"                                                                       \
+    "  ctrl+S - " +                                                            \
+    std::string(_("Enable/disable audio")) +                                   \
+    "\n"                                                                       \
+    "  ctrl+O - " +                                                            \
+    std::string(_("Open options menu")) +                                      \
+    "\n"                                                                       \
+    "  ctrl+G - " +                                                            \
+    std::string(_("Toggle Ghost Trail Rendering")) +                           \
+    "\n"                                                                       \
+    "  ctrl+T - " +                                                            \
+    std::string(_("Toggle Trail Cam")) +                                       \
+    "\n"                                                                       \
+    "  ctrl+N - " +                                                            \
+    std::string(_("Toggle Display Medals,Display WR")) +                       \
+    "\n"                                                                       \
+    "  " +                                                                     \
+    help_KEY + " - " + std::string(_("Show this help")) +                      \
+    "\n"                                                                       \
+    "  " +                                                                     \
+    switch_player_KEY + " - " + std::string(_("Switch biker")) +               \
+    "\n"                                                                       \
+    "  " +                                                                     \
+    toogle_favorite_KEY + " - " + std::string(_("Toggle favorite")) +          \
+    "\n"                                                                       \
+    "  " +                                                                     \
     switch_trackingshot_mode_KEY + " - " +                                     \
-    std::string(_("Toggle Ghost Trail Tracking Shot")) + "\n"                  \
-                                                         "  " +                \
-    fps_KEY + " - " + std::string(_("Enable/disable FPS display")) + "\n"      \
-                                                                     "  " +    \
+    std::string(_("Toggle Ghost Trail Tracking Shot")) +                       \
+    "\n"                                                                       \
+    "  " +                                                                     \
+    fps_KEY + " - " + std::string(_("Enable/disable FPS display")) +           \
+    "\n"                                                                       \
+    "  " +                                                                     \
     switch_wwwaccess_KEY + " - " + std::string(_("Enable/disable web")) +      \
     "\n"                                                                       \
     "  " +                                                                     \
@@ -477,13 +542,16 @@ Central place to keep many in-game text strings
     "\n"                                                                       \
     "  " +                                                                     \
     switch_gfxquality_mode_KEY + " - " +                                       \
-    std::string(_("Toggle Contrast, Light and Full Graphics")) + "\n"          \
-                                                                 "  " +        \
+    std::string(_("Toggle Contrast, Light and Full Graphics")) +               \
+    "\n"                                                                       \
+    "  " +                                                                     \
     switch_gfx_mode_KEY + " - " +                                              \
-    std::string(_("Toggle theme and ugly over mode")) + "\n"                   \
-                                                        "  " +                 \
-    screenshot_KEY + " - " + std::string(_("Take a screenshot")) + "\n"        \
-                                                                   "  " +      \
+    std::string(_("Toggle theme and ugly over mode")) +                        \
+    "\n"                                                                       \
+    "  " +                                                                     \
+    screenshot_KEY + " - " + std::string(_("Take a screenshot")) +             \
+    "\n"                                                                       \
+    "  " +                                                                     \
     levelinfo_KEY + " - " + std::string(_("Show level info")) + "\n"
 
 #define GAMETEXT_HIDEGHOSTS _("Hide ghosts")
@@ -866,7 +934,8 @@ Central place to keep many in-game text strings
   _("Allow X-Moto to ask you your mind about levels")
 #define CONTEXTHELP_RESOLUTION _("Select graphics resolution")
 #define CONTEXTHELP_RUN_IN_WINDOW _("Run the game in a window")
-#define CONTEXTHELP_MAX_FRAMERATE _("Set the maximum framerate the game can run at")
+#define CONTEXTHELP_MAX_FRAMERATE \
+  _("Set the maximum framerate the game can run at")
 #define CONTEXTHELP_LOW_MENU _("Not so fancy menu graphics")
 #define CONTEXTHELP_MEDIUM_MENU _("A bit more fancy menu graphics")
 #define CONTEXTHELP_HIGH_MENU _("Fanciest menu graphics")
@@ -1041,7 +1110,7 @@ Central place to keep many in-game text strings
 #define CONTEXTHELP_DBSYNCHRONIZE_ONQUIT \
   _("Synchronise your database when your quit X-Moto")
 #define CONTEXTHELP_ENABLEJOYSTICKS _("Enable joysticks events")
-#define CONTEXTHELP_BEATINGMODE \
+#define CONTEXTHELP_BEATINGMODE                                     \
   _("Preselect the retry button when dying or finishing a level,\n" \
     "and allow levels to be restarted with 'return to checkpoint' key")
 

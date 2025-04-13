@@ -49,7 +49,9 @@ HTTPForm::~HTTPForm() {
 #endif
 }
 
-void HTTPForm::add(const std::string &name, const std::string &data, bool file) {
+void HTTPForm::add(const std::string &name,
+                   const std::string &data,
+                   bool file) {
 #if USE_CURL_MIME_API
   curl_mimepart *part = curl_mime_addpart(m_mime);
 
@@ -153,21 +155,17 @@ size_t FSWeb::writeData(void *ptr, size_t size, size_t nmemb, FILE *stream) {
   return fwrite(ptr, size, nmemb, stream);
 }
 
-void FSWeb::downloadFileBz2(
-  const std::string &p_local_file,
-  const std::string &p_web_file,
-  ProgressCallback progressCallback,
-  void *p_data,
-  const ProxySettings *p_proxy_settings) {
+void FSWeb::downloadFileBz2(const std::string &p_local_file,
+                            const std::string &p_web_file,
+                            ProgressCallback progressCallback,
+                            void *p_data,
+                            const ProxySettings *p_proxy_settings) {
   std::string v_bzFile = p_local_file + ".bz2";
 
   /* remove in case it already exists */
   remove(v_bzFile.c_str());
-  downloadFile(v_bzFile,
-               p_web_file + ".bz2",
-               progressCallback,
-               p_data,
-               p_proxy_settings);
+  downloadFile(
+    v_bzFile, p_web_file + ".bz2", progressCallback, p_data, p_proxy_settings);
 
   try {
     FileCompression::bunzip2(v_bzFile, p_local_file);
@@ -178,12 +176,11 @@ void FSWeb::downloadFileBz2(
   }
 }
 
-void FSWeb::downloadFileBz2UsingMd5(
-  const std::string &p_local_file,
-  const std::string &p_web_file,
-  ProgressCallback progressCallback,
-  void *p_data,
-  const ProxySettings *p_proxy_settings) {
+void FSWeb::downloadFileBz2UsingMd5(const std::string &p_local_file,
+                                    const std::string &p_web_file,
+                                    ProgressCallback progressCallback,
+                                    void *p_data,
+                                    const ProxySettings *p_proxy_settings) {
   bool require_dwd = true;
 
   try {
@@ -212,11 +209,8 @@ void FSWeb::downloadFileBz2UsingMd5(
   }
 
   if (require_dwd) {
-    FSWeb::downloadFileBz2(p_local_file,
-                           p_web_file,
-                           progressCallback,
-                           p_data,
-                           p_proxy_settings);
+    FSWeb::downloadFileBz2(
+      p_local_file, p_web_file, progressCallback, p_data, p_proxy_settings);
   }
 }
 
@@ -291,8 +285,7 @@ void FSWeb::downloadFile(const std::string &p_local_file,
 
   if (progressCallback != NULL) {
     curl_easy_setopt(v_curl, CURLOPT_NOPROGRESS, false);
-    curl_easy_setopt(
-      v_curl, CURLOPT_XFERINFOFUNCTION, progressCallback);
+    curl_easy_setopt(v_curl, CURLOPT_XFERINFOFUNCTION, progressCallback);
     curl_easy_setopt(v_curl, CURLOPT_PROGRESSDATA, p_data);
   }
 
@@ -350,7 +343,6 @@ void FSWeb::uploadReplay(const std::string &p_replayFilename,
   std::string v_local_file;
   v_local_file = XMFS::getUserDir(FDT_CACHE) + "/" + DEFAULT_WWW_MSGFILE("UR");
 
-
   LogInfo(std::string("Uploading replay " + p_replayFilename).c_str());
 
   /* open the file */
@@ -366,7 +358,7 @@ void FSWeb::uploadReplay(const std::string &p_replayFilename,
     throw Exception("error : unable to init curl");
   }
 
-  HTTPForm form{v_curl};
+  HTTPForm form{ v_curl };
 
   form.addData("id_room", p_id_room);
   form.addData("login", p_login);
@@ -525,7 +517,7 @@ void FSWeb::sendVote(const std::string &p_id_level,
     throw Exception("error : unable to init curl");
   }
 
-  HTTPForm form{v_curl};
+  HTTPForm form{ v_curl };
 
   form.addData("game_id", p_id_level);
   form.addData("difficulty", p_difficulty_value);
@@ -606,7 +598,7 @@ void FSWeb::sendReport(const std::string &p_reportauthor,
     throw Exception("error : unable to init curl");
   }
 
-  HTTPForm form{v_curl};
+  HTTPForm form{ v_curl };
 
   form.addData("author", p_reportauthor);
   form.addData("msg", p_reportmsg);
@@ -729,7 +721,7 @@ void FSWeb::uploadDbSync(const std::string &p_dbSyncFilename,
 
   snprintf(v_syncStr, 256, "%i", p_dbSyncServer);
 
-  HTTPForm form{v_curl};
+  HTTPForm form{ v_curl };
 
   form.addData("login", p_login);
   form.addData("password", p_password);
@@ -879,7 +871,8 @@ int FSWeb::f_curl_progress_callback_download(void *clientp,
   float fract = dlnow / (float)dltotal;
   if (dltotal > 0.0f) {
     if (fract >= 0.0f && fract <= 1.0f) {
-      real_percentage_of_current_file = (fract * 100.0f) / (float)data->v_nb_files_to_download;
+      real_percentage_of_current_file =
+        (fract * 100.0f) / (float)data->v_nb_files_to_download;
     }
   }
 

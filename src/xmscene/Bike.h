@@ -275,7 +275,7 @@ protected:
 
 class OnBikerHooks {
 public:
-  virtual ~OnBikerHooks(){};
+  virtual ~OnBikerHooks() {};
   virtual void onSomersaultDone(bool i_counterclock) = 0;
   virtual void onWheelTouches(int i_wheel, bool i_touch) = 0;
   virtual void onHeadTouches() = 0;

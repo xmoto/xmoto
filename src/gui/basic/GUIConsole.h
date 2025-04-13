@@ -57,8 +57,12 @@ public:
   virtual void paint() override;
   virtual bool offerActivation() override;
 
-  virtual bool keyDown(int nKey, SDL_Keymod mod, const std::string &i_utf8Char) override;
-  virtual bool textInput(int nKey, SDL_Keymod mod, const std::string &i_utf8Char) override;
+  virtual bool keyDown(int nKey,
+                       SDL_Keymod mod,
+                       const std::string &i_utf8Char) override;
+  virtual bool textInput(int nKey,
+                         SDL_Keymod mod,
+                         const std::string &i_utf8Char) override;
   virtual void mouseWheelUp(int x, int y) override;
   virtual void mouseWheelDown(int x, int y) override;
 
@@ -75,7 +79,9 @@ private:
                    int nWidth,
                    int nHeight);
 
-  inline int32_t numScreenRows() { return getPosition().nHeight / m_lineHeight; }
+  inline int32_t numScreenRows() {
+    return getPosition().nHeight / m_lineHeight;
+  }
 
   void clear();
   void resetScroll(bool end);

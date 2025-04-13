@@ -652,14 +652,12 @@ void Joint::loadToPlay(Level *i_level, ChipmunkWorld *i_chipmunkWorld) {
       v.y = DynamicPosition().y * CHIP_SCALE_RATIO;
 
       m_joint = cpPivotJointNew(body1, body2, v);
-      cpSpaceAddJoint(m_associatedSpace,
-                      m_joint);
+      cpSpaceAddJoint(m_associatedSpace, m_joint);
       break;
     case Pin:
 
       m_joint = cpPinJointNew(body1, body2, cpvzero, cpvzero);
-      cpSpaceAddJoint(m_associatedSpace,
-                      m_joint);
+      cpSpaceAddJoint(m_associatedSpace, m_joint);
       break;
     case JointNone:
     default:

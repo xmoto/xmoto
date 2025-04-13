@@ -28,7 +28,9 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 /*===========================================================================
   Image class definition
   ===========================================================================*/
-typedef struct _image_info_t { int nWidth, nHeight; } image_info_t;
+typedef struct _image_info_t {
+  int nWidth, nHeight;
+} image_info_t;
 
 class Img {
 public:
@@ -87,14 +89,14 @@ private:
   /* Helper methods for image resampling, stolen from one of my earlier
      C projects :) */
   Color _Linterp_scanline(Color *pScan,
-                            unsigned int nSrcLen,
-                            unsigned int nDestLen,
-                            int s);
+                          unsigned int nSrcLen,
+                          unsigned int nDestLen,
+                          int s);
   Color _Aa_avg_scanline(Color *pScan, unsigned int x1, unsigned int x2);
   Color _Resample_scanline(Color *pScan,
-                             unsigned int nScanLen,
-                             unsigned int nDestLen,
-                             int nx);
+                           unsigned int nScanLen,
+                           unsigned int nDestLen,
+                           int nx);
   void _Resample(Color *pSrc,
                  unsigned int nSrcWidth,
                  unsigned int nSrcHeight,

@@ -22,10 +22,10 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  *  GUI: text edit box
  */
 #include "GUI.h"
+#include "common/TextEdit.h"
 #include "drawlib/DrawLib.h"
 #include "helpers/utf8.h"
 #include "xmoto/Game.h"
-#include "common/TextEdit.h"
 
 #include <algorithm>
 
@@ -51,7 +51,8 @@ void UIEdit::paint(void) {
   int nCursorOffset = 0;
   int nCursorWidth = 0;
 
-  std::string s = utf8::utf8_substring(v_textToDisplay, 0, m_textEdit.cursorPos());
+  std::string s =
+    utf8::utf8_substring(v_textToDisplay, 0, m_textEdit.cursorPos());
 
   /* cursor offset */
   if (s != "") {
@@ -69,7 +70,8 @@ void UIEdit::paint(void) {
     if (m_textEdit.cursorPos() >= utf8::utf8_length(v_textToDisplay)) {
       nCursorWidth = BlockCursorWidth;
     } else {
-      std::string s = utf8::utf8_substring(v_textToDisplay, m_textEdit.cursorPos(), 1);
+      std::string s =
+        utf8::utf8_substring(v_textToDisplay, m_textEdit.cursorPos(), 1);
       FontManager *fm = getFont();
       FontGlyph *fg = fm->getGlyph(s);
       nCursorWidth = fg->realWidth();
@@ -220,7 +222,9 @@ bool UIEdit::keyDown(int nKey, SDL_Keymod mod, const std::string &i_utf8Char) {
   return false;
 }
 
-bool UIEdit::textInput(int nKey, SDL_Keymod mod, const std::string &i_utf8Char) {
+bool UIEdit::textInput(int nKey,
+                       SDL_Keymod mod,
+                       const std::string &i_utf8Char) {
   // alt/... and special keys must not be kept
   if (utf8::utf8_length(i_utf8Char) != 1) {
     return false;

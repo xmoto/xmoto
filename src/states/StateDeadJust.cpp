@@ -87,25 +87,23 @@ void StateDeadJust::enter() {
 void StateDeadJust::xmKey(InputEventType i_type, const XMKey &i_xmkey) {
   bool safemode = XMSession::instance()->isSafemodeActive();
 
-  if (i_type == INPUT_DOWN && (i_xmkey == XMKey(SDLK_ESCAPE, KMOD_NONE) ||
-                               i_xmkey.getJoyButton() == SDL_CONTROLLER_BUTTON_START)) {
+  if (i_type == INPUT_DOWN &&
+      (i_xmkey == XMKey(SDLK_ESCAPE, KMOD_NONE) ||
+       i_xmkey.getJoyButton() == SDL_CONTROLLER_BUTTON_START)) {
     StateManager::instance()->pushState(
       new StateDeadMenu(m_universe, getStateId()));
   }
 
   else if (i_type == INPUT_DOWN &&
-           i_xmkey ==
-             (*Input::instance()->getGlobalKey(INPUT_RESTARTLEVEL))) {
+           i_xmkey == (*Input::instance()->getGlobalKey(INPUT_RESTARTLEVEL))) {
     if (!safemode || !checkpointReached()) {
       /* restart the level immediately */
       restartLevel();
     }
   }
 
-  else if (i_type == INPUT_DOWN &&
-           i_xmkey == (*Input::instance()->getGlobalKey(
-                        INPUT_RESTARTCHECKPOINT))) {
-
+  else if (i_type == INPUT_DOWN && i_xmkey == (*Input::instance()->getGlobalKey(
+                                                INPUT_RESTARTCHECKPOINT))) {
     toCheckpointBeeingDead();
   }
 
@@ -240,5 +238,5 @@ void StateDeadJust::toCheckpointBeeingDead() {
 }
 
 bool StateDeadJust::checkpointReached() const {
- return m_universe->getScenes()[0]->getCheckpoint() != nullptr;
+  return m_universe->getScenes()[0]->getCheckpoint() != nullptr;
 }

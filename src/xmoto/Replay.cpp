@@ -53,8 +53,8 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #define RMOVINGBLOCK_MIN_FARDIFFTIME2 80
 #define RMOVINGBLOCK_MIN_FARPLAYERLENGTH2 10.0
 #define RMOVINGBLOCK_MIN_FARDIFFTIME3 150
-//#define RMOVINGBLOCK_MIN_FARPLAYERLENGTH3 no values while it's all what is
-// greater
+// #define RMOVINGBLOCK_MIN_FARPLAYERLENGTH3 no values while it's all what is
+//  greater
 
 // if the block has not moved a lot, but for a long time, save it
 #define MOVINGBLOCK_MIN_LONGDIFFTIME 500

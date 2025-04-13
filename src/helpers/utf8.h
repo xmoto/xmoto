@@ -47,8 +47,8 @@ public:
                                     size_t i_nbChars);
   /* substring with absolute indexes instead of a length */
   static std::string utf8_substring_abs(const std::string &str,
-                                    size_t start,
-                                    size_t end = std::string::npos);
+                                        size_t start,
+                                        size_t end = std::string::npos);
 
   static void utf8_split(const std::string &i_line,
                          const std::string &i_char,

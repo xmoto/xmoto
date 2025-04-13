@@ -23,10 +23,10 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
 #include "VExcept.h"
 #include "common/VCommon.h"
-#include <math.h>
-#include <cmath>
-#include <stdlib.h> // for rand
 #include <algorithm>
+#include <cmath>
+#include <math.h>
+#include <stdlib.h> // for rand
 
 /*===========================================================================
   Vectors
@@ -34,9 +34,13 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #define VECTOR_COMPARE_EPSILON 0.001f
 
 template<typename T>
-constexpr double rad2deg(T x) { return x * (180.0/M_PI); }
+constexpr double rad2deg(T x) {
+  return x * (180.0 / M_PI);
+}
 template<typename T>
-constexpr double deg2rad(T x) { return x * (M_PI/180.0); }
+constexpr double deg2rad(T x) {
+  return x * (M_PI / 180.0);
+}
 
 template<typename T>
 constexpr T clamp(T v, T min, T max) {

@@ -27,7 +27,9 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 class WebLevels;
 class GameState;
 
-class UpgradeLevelsThread : public XMThread, public WWWAppInterface {
+class UpgradeLevelsThread
+  : public XMThread
+  , public WWWAppInterface {
 public:
   UpgradeLevelsThread(const std::string &i_id_theme,
                       bool i_loadMainLayerOnly,

@@ -75,7 +75,8 @@ Camera::Camera(Vector2i downleft, Vector2i upright) {
 
 Camera::~Camera() {
   DrawLib *drawLib = GameApp::instance()->getDrawLib();
-  drawLib->setRenderSurface(new RenderSurface(m_renderSurf.downleft(), m_renderSurf.upright()), true);
+  drawLib->setRenderSurface(
+    new RenderSurface(m_renderSurf.downleft(), m_renderSurf.upright()), true);
 }
 
 void Camera::prepareForNewLevel() {

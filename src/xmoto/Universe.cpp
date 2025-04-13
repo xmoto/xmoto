@@ -750,16 +750,17 @@ std::string Universe::_getGhostReplayPath_bestOfThePlayer(xmDatabase *pDb,
 
   p_time = -1;
 
-  v_result = pDb->readDB(
-    "SELECT name, finishTime FROM replays "
-    "WHERE id_profile=\"" +
-      xmDatabase::protectString(XMSession::instance()->profile()) +
-      "\" "
-      "AND   id_level=\"" +
-      xmDatabase::protectString(p_levelId) + "\" "
-                                             "AND   isFinished=1 "
-                                             "ORDER BY finishTime LIMIT 1;",
-    nrow);
+  v_result =
+    pDb->readDB("SELECT name, finishTime FROM replays "
+                "WHERE id_profile=\"" +
+                  xmDatabase::protectString(XMSession::instance()->profile()) +
+                  "\" "
+                  "AND   id_level=\"" +
+                  xmDatabase::protectString(p_levelId) +
+                  "\" "
+                  "AND   isFinished=1 "
+                  "ORDER BY finishTime LIMIT 1;",
+                nrow);
   if (nrow == 0) {
     pDb->read_DB_free(v_result);
     return "";
@@ -781,13 +782,13 @@ std::string Universe::_getGhostReplayPath_bestOfTheRoom(xmDatabase *pDb,
   std::string res;
   std::string v_fileUrl;
 
-  v_result =
-    pDb->readDB("SELECT fileUrl, finishTime FROM webhighscores "
-                "WHERE id_room=" +
-                  XMSession::instance()->idRoom(i_number) + " "
-                                                            "AND id_level=\"" +
-                  xmDatabase::protectString(p_levelId) + "\";",
-                nrow);
+  v_result = pDb->readDB("SELECT fileUrl, finishTime FROM webhighscores "
+                         "WHERE id_room=" +
+                           XMSession::instance()->idRoom(i_number) +
+                           " "
+                           "AND id_level=\"" +
+                           xmDatabase::protectString(p_levelId) + "\";",
+                         nrow);
   if (nrow == 0) {
     p_time = -1;
     pDb->read_DB_free(v_result);
