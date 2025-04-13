@@ -1173,9 +1173,11 @@ std::string XMFS::m_UserDataDirUTF8 = "";
 std::string XMFS::m_SystemDataDir = ""; /* Globals */
 std::string XMFS::m_SystemLocaleDir = "";
 bool XMFS::m_bGotSystemDataDir;
-std::string XMFS::m_BinDataFile = "";
+std::string XMFS::m_BinDataFile = "<unavailable>";
 std::string XMFS::m_binCheckSum = "";
 std::vector<PackFile> XMFS::m_PackFiles;
+
+const char *buildBinFilePath = "bin/xmoto.bin";
 
 void XMFS::init(const std::string &AppDir,
                 const std::string &i_binFile,
@@ -1367,6 +1369,7 @@ void XMFS::init(const std::string &AppDir,
      Gets the path to the X-Moto executable, removes the last two path
      components, and adds /share. */
   if (!m_bGotSystemDataDir) {
+    /* TODO should be moved to a proper function/var. */
     std::string onNixOS = Environment::get_variable("NIX_PATH");
     if (onNixOS.length() > 0) {
       std::string path;
@@ -1386,7 +1389,8 @@ void XMFS::init(const std::string &AppDir,
 
   /* Default to /usr/share */
   if (!m_bGotSystemDataDir) {
-    m_SystemDataDir = "/usr/share";
+    /* Fail here to make things easier to debug in the future. */
+    throw Exception("Failed to find suitable folder containing system data for m_SystemDataDir");
   }
 
   m_SystemLocaleDir = m_SystemDataDir + "/locale";
@@ -1417,10 +1421,22 @@ void XMFS::init(const std::string &AppDir,
     m_BinDataFile = m_SystemDataDir + "/" + i_binFile;
   }
 
-  /* Initialize binary data package if any */
-  FILE *fp = fopen(m_BinDataFile.c_str(), "rb");
+  /* Try loading from the current folder first. Useful for debugging. */
+  const char *localBinFile = i_binFile.c_str();
+  FILE *fp = fopen(localBinFile, "rb");
   if (fp == NULL) {
-    throw Exception("Package " + i_binFile + " not found !");
+      /* No bin file in current directory. Fallback to bin/ subdirectory. */
+      fp = fopen(buildBinFilePath, "rb");
+  }
+
+  if (fp == NULL) {
+      /* No bin file under the bin directory either. Fallback to system directory. */
+      fp = fopen(m_BinDataFile.c_str(), "rb");
+  }
+
+  /* Check if any of the potential bin package location was found. */
+  if (fp == NULL) {
+    throw Exception("Package " + i_binFile + " not found ! Searched: ./" + localBinFile + ", " + buildBinFilePath + " and " + m_BinDataFile.c_str() + ".");
   }
 
   char cBuf[256];

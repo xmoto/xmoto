@@ -2,10 +2,10 @@
 , curl, libjpeg, libpng, libxml2, sqlite, zlib
 , enableCmakeNinja ? false
 , enableDev ? false
-, enableGettext ? false
+, enableGettext ? true, gettext ? null
 , enableOpengl ? true, libGL ? null, libGLU ? null
 , enableSdl ? false, SDL2 ? null, SDL2_gfx ? null, SDL2_mixer ? null, SDL2_net ? null, SDL2_ttf ? null
-, enableSystemBzip2 ? false, bzip2 ? null
+, enableSystemBzip2 ? true, bzip2 ? null
 , enableSystemLua ? false, lua ? null
 , enableSystemOde ? false, ode ? null
 , enableSystemXdg ? false, libxdg_basedir ? null
@@ -13,8 +13,7 @@
 
 assert enableCmakeNinja -> buildPackages.ninja != null;
 
-assert enableGettext -> buildPackages.gettext != null;
-assert enableGettext -> buildPackages.libintl != null;
+assert enableGettext -> gettext != null;
 
 # Can't disable OpenGL yet.
 assert libGL != null;
@@ -56,8 +55,7 @@ stdenv.mkDerivation rec {
   ] ++ optionals enableCmakeNinja [
     buildPackages.ninja
   ] ++ optionals enableGettext [
-    buildPackages.gettext
-    buildPackages.libintl
+    gettext
   ];
 
   buildInputs = [
