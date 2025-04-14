@@ -1,6 +1,8 @@
 set(XMOTO_PACK "native" CACHE STRING "Whether to pack xmoto.bin natively or through wine")
 set_property(CACHE XMOTO_PACK PROPERTY STRINGS "native" "wine")
 
+file(GLOB_RECURSE BIN_FILES CONFIGURE_DEPENDS "${CMAKE_CURRENT_SOURCE_DIR}/**/*")
+
 if(WIN32 AND CMAKE_CROSSCOMPILING AND XMOTO_PACK STREQUAL "wine")
   add_custom_command(
     OUTPUT xmoto.bin
@@ -10,14 +12,14 @@ if(WIN32 AND CMAKE_CROSSCOMPILING AND XMOTO_PACK STREQUAL "wine")
       "${CMAKE_CURRENT_SOURCE_DIR}" # Input directory
       "${CMAKE_BINARY_DIR}" # Build directory
       "${MXE_TOOLCHAIN_PATH}" # Toolchain directory
-    MAIN_DEPENDENCY package.lst
+    DEPENDS ${BIN_FILES}
     COMMENT "Packing xmoto.bin"
   )
 else()
   add_custom_command(
     OUTPUT xmoto.bin
     COMMAND xmoto --pack xmoto.bin "${CMAKE_CURRENT_SOURCE_DIR}"
-    MAIN_DEPENDENCY package.lst
+    DEPENDS ${BIN_FILES}
     COMMENT "Packing xmoto.bin"
   )
 endif()
