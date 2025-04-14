@@ -26,7 +26,9 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
 class xmDatabase;
 
-class SendVoteThread : public XMThread, public WWWAppInterface {
+class SendVoteThread
+  : public XMThread
+  , public WWWAppInterface {
 public:
   SendVoteThread(const std::string &i_idlevel,
                  const std::string &i_difficulty_value,

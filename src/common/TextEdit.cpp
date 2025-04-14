@@ -1,10 +1,9 @@
 #include "TextEdit.h"
-#include "helpers/utf8.h"
 #include "helpers/System.h"
 #include "helpers/VMath.h"
+#include "helpers/utf8.h"
 
 /* NOTE: This probably does not work properly with utf8 yet */
-
 
 void TextEdit::clear() {
   m_cursorPos = 0;
@@ -27,9 +26,9 @@ void TextEdit::deleteWordRight() {
 
   size_t deleteTo = m_cursorPos + calculateWordRight();
 
-  m_text =
-    utf8::utf8_substring(m_text, 0, m_cursorPos) +
-    utf8::utf8_substring(m_text, deleteTo, utf8::utf8_length(m_text) - deleteTo);
+  m_text = utf8::utf8_substring(m_text, 0, m_cursorPos) +
+           utf8::utf8_substring(
+             m_text, deleteTo, utf8::utf8_length(m_text) - deleteTo);
 }
 
 void TextEdit::deleteRight(int count) {

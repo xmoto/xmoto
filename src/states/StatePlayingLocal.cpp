@@ -330,9 +330,8 @@ void StatePlayingLocal::xmKey(InputEventType i_type, const XMKey &i_xmkey) {
   }
 #endif
 
-  else if (i_type == INPUT_DOWN &&
-           i_xmkey == (*Input::instance()->getGlobalKey(
-                        INPUT_RESTARTCHECKPOINT))) {
+  else if (i_type == INPUT_DOWN && i_xmkey == (*Input::instance()->getGlobalKey(
+                                                INPUT_RESTARTCHECKPOINT))) {
 
     bool v_isCheckpoint = false;
     bool safemode = XMSession::instance()->isSafemodeActive();
@@ -356,11 +355,11 @@ void StatePlayingLocal::xmKey(InputEventType i_type, const XMKey &i_xmkey) {
   }
 
   else if (i_type == INPUT_DOWN &&
-      i_xmkey == (*Input::instance()->getGlobalKey(INPUT_LEVELINFO))) {
+           i_xmkey == (*Input::instance()->getGlobalKey(INPUT_LEVELINFO))) {
     if (!isLockedScene()) {
       m_displayStats = true;
       StateManager::instance()->pushState(new StateLevelInfoViewer(
-            m_universe->getScenes()[0]->getLevelSrc()->Id(), true, false));
+        m_universe->getScenes()[0]->getLevelSrc()->Id(), true, false));
     }
   }
 

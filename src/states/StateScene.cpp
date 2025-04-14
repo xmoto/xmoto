@@ -124,7 +124,8 @@ StateScene::~StateScene() {
   StateManager::instance()->unregisterAsObserver("INTERPOLATION_CHANGED", this);
   StateManager::instance()->unregisterAsObserver("MIRRORMODE_CHANGED", this);
   StateManager::instance()->unregisterAsObserver("REPLAY_DOWNLOADED", this);
-  StateManager::instance()->unregisterAsObserver("REPLAY_FAILEDTODOWNLOAD", this);
+  StateManager::instance()->unregisterAsObserver("REPLAY_FAILEDTODOWNLOAD",
+                                                 this);
   StateManager::instance()->unregisterAsObserver("CHANGE_TRAILCAM", this);
 
   if (m_cameraAnim != NULL) {
@@ -353,8 +354,7 @@ void StateScene::onRenderFlush() {
 void StateScene::xmKey(InputEventType i_type, const XMKey &i_xmkey) {
   GameApp *pGame = GameApp::instance();
 
-  if (i_xmkey ==
-      (*Input::instance()->getGlobalKey(INPUT_LEVELWATCHING))) {
+  if (i_xmkey == (*Input::instance()->getGlobalKey(INPUT_LEVELWATCHING))) {
     if (i_type == INPUT_UP) {
       if (m_cameraAnim != NULL) {
         if (autoZoom() && m_cameraAnim->allowNextStep()) {
@@ -368,9 +368,8 @@ void StateScene::xmKey(InputEventType i_type, const XMKey &i_xmkey) {
     }
   }
 
-  else if (i_type == INPUT_DOWN &&
-           i_xmkey ==
-             (*Input::instance()->getGlobalKey(INPUT_SWITCHSAFEMODE))) {
+  else if (i_type == INPUT_DOWN && i_xmkey == (*Input::instance()->getGlobalKey(
+                                                INPUT_SWITCHSAFEMODE))) {
     bool bSafemodeNotActive = !XMSession::instance()->isSafemodeActive();
 
     XMSession::instance()->setSafemodeActive(bSafemodeNotActive);
@@ -380,23 +379,21 @@ void StateScene::xmKey(InputEventType i_type, const XMKey &i_xmkey) {
   }
 
   else if (i_type == INPUT_DOWN &&
-           i_xmkey ==
-             (*Input::instance()->getGlobalKey(INPUT_RESTARTLEVEL))) {
+           i_xmkey == (*Input::instance()->getGlobalKey(INPUT_RESTARTLEVEL))) {
     if (!XMSession::instance()->isSafemodeActive())
       restartLevel();
   }
 
   else if (i_type == INPUT_DOWN &&
-           i_xmkey ==
-             (*Input::instance()->getGlobalKey(INPUT_SWITCHPLAYER))) {
+           i_xmkey == (*Input::instance()->getGlobalKey(INPUT_SWITCHPLAYER))) {
     if (m_universe != NULL) {
       m_universe->switchFollowCamera();
     }
   }
 
   else if (i_type == INPUT_DOWN &&
-           i_xmkey == (*Input::instance()->getGlobalKey(
-                        INPUT_SWITCHTRACKINGSHOTMODE))) {
+           i_xmkey ==
+             (*Input::instance()->getGlobalKey(INPUT_SWITCHTRACKINGSHOTMODE))) {
     if (m_universe != NULL && m_renderer != NULL) {
       m_trackingShotMode = !m_trackingShotMode;
 
@@ -437,9 +434,8 @@ void StateScene::xmKey(InputEventType i_type, const XMKey &i_xmkey) {
     }
   }
 
-  else if (i_type == INPUT_DOWN &&
-           i_xmkey ==
-             (*Input::instance()->getGlobalKey(INPUT_SWITCHFAVORITE))) {
+  else if (i_type == INPUT_DOWN && i_xmkey == (*Input::instance()->getGlobalKey(
+                                                INPUT_SWITCHFAVORITE))) {
     if (m_universe != NULL) {
       if (m_universe->getScenes().size() > 0) { // just add the first world
         pGame->switchLevelToFavorite(
@@ -449,9 +445,8 @@ void StateScene::xmKey(InputEventType i_type, const XMKey &i_xmkey) {
     }
   }
 
-  else if (i_type == INPUT_DOWN &&
-           i_xmkey ==
-             (*Input::instance()->getGlobalKey(INPUT_SWITCHBLACKLIST))) {
+  else if (i_type == INPUT_DOWN && i_xmkey == (*Input::instance()->getGlobalKey(
+                                                INPUT_SWITCHBLACKLIST))) {
     if (m_universe != NULL) {
       if (m_universe->getScenes().size() >
           0) { // just blacklist the first world
@@ -464,15 +459,13 @@ void StateScene::xmKey(InputEventType i_type, const XMKey &i_xmkey) {
   }
 
   else if (i_type == INPUT_DOWN &&
-           i_xmkey ==
-             (*Input::instance()->getGlobalKey(INPUT_NEXTLEVEL))) {
+           i_xmkey == (*Input::instance()->getGlobalKey(INPUT_NEXTLEVEL))) {
     if (!XMSession::instance()->isSafemodeActive())
       nextLevel();
   }
 
   else if (i_type == INPUT_DOWN &&
-           i_xmkey ==
-             (*Input::instance()->getGlobalKey(INPUT_PREVIOUSLEVEL))) {
+           i_xmkey == (*Input::instance()->getGlobalKey(INPUT_PREVIOUSLEVEL))) {
     if (!XMSession::instance()->isSafemodeActive())
       nextLevel(false);
   }
@@ -498,8 +491,8 @@ void StateScene::xmKey(InputEventType i_type, const XMKey &i_xmkey) {
   }
 
   else if (i_type == INPUT_DOWN &&
-           i_xmkey == (*Input::instance()->getGlobalKey(
-                        INPUT_SWITCHRENDERGHOSTTRAIL))) {
+           i_xmkey ==
+             (*Input::instance()->getGlobalKey(INPUT_SWITCHRENDERGHOSTTRAIL))) {
     // toogle
     XMSession::instance()->setRenderGhostTrail(
       !XMSession::instance()->renderGhostTrail());
@@ -996,7 +989,6 @@ void StateScene::displayStats() {
           (i < (int)m_quality) ? m_qualityTex : m_uncheckedTex,
           0xFFFFFFFF,
           true);
-
       }
     }
   }

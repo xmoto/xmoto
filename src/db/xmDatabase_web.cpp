@@ -460,8 +460,9 @@ void xmDatabase::updateMyHighscoresFromHighscores(
              "AND a.id_level   = b.id_level    "
              "AND a.id_profile = b.id_profile) "
              "WHERE a.id_profile = \"" +
-               protectString(i_id_profile) + "\" "
-                                             "AND   b.id_profile IS NULL;",
+               protectString(i_id_profile) +
+               "\" "
+               "AND   b.id_profile IS NULL;",
              nrow);
 
     if (nrow > 0) {
@@ -506,8 +507,9 @@ void xmDatabase::updateMyHighscoresKnownStolenBack(
       "AND a.id_level   = b.id_level    "
       "AND a.id_profile = b.id_profile) "
       "WHERE a.id_profile = \"" +
-        protectString(i_id_profile) + "\" "
-                                      "AND   b.known_stolen = 1;",
+        protectString(i_id_profile) +
+        "\" "
+        "AND   b.known_stolen = 1;",
       nrow);
 
     if (nrow > 0) {
@@ -520,8 +522,9 @@ void xmDatabase::updateMyHighscoresKnownStolenBack(
                     protectString(getResult(v_result, 3, i, 0)) +
                     "\" "
                     "AND   id_room=" +
-                    getResult(v_result, 3, i, 1) + " "
-                                                   "AND   id_level=\"" +
+                    getResult(v_result, 3, i, 1) +
+                    " "
+                    "AND   id_level=\"" +
                     protectString(getResult(v_result, 3, i, 2)) + "\";");
         }
         simpleSql("COMMIT;");
@@ -559,9 +562,10 @@ bool xmDatabase::markMyHighscoresKnownStolen(const std::string &i_id_profile,
         "INNER JOIN levels AS c ON a.id_level = c.id_level "
         "INNER JOIN webrooms AS d ON a.id_room=d.id_room "
         "WHERE a.id_profile <> \"" +
-        protectString(i_id_profile) + "\" "
-                                      "AND   b.known_stolen = 0 "
-                                      "ORDER BY a.date DESC;",
+        protectString(i_id_profile) +
+        "\" "
+        "AND   b.known_stolen = 0 "
+        "ORDER BY a.date DESC;",
       nrow);
 
     if (nrow > 0) {
@@ -591,10 +595,12 @@ bool xmDatabase::markMyHighscoresKnownStolen(const std::string &i_id_profile,
                     "SET known_stolen=1, known_stolen_date=datetime('now', "
                     "'localtime') "
                     "WHERE id_profile=\"" +
-                    protectString(i_id_profile) + "\" "
-                                                  "AND   id_room=" +
-                    getResult(v_result, 5, i, 0) + " "
-                                                   "AND   id_level=\"" +
+                    protectString(i_id_profile) +
+                    "\" "
+                    "AND   id_room=" +
+                    getResult(v_result, 5, i, 0) +
+                    " "
+                    "AND   id_level=\"" +
                     protectString(getResult(v_result, 5, i, 1)) + "\";");
         }
         simpleSql("COMMIT;");

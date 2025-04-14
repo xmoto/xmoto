@@ -146,7 +146,10 @@ int64_t Sound::RWops_seek(SDL_RWops *context, int64_t offset, int whence) {
   return XMFS::getOffset(pf);
 }
 
-size_t Sound::RWops_read(SDL_RWops *context, void *ptr, size_t size, size_t maxnum) {
+size_t Sound::RWops_read(SDL_RWops *context,
+                         void *ptr,
+                         size_t size,
+                         size_t maxnum) {
   FileHandle *pf = (FileHandle *)context->hidden.unknown.data1;
   if (XMFS::isEnd(pf))
     return 0;
@@ -161,7 +164,10 @@ size_t Sound::RWops_read(SDL_RWops *context, void *ptr, size_t size, size_t maxn
   return nToRead;
 }
 
-size_t Sound::RWops_write(SDL_RWops *context, const void *ptr, size_t size, size_t num) {
+size_t Sound::RWops_write(SDL_RWops *context,
+                          const void *ptr,
+                          size_t size,
+                          size_t num) {
   return num;
 }
 
@@ -283,7 +289,7 @@ void Sound::playMusic(std::string i_musicPath) {
 
 /* No music available, try loading */
 #if 0 && defined(WIN32) || \
-  defined(            \
+  defined(                 \
     __amigaos4__) /* this works around a bug in SDL_mixer 1.2.7 on Windows */
   SDL_RWops *rwfp;
   rwfp = SDL_RWFromFile(i_musicPath.c_str(), "rb");

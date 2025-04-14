@@ -146,9 +146,8 @@ void StatePause::xmKey(InputEventType i_type, const XMKey &i_xmkey) {
     m_requestForEnd = true;
   }
 
-  else if (i_type == INPUT_DOWN &&
-           i_xmkey ==
-             (*Input::instance()->getGlobalKey(INPUT_SWITCHFAVORITE))) {
+  else if (i_type == INPUT_DOWN && i_xmkey == (*Input::instance()->getGlobalKey(
+                                                INPUT_SWITCHFAVORITE))) {
     if (m_universe != NULL) {
       if (m_universe->getScenes().size() > 0) { // just add the first world
         GameApp::instance()->switchLevelToFavorite(
@@ -158,9 +157,8 @@ void StatePause::xmKey(InputEventType i_type, const XMKey &i_xmkey) {
     }
   }
 
-  else if (i_type == INPUT_DOWN &&
-           i_xmkey ==
-             (*Input::instance()->getGlobalKey(INPUT_SWITCHBLACKLIST))) {
+  else if (i_type == INPUT_DOWN && i_xmkey == (*Input::instance()->getGlobalKey(
+                                                INPUT_SWITCHBLACKLIST))) {
     if (m_universe != NULL) {
       if (m_universe->getScenes().size() >
           0) { // just blacklist the first world

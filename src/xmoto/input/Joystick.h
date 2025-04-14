@@ -4,17 +4,17 @@
 #include "helpers/Singleton.h"
 #include "helpers/VMath.h"
 #include "include/xm_SDL.h"
-#include <stdint.h>
 #include <array>
-#include <vector>
+#include <stdint.h>
 #include <string>
+#include <vector>
 
 static const uint32_t JOYSTICK_REPEAT_DELAY_MS = 500;
-static const float    JOYSTICK_REPEAT_RATE_HZ = 1000 / 33.0f;
+static const float JOYSTICK_REPEAT_RATE_HZ = 1000 / 33.0f;
 
-static const int32_t  JOYSTICK_MAX_VALUE = 32760;
-static const int32_t  JOYSTICK_DEADZONE_BASE = JOYSTICK_MAX_VALUE / 4;
-static const int32_t  JOYSTICK_DEADZONE_MENU = JOYSTICK_MAX_VALUE / 2;
+static const int32_t JOYSTICK_MAX_VALUE = 32760;
+static const int32_t JOYSTICK_DEADZONE_BASE = JOYSTICK_MAX_VALUE / 4;
+static const int32_t JOYSTICK_DEADZONE_MENU = JOYSTICK_MAX_VALUE / 2;
 
 using JoyDir = int8_t;
 
@@ -24,9 +24,7 @@ struct Joystick {
   SDL_JoystickID id;
 
   bool operator==(const Joystick &other) const {
-    return handle == other.handle
-        && name == other.name
-        && id == other.id;
+    return handle == other.handle && name == other.name && id == other.id;
   }
 };
 

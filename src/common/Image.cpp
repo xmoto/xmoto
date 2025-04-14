@@ -524,9 +524,9 @@ void Img::checkAlpha(void) {
 }
 
 Color Img::_Linterp_scanline(Color *pScan,
-                               unsigned int nSrcLen,
-                               unsigned int nDestLen,
-                               int s) {
+                             unsigned int nSrcLen,
+                             unsigned int nDestLen,
+                             int s) {
   int t = ((nSrcLen - 1) * s) / nDestLen;
   int v = ((nSrcLen - 1) * s) % nDestLen;
   int r1, g1, b1, a1;
@@ -541,9 +541,7 @@ Color Img::_Linterp_scanline(Color *pScan,
                     (a1 * (nDestLen - v)) / nDestLen + (a2 * v) / nDestLen);
 }
 
-Color Img::_Aa_avg_scanline(Color *pScan,
-                              unsigned int x1,
-                              unsigned int x2) {
+Color Img::_Aa_avg_scanline(Color *pScan, unsigned int x1, unsigned int x2) {
   int r = 0, g = 0, b = 0, a = 0;
   int d = 0;
   for (unsigned int i = x1; i < x2; i++) {
@@ -560,9 +558,9 @@ Color Img::_Aa_avg_scanline(Color *pScan,
 }
 
 Color Img::_Resample_scanline(Color *pScan,
-                                unsigned int nScanLen,
-                                unsigned int nDestLen,
-                                int nx) {
+                              unsigned int nScanLen,
+                              unsigned int nDestLen,
+                              int nx) {
   /* Scanline... upsample, downsample, or straight copy? */
   if (nScanLen < nDestLen)
     return _Linterp_scanline(pScan, nScanLen, nDestLen, nx);

@@ -52,16 +52,17 @@ bool SendVoteThread::hasPlayedEnough(xmDatabase *pDb,
   unsigned int nrow;
   int v_playedTime;
 
-  v_result = pDb->readDB(
-    "SELECT IFNULL(SUM(playedTime), 0) "
-    "FROM stats_profiles_levels "
-    "WHERE id_profile = \"" +
-      xmDatabase::protectString(XMSession::instance()->profile()) +
-      "\" "
-      "AND id_level=\"" +
-      xmDatabase::protectString(i_id_level) + "\" "
-                                              "GROUP BY id_profile, id_level;",
-    nrow);
+  v_result =
+    pDb->readDB("SELECT IFNULL(SUM(playedTime), 0) "
+                "FROM stats_profiles_levels "
+                "WHERE id_profile = \"" +
+                  xmDatabase::protectString(XMSession::instance()->profile()) +
+                  "\" "
+                  "AND id_level=\"" +
+                  xmDatabase::protectString(i_id_level) +
+                  "\" "
+                  "GROUP BY id_profile, id_level;",
+                nrow);
   if (nrow != 1) {
     /* should not happend */
     pDb->read_DB_free(v_result);

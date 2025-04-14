@@ -82,16 +82,19 @@ void StatePlaying::handleControllers(InputEventType Type,
   uint32_t p, pW;
   Biker *v_biker;
 
-  const auto checkKey = [i_xmkey](INPUT_PLAYERKEYS key, uint32_t player) -> bool {
+  const auto checkKey = [i_xmkey](INPUT_PLAYERKEYS key,
+                                  uint32_t player) -> bool {
     // This is a dirty workaround for the following bug:
     // 1. Press down key <x> (where x is a key that controls the bike)
     // 2. Press down ctrl
     // 3. Release key <x>
     // 3. Release ctrl
-    // 4. Key <x> gets "stuck", e.g. if it's the "drive forward" key, the bike keeps
+    // 4. Key <x> gets "stuck", e.g. if it's the "drive forward" key, the bike
+    // keeps
     //    driving after the key is released
     // This needs to be properly fixed by overhauling the input code.
-    return i_xmkey.equalsIgnoreMods(*Input::instance()->getPlayerKey(key, player));
+    return i_xmkey.equalsIgnoreMods(
+      *Input::instance()->getPlayerKey(key, player));
   };
 
   bool mirrorMode = XMSession::instance()->mirrorMode();
@@ -213,16 +216,14 @@ void StatePlaying::handleScriptKeys(InputEventType Type, const XMKey &i_xmkey) {
         Input::instance()
           ->getScriptKeyHooks(i)
           .pGame->getLuaLibGame()
-          ->scriptCallVoid(
-            Input::instance()->getScriptKeyHooks(i).FuncName);
+          ->scriptCallVoid(Input::instance()->getScriptKeyHooks(i).FuncName);
       }
       for (int j = 0; j < INPUT_NB_PLAYERS; j++) {
         if (Input::instance()->getScriptActionKeys(j, i) == i_xmkey) {
           Input::instance()
             ->getScriptKeyHooks(i)
             .pGame->getLuaLibGame()
-            ->scriptCallVoid(
-              Input::instance()->getScriptKeyHooks(i).FuncName);
+            ->scriptCallVoid(Input::instance()->getScriptKeyHooks(i).FuncName);
         }
       }
     }
@@ -294,8 +295,8 @@ void StatePlaying::dealWithActivedKeys() {
       }
 
       if (Input::instance()
-          ->getPlayerKey(INPUT_CHANGEDIR, p)
-          ->isPressed(v_keystate, v_mousestate, numkeys)
+            ->getPlayerKey(INPUT_CHANGEDIR, p)
+            ->isPressed(v_keystate, v_mousestate, numkeys)
           /*
            * Make sure we aren't holding down the A button, as this would cause
            * the player to change directions instantly after opening the level
@@ -304,8 +305,8 @@ void StatePlaying::dealWithActivedKeys() {
            * controller. Note that this behavior still stands for the spacebar.
            */
           && !(Input::instance()
-               ->getPlayerKey(INPUT_CHANGEDIR, p)
-               ->getJoyButton() == SDL_CONTROLLER_BUTTON_A)) {
+                 ->getPlayerKey(INPUT_CHANGEDIR, p)
+                 ->getJoyButton() == SDL_CONTROLLER_BUTTON_A)) {
         /* Change dir */
         if (m_changeDirKeyAlreadyPress[p] == false) {
           v_biker->getControler()->setChangeDir(true);

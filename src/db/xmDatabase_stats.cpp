@@ -177,8 +177,9 @@ bool xmDatabase::stats_checkKeyExists_stats_profiles(
   const std::string &i_profile) {
   return checkKey("SELECT count(1) FROM stats_profiles "
                   "WHERE sitekey=\"" +
-                  protectString(i_sitekey) + "\" "
-                                             "AND   id_profile=\"" +
+                  protectString(i_sitekey) +
+                  "\" "
+                  "AND   id_profile=\"" +
                   protectString(i_profile) + "\";");
 }
 
@@ -188,10 +189,12 @@ bool xmDatabase::stats_checkKeyExists_stats_profiles_levels(
   const std::string &i_level) {
   return checkKey("SELECT count(1) FROM stats_profiles_levels "
                   "WHERE sitekey=\"" +
-                  protectString(i_sitekey) + "\" "
-                                             "AND   id_profile=\"" +
-                  protectString(i_profile) + "\" "
-                                             "AND   id_level=\"" +
+                  protectString(i_sitekey) +
+                  "\" "
+                  "AND   id_profile=\"" +
+                  protectString(i_profile) +
+                  "\" "
+                  "AND   id_level=\"" +
                   protectString(i_level) + "\";");
 }
 
@@ -213,10 +216,12 @@ void xmDatabase::stats_levelCompleted(const std::string &i_sitekey,
               "last_play_date=datetime('now', 'localtime'), "
               "synchronized = 0 "
               "WHERE sitekey=\"" +
-              protectString(i_sitekey) + "\" "
-                                         "AND id_profile=\"" +
-              protectString(PlayerName) + "\" "
-                                          "AND id_level=\"" +
+              protectString(i_sitekey) +
+              "\" "
+              "AND id_profile=\"" +
+              protectString(PlayerName) +
+              "\" "
+              "AND id_level=\"" +
               protectString(LevelID) + "\";");
   } else {
     simpleSql("INSERT INTO stats_profiles_levels("
@@ -248,10 +253,12 @@ void xmDatabase::stats_died(const std::string &i_sitekey,
               "last_play_date=datetime('now', 'localtime'), "
               "synchronized = 0 "
               "WHERE sitekey=\"" +
-              protectString(i_sitekey) + "\" "
-                                         "AND id_profile=\"" +
-              protectString(PlayerName) + "\" "
-                                          "AND id_level=\"" +
+              protectString(i_sitekey) +
+              "\" "
+              "AND id_profile=\"" +
+              protectString(PlayerName) +
+              "\" "
+              "AND id_level=\"" +
               protectString(LevelID) + "\";");
   } else {
     simpleSql("INSERT INTO stats_profiles_levels("
@@ -282,10 +289,12 @@ void xmDatabase::stats_abortedLevel(const std::string &i_sitekey,
               "last_play_date=datetime('now', 'localtime'), "
               "synchronized = 0 "
               "WHERE sitekey=\"" +
-              protectString(i_sitekey) + "\" "
-                                         "AND id_profile=\"" +
-              protectString(PlayerName) + "\" "
-                                          "AND id_level=\"" +
+              protectString(i_sitekey) +
+              "\" "
+              "AND id_profile=\"" +
+              protectString(PlayerName) +
+              "\" "
+              "AND id_level=\"" +
               protectString(LevelID) + "\";");
   } else {
     simpleSql("INSERT INTO stats_profiles_levels("
@@ -317,10 +326,12 @@ void xmDatabase::stats_levelRestarted(const std::string &i_sitekey,
               "last_play_date=datetime('now', 'localtime'), "
               "synchronized = 0 "
               "WHERE sitekey=\"" +
-              protectString(i_sitekey) + "\" "
-                                         "AND id_profile=\"" +
-              protectString(PlayerName) + "\" "
-                                          "AND id_level=\"" +
+              protectString(i_sitekey) +
+              "\" "
+              "AND id_profile=\"" +
+              protectString(PlayerName) +
+              "\" "
+              "AND id_level=\"" +
               protectString(LevelID) + "\";");
   } else {
     simpleSql("INSERT INTO stats_profiles_levels("

@@ -190,7 +190,8 @@ public:
 
   std::vector<Vector2f> &getLayerOffsets() { return m_layerOffsets; }
 
-  static std::string getCacheFilePath(xmDatabase *i_db, const std::string &i_id_level);
+  static std::string getCacheFilePath(xmDatabase *i_db,
+                                      const std::string &i_id_level);
   static bool isInCache(xmDatabase *i_db, const std::string &i_id_level);
   static void removeFromCache(xmDatabase *i_db, const std::string &i_id_level);
 

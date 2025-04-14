@@ -103,10 +103,14 @@ typedef enum _tim_pixel_type_t {
 } tim_pixel_type_t;
 
 /* 24-bit RGB */
-typedef struct _tim_rgb_t { unsigned char r, g, b; } tim_rgb24_t;
+typedef struct _tim_rgb_t {
+  unsigned char r, g, b;
+} tim_rgb24_t;
 
 /* 32-bit RGBA */
-typedef struct _tim_rgba_t { unsigned char r, g, b, a; } tim_rgba32_t;
+typedef struct _tim_rgba_t {
+  unsigned char r, g, b, a;
+} tim_rgba32_t;
 
 /*==============================================================================
 Types: Images
@@ -230,7 +234,9 @@ void tim_free(tim_session_t *pSession, void *pvBlock);
 char *tim_strdup(tim_session_t *pSession, const char *pcString);
 
 /* File I/O */
-void *tim_open(tim_session_t *pSession, const char *pcWhere, tim_io_mode_t IOMode);
+void *tim_open(tim_session_t *pSession,
+               const char *pcWhere,
+               tim_io_mode_t IOMode);
 void tim_close(tim_session_t *pSession, void *pvHandle);
 int tim_seek(tim_session_t *pSession,
              void *pvHandle,
@@ -241,7 +247,9 @@ int tim_write(tim_session_t *pSession, void *pvHandle, void *pvBuf, int nSize);
 int tim_eof(tim_session_t *pSession, void *pvHandle);
 
 /* File format management */
-int tim_remove_hint(tim_session_t *pSession, const char *pcExt, const char *pcTag);
+int tim_remove_hint(tim_session_t *pSession,
+                    const char *pcExt,
+                    const char *pcTag);
 int tim_is_hint(tim_session_t *pSession, const char *pcExt, const char *pcTag);
 const char *tim_get_hint(tim_session_t *pSession,
                          const char *pcExt,
@@ -268,7 +276,8 @@ int tim_set_hint_int(tim_session_t *pSession,
                      const char *pcTag,
                      int nValue);
 
-int tim_add_extension_to_file_format(tim_file_format_t *p, const char *pcExtension);
+int tim_add_extension_to_file_format(tim_file_format_t *p,
+                                     const char *pcExtension);
 tim_file_format_t *tim_create_file_format(tim_session_t *pSession,
                                           const char *pcExtension,
                                           tim_callback_save_t SaveCallback,

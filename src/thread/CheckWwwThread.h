@@ -27,7 +27,9 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 class WebRoom;
 class WebLevels;
 
-class CheckWwwThread : public XMThread, public WWWAppInterface {
+class CheckWwwThread
+  : public XMThread
+  , public WWWAppInterface {
 public:
   // when forceUpdate is false, use the values in xmsession
   // to know which part has to be updated

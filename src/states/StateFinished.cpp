@@ -383,16 +383,16 @@ void StateFinished::executeOneCommand(std::string cmd, std::string args) {
 }
 
 void StateFinished::xmKey(InputEventType i_type, const XMKey &i_xmkey) {
-  if (i_type == INPUT_DOWN && (i_xmkey == XMKey(SDLK_ESCAPE, KMOD_NONE) ||
-                               i_xmkey.getJoyButton() == SDL_CONTROLLER_BUTTON_B)) {
+  if (i_type == INPUT_DOWN &&
+      (i_xmkey == XMKey(SDLK_ESCAPE, KMOD_NONE) ||
+       i_xmkey.getJoyButton() == SDL_CONTROLLER_BUTTON_B)) {
     /* quit this state */
     m_requestForEnd = true;
     StateManager::instance()->sendAsynchronousMessage("FINISH", m_parentId);
   }
 
-  else if (i_type == INPUT_DOWN &&
-           i_xmkey ==
-             (*Input::instance()->getGlobalKey(INPUT_SWITCHFAVORITE))) {
+  else if (i_type == INPUT_DOWN && i_xmkey == (*Input::instance()->getGlobalKey(
+                                                INPUT_SWITCHFAVORITE))) {
     if (m_universe != NULL) {
       if (m_universe->getScenes().size() > 0) { // just add the first world
         GameApp::instance()->switchLevelToFavorite(
@@ -402,9 +402,8 @@ void StateFinished::xmKey(InputEventType i_type, const XMKey &i_xmkey) {
     }
   }
 
-  else if (i_type == INPUT_DOWN &&
-           i_xmkey ==
-             (*Input::instance()->getGlobalKey(INPUT_SWITCHBLACKLIST))) {
+  else if (i_type == INPUT_DOWN && i_xmkey == (*Input::instance()->getGlobalKey(
+                                                INPUT_SWITCHBLACKLIST))) {
     if (m_universe != NULL) {
       if (m_universe->getScenes().size() >
           0) { // just blacklist the first world
@@ -599,12 +598,13 @@ void StateFinished::makeBestTimesWindow(UIBestTimes *pWindow,
 
   pWindow->clear();
 
-  v_result = i_db->readDB(
-    "SELECT finishTime, id_profile FROM profile_completedLevels "
-    "WHERE id_level=\"" +
-      xmDatabase::protectString(LevelID) + "\" "
-                                           "ORDER BY 0+finishTime LIMIT 10;",
-    nrow);
+  v_result =
+    i_db->readDB("SELECT finishTime, id_profile FROM profile_completedLevels "
+                 "WHERE id_level=\"" +
+                   xmDatabase::protectString(LevelID) +
+                   "\" "
+                   "ORDER BY 0+finishTime LIMIT 10;",
+                 nrow);
   for (unsigned int i = 0; i < nrow; i++) {
     v_finishTime = atoi(i_db->getResult(v_result, 2, i, 0));
     v_profile = i_db->getResult(v_result, 2, i, 1);
@@ -614,14 +614,15 @@ void StateFinished::makeBestTimesWindow(UIBestTimes *pWindow,
   }
   i_db->read_DB_free(v_result);
 
-  v_result = i_db->readDB(
-    "SELECT finishTime FROM profile_completedLevels "
-    "WHERE id_profile=\"" +
-      xmDatabase::protectString(PlayerName) + "\" "
-                                              "AND   id_level=\"" +
-      xmDatabase::protectString(LevelID) + "\" "
-                                           "ORDER BY 0+finishTime LIMIT 10;",
-    nrow);
+  v_result = i_db->readDB("SELECT finishTime FROM profile_completedLevels "
+                          "WHERE id_profile=\"" +
+                            xmDatabase::protectString(PlayerName) +
+                            "\" "
+                            "AND   id_level=\"" +
+                            xmDatabase::protectString(LevelID) +
+                            "\" "
+                            "ORDER BY 0+finishTime LIMIT 10;",
+                          nrow);
   for (unsigned int i = 0; i < nrow; i++) {
     v_finishTime = atoi(i_db->getResult(v_result, 1, i, 0));
     pWindow->addRow2(formatTime(v_finishTime), PlayerName);

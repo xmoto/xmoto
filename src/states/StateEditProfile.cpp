@@ -110,8 +110,8 @@ void StateEditProfile::checkEvents() {
       /* save previous profile before loading the previous one */
       XMSession::instance()->saveProfile(xmDatabase::instance("main"));
       Input::instance()->saveConfig(GameApp::instance()->getUserConfig(),
-                                           xmDatabase::instance("main"),
-                                           XMSession::instance()->profile());
+                                    xmDatabase::instance("main"),
+                                    XMSession::instance()->profile());
 
       XMSession::instance()->setProfile(pEntry->Text[0]);
       // set children compliant
@@ -122,9 +122,10 @@ void StateEditProfile::checkEvents() {
                                          xmDatabase::instance("main"));
 
       XMSession::instance()->loadConfig(
-          GameApp::instance()->getUserConfig(),
-          /* don't reload the default profile because that breaks profile selection */
-          false);
+        GameApp::instance()->getUserConfig(),
+        /* don't reload the default profile because that breaks profile
+           selection */
+        false);
 
       XMSession::instance()->setChildrenCompliant(v_ccButton->getChecked());
 
@@ -186,10 +187,9 @@ void StateEditProfile::checkEvents() {
 }
 
 void StateEditProfile::xmKey(InputEventType i_type, const XMKey &i_xmkey) {
-  if (XMSession::instance()->profile() != "" &&
-      i_type == INPUT_DOWN && (
-        i_xmkey == XMKey(SDLK_ESCAPE, KMOD_NONE) ||
-        i_xmkey.getJoyButton() == SDL_CONTROLLER_BUTTON_B)) {
+  if (XMSession::instance()->profile() != "" && i_type == INPUT_DOWN &&
+      (i_xmkey == XMKey(SDLK_ESCAPE, KMOD_NONE) ||
+       i_xmkey.getJoyButton() == SDL_CONTROLLER_BUTTON_B)) {
     m_requestForEnd = true;
     return;
   }
@@ -295,7 +295,6 @@ void StateEditProfile::createGUIIfNeeded(RenderSurface *i_screen) {
                           57);
   v_button->setID("CLOSE_BUTTON");
   v_button->setFont(drawLib->getFontSmall());
-
 
   createProfileList();
 }

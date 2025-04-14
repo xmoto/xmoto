@@ -23,7 +23,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
 class XMotoLoadReplaysInterface {
 public:
-  virtual ~XMotoLoadReplaysInterface(){};
+  virtual ~XMotoLoadReplaysInterface() {};
   virtual void loadReplayHook(std::string i_replay, int i_percentage) = 0;
 };
 

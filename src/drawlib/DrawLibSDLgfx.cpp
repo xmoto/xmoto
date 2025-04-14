@@ -31,7 +31,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "SDL_gfxPrimitives.h"
 #include "SDL_rotozoom.h"
 #include "helpers/iqsort.h"
-//#define islt(a,b) ((*(const int *)a) - (*(const int *)b))
+// #define islt(a,b) ((*(const int *)a) - (*(const int *)b))
 #define islt(a, b) ((*a) < (*b))
 
 int xx_gfxPrimitivesCompareInt(const void *a, const void *b) {
@@ -127,7 +127,7 @@ private:
 SDLFontManager::SDLFontManager(DrawLib *i_drawLib,
                                const std::string &i_fontFile,
                                int i_fontSize)
-  : FontManager(i_drawLib, i_fontFile, i_fontSize){};
+  : FontManager(i_drawLib, i_fontFile, i_fontSize) {};
 
 FontGlyph *SDLFontManager::getGlyph(const std::string &i_string) {
   return new SDLFontGlyph("test");
@@ -187,7 +187,7 @@ DrawLibSDLgfx::DrawLibSDLgfx()
   m_fontBig = getFontManager(FS::FullPath(FontManager::getDrawFontFile()), 60);
 };
 
-DrawLibSDLgfx::~DrawLibSDLgfx(){};
+DrawLibSDLgfx::~DrawLibSDLgfx() {};
 
 /*===========================================================================
 Transform an OpenGL vertex to pure 2D
@@ -479,7 +479,8 @@ void DrawLibSDLgfx::endDraw() {
                 zoomSurface(m_texture->surface, zoom, zoom, SMOOTHING_ON);
               if (m_texture->isAlpha) {
                 s = SDL_DisplayFormatAlpha(a);
-                // s = SDL_ConvertSurface(a, windowSurface->format, SDL_HWSURFACE);
+                // s = SDL_ConvertSurface(a, windowSurface->format,
+                // SDL_HWSURFACE);
               } else {
                 s = SDL_ConvertSurface(a, windowSurface->format, SDL_HWSURFACE);
               }
@@ -489,8 +490,8 @@ void DrawLibSDLgfx::endDraw() {
                 m_texture->surface, windowSurface->format, SDL_HWSURFACE);
               if (m_texture->isAlpha) {
                 s = SDL_DisplayFormatAlpha(m_texture->surface);
-                // s = SDL_ConvertSurface(m_texture->surface, windowSurface->format,
-                // SDL_HWSURFACE);
+                // s = SDL_ConvertSurface(m_texture->surface,
+                // windowSurface->format, SDL_HWSURFACE);
               } else {
                 s = SDL_ConvertSurface(
                   m_texture->surface, windowSurface->format, SDL_HWSURFACE);
@@ -599,9 +600,8 @@ void DrawLibSDLgfx::clearGraphics() {
   if (m_bg_data == NULL) {
     m_bg_data =
       malloc(surface->format->BytesPerPixel * surface->w * surface->h);
-    memset(m_bg_data,
-           0,
-           surface->format->BytesPerPixel * surface->w * surface->h);
+    memset(
+      m_bg_data, 0, surface->format->BytesPerPixel * surface->w * surface->h);
   }
   memcpy(surface->pixels,
          m_bg_data,

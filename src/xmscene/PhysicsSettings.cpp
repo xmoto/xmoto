@@ -451,7 +451,7 @@ void PhysicsSettings::load(FileDataType i_fdt, const std::string &i_filename) {
         v_rider_foot_mass_done == false || v_rider_hand_mass_done == false ||
         v_rider_anchors_erp_done == false || v_rider_anchors_cfm_done == false
 
-        ) {
+    ) {
       throw Exception("Incomplete xml file");
     }
 

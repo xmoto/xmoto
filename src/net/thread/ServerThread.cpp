@@ -1744,7 +1744,7 @@ void ServerThread::manageSrvCmd(unsigned int i_client,
              std::string(v_args[1])) || // master admin password
           (m_pDb->srv_isAdmin(m_clients[i_client]->name(),
                               v_args[1])) // normal admin password
-          ) {
+      ) {
         m_clients[i_client]->setAdminConnected(true);
         v_answer += "Connected\n";
       } else {
@@ -1822,12 +1822,15 @@ void ServerThread::manageSrvCmd(unsigned int i_client,
       char v_clientstr[94];
       std::string v_mode;
 
-      v_answer += "+----+-----------------+----+----------------+-----+----------"
-                  "--------------+-------+--------+\n";
-      v_answer += "|  id|login            |mode|              ip|proto|version   "
-                  "              |xmproto|ping(mS)|\n";
-      v_answer += "+----+-----------------+----+----------------+-----+----------"
-                  "--------------+-------+--------+\n";
+      v_answer +=
+        "+----+-----------------+----+----------------+-----+----------"
+        "--------------+-------+--------+\n";
+      v_answer +=
+        "|  id|login            |mode|              ip|proto|version   "
+        "              |xmproto|ping(mS)|\n";
+      v_answer +=
+        "+----+-----------------+----+----------------+-----+----------"
+        "--------------+-------+--------+\n";
 
       for (unsigned int i = 0; i < m_clients.size(); i++) {
         std::ostringstream v_ping;

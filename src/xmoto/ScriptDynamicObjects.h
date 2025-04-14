@@ -117,8 +117,9 @@ private:
   Entity *m_entity;
 };
 
-class SDynamicEntityRotation : public SDynamicEntityMove,
-                               public SDynamicRotation {
+class SDynamicEntityRotation
+  : public SDynamicEntityMove
+  , public SDynamicRotation {
 public:
   SDynamicEntityRotation(std::string pEntity,
                          float pInitAngle,
@@ -133,8 +134,9 @@ public:
 private:
 };
 
-class SDynamicEntityTranslation : public SDynamicEntityMove,
-                                  public SDynamicTranslation {
+class SDynamicEntityTranslation
+  : public SDynamicEntityMove
+  , public SDynamicTranslation {
 public:
   SDynamicEntityTranslation(std::string pEntity,
                             float pX,
@@ -149,8 +151,9 @@ public:
 private:
 };
 
-class SDynamicEntitySelfRotation : public SDynamicEntityMove,
-                                   public SDynamicSelfRotation {
+class SDynamicEntitySelfRotation
+  : public SDynamicEntityMove
+  , public SDynamicSelfRotation {
 public:
   SDynamicEntitySelfRotation(std::string pEntity,
                              int pPeriod,
@@ -182,8 +185,9 @@ private:
   Block *m_block;
 };
 
-class SDynamicBlockRotation : public SDynamicBlockMove,
-                              public SDynamicRotation {
+class SDynamicBlockRotation
+  : public SDynamicBlockMove
+  , public SDynamicRotation {
 public:
   SDynamicBlockRotation(std::string pBlock,
                         float pInitAngle,
@@ -198,8 +202,9 @@ public:
 private:
 };
 
-class SDynamicBlockSelfRotation : public SDynamicBlockMove,
-                                  public SDynamicSelfRotation {
+class SDynamicBlockSelfRotation
+  : public SDynamicBlockMove
+  , public SDynamicSelfRotation {
 public:
   SDynamicBlockSelfRotation(std::string pBlock,
                             int pPeriod,
@@ -212,8 +217,9 @@ public:
 private:
 };
 
-class SDynamicBlockTranslation : public SDynamicBlockMove,
-                                 public SDynamicTranslation {
+class SDynamicBlockTranslation
+  : public SDynamicBlockMove
+  , public SDynamicTranslation {
 public:
   SDynamicBlockTranslation(std::string pBlock,
                            float pX,

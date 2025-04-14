@@ -196,9 +196,8 @@ int tim_png_load(tim_session_t *pSession,
     /* Allocate image structure */
     pImg = tim_create_image(pSession, nWidth, nHeight, pt);
     if (pImg == NULL)
-      longjmp(png_jmpbuf(PngPtr),
-              -1); /* Long jump! (yick!) I'm only using this because
-                      I enjoy hating myself :) */
+      longjmp(png_jmpbuf(PngPtr), -1); /* Long jump! (yick!) I'm only using this
+                                          because I enjoy hating myself :) */
     *ppImage = pImg;
 
     /* Load image */

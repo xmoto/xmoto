@@ -27,17 +27,19 @@ typedef unsigned int Color;
   ((Color)((alpha) | (((Color)blue) << 8) | (((Color)green) << 16) | \
            (((Color)red) << 24)))
 
-#define GET_ALPHA(color) ((Color)((color)&0xff))
-#define GET_BLUE(color) ((Color)(((color)&0xff00) >> 8))
-#define GET_GREEN(color) ((Color)(((color)&0xff0000) >> 16))
-#define GET_RED(color) ((Color)(((color)&0xff000000) >> 24))
+#define GET_ALPHA(color) ((Color)((color) & 0xff))
+#define GET_BLUE(color) ((Color)(((color) & 0xff00) >> 8))
+#define GET_GREEN(color) ((Color)(((color) & 0xff0000) >> 16))
+#define GET_RED(color) ((Color)(((color) & 0xff000000) >> 24))
 
-#define SET_ALPHA(color, alpha) ((Color)(((color)&0xffffff00) | ((alpha)&0xff)))
+#define SET_ALPHA(color, alpha) \
+  ((Color)(((color) & 0xffffff00) | ((alpha) & 0xff)))
 #define SET_BLUE(color, blue) \
-  ((Color)(((color)&0xffff00ff) | ((blue)&0xff) << 8))
+  ((Color)(((color) & 0xffff00ff) | ((blue) & 0xff) << 8))
 #define SET_GREEN(color, green) \
-  ((Color)(((color)&0xff00ffff) | ((green)&0xff) << 16))
-#define SET_RED(color, red) ((Color)(((color)&0x00ffffff) | ((red)&0xff) << 24))
+  ((Color)(((color) & 0xff00ffff) | ((green) & 0xff) << 16))
+#define SET_RED(color, red) \
+  ((Color)(((color) & 0x00ffffff) | ((red) & 0xff) << 24))
 
 #define INVERT_COLOR(color)          \
   MAKE_COLOR(255 - GET_RED(color),   \

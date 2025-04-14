@@ -52,7 +52,7 @@ void BSPLine::computeNormal() {
 }
 
 BSPPoly::BSPPoly(int size) {
-    m_vertices.reserve(size);
+  m_vertices.reserve(size);
 }
 
 BSPPoly::BSPPoly(const BSPPoly &i_poly) {

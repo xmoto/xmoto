@@ -33,8 +33,8 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "StatePause.h"
 #include "StateRequestKey.h"
 #include "StateServerConsole.h"
-#include "StateWaitServerInstructions.h"
 #include "StateVote.h"
+#include "StateWaitServerInstructions.h"
 #include "net/NetClient.h"
 
 #include "common/XMSession.h"
@@ -76,7 +76,7 @@ StateManager::StateManager() {
   m_cursor = NULL;
 
   // get the current focus and visibility status
-  GameApp* game = GameApp::instance();
+  GameApp *game = GameApp::instance();
   m_isVisible = !game->isIconified();
   m_hasFocus = game->hasKeyboardFocus() || game->hasMouseFocus();
 
@@ -1153,13 +1153,12 @@ void StateManager::connectOrDisconnect() {
     NetClient::instance()->disconnect();
   } else {
     try {
-      NetClient::instance()->connect(
-        XMSession::instance()->clientServerName(),
-        XMSession::instance()->clientServerPort());
+      NetClient::instance()->connect(XMSession::instance()->clientServerName(),
+                                     XMSession::instance()->clientServerPort());
 
-      NetClient::instance()->changeMode(
-        XMSession::instance()->clientGhostMode() ? NETCLIENT_GHOST_MODE
-                                                 : NETCLIENT_SLAVE_MODE);
+      NetClient::instance()->changeMode(XMSession::instance()->clientGhostMode()
+                                          ? NETCLIENT_GHOST_MODE
+                                          : NETCLIENT_SLAVE_MODE);
 
       if (!XMSession::instance()->clientGhostMode())
         StateManager::instance()->pushState(new StateWaitServerInstructions());

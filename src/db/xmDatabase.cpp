@@ -105,11 +105,8 @@ void xmDatabase::backupXmDb(const std::string &dbFile) {
   backupName << "xm.v" << m_openingVersion << "." << currentDateTime() << ".db";
 
   std::string outputPath;
-  if (!XMFS::copyFile(FDT_DATA,
-                      dbFile,
-                      "Backups/" + backupName.str(),
-                      outputPath,
-                      true)) {
+  if (!XMFS::copyFile(
+        FDT_DATA, dbFile, "Backups/" + backupName.str(), outputPath, true)) {
     throw Exception("Failed to copy database file");
   }
   LogInfo("Database backed up to: %s", outputPath.c_str());
@@ -254,29 +251,33 @@ void xmDatabase::updateXMDirectories(const std::string &i_oldGameDataDir,
     simpleSql("UPDATE levels SET filepath ="
               " xm_replaceStart(filepath, \"" +
               protectString(i_oldGameDataDir) + "\", \"" +
-              protectString(i_newGameDataDir) + "\")"
-                                                " WHERE filepath LIKE \"" +
+              protectString(i_newGameDataDir) +
+              "\")"
+              " WHERE filepath LIKE \"" +
               protectString(i_oldGameDataDir) + "%\";");
 
     simpleSql("UPDATE themes SET filepath ="
               " xm_replaceStart(filepath, \"" +
               protectString(i_oldGameDataDir) + "\", \"" +
-              protectString(i_newGameDataDir) + "\")"
-                                                " WHERE filepath LIKE \"" +
+              protectString(i_newGameDataDir) +
+              "\")"
+              " WHERE filepath LIKE \"" +
               protectString(i_oldGameDataDir) + "%\";");
 
     simpleSql("UPDATE levels SET filepath ="
               " xm_replaceStart(filepath, \"" +
               protectString(i_oldUserDataDir) + "\", \"" +
-              protectString(i_newUserDataDir) + "\")"
-                                                " WHERE filepath LIKE \"" +
+              protectString(i_newUserDataDir) +
+              "\")"
+              " WHERE filepath LIKE \"" +
               protectString(i_oldUserDataDir) + "%\";");
 
     simpleSql("UPDATE themes SET filepath ="
               " xm_replaceStart(filepath, \"" +
               protectString(i_oldUserDataDir) + "\", \"" +
-              protectString(i_newUserDataDir) + "\")"
-                                                " WHERE filepath LIKE \"" +
+              protectString(i_newUserDataDir) +
+              "\")"
+              " WHERE filepath LIKE \"" +
               protectString(i_oldUserDataDir) + "%\";");
 
     simpleSql("COMMIT;");
@@ -1033,11 +1034,8 @@ void xmDatabase::upgradeXmDbToVersion(int i_fromVersion,
           UserConfig defaultConfig;
           XMSession::createDefaultConfig(&defaultConfig);
           std::vector<std::string> varsToReset = {
-            "WebLevelsURL",
-            "WebDbSyncUploadURL",
-            "WebThemesURL",
-            "WebThemesURLBase",
-            "WebHighscoreUploadURL",
+            "WebLevelsURL",     "WebDbSyncUploadURL",    "WebThemesURL",
+            "WebThemesURLBase", "WebHighscoreUploadURL",
           };
 
           auto userConfig = GameApp::instance()->getUserConfig();
@@ -1072,18 +1070,14 @@ void xmDatabase::upgradeXmDbToVersion(int i_fromVersion,
 
             for (auto &renames : domainRenames) {
               simpleSql("UPDATE " + table + " SET " + field + " = replace(" +
-                        field + ", '" + renames.first +
-                        "', '" + renames.second + "');");
+                        field + ", '" + renames.first + "', '" +
+                        renames.second + "');");
             }
           }
 
-          simpleSql(
-            "UPDATE profiles_configs SET value = replace(value, '"
-            LEGACY_GAMES_DOMAIN
-            "', '"
-            GAMES_DOMAIN
-            "') WHERE key = 'ClientServerName'"
-          );
+          simpleSql("UPDATE profiles_configs SET value = replace(value, "
+                    "'" LEGACY_GAMES_DOMAIN "', '" GAMES_DOMAIN
+                    "') WHERE key = 'ClientServerName'");
 
           simpleSql("COMMIT;");
         } catch (Exception &e) {

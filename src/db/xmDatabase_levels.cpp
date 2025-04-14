@@ -262,8 +262,8 @@ void xmDatabase::levels_cleanNoWWWLevels() {
                   protectString(v_id_level) + "\";");
 
         v_basename = XMFS::getFileBaseName(v_filepath);
-        if (XMFS::moveFile(
-              v_filepath, v_savePath + "/" + v_basename + ".lvl") == false) {
+        if (XMFS::moveFile(v_filepath,
+                           v_savePath + "/" + v_basename + ".lvl") == false) {
           LogWarning("Unable to move the file into the trash");
         }
       } catch (Exception &e) {
@@ -329,8 +329,9 @@ bool xmDatabase::levels_add_fast(const std::string &i_filepath,
 
   // found it in the database
   simpleSql("UPDATE levels SET loaded=1 WHERE " + v_cond + "filepath=\"" +
-            protectString(i_filepath) + "\" "
-                                        "AND checkSum=\"" +
+            protectString(i_filepath) +
+            "\" "
+            "AND checkSum=\"" +
             protectString(v_checksum) + "\";");
   return true;
 }

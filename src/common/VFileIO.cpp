@@ -20,15 +20,15 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
 #include "helpers/Environment.h"
 #ifdef WIN32
-  #include <windows.h>
-  #include <direct.h>
-  #include <io.h>
-  #include <userenv.h>
-  #include <winbase.h>
+#include <direct.h>
+#include <io.h>
+#include <userenv.h>
+#include <winbase.h>
+#include <windows.h>
 #else
-  #include <dirent.h>
-  #include <sys/types.h>
-  #include <unistd.h>
+#include <dirent.h>
+#include <sys/types.h>
+#include <unistd.h>
 #endif
 
 #include <stdarg.h>
@@ -135,7 +135,7 @@ bool str_match_wildcard(char *pcMWildcard,
                         bool CaseSensitive) {
   int nPos = 0;
   bool PrevIsWildcard = false;
-  char c1[256+1], c2[256+1];
+  char c1[256 + 1], c2[256 + 1];
   char *pcWildcard, *pcString;
 
   if (CaseSensitive) {
@@ -143,10 +143,10 @@ bool str_match_wildcard(char *pcMWildcard,
     pcString = pcMString;
   } else {
     strncpy(c1, pcMWildcard, sizeof(c1));
-    c1[sizeof(c1)-1] = '\0';
+    c1[sizeof(c1) - 1] = '\0';
 
     strncpy(c2, pcMString, sizeof(c2));
-    c2[sizeof(c2)-1] = '\0';
+    c2[sizeof(c2) - 1] = '\0';
 
     strlwr(c1);
     strlwr(c2);
@@ -853,7 +853,7 @@ void XMFS::writeLine(FileHandle *pfh, const std::string &Line) {
 }
 
 void XMFS::writeLineF(FileHandle *pfh, char *pcFmt, ...) {
-  char cBuf[2048], cBuf2[2048+1];
+  char cBuf[2048], cBuf2[2048 + 1];
   va_list List;
   va_start(List, pcFmt);
   vsnprintf(cBuf, sizeof(cBuf), pcFmt, List);
@@ -1312,8 +1312,8 @@ void XMFS::init(const std::string &AppDir,
   CFBundleRef bundle = CFBundleGetMainBundle();
   CFURLRef res = CFBundleCopyResourcesDirectoryURL(bundle);
   char path[PATH_MAX];
-  if (!CFURLGetFileSystemRepresentation(res, TRUE, (uint8_t*)path, PATH_MAX)) {
-      throw Exception("Failed to get bundle path");
+  if (!CFURLGetFileSystemRepresentation(res, TRUE, (uint8_t *)path, PATH_MAX)) {
+    throw Exception("Failed to get bundle path");
   }
   CFRelease(res);
 
@@ -1352,7 +1352,8 @@ void XMFS::init(const std::string &AppDir,
   /* Try some default fallbacks */
   if (!m_bGotSystemDataDir) {
     const std::vector<std::string> dataDirs = {
-      "/usr/share", "/usr/local/share",
+      "/usr/share",
+      "/usr/local/share",
     };
 
     for (auto &dir : dataDirs) {
@@ -1364,10 +1365,10 @@ void XMFS::init(const std::string &AppDir,
     }
   }
 
-  /* On NixOS, the data is in ../share/xmoto relative to the X-Moto executable, which
-     resides somewhere in the /nix/store directory.
-     Gets the path to the X-Moto executable, removes the last two path
-     components, and adds /share. */
+  /* On NixOS, the data is in ../share/xmoto relative to the X-Moto executable,
+     which resides somewhere in the /nix/store directory. Gets the path to the
+     X-Moto executable, removes the last two path components, and adds /share.
+   */
   if (!m_bGotSystemDataDir) {
     /* TODO should be moved to a proper function/var. */
     std::string onNixOS = Environment::get_variable("NIX_PATH");
@@ -1601,7 +1602,8 @@ float XMFS::readFloat_MaybeLE(FileHandle *pfh, bool big) {
   return big ? SwapEndian::BigFloat(v) : SwapEndian::LittleFloat(v);
 }
 
-bool XMFS::isFileInDir(const std::string &p_dirpath, const std::string &p_filepath) {
+bool XMFS::isFileInDir(const std::string &p_dirpath,
+                       const std::string &p_filepath) {
   std::string v_fileDir;
 
   v_fileDir = getFileDir(p_filepath);

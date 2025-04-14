@@ -157,7 +157,7 @@ public:
     m_speciality = ET_CHECKPOINT;
     m_isVirgin = true;
   }
-  virtual ~Checkpoint(){};
+  virtual ~Checkpoint() {};
 
   bool isActivated() const;
   void deactivate();

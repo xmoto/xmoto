@@ -410,8 +410,8 @@ void XMSession::loadProfile(const std::string &i_id_profile, xmDatabase *pDb) {
     pDb->config_getBool(i_id_profile, "BeatingMode", m_beatingMode);
   m_hideSpritesUgly =
     pDb->config_getBool(i_id_profile, "HideSpritesUgly", m_hideSpritesUgly);
-  m_hideSpritesMinimap =
-    pDb->config_getBool(i_id_profile, "HideSpritesMinimap", m_hideSpritesMinimap);
+  m_hideSpritesMinimap = pDb->config_getBool(
+    i_id_profile, "HideSpritesMinimap", m_hideSpritesMinimap);
   m_webForms = pDb->config_getBool(i_id_profile, "WebForms", m_webForms);
 
   m_serverStartAtStartup = pDb->config_getBool(
@@ -629,14 +629,14 @@ void XMSession::saveProfile(xmDatabase *pDb) {
 
   pDb->config_setString(m_profile,
                         "MenuGraphics",
-                        m_menuGraphics == GFX_LOW
-                          ? "Low"
-                          : m_menuGraphics == GFX_MEDIUM ? "Medium" : "High");
+                        m_menuGraphics == GFX_LOW      ? "Low"
+                        : m_menuGraphics == GFX_MEDIUM ? "Medium"
+                                                       : "High");
   pDb->config_setString(m_profile,
                         "GameGraphics",
-                        m_gameGraphics == GFX_LOW
-                          ? "Low"
-                          : m_gameGraphics == GFX_MEDIUM ? "Medium" : "High");
+                        m_gameGraphics == GFX_LOW      ? "Low"
+                        : m_gameGraphics == GFX_MEDIUM ? "Medium"
+                                                       : "High");
   pDb->config_setString(m_profile, "ProxyType", proxySettings()->getTypeStr());
   pDb->config_setString(m_profile, "ProxyServer", proxySettings()->getServer());
   pDb->config_setString(

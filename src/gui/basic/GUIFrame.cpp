@@ -217,7 +217,8 @@ void UIFrame::paint(void) {
       nTargetY = m_nMaximizedY;
     }
 
-    float targetFps = (float)StateManager::instance()->getTopState()->getRenderFps();
+    float targetFps =
+      (float)StateManager::instance()->getTopState()->getRenderFps();
     float animationSpeed = targetFps > 0.0f ? (30.0f / targetFps) : 1.0f;
 
     /* Is the window at target position? */

@@ -82,7 +82,7 @@ void Environment::set_variable(const std::string &i_variable,
   v_set = true;
 
 #else
-  #warning "Missing setenv and putenv"
+#warning "Missing setenv and putenv"
 #endif
 
   if (v_set == false) {

@@ -79,7 +79,9 @@ char *tim_strdup(tim_session_t *pSession, const char *pcString) {
   File I/O system
   ==============================================================================*/
 
-void *tim_open(tim_session_t *pSession, const char *pcWhere, tim_io_mode_t IOMode) {
+void *tim_open(tim_session_t *pSession,
+               const char *pcWhere,
+               tim_io_mode_t IOMode) {
   /* Open file */
   return pSession->IO.tim_callback_open(pcWhere, IOMode);
 }
@@ -116,7 +118,8 @@ int tim_eof(tim_session_t *pSession, void *pvHandle) {
   File format management
   ==============================================================================*/
 
-int tim_add_extension_to_file_format(tim_file_format_t *p, const char *pcExtension) {
+int tim_add_extension_to_file_format(tim_file_format_t *p,
+                                     const char *pcExtension) {
   /* Room for more extensions? */
   if (p->nNumExtensions >= TIM_MAX_EXTENSIONS_PER_FILE_FORMAT)
     return TIM_RV_ERR_INTERNAL_LIMIT;
@@ -246,7 +249,9 @@ tim_file_format_hint_t *tim_add_file_format_hint(tim_session_t *pSession,
   return p;
 }
 
-int tim_remove_hint(tim_session_t *pSession, const char *pcExt, const char *pcTag) {
+int tim_remove_hint(tim_session_t *pSession,
+                    const char *pcExt,
+                    const char *pcTag) {
   tim_file_format_t *pFormat;
   tim_file_format_hint_t *p;
 

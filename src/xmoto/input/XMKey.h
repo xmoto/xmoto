@@ -21,10 +21,10 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #ifndef __XMKEY_H__
 #define __XMKEY_H__
 
-#include "include/xm_SDL.h"
 #include "Joystick.h"
-#include <string>
+#include "include/xm_SDL.h"
 #include <stdint.h>
+#include <string>
 
 enum XMKey_input {
   XMK_NONE,
@@ -54,11 +54,18 @@ class XMKey {
 public:
   XMKey();
   XMKey(SDL_Event &i_event);
-  XMKey(const std::string &i_key, bool i_basicMode = false); /* basic mode is to give a simple letter, for scripts key */
-  XMKey(SDL_Keycode nKey, SDL_Keymod mod, const std::string &i_utf8Char = "", int repetition = 0); // keyboard
+  XMKey(const std::string &i_key,
+        bool i_basicMode =
+          false); /* basic mode is to give a simple letter, for scripts key */
+  XMKey(SDL_Keycode nKey,
+        SDL_Keymod mod,
+        const std::string &i_utf8Char = "",
+        int repetition = 0); // keyboard
   XMKey(Uint8 nButton, unsigned int i_repetition = 0); // mouse
   XMKey(Joystick *joystick, Uint8 i_joyButton); // joystick button
-  XMKey(Joystick *joystick, Uint8 i_joyAxis, Sint16 i_joyAxisValue); // joystick axis
+  XMKey(Joystick *joystick,
+        Uint8 i_joyAxis,
+        Sint16 i_joyAxisValue); // joystick axis
 
   bool operator==(const XMKey &i_other) const;
   bool equalsIgnoreMods(const XMKey &i_other) const;
@@ -66,7 +73,9 @@ public:
   std::string toFancyString() const;
   static const char *modKeyString(SDL_Keymod modKey);
   bool isModKeyDown(SDL_Keymod modKey) const;
-  bool isPressed(const Uint8 *i_keystate, Uint8 i_mousestate, int numkeys) const;
+  bool isPressed(const Uint8 *i_keystate,
+                 Uint8 i_mousestate,
+                 int numkeys) const;
 
   inline bool isDefined() const { return m_type != XMK_NONE; }
 
@@ -77,14 +86,16 @@ public:
   float getAnalogValue() const;
   XMKey_direction getDirection() const;
 
-  bool toKeyboard(SDL_Keycode &nKey, SDL_Keymod &o_mod, std::string &o_utf8Char) const;
+  bool toKeyboard(SDL_Keycode &nKey,
+                  SDL_Keymod &o_mod,
+                  std::string &o_utf8Char) const;
   bool toMouse(int &nX, int &nY, Uint8 &nButton) const;
   bool toMouseWheel(int &nX, int &nY, Sint32 &wheelX, Sint32 &wheelY) const;
   bool toJoystickButton(Uint8 &o_joyNum, Uint8 &o_joyButton) const;
   bool toJoystickAxisMotion(JoyAxisEvent &event) const;
 
   inline SDL_Keycode getKeyboardSym() const { return m_keyboard_sym; }
-  inline SDL_Keymod  getKeyboardMod() const { return m_keyboard_mod; }
+  inline SDL_Keymod getKeyboardMod() const { return m_keyboard_mod; }
 
   inline Uint8 getJoyButton() const { return m_joyButton; }
 

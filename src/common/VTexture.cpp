@@ -23,12 +23,12 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 #include "VTexture.h"
 #include "Image.h"
+#include "Theme.h"
 #include "VFileIO.h"
+#include "XMSession.h"
 #include "drawlib/DrawLib.h"
 #include "helpers/Log.h"
 #include "xmoto/Game.h"
-#include "Theme.h"
-#include "XMSession.h"
 
 void Texture::addAssociatedSprite(Sprite *sprite) {
   bool found = false;

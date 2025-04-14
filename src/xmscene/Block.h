@@ -273,7 +273,7 @@ private:
   std::vector<BlockVertex *> m_vertices;
   std::vector<ConvexBlock *> m_convexBlocks;
 
-  std::vector<cpShape*> m_shapes;
+  std::vector<cpShape *> m_shapes;
   // one geom for each edge texture
   std::vector<Geom *> m_edgeGeoms;
   // one Material (edge texture, blend color, scale and depth ) for each geom

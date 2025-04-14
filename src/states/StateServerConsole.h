@@ -27,7 +27,9 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 class UIRoot;
 class UIConsole;
 
-class StateServerConsole : public StateMenu, public UIConsoleHook {
+class StateServerConsole
+  : public StateMenu
+  , public UIConsoleHook {
 public:
   StateServerConsole(bool drawStateBehind = true,
                      bool updateStatesBehind = false);

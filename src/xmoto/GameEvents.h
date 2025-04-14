@@ -248,7 +248,7 @@ class MGE_PlayersToucheEntity : public SceneEvent {
 public:
   MGE_PlayersToucheEntity(int p_eventTime);
   MGE_PlayersToucheEntity(int p_eventTime,
-                          const std::string& p_entityID,
+                          const std::string &p_entityID,
                           bool p_bTouchedWithHead);
   ~MGE_PlayersToucheEntity();
 
@@ -269,7 +269,7 @@ class MGE_PlayerTouchesEntity : public SceneEvent {
 public:
   MGE_PlayerTouchesEntity(int p_eventTime);
   MGE_PlayerTouchesEntity(int p_eventTime,
-                          const std::string& p_entityID,
+                          const std::string &p_entityID,
                           bool p_bTouchedWithHead,
                           int i_player);
   ~MGE_PlayerTouchesEntity();
@@ -293,7 +293,7 @@ public:
   MGE_EntityDestroyed(int p_eventTime);
   MGE_EntityDestroyed(
     int p_eventTime,
-    const std::string& i_entityId,
+    const std::string &i_entityId,
     EntitySpeciality i_entityType,
     Vector2f i_entityPosition,
     float i_entitySize,
@@ -393,7 +393,7 @@ private:
 class MGE_Message : public SceneEvent {
 public:
   MGE_Message(int p_eventTime);
-  MGE_Message(int p_eventTime, const std::string& p_message);
+  MGE_Message(int p_eventTime, const std::string &p_message);
   ~MGE_Message();
 
   void doAction(Scene *p_pScene);
@@ -411,7 +411,10 @@ private:
 class MGE_MoveBlock : public SceneEvent {
 public:
   MGE_MoveBlock(int p_eventTime);
-  MGE_MoveBlock(int p_eventTime, const std::string& p_blockID, float p_x, float p_y);
+  MGE_MoveBlock(int p_eventTime,
+                const std::string &p_blockID,
+                float p_x,
+                float p_y);
   ~MGE_MoveBlock();
 
   void doAction(Scene *p_pScene);
@@ -430,7 +433,10 @@ private:
 class MGE_SetBlockPos : public SceneEvent {
 public:
   MGE_SetBlockPos(int p_eventTime);
-  MGE_SetBlockPos(int p_eventTime, const std::string& p_blockID, float p_x, float p_y);
+  MGE_SetBlockPos(int p_eventTime,
+                  const std::string &p_blockID,
+                  float p_x,
+                  float p_y);
   ~MGE_SetBlockPos();
 
   void doAction(Scene *p_pScene);
@@ -535,7 +541,7 @@ class MGE_SetEntityPos : public SceneEvent {
 public:
   MGE_SetEntityPos(int p_eventTime);
   MGE_SetEntityPos(int p_eventTime,
-                   const std::string& p_entityID,
+                   const std::string &p_entityID,
                    float p_x,
                    float p_y);
   ~MGE_SetEntityPos();
@@ -557,7 +563,7 @@ class MGE_SetBlockCenter : public SceneEvent {
 public:
   MGE_SetBlockCenter(int p_eventTime);
   MGE_SetBlockCenter(int p_eventTime,
-                     const std::string& p_blockID,
+                     const std::string &p_blockID,
                      float p_x,
                      float p_y);
   ~MGE_SetBlockCenter();
@@ -578,7 +584,9 @@ private:
 class MGE_SetBlockRotation : public SceneEvent {
 public:
   MGE_SetBlockRotation(int p_eventTime);
-  MGE_SetBlockRotation(int p_eventTime, const std::string& p_blockID, float p_angle);
+  MGE_SetBlockRotation(int p_eventTime,
+                       const std::string &p_blockID,
+                       float p_angle);
   ~MGE_SetBlockRotation();
 
   void doAction(Scene *p_pScene);
@@ -598,7 +606,7 @@ class MGE_SetDynamicBlockSelfRotation : public SceneEvent {
 public:
   MGE_SetDynamicBlockSelfRotation(int p_eventTime);
   MGE_SetDynamicBlockSelfRotation(int p_eventTime,
-                                  const std::string& p_blockID,
+                                  const std::string &p_blockID,
                                   int p_period,
                                   int p_startTime,
                                   int p_endTime);
@@ -624,7 +632,7 @@ class MGE_SetPhysicsBlockSelfRotation : public SceneEvent {
 public:
   MGE_SetPhysicsBlockSelfRotation(int eventTime);
   MGE_SetPhysicsBlockSelfRotation(int eventTime,
-                                  const std::string& blockID,
+                                  const std::string &blockID,
                                   int torque,
                                   int startTime,
                                   int endTime);
@@ -650,7 +658,7 @@ class MGE_SetPhysicsBlockTranslation : public SceneEvent {
 public:
   MGE_SetPhysicsBlockTranslation(int eventTime);
   MGE_SetPhysicsBlockTranslation(int eventTime,
-                                 const std::string& blockID,
+                                 const std::string &blockID,
                                  float x,
                                  float y,
                                  int period,
@@ -678,7 +686,7 @@ class MGE_SetDynamicEntityRotation : public SceneEvent {
 public:
   MGE_SetDynamicEntityRotation(int p_eventTime);
   MGE_SetDynamicEntityRotation(int p_eventTime,
-                               const std::string& p_entityID,
+                               const std::string &p_entityID,
                                float p_fInitAngle,
                                float p_fRadius,
                                int p_period,
@@ -707,7 +715,7 @@ class MGE_SetDynamicEntitySelfRotation : public SceneEvent {
 public:
   MGE_SetDynamicEntitySelfRotation(int p_eventTime);
   MGE_SetDynamicEntitySelfRotation(int p_eventTime,
-                                   const std::string& p_entityID,
+                                   const std::string &p_entityID,
                                    int p_period,
                                    int p_startTime,
                                    int p_endTime);
@@ -733,7 +741,7 @@ class MGE_SetDynamicEntityTranslation : public SceneEvent {
 public:
   MGE_SetDynamicEntityTranslation(int p_eventTime);
   MGE_SetDynamicEntityTranslation(int p_eventTime,
-                                  const std::string& p_entityID,
+                                  const std::string &p_entityID,
                                   float p_x,
                                   float p_y,
                                   int p_period,
@@ -760,7 +768,7 @@ private:
 class MGE_SetDynamicEntityNone : public SceneEvent {
 public:
   MGE_SetDynamicEntityNone(int p_eventTime);
-  MGE_SetDynamicEntityNone(int p_eventTime, const std::string& p_entityID);
+  MGE_SetDynamicEntityNone(int p_eventTime, const std::string &p_entityID);
   ~MGE_SetDynamicEntityNone();
 
   void doAction(Scene *p_pScene);
@@ -779,7 +787,7 @@ class MGE_SetDynamicBlockRotation : public SceneEvent {
 public:
   MGE_SetDynamicBlockRotation(int p_eventTime);
   MGE_SetDynamicBlockRotation(int p_eventTime,
-                              const std::string& p_blockID,
+                              const std::string &p_blockID,
                               float p_fInitAngle,
                               float p_fRadius,
                               int p_period,
@@ -809,7 +817,7 @@ class MGE_SetDynamicBlockTranslation : public SceneEvent {
 public:
   MGE_SetDynamicBlockTranslation(int p_eventTime);
   MGE_SetDynamicBlockTranslation(int p_eventTime,
-                                 const std::string& p_blockID,
+                                 const std::string &p_blockID,
                                  float p_x,
                                  float p_y,
                                  int p_period,
@@ -836,7 +844,7 @@ private:
 class MGE_SetDynamicBlockNone : public SceneEvent {
 public:
   MGE_SetDynamicBlockNone(int p_eventTime);
-  MGE_SetDynamicBlockNone(int p_eventTime, const std::string& p_blockID);
+  MGE_SetDynamicBlockNone(int p_eventTime, const std::string &p_blockID);
   ~MGE_SetDynamicBlockNone();
 
   void doAction(Scene *p_pScene);
@@ -979,7 +987,7 @@ class MGE_PlaySound : public SceneEvent {
 public:
   MGE_PlaySound(int p_eventTime);
   MGE_PlaySound(int p_eventTime,
-                const std::string& p_soundName,
+                const std::string &p_soundName,
                 float p_volume = DEFAULT_SAMPLE_VOLUME);
   ~MGE_PlaySound();
 
@@ -999,7 +1007,7 @@ private:
 class MGE_PlayMusic : public SceneEvent {
 public:
   MGE_PlayMusic(int p_eventTime);
-  MGE_PlayMusic(int p_eventTime, const std::string& p_musicName);
+  MGE_PlayMusic(int p_eventTime, const std::string &p_musicName);
   ~MGE_PlayMusic();
 
   void doAction(Scene *p_pScene);

@@ -77,9 +77,8 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 bool isEntityInsignificant(Entity *entity) {
   auto &&speciality = entity->Speciality();
 
-  return speciality == ET_NONE
-      || speciality == ET_PARTICLES_SOURCE
-      || speciality == ET_JOINT;
+  return speciality == ET_NONE || speciality == ET_PARTICLES_SOURCE ||
+         speciality == ET_JOINT;
 }
 
 /* to sort blocks on their texture */
@@ -475,16 +474,15 @@ void GameRenderer::renderEngineCounterNeedle(int nWidth,
                ENGINECOUNTER_NEEDLE_WIDTH_FACTOR);
 
   Vector2f pcenterr =
-    pcenter -
-    Vector2f(-cosf(value / 360.0 * (2.0 * 3.14159) + (3.14159 / 2) +
-                   ENGINECOUNTER_STARTANGLE)
+    pcenter - Vector2f(-cosf(value / 360.0 * (2.0 * 3.14159) + (3.14159 / 2) +
+                             ENGINECOUNTER_STARTANGLE)
 
-               *
-               (ENGINECOUNTER_RADIUS)*coefw * ENGINECOUNTER_NEEDLE_WIDTH_FACTOR,
-             sinf(value / 360.0 * (2.0 * 3.14159) + (3.14159 / 2) +
-                  ENGINECOUNTER_STARTANGLE) *
-               (ENGINECOUNTER_RADIUS)*coefh *
-               ENGINECOUNTER_NEEDLE_WIDTH_FACTOR);
+                         * (ENGINECOUNTER_RADIUS)*coefw *
+                         ENGINECOUNTER_NEEDLE_WIDTH_FACTOR,
+                       sinf(value / 360.0 * (2.0 * 3.14159) + (3.14159 / 2) +
+                            ENGINECOUNTER_STARTANGLE) *
+                         (ENGINECOUNTER_RADIUS)*coefh *
+                         ENGINECOUNTER_NEEDLE_WIDTH_FACTOR);
 
   Vector2f pdest =
     pcenter +
@@ -592,8 +590,10 @@ void GameRenderer::renderMiniMap(Scene *i_scene,
   input:  position on the screen (in the minimap area)
   output: position in the level
 */
-#define MAP_TO_LEVEL_X(mapX) ((mapX)-x - nWidth / 2) / MINIMAPZOOM + cameraPosX
-#define MAP_TO_LEVEL_Y(mapY) ((mapY)-y - nHeight / 2) / MINIMAPZOOM + cameraPosY
+#define MAP_TO_LEVEL_X(mapX) \
+  ((mapX) - x - nWidth / 2) / MINIMAPZOOM + cameraPosX
+#define MAP_TO_LEVEL_Y(mapY) \
+  ((mapY) - y - nHeight / 2) / MINIMAPZOOM + cameraPosY
   AABB mapBBox;
   mapBBox.addPointToAABB2f(MAP_TO_LEVEL_X(x), MAP_TO_LEVEL_Y(y));
   mapBBox.addPointToAABB2f(MAP_TO_LEVEL_X(x + nWidth),
@@ -682,9 +682,9 @@ void GameRenderer::renderMiniMap(Scene *i_scene,
   output: position on the screen (draw in the minimap area)
 */
 #define LEVEL_TO_SCREEN_X(elemPosX) \
-  (x + nWidth / 2 + (float)((elemPosX)-cameraPosX) * MINIMAPZOOM)
+  (x + nWidth / 2 + (float)((elemPosX) - cameraPosX) * MINIMAPZOOM)
 #define LEVEL_TO_SCREEN_Y(elemPosY) \
-  (y + nHeight / 2 - (float)((elemPosY)-cameraPosY) * MINIMAPZOOM)
+  (y + nHeight / 2 - (float)((elemPosY) - cameraPosY) * MINIMAPZOOM)
 
   for (unsigned int i = 0; i < i_scene->Players().size(); i++) {
     Vector2f bikePos(
@@ -707,7 +707,8 @@ void GameRenderer::renderMiniMap(Scene *i_scene,
     i_scene->getCollisionHandler()->getEntitiesNearPosition(mapBBox);
 
   for (auto &entity : Entities) {
-    if (XMSession::instance()->hideSpritesMinimap() && isEntityInsignificant(entity))
+    if (XMSession::instance()->hideSpritesMinimap() &&
+        isEntityInsignificant(entity))
       continue;
 
     Vector2f entityPos(LEVEL_TO_SCREEN_X(entity->DynamicPosition().x),
@@ -1848,7 +1849,7 @@ void GameRenderer::_RenderSprites(Scene *i_scene,
 
 void GameRenderer::_GetSpriteDetails(Scene *scene,
                                      Entity *entity,
-                                     AnimationSprite* &spriteReference) {
+                                     AnimationSprite *&spriteReference) {
   AnimationSprite *sprite = nullptr;
   switch (entity->Speciality()) {
     case ET_KILL:
@@ -1858,14 +1859,12 @@ void GameRenderer::_GetSpriteDetails(Scene *scene,
       sprite = (AnimationSprite *)scene->getLevelSrc()->flowerSprite();
       break;
     case ET_ISTOTAKE:
-      sprite =
-        (AnimationSprite *)scene->getLevelSrc()->strawberrySprite();
+      sprite = (AnimationSprite *)scene->getLevelSrc()->strawberrySprite();
       break;
     case ET_CHECKPOINT: {
       Checkpoint *checkpoint = (Checkpoint *)entity;
       if (checkpoint->isActivated()) {
-        sprite =
-          (AnimationSprite *)scene->getLevelSrc()->checkpointSpriteUp();
+        sprite = (AnimationSprite *)scene->getLevelSrc()->checkpointSpriteUp();
       } else {
         sprite =
           (AnimationSprite *)scene->getLevelSrc()->checkpointSpriteDown();
@@ -1885,7 +1884,9 @@ void GameRenderer::_GetSpriteDetails(Scene *scene,
 /*===========================================================================
 Render a sprite
 ===========================================================================*/
-void GameRenderer::_RenderSprite(Scene *i_scene, Entity *pEntity, float i_sizeMult) {
+void GameRenderer::_RenderSprite(Scene *i_scene,
+                                 Entity *pEntity,
+                                 float i_sizeMult) {
   AnimationSprite *v_sprite = nullptr;
   float v_centerX = 0.0f;
   float v_centerY = 0.0f;
@@ -1997,15 +1998,12 @@ void GameRenderer::_RenderSprite(Scene *i_scene, Entity *pEntity, float i_sizeMu
   auto sess = XMSession::instance();
   bool hide = sess->hideSpritesUgly() && isEntityInsignificant(pEntity);
 
-  if (sess->debug() ||
-      sess->testTheme() ||
-      (sess->ugly() && !hide)) {
+  if (sess->debug() || sess->testTheme() || (sess->ugly() && !hide)) {
     _RenderSpriteCircle(pEntity, i_sizeMult);
   }
 }
 
 void GameRenderer::_RenderSpriteCircle(Entity *entity, float sizeMult) {
-
   Color color;
   switch (entity->Speciality()) {
     case ET_KILL:
@@ -2014,7 +2012,7 @@ void GameRenderer::_RenderSpriteCircle(Entity *entity, float sizeMult) {
       break;
 
     case ET_MAKEWIN:
-       /* Fix: color not same as blocks */
+      /* Fix: color not same as blocks */
       color = MAKE_COLOR(255, 0, 255, 255);
       break;
 
@@ -2032,18 +2030,13 @@ void GameRenderer::_RenderSpriteCircle(Entity *entity, float sizeMult) {
       break;
 
     default:
-       /* then only the entities used in scripts get displayed */
+      /* then only the entities used in scripts get displayed */
       color = MAKE_COLOR(255, 255, 90, 255);
       break;
   }
 
   _RenderCircle(
-    20,
-    color,
-    entity->DynamicPosition(),
-    entity->Size() * sizeMult
-  );
-
+    20, color, entity->DynamicPosition(), entity->Size() * sizeMult);
 }
 
 /*===========================================================================
@@ -3020,8 +3013,8 @@ void GameRenderer::_RenderScreenShadow(Scene *i_scene) {
     pDrawLib->drawBox(
       Vector2f(0.0, 0.0),
       Vector2f(float(m_screen.getDispWidth()), // pDrawlib returns camera
-               // specific values, as set in
-               // render()
+                                               // specific values, as set in
+                                               // render()
                float(m_screen.getDispHeight())),
       0,
       MAKE_COLOR(0, 0, 0, v_nShade));
@@ -3400,7 +3393,8 @@ void GameRenderer::renderBodyPart(const Vector2f &i_from,
 
   if (i_sprite == NULL)
     return;
-  pTexture = i_sprite->getTexture(false, WrapMode::Repeat, FM_LINEAR); // FM_LINEAR
+  pTexture =
+    i_sprite->getTexture(false, WrapMode::Repeat, FM_LINEAR); // FM_LINEAR
   if (pTexture == NULL)
     return;
 

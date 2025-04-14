@@ -94,14 +94,16 @@ void StateOptions::clean() {
 void StateOptions::xmKey(InputEventType i_type, const XMKey &i_xmkey) {
   StateMenu::xmKey(i_type, i_xmkey);
 
-  if (i_type == INPUT_DOWN && (i_xmkey == XMKey(SDLK_ESCAPE, KMOD_NONE) ||
-                               i_xmkey.getJoyButton() == SDL_CONTROLLER_BUTTON_B)) {
+  if (i_type == INPUT_DOWN &&
+      (i_xmkey == XMKey(SDLK_ESCAPE, KMOD_NONE) ||
+       i_xmkey.getJoyButton() == SDL_CONTROLLER_BUTTON_B)) {
     m_requestForEnd = true;
     return;
   }
 
   else if (i_type == INPUT_DOWN &&
-           i_xmkey == (*Input::instance()->getGlobalKey(INPUT_TOGGLESERVERCONN)) &&
+           i_xmkey ==
+             (*Input::instance()->getGlobalKey(INPUT_TOGGLESERVERCONN)) &&
            i_xmkey.getRepetition() == 0) {
     StateManager::instance()->connectOrDisconnect();
   }
@@ -312,16 +314,6 @@ void StateOptions::checkEvents() {
     XMSession::instance()->setMaxRenderFps(maxFramerate);
     SysMessage::instance()->displayInformation(GAMETEXT_OPTION_NEED_TO_RESTART);
   }
-
-
-
-
-
-
-
-
-
-
 
   v_button = reinterpret_cast<UIButton *>(
     m_GUI->getChild("MAIN:TABS:GENERAL_TAB:TABS:VIDEO_TAB:MENULOW"));
@@ -852,8 +844,8 @@ void StateOptions::checkEvents() {
   //  XMSession::instance()->setDbsynchronizeOnQuit(v_button->getChecked());
   //}
 
-  v_button = reinterpret_cast<UIButton *>(
-      m_GUI->getChild("MAIN:TABS:GENERAL_TAB:TABS:INFO_TAB:CLEARLEVELCACHE_BUTTON"));
+  v_button = reinterpret_cast<UIButton *>(m_GUI->getChild(
+    "MAIN:TABS:GENERAL_TAB:TABS:INFO_TAB:CLEARLEVELCACHE_BUTTON"));
   if (v_button->isClicked()) {
     v_button->setClicked(false);
 
@@ -1150,7 +1142,6 @@ UIWindow *StateOptions::makeWindowOptions_general(UIWindow *i_parent) {
   v_button->setGroup(50023);
   v_button->setContextHelp(GAMETEXT_HIDESPRITESMINIMAP);
 
-
   /* theme */
   v_window = new UIWindow(v_generalTabs,
                           20,
@@ -1245,13 +1236,12 @@ UIWindow *StateOptions::makeWindowOptions_video(UIWindow *i_parent) {
 
   auto maxFramerateLabel = std::string(GAMETEXT_MAX_FRAMERATE) + ":";
 
-  v_someText = new UIStatic(
-    v_window,
-    5+2,
-    v_window->getPosition().nHeight - 43 - 10 - 90 - 2,
-    maxFramerateLabel,
-    v_window->getPosition().nWidth - 40,
-    28);
+  v_someText = new UIStatic(v_window,
+                            5 + 2,
+                            v_window->getPosition().nHeight - 43 - 10 - 90 - 2,
+                            maxFramerateLabel,
+                            v_window->getPosition().nWidth - 40,
+                            28);
 
   v_someText->setID("MAX_FRAMERATE_LABEL");
   v_someText->setHAlign(UI_ALIGN_LEFT);
@@ -1260,16 +1250,14 @@ UIWindow *StateOptions::makeWindowOptions_video(UIWindow *i_parent) {
   int padding = v_someText->getFont()->getGlyph(maxFramerateLabel)->realWidth();
 
   v_edit = new UIEdit(v_window,
-      padding + 8 + 8,
-      v_window->getPosition().nHeight - 43 - 10 - 90 - 2,
-      "",
-      60,
-      28);
+                      padding + 8 + 8,
+                      v_window->getPosition().nHeight - 43 - 10 - 90 - 2,
+                      "",
+                      60,
+                      28);
   v_edit->setFont(drawlib->getFontSmall());
   v_edit->setID("MAX_FRAMERATE");
   v_edit->setContextHelp(CONTEXTHELP_MAX_FRAMERATE);
-
-
 
   auto gfxLabelFont = drawlib->getFontSmall();
   auto menuGfxLabel = std::string(GAMETEXT_MENUGFX) + ":";
@@ -1311,12 +1299,13 @@ UIWindow *StateOptions::makeWindowOptions_video(UIWindow *i_parent) {
   v_button->setGroup(20024);
   v_button->setContextHelp(CONTEXTHELP_MEDIUM_MENU);
 
-  v_button = new UIButton(v_window,
-                          padding + (v_window->getPosition().nWidth - 120) / 3 * 2,
-                          v_window->getPosition().nHeight - 43 - 10 - 60,
-                          GAMETEXT_HIGH,
-                          (v_window->getPosition().nWidth - 120) / 3,
-                          28);
+  v_button =
+    new UIButton(v_window,
+                 padding + (v_window->getPosition().nWidth - 120) / 3 * 2,
+                 v_window->getPosition().nHeight - 43 - 10 - 60,
+                 GAMETEXT_HIGH,
+                 (v_window->getPosition().nWidth - 120) / 3,
+                 28);
   v_button->setType(UI_BUTTON_TYPE_RADIO);
   v_button->setID("MENUHIGH");
   v_button->setFont(drawlib->getFontSmall());
@@ -1355,12 +1344,13 @@ UIWindow *StateOptions::makeWindowOptions_video(UIWindow *i_parent) {
   v_button->setGroup(20025);
   v_button->setContextHelp(CONTEXTHELP_MEDIUM_GAME);
 
-  v_button = new UIButton(v_window,
-                          padding + (v_window->getPosition().nWidth - 120) / 3 * 2,
-                          v_window->getPosition().nHeight - 43 - 10 - 30,
-                          GAMETEXT_FULL,
-                          (v_window->getPosition().nWidth - 120) / 3,
-                          28);
+  v_button =
+    new UIButton(v_window,
+                 padding + (v_window->getPosition().nWidth - 120) / 3 * 2,
+                 v_window->getPosition().nHeight - 43 - 10 - 30,
+                 GAMETEXT_FULL,
+                 (v_window->getPosition().nWidth - 120) / 3,
+                 28);
   v_button->setType(UI_BUTTON_TYPE_RADIO);
   v_button->setID("GAMEHIGH");
   v_button->setFont(drawlib->getFontSmall());
@@ -1765,11 +1755,11 @@ UIWindow *StateOptions::makeWindowOptions_infos(UIWindow *i_parent) {
   makeWindowOptions_infos_line(v_window, "xmNet version", str_net.str(), p);
 
   v_button = new UIButton(v_window,
-      20,
-      v_window->getPosition().nHeight - 68,
-      GAMETEXT_CLEARLEVELCACHE,
-      207,
-      57);
+                          20,
+                          v_window->getPosition().nHeight - 68,
+                          GAMETEXT_CLEARLEVELCACHE,
+                          207,
+                          57);
   v_button->setID("CLEARLEVELCACHE_BUTTON");
   v_button->setFont(drawlib->getFontSmall());
   v_button->setType(UI_BUTTON_TYPE_LARGE);
@@ -2838,8 +2828,7 @@ void StateOptions::updateControlsList() {
   for (unsigned int i = 0; i < INPUT_NB_GLOBALKEYS; i++) {
     if (Input::instance()->getGlobalKeyCustomizable(i)) {
       p = pList->addEntry(Input::instance()->getGlobalKeyHelp(i));
-      p->Text.push_back(
-        Input::instance()->getGlobalKey(i)->toFancyString());
+      p->Text.push_back(Input::instance()->getGlobalKey(i)->toFancyString());
       p->Text.push_back(Input::instance()->getGlobalKey(i)->toString());
     }
   }
@@ -2858,21 +2847,17 @@ void StateOptions::updateControlsList() {
     // player keys
     for (unsigned int j = 0; j < INPUT_NB_PLAYERKEYS; j++) {
       p = pList->addEntry(Input::instance()->getPlayerKeyHelp(j, i));
-      p->Text.push_back(
-        Input::instance()->getPlayerKey(j, i)->toFancyString());
-      p->Text.push_back(
-        Input::instance()->getPlayerKey(j, i)->toString());
+      p->Text.push_back(Input::instance()->getPlayerKey(j, i)->toFancyString());
+      p->Text.push_back(Input::instance()->getPlayerKey(j, i)->toString());
     }
 
     // player script keys
     for (unsigned int k = 0; k < MAX_SCRIPT_KEY_HOOKS; k++) {
       std::ostringstream keyName;
-      keyName
-        << GAMETEXT_SCRIPTACTION
-        << " "
-        << (k + 1);
+      keyName << GAMETEXT_SCRIPTACTION << " " << (k + 1);
       p = pList->addEntry(keyName.str());
-      p->Text.push_back(Input::instance()->getSCRIPTACTION(i, k).toFancyString());
+      p->Text.push_back(
+        Input::instance()->getSCRIPTACTION(i, k).toFancyString());
       p->Text.push_back(Input::instance()->getSCRIPTACTION(i, k).toString());
     }
   }
@@ -3240,7 +3225,8 @@ void StateOptions::setInputKey(const std::string &i_strKey,
 
     // player keys
     for (unsigned int j = 0; j < INPUT_NB_PLAYERKEYS; j++) {
-      std::string keyName = Input::instance()->getPlayerKeyHelp(j, i) + " " + playerNumber;
+      std::string keyName =
+        Input::instance()->getPlayerKeyHelp(j, i) + " " + playerNumber;
 
       if (i_strKey == keyName) {
         Input::instance()->setPlayerKey(j, i, XMKey(i_key));
@@ -3250,12 +3236,7 @@ void StateOptions::setInputKey(const std::string &i_strKey,
     // player script keys
     for (unsigned int k = 0; k < MAX_SCRIPT_KEY_HOOKS; k++) {
       std::ostringstream keyName;
-      keyName
-        << GAMETEXT_SCRIPTACTION
-        << " "
-        << (k + 1)
-        << " "
-        << playerNumber;
+      keyName << GAMETEXT_SCRIPTACTION << " " << (k + 1) << " " << playerNumber;
 
       if (i_strKey == keyName.str()) {
         Input::instance()->setSCRIPTACTION(i, k, XMKey(i_key));

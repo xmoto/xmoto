@@ -34,16 +34,12 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
 class Sprite;
 
-enum FilterMode {
-  FM_NEAREST,
-  FM_LINEAR,
-  FM_MIPMAP
-};
+enum FilterMode { FM_NEAREST, FM_LINEAR, FM_MIPMAP };
 
 enum class WrapMode {
-  Clamp       = GL_CLAMP,
+  Clamp = GL_CLAMP,
   ClampToEdge = GL_CLAMP_TO_EDGE,
-  Repeat      = GL_REPEAT,
+  Repeat = GL_REPEAT,
 };
 
 // Our friendly texture exception friend

@@ -59,7 +59,9 @@ struct ColElement {
 template<class T>
 class ElementHandler {
 public:
-  typedef struct { std::vector<struct ColElement<T> *> ColElements; } GridCell;
+  typedef struct {
+    std::vector<struct ColElement<T> *> ColElements;
+  } GridCell;
 
   /* The element must have a method getAABB() */
   struct ColElement<T> *addElement(T *id);

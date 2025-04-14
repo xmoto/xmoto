@@ -721,7 +721,7 @@ void Level::loadXML(bool i_loadMainLayerOnly) {
 }
 
 /* Load using the best way possible. File name must already be set!
-  *  Return whether or not it was loaded from the cache. */
+ *  Return whether or not it was loaded from the cache. */
 bool Level::loadReducedFromFile(bool i_loadMainLayerOnly) {
   std::string cacheFileName;
 
@@ -767,7 +767,8 @@ std::string Level::getNameInCache(bool i_loadMainLayerOnly) const {
          ".blv";
 }
 
-std::string Level::getCacheFilePath(xmDatabase *i_db, const std::string &i_id_level) {
+std::string Level::getCacheFilePath(xmDatabase *i_db,
+                                    const std::string &i_id_level) {
   std::string path;
   char **v_result;
   unsigned int nrow;
@@ -779,8 +780,10 @@ std::string Level::getCacheFilePath(xmDatabase *i_db, const std::string &i_id_le
     try {
       std::string v_checkSum = i_db->getResult(v_result, 2, 0, 0);
       std::string v_filePath = i_db->getResult(v_result, 2, 0, 1);
-      path = "LCache/" + v_checkSum + XMFS::getFileBaseName(v_filePath) + ".blv";
-    } catch (Exception &e) {}
+      path =
+        "LCache/" + v_checkSum + XMFS::getFileBaseName(v_filePath) + ".blv";
+    } catch (Exception &e) {
+    }
   }
   i_db->read_DB_free(v_result);
   return path;

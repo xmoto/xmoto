@@ -100,23 +100,9 @@ void StateServerConsole::createGUIIfNeeded() {
   m_console->setFont(drawLib->getFontSmall());
 
   std::vector<std::string> commands = {
-    "help",
-    "clear",
-    "login",
-    "logout",
-    "changepassword",
-    "lsplayers",
-    "lsscores",
-    "lsbans",
-    "ban",
-    "unban",
-    "lsadmins",
-    "addadmin",
-    "rmadmin",
-    "reloadrules",
-    "stats",
-    "msg",
-    "ping",
+    "help",     "clear",       "login", "logout", "changepassword", "lsplayers",
+    "lsscores", "lsbans",      "ban",   "unban",  "lsadmins",       "addadmin",
+    "rmadmin",  "reloadrules", "stats", "msg",    "ping",
   };
 
   for (auto &command : commands)

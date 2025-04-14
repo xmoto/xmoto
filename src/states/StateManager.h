@@ -64,7 +64,9 @@ public:
 
   void changeFocus(bool i_hasFocus);
   void changeVisibility(bool i_visible);
-  void setInvalidated(bool i_isInvalidated) { m_isInvalidated = i_isInvalidated; }
+  void setInvalidated(bool i_isInvalidated) {
+    m_isInvalidated = i_isInvalidated;
+  }
 
   bool hasFocus() const { return m_hasFocus; }
   bool isInvalidated() const { return m_isInvalidated; }

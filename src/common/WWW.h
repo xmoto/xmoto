@@ -45,31 +45,31 @@ class xmDatabase;
 #define DEFAULT_TRANSFER_TIMEOUT 240
 #define DEFAULT_TRANSFER_CONNECT_TIMEOUT 15
 
-#define DEFAULT_WEBHIGHSCORES_URL             DEFAULT_SITE_URL "/highscores.xml"
-#define DEFAULT_WEBLEVELS_URL                 DEFAULT_SITE_URL "/levels.xml"
-#define DEFAULT_UPLOADDBSYNC_URL              DEFAULT_SITE_URL "/tools/UploadDbSync.php"
-#define DEFAULT_WEBTHEMES_URL                 DEFAULT_SITE_URL "/themes.xml"
-#define DEFAULT_WEBTHEMES_SPRITESURLBASE      DEFAULT_SITE_URL "/sprites"
-#define DEFAULT_UPLOADREPLAY_URL              DEFAULT_SITE_URL "/tools/UploadReplay.php"
-#define DEFAULT_SENDVOTE_URL                  DEFAULT_SITE_URL "/tools/SendVote.php"
-#define DEFAULT_SENDREPORT_URL                DEFAULT_SITE_URL "/tools/SendReport.php"
-#define DEFAULT_WEBROOMS_URL                  DEFAULT_SITE_URL "/rooms.xml"
+#define DEFAULT_WEBHIGHSCORES_URL DEFAULT_SITE_URL "/highscores.xml"
+#define DEFAULT_WEBLEVELS_URL DEFAULT_SITE_URL "/levels.xml"
+#define DEFAULT_UPLOADDBSYNC_URL DEFAULT_SITE_URL "/tools/UploadDbSync.php"
+#define DEFAULT_WEBTHEMES_URL DEFAULT_SITE_URL "/themes.xml"
+#define DEFAULT_WEBTHEMES_SPRITESURLBASE DEFAULT_SITE_URL "/sprites"
+#define DEFAULT_UPLOADREPLAY_URL DEFAULT_SITE_URL "/tools/UploadReplay.php"
+#define DEFAULT_SENDVOTE_URL DEFAULT_SITE_URL "/tools/SendVote.php"
+#define DEFAULT_SENDREPORT_URL DEFAULT_SITE_URL "/tools/SendReport.php"
+#define DEFAULT_WEBROOMS_URL DEFAULT_SITE_URL "/rooms.xml"
 
 #define DEFAULT_WEBHIGHSCORES_FILENAME_PREFIX "webhighscores"
-#define DEFAULT_WEBLEVELS_FILENAME            "weblevels.xml"
-#define DEFAULT_WEBLEVELS_DIR                 "downloaded"
-#define DEFAULT_WEBTHEMES_FILENAME            "webthemes.xml"
-#define DEFAULT_WEBROOMS_FILENAME             "webrooms.xml"
-#define DEFAULT_WEBROOM_NAME                  "WR"
+#define DEFAULT_WEBLEVELS_FILENAME "weblevels.xml"
+#define DEFAULT_WEBLEVELS_DIR "downloaded"
+#define DEFAULT_WEBTHEMES_FILENAME "webthemes.xml"
+#define DEFAULT_WEBROOMS_FILENAME "webrooms.xml"
+#define DEFAULT_WEBROOM_NAME "WR"
 
 #define WWW_AGENT ("xmoto-" + XMBuild::getVersionString(true))
 
 #if CURL_AT_LEAST_VERSION(7, 56, 0)
-  #define USE_CURL_MIME_API 1
-  #define HTTP_FORM_TYPE CURLOPT_MIMEPOST
+#define USE_CURL_MIME_API 1
+#define HTTP_FORM_TYPE CURLOPT_MIMEPOST
 #else
-  #define USE_CURL_MIME_API 0
-  #define HTTP_FORM_TYPE CURLOPT_HTTPPOST
+#define USE_CURL_MIME_API 0
+#define HTTP_FORM_TYPE CURLOPT_HTTPPOST
 #endif
 
 class HTTPForm {
@@ -78,13 +78,9 @@ public:
   ~HTTPForm();
 
 #if USE_CURL_MIME_API
-  const curl_mime *const handle() const {
-    return m_mime;
-  }
+  const curl_mime *const handle() const { return m_mime; }
 #else
-  const curl_httppost *const handle() const {
-    return m_post;
-  }
+  const curl_httppost *const handle() const { return m_post; }
 #endif
 
   void addData(const std::string &name, const std::string &data);
@@ -102,7 +98,6 @@ private:
   curl_httppost *m_post;
   curl_httppost *m_last;
 #endif
-
 };
 
 struct f_curl_download_data {
@@ -123,26 +118,23 @@ using ProgressCallback = int (*)(void *clientp,
 
 class FSWeb {
 public:
-  static void downloadFile(
-    const std::string &p_local_file,
-    const std::string &p_web_file,
-    ProgressCallback progressCallback,
-    void *p_data,
-    const ProxySettings *p_proxy_settings);
+  static void downloadFile(const std::string &p_local_file,
+                           const std::string &p_web_file,
+                           ProgressCallback progressCallback,
+                           void *p_data,
+                           const ProxySettings *p_proxy_settings);
 
-  static void downloadFileBz2(
-    const std::string &p_local_file,
-    const std::string &p_web_file,
-    ProgressCallback progressCallback,
-    void *p_data,
-    const ProxySettings *p_proxy_settings);
+  static void downloadFileBz2(const std::string &p_local_file,
+                              const std::string &p_web_file,
+                              ProgressCallback progressCallback,
+                              void *p_data,
+                              const ProxySettings *p_proxy_settings);
 
-  static void downloadFileBz2UsingMd5(
-    const std::string &p_local_file,
-    const std::string &p_web_file,
-    ProgressCallback progressCallback,
-    void *p_data,
-    const ProxySettings *p_proxy_settings);
+  static void downloadFileBz2UsingMd5(const std::string &p_local_file,
+                                      const std::string &p_web_file,
+                                      ProgressCallback progressCallback,
+                                      void *p_data,
+                                      const ProxySettings *p_proxy_settings);
 
   static void uploadReplay(const std::string &p_replayFilename,
                            const std::string &p_id_room,

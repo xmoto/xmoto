@@ -7,9 +7,9 @@
 class TextEdit {
 public:
   TextEdit(bool multiline = false, bool hidden = false)
-    : m_cursorPos(0),
-      m_multiline(multiline),
-      m_hidden(hidden) {}
+    : m_cursorPos(0)
+    , m_multiline(multiline)
+    , m_hidden(hidden) {}
   ~TextEdit() {}
 
   void clear();

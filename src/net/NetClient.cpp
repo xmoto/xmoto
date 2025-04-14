@@ -254,13 +254,11 @@ void NetClient::connect(const std::string &i_server, int i_port) {
   LogInfo("client: connected on %s:%d", i_server.c_str(), i_port);
 
   char buf[512];
-  snprintf(buf,
-           512,
-           GAMETEXT_PRESSCTRLCTOCHAT,
-           Input::instance()
-             ->getGlobalKey(INPUT_CHAT)
-             ->toFancyString()
-             .c_str());
+  snprintf(
+    buf,
+    512,
+    GAMETEXT_PRESSCTRLCTOCHAT,
+    Input::instance()->getGlobalKey(INPUT_CHAT)->toFancyString().c_str());
   SysMessage::instance()->addConsoleLine(buf, CLT_INFORMATION);
 
   // bind udp port on server
@@ -677,10 +675,9 @@ void NetClient::manageAction(xmDatabase *pDb, NetAction *i_netAction) {
            i++) {
         unsigned int j = 0;
         while (j < m_otherClients.size()) {
-          if (m_otherClients[j]->id() ==
-              ((NA_changeClients *)i_netAction)
-                ->getRemovedInfosClients()[i]
-                .NetId) {
+          if (m_otherClients[j]->id() == ((NA_changeClients *)i_netAction)
+                                           ->getRemovedInfosClients()[i]
+                                           .NetId) {
             snprintf(buf,
                      512,
                      GAMETEXT_CLIENTDISCONNECTSERVER,

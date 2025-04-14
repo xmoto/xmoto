@@ -698,7 +698,9 @@ Sprite::Sprite(Theme *p_associated_theme, std::string v_name) {
 
 Sprite::~Sprite() {}
 
-Texture *Sprite::getTexture(bool bSmall, WrapMode wrapMode, FilterMode eFilterMode) {
+Texture *Sprite::getTexture(bool bSmall,
+                            WrapMode wrapMode,
+                            FilterMode eFilterMode) {
   Texture *v_currentTexture;
 
   v_currentTexture = getCurrentTexture();

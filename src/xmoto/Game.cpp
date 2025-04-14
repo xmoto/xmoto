@@ -24,7 +24,6 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "Game.h"
 #include "Credits.h"
 #include "GameText.h"
-#include "input/Input.h"
 #include "PhysSettings.h"
 #include "Sound.h"
 #include "SysMessage.h"
@@ -38,6 +37,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "gui/specific/GUIXMoto.h"
 #include "helpers/Log.h"
 #include "helpers/Text.h"
+#include "input/Input.h"
 #include "net/NetClient.h"
 #include "xmscene/Bike.h"
 #include "xmscene/BikeGhost.h"
@@ -379,8 +379,9 @@ std::string GameApp::getWorldRecord(unsigned int i_number,
                   "FROM webrooms AS a LEFT OUTER JOIN webhighscores AS b "
                   "ON (a.id_room = b.id_room "
                   "AND b.id_level=\"" +
-                    xmDatabase::protectString(LevelID) + "\") "
-                                                         "WHERE a.id_room=" +
+                    xmDatabase::protectString(LevelID) +
+                    "\") "
+                    "WHERE a.id_room=" +
                     XMSession::instance()->idRoom(i_number) + ";",
                   nrow);
   if (nrow != 1) {
@@ -595,9 +596,7 @@ std::string GameApp::loadDemoReplay(const std::string &demoFile) {
 
     try {
       LevelsManager::instance()->addExternalLevel(
-        m_xmdemo->levelFile(),
-        xmDatabase::instance("main"),
-        false);
+        m_xmdemo->levelFile(), xmDatabase::instance("main"), false);
     } catch (Exception &e) {
       LogError("Can't add level %s as external level",
                m_xmdemo->levelFile().c_str());

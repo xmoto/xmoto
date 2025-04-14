@@ -44,8 +44,9 @@ void xmDatabase::themes_update(const std::string &i_id_theme,
   simpleSql("UPDATE themes "
             "SET filepath=\"" +
             protectString(i_filepath) + "\", checkSum=\"" +
-            protectString(md5file(i_filepath)) + "\" "
-                                                 "WHERE id_theme=\"" +
+            protectString(md5file(i_filepath)) +
+            "\" "
+            "WHERE id_theme=\"" +
             protectString(i_id_theme) + "\";");
 }
 
