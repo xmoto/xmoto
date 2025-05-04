@@ -4,7 +4,7 @@
 cd ${0/gettextize/}/..
 SRCDIR=src
 SRC_FILES=($SRCDIR/xmoto/GameText.h $SRCDIR/xmoto/LevelsText.h)
-xgettext --default-domain xmoto --sort-output \
+xgettext --default-domain xmoto \
   --keyword=_ --keyword=ngettext \
   --add-comments=i18n -p ./i18n/po -o xmoto.pot \
   --package-name="X-Moto" \
