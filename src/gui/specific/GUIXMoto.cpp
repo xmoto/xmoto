@@ -94,13 +94,13 @@ void UILevelList::addLevel(const std::string &i_id_level,
   /* Add times to list entry */
   if (pEntry != NULL) {
     if (i_playerHighscore < 0) {
-      pEntry->Text.push_back("--:--:--");
+      pEntry->Text.push_back(GAMETEXT_HIGHSCORE_NONE);
     } else {
       pEntry->Text.push_back(formatTime(i_playerHighscore));
     }
 
     if (i_roomHighscore < 0) {
-      pEntry->Text.push_back(GAMETEXT_WORLDRECORDNA);
+      pEntry->Text.push_back(GAMETEXT_HIGHSCORE_NONE);
     } else {
       pEntry->Text.push_back(formatTime(i_roomHighscore));
     }

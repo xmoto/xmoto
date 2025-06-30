@@ -387,7 +387,7 @@ std::string GameApp::getWorldRecord(unsigned int i_number,
   if (nrow != 1) {
     /* should not happend */
     v_pDb->read_DB_free(v_result);
-    return GAMETEXT_WORLDRECORDNA + std::string(": WR");
+    return GAMETEXT_HIGHSCORE_NONE + std::string(": WR");
   }
   v_roomName = v_pDb->getResult(v_result, 4, 0, 0);
   if (v_pDb->getResult(v_result, 4, 0, 1) != NULL) {
@@ -407,7 +407,7 @@ std::string GameApp::getWorldRecord(unsigned int i_number,
   }
 
   /* no highscore */
-  return GAMETEXT_WORLDRECORDNA + std::string(": ") + v_roomName;
+  return GAMETEXT_HIGHSCORE_NONE + std::string(": ") + v_roomName;
 }
 
 TColor GameApp::getColorFromPlayerNumber(int i_player) {

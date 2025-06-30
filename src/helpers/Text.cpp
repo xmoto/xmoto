@@ -61,7 +61,7 @@ std::string formatTime(int i_time) {
   nS = (i_time - nM * 6000) / 100;
   nH = i_time - nM * 6000 - nS * 100;
 
-  snprintf(cBuf, 256, "%02d:%02d:%02d", nM, nS, nH);
+  snprintf(cBuf, 256, "%02d:%02d.%02d", nM, nS, nH);
   return cBuf;
 }
 
