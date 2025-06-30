@@ -813,7 +813,7 @@ Central place to keep many in-game text strings
 #define GAMETEXT_VIEWTHEHIGHSCORE _("View the highscore")
 #define GAMETEXT_WANTTOUPDATELEVEL _("Do you want to update level \"%s\"?")
 #define GAMETEXT_WARNING _("Warning")
-#define GAMETEXT_WORLDRECORDNA "--:--:--"
+#define GAMETEXT_HIGHSCORE_NONE "--:--"
 #define GAMETEXT_WWWTAB _("WWW")
 #define GAMETEXT_WWWROOMSTAB_REFERENCE _("Reference room")
 #define GAMETEXT_WWWROOMSTAB_OTHER _("Room %i")

@@ -769,7 +769,7 @@ void StateLevelInfoViewer::updateLevelInfoViewerBestTimes() {
                                               std::string(c_tmp));
       } else {
         pLV_BestTimes_WorldRecord->setCaption(v_roomName + ": " +
-                                              GAMETEXT_WORLDRECORDNA);
+                                              GAMETEXT_HIGHSCORE_NONE);
       }
     } else
       pLV_BestTimes_WorldRecord->setCaption("");

@@ -650,7 +650,9 @@ void StateScene::setScoresTimes() {
   int v_best_room_time = -1;
   int v_best_player_time = -1;
 
-  std::string T1 = "--:--:--", T2 = "--:--:--", T3 = "--:--:--";
+  std::string T1 = GAMETEXT_HIGHSCORE_NONE;
+  std::string T2 = GAMETEXT_HIGHSCORE_NONE;
+  std::string T3 = GAMETEXT_HIGHSCORE_NONE;
   std::string v_id_level;
   // take the level id of the first world
   if (m_universe != NULL) {
