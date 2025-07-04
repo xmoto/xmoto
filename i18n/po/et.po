@@ -1,4 +1,6 @@
-# SPDX-FileCopyrightText: 2025 Eerik Abel <eerikabel33@gmail.com>
+# Translation of X-Moto to Estonian
+# This file is distributed under the same license as the X-Moto package.
+# Eerik Abel <eerikabel33@gmail.com>, 2025.
 msgid ""
 msgstr ""
 "Project-Id-Version: xmoto\n"
