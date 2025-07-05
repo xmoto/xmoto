@@ -25,6 +25,7 @@ enum { LANGUAGE_NAME = 0, LANGUAGE_ASIAN_NAME = 1, LANGUAGE_CODE = 2 };
 
 const char *LANGUAGES[][3] = {
   { "Català", "Catala", "ca_ES" }, // analpaper at gmail dot com
+  { "Eesti", "Eesti", "et" }, // eerikabel33 at gmail dot com
   { "Èesky", "Eesky", "cs_CZ" }, // tomas.chvatal at gmail dot com
   { "Dansk", "Dansk", "da_DK" }, // kristianjagd at gmail dot com
   { "Deutsch", "Deutsch", "de" }, // mothbox at gmx dot net
